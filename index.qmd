@@ -1,0 +1,18 @@
+---
+format: html
+editor: visual
+---
+
+## Overview
+
+Welcome to my portfolio for the Department of Statistical Sciences. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course.
+
+## Portfolio Structure
+
+-   [Reflective Commentary](reflective-commentary.qmd) (1000--2000 word synthesis)
+-   [AI Use Log](ai-use-log.qmd) (Record of generative AI assistance)
+-   [Course Section 1](section-1/section-1.qmd) (Tutorials, model fitting, and reflections)
+-   [Course Section 2](section-2/section-2.qmd) (Tutorials, model fitting, and reflections)
+-   [Substantial Projects](projects-index.qmd) (Four major analytical projects)
+-   [Learning Journal](journal-index.qmd) (Chronological progress tracking)
+-   [Appendix](appendix/code-and-data.qmd) (Reproducible code and dataset links)\[cite: 1\]

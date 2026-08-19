@@ -1,0 +1,28 @@
+---
+format: html
+editor: visual
+---
+
+## Data Statement
+
+<!-- Include source, consent, anonymisation, and POPIA compliance if applicable -->
+
+\[cite: 1\]
+
+## Teaching Session Summaries
+
+<!-- Fit models, interpret results, compute predictions and prediction intervals -->
+
+\[cite: 1\]
+
+## Worked Tutorials & Software Implementations
+
+<!-- Worked tutorials with progress reflections and first-principles R code -->
+
+\[cite: 1\]
+
+## Topic Exploration
+
+<!-- Exploration of an idea or method not directly covered in lectures/notes -->
+
+\[cite: 1\]

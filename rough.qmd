@@ -1,0 +1,243 @@
+---
+course: "Time Series"
+assignment: "Journal entries"
+student-number: "LTHISA001"
+format:
+  pdf:
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    documentclass: article
+    fontsize: 12pt
+    geometry:
+      - left=3cm
+      - right=3cm
+      - top=2.5cm
+      - bottom=2.5cm
+    toc: false
+    toc-depth: 3
+    number-sections: false
+    listings: true
+    include-in-header: 
+      - metadata.tex
+      - header.tex
+    include-before-body: title.tex
+execute:
+  warning: false
+  message: false
+editor: visual
+---
+
+```{r}
+#| echo: false
+#| warning: false 
+
+library(ggplot2)
+```
+
+# Chapter 1: Foundations
+
+## Learning outcomes
+
+1.  Explain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.
+2.  Treat an observed series as one realisation of a stochastic process.
+3.  Explain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.
+4.  Match a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.
+5.  Identify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.
+6.  Produce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.
+7.  Use the lag and lead operators, and the algebra built on them, to write models compactly.
+8.  Define weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.
+9.  Define white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.
+10. Fit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.
+11. Explain volatility clustering and fit ARCH and GARCH models to it.
+
+### Lecture 1
+
+Date: 27 July 2026 Topic: Foundations What we did: Questions: What's next?
+
+Example: Continuous series
+
+```{r}
+#| echo: false
+#| warning: false
+
+# Read in data:
+data(AirPassengers)
+# View(AirPassengers)
+```
+
+@fig-continuous-ts plots the number of monthly airline passengers over a 12 year period. This figure clearly illustrates the concepts of seasonality and trend.
+
+```{r}
+#| label: fig-continuous_ts
+#| fig-cap: "Time series plot of the number of monthly airline passengers from 1949 to 1960."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+AirPassengers_df = data.frame(
+  month  = as.numeric(time(AirPassengers)),
+  count = as.numeric(AirPassengers)
+)
+
+ggplot(data = AirPassengers_df,
+       mapping = aes(x = month,
+                     y = count)) + 
+  geom_point(col = 'deeppink') + 
+  geom_line(col = 'deeppink') + 
+  labs(
+    title = "Monthly airline passenger numbers (1949–1960).",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+```
+
+Example: Discrete series
+
+```{r}
+#| echo: false 
+#| warning: false 
+
+# Read in data: 
+library(readr)
+seals = read_csv("_data/seals.csv")
+seals_ts = ts(seals,start=1957,end=1999,frequency=1)[,-1]
+# View(seals)
+```
+
+@fig-discrete-ts plots the changing number of observed seals over a period of 25 years.
+
+```{r}
+#| label: fig-discrete_ts
+#| fig-cap: "Time series plot of the number of seals from 1975 to 1999."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+seals_df = data.frame(
+  year  = as.numeric(time(seals_ts)),
+  count = as.numeric(seals_ts)
+)
+
+ggplot(data = seals_df,
+       mapping = aes(x = year, y = count)) + 
+  geom_col(fill = "lightblue", 
+           color = "black", 
+           width = 1) +  
+  scale_x_continuous(breaks = seq(1957, 1999, by = 5)) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Annual number of seals (1957–1999).",
+    x = "Year",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+IMPORTANT: Time series model dependence through sequential observations.
+
+Assumption: Equally spaced measurements.
+
+Assumption: Autocorrelation across time.
+
+Time series in a single measurement taken at multiple points in time. Technically we are modelling the same thing over and over again (this makes sense why there is sequential correlation).
+
+## Lecture 2
+
+Date: 3 August 2026 Topic: What we did: Questions: What's next?
+
+Aggregation
+
+```{r}
+agg_AirPassengers = aggregate(AirPassengers,
+                              nfrequency = 1,
+                              FUN = sum)
+
+aggAP_df = data.frame(
+  year  = as.numeric(time(agg_AirPassengers)),
+  count = as.numeric(agg_AirPassengers)
+)
+
+ggplot(data = aggAP_df,
+       mapping = aes(x = year,
+                     y = count)) + 
+  geom_line(color = 'deeppink') + 
+  geom_point(colour = 'deeppink') +
+  scale_x_continuous(breaks = seq(1949, 1960, by = 1)) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Annual trend in air passengers (1949–1960).",
+    x = "Year",
+    y = "Number of passengers"
+  ) +
+  theme_minimal()
+
+```
+
+NOTE: Noise in data introduces different realisations. Noise is stochastic.
+
+# Chapter 2: The Forecasting Problem
+
+## Lecture 3
+
+Date: Topic: What we did: Questions: What's next?
+
+Forecasting: This is kind of like making a prediction. A forecast is a random variable.
+
+Goal setting: This is what we want to happen Planning: This is how we are going to reach our goal
+
+CHANGING THE FORECAST DOESN'T CHANGE WHAT WILL HAPPEN!
+
+A *random walk* is a non-stationary process where memory is permanent. This means that every future shock accumulates endlessly. The next observation is dependent on the previous observation.
+
+A *stationary* process is where memory decays geometrically, shocks die out. This will force the process back to the mean.
+
+Question: What is a mixed model? Answer (19 August 2026): This is a multivariate time series.
+
+Chapter 3: Exploring a Series
+
+Option 1: The time domain
+
+Here we look at previous observations. This leads to AR,MA,ARMA and ARIMA models.
+
+Option 2: The frequency domain
+
+Here we look at previous trends.
+
+*seasonality must have a fixed and known interval* Question: Otherwise is it a cycle? Answer:
+
+## Lecture 4
+
+Date: Topic: What we did: Questions: What's next?
+
+Exercises
+
+1.  Why is ordinary random k-fold cross-validation inappropriate for forecasting?
+
+If you exclude an observation at time t-1 but use observation t, you are technically predicting the past based on future observations. Future observations must never be used when estimating a forecasting model as this violates a fundamental principal of forecasting -
+
+2.  Define temporal leakage.
+
+Future observations enter model estimation. Reported accuracy looks excellent but is unattainable in practice - the future is unknown when real forecasts are made.
+
+3.  Contrast Walk_Forward, Expanding Window and Sliding Window validation.
+
+page 66 of slides
+
+4.  When would Sliding Window outperform Expanding Window?
+
+When data is non-stationary.
+
+5.  A firm refits its model daily using only the most recent 250 observations. Which strategy is this?
+
+Sliding window
+
+6.  Why must temporal ordering be preserved during validation?
+
+Otherwise the model knows things it could not have known at forecasting time. This leads to inflated accuracy that is unattainable in practise.

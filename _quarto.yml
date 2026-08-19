@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "!rough.qmd" # Excludes draft files from rendering
+
+website:
+  title: "Insert title here"
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - text: "Reflective Commentary"
+        href: reflective-commentary.qmd
+      - text: "AI Use Log"
+        href: ai-use-log.qmd
+      - section: "Course Sections"
+        contents:
+          - text: "Section 1"
+            href: section-1/section-1.qmd
+          - text: "Section 2"
+            href: section-2/section-2.qmd
+      - section: "Projects"
+        contents:
+          - text: "Projects Overview"
+            href: projects/index.qmd
+          - text: "Project 1"
+            href: projects/project-01.qmd
+          - text: "Project 2"
+            href: projects/project-02.qmd
+          - text: "Project 3"
+            href: projects/project-03.qmd
+          - text: "Project 4"
+            href: projects/project-04.qmd
+      - section: "Journal & Appendix"
+        contents:
+          - text: "Journal Overview"
+            href: journal/index.qmd
+          - text: "Journal Entries"
+            href: journal/entries.qmd
+          - text: "Code & Data"
+            href: appendix/code-and-data.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: show

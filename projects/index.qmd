@@ -1,0 +1,15 @@
+---
+format: html
+editor: visual
+---
+
+## Overview
+
+This section contains four substantial projects spanning Section 1 and Section 2\[cite: 1\].
+
+| Project   | Section   | Project Type              | Focus Area                | Link                                 |
+|--------------|--------------|----------------|--------------|--------------|
+| Project 1 | Section 1 | Simulation Study          | Model Comparison          | [Summary](project-01.qmd)\[cite: 1\] |
+| Project 2 | Section 1 | R Package Implementation  | Computational Programming | [Summary](project-02.qmd)\[cite: 1\] |
+| Project 3 | Section 2 | Shiny Application         | Interactive Visualization | [Summary](project-03.qmd)\[cite: 1\] |
+| Project 4 | Section 2 | Exploratory Data Analysis | Real-World Data           | [Summary](project-04.qmd)\[cite: 1\] |

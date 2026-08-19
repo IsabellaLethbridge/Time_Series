@@ -1,0 +1,17 @@
+---
+format: html
+editor: visual
+---
+
+## R Code & Scripts
+
+-   `scripts/simulation-study.R`
+-   `scripts/shiny-app/app.R`
+
+## Data Access & Repositories
+
+-   Raw Data Files & Data Access Instructions\[cite: 1\]
+
+## Computational Notebooks
+
+-   Extended Analysis Reports\[cite: 1\]

@@ -1,0 +1,28 @@
+---
+format: html
+editor: visual
+---
+
+## Learning Achievements
+
+<!-- Reflect on key statistical capabilities acquired during the course -->
+
+\[cite: 1\]
+
+## Methodological Challenges
+
+<!-- Discuss difficult concepts, modeling hurdles, and how you addressed them -->
+
+\[cite: 1\]
+
+## Ethical and Reproducibility Considerations
+
+<!-- Discuss data ethics, anonymisation (POPIA), and computational reproducibility -->
+
+\[cite: 1\]
+
+## Future Areas for Development
+
+<!-- Outline statistical and programming skills to develop next -->
+
+\[cite: 1\]

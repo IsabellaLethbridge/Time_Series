@@ -1,0 +1,24 @@
+---
+format: html
+editor: visual
+---
+
+-   **Section & Topic:**\[cite: 1\]
+-   **Project Type:** (Implementation / Shiny App / Exploration / Simulation)\[cite: 1\]
+-   **Question / Aim:**\[cite: 1\]
+-   **Data Used:** (Include source details if real-world data)\[cite: 1\]
+-   **Methods Used:**\[cite: 1\]
+
+## Key Findings
+
+<!-- Summary of findings -->
+
+\[cite: 1\]
+
+## Reflections
+
+-   **What I would do differently next time:**\[cite: 1\]
+
+## Links
+
+-   [Detailed Analysis & Code Script](../appendix/code-and-data.qmd)\[cite: 1\]

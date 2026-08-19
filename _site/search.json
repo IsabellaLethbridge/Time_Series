@@ -1,0 +1,310 @@
+[
+  {
+    "objectID": "ai-use-log.html",
+    "href": "ai-use-log.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Date\nTool Used\nPrompt / Task Description\nLink to Conversation\nVerification & Changes Made\n\n\n\n\nYYYY-MM-DD\nChatGPT / Claude\nDebugging R code for model fit\nLink\nChecked output against manual calculations[cite: 1]"
+  },
+  {
+    "objectID": "appendix/code-and-data.html",
+    "href": "appendix/code-and-data.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "scripts/simulation-study.R\nscripts/shiny-app/app.R"
+  },
+  {
+    "objectID": "appendix/code-and-data.html#r-code-scripts",
+    "href": "appendix/code-and-data.html#r-code-scripts",
+    "title": "Insert title here",
+    "section": "",
+    "text": "scripts/simulation-study.R\nscripts/shiny-app/app.R"
+  },
+  {
+    "objectID": "appendix/code-and-data.html#data-access-repositories",
+    "href": "appendix/code-and-data.html#data-access-repositories",
+    "title": "Insert title here",
+    "section": "Data Access & Repositories",
+    "text": "Data Access & Repositories\n\nRaw Data Files & Data Access Instructions[cite: 1]"
+  },
+  {
+    "objectID": "appendix/code-and-data.html#computational-notebooks",
+    "href": "appendix/code-and-data.html#computational-notebooks",
+    "title": "Insert title here",
+    "section": "Computational Notebooks",
+    "text": "Computational Notebooks\n\nExtended Analysis Reports[cite: 1]"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Welcome to my portfolio for the Department of Statistical Sciences. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Welcome to my portfolio for the Department of Statistical Sciences. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
+  },
+  {
+    "objectID": "index.html#portfolio-structure",
+    "href": "index.html#portfolio-structure",
+    "title": "Insert title here",
+    "section": "Portfolio Structure",
+    "text": "Portfolio Structure\n\nReflective Commentary (1000–2000 word synthesis)\nAI Use Log (Record of generative AI assistance)\nCourse Section 1 (Tutorials, model fitting, and reflections)\nCourse Section 2 (Tutorials, model fitting, and reflections)\nSubstantial Projects (Four major analytical projects)\nLearning Journal (Chronological progress tracking)\nAppendix (Reproducible code and dataset links)[cite: 1]"
+  },
+  {
+    "objectID": "journal/entries.html",
+    "href": "journal/entries.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Session / Topic Covered:[cite: 1]\nWhat I Did:[cite: 1]\nWhat I Learned:[cite: 1]\nDifficulties / Open Questions:[cite: 1]\nWhat to Do Next:[cite: 1]\nLinks: Link to Section Work | Link to AI Log[cite: 1]"
+  },
+  {
+    "objectID": "journal/entries.html#entry-1-yyyy-mm-dd",
+    "href": "journal/entries.html#entry-1-yyyy-mm-dd",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Session / Topic Covered:[cite: 1]\nWhat I Did:[cite: 1]\nWhat I Learned:[cite: 1]\nDifficulties / Open Questions:[cite: 1]\nWhat to Do Next:[cite: 1]\nLinks: Link to Section Work | Link to AI Log[cite: 1]"
+  },
+  {
+    "objectID": "journal/index.html",
+    "href": "journal/index.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "This journal documents my continuous learning progress throughout the course[cite: 1].\n\nView Chronological Entries[cite: 1]"
+  },
+  {
+    "objectID": "projects/index.html",
+    "href": "projects/index.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "This section contains four substantial projects spanning Section 1 and Section 2[cite: 1].\n\n\n\nProject\nSection\nProject Type\nFocus Area\nLink\n\n\n\n\nProject 1\nSection 1\nSimulation Study\nModel Comparison\nSummary[cite: 1]\n\n\nProject 2\nSection 1\nR Package Implementation\nComputational Programming\nSummary[cite: 1]\n\n\nProject 3\nSection 2\nShiny Application\nInteractive Visualization\nSummary[cite: 1]\n\n\nProject 4\nSection 2\nExploratory Data Analysis\nReal-World Data\nSummary[cite: 1]"
+  },
+  {
+    "objectID": "projects/index.html#overview",
+    "href": "projects/index.html#overview",
+    "title": "Insert title here",
+    "section": "",
+    "text": "This section contains four substantial projects spanning Section 1 and Section 2[cite: 1].\n\n\n\nProject\nSection\nProject Type\nFocus Area\nLink\n\n\n\n\nProject 1\nSection 1\nSimulation Study\nModel Comparison\nSummary[cite: 1]\n\n\nProject 2\nSection 1\nR Package Implementation\nComputational Programming\nSummary[cite: 1]\n\n\nProject 3\nSection 2\nShiny Application\nInteractive Visualization\nSummary[cite: 1]\n\n\nProject 4\nSection 2\nExploratory Data Analysis\nReal-World Data\nSummary[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-01.html",
+    "href": "projects/project-01.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-01.html#key-findings",
+    "href": "projects/project-01.html#key-findings",
+    "title": "Insert title here",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-01.html#reflections",
+    "href": "projects/project-01.html#reflections",
+    "title": "Insert title here",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-01.html#links",
+    "href": "projects/project-01.html#links",
+    "title": "Insert title here",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-02.html",
+    "href": "projects/project-02.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-02.html#key-findings",
+    "href": "projects/project-02.html#key-findings",
+    "title": "Insert title here",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-02.html#reflections",
+    "href": "projects/project-02.html#reflections",
+    "title": "Insert title here",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-02.html#links",
+    "href": "projects/project-02.html#links",
+    "title": "Insert title here",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-03.html",
+    "href": "projects/project-03.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-03.html#key-findings",
+    "href": "projects/project-03.html#key-findings",
+    "title": "Insert title here",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-03.html#reflections",
+    "href": "projects/project-03.html#reflections",
+    "title": "Insert title here",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-03.html#links",
+    "href": "projects/project-03.html#links",
+    "title": "Insert title here",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-04.html",
+    "href": "projects/project-04.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-04.html#key-findings",
+    "href": "projects/project-04.html#key-findings",
+    "title": "Insert title here",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-04.html#reflections",
+    "href": "projects/project-04.html#reflections",
+    "title": "Insert title here",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "projects/project-04.html#links",
+    "href": "projects/project-04.html#links",
+    "title": "Insert title here",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "reflective-commentary.html",
+    "href": "reflective-commentary.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "[cite: 1]"
+  },
+  {
+    "objectID": "reflective-commentary.html#learning-achievements",
+    "href": "reflective-commentary.html#learning-achievements",
+    "title": "Insert title here",
+    "section": "",
+    "text": "[cite: 1]"
+  },
+  {
+    "objectID": "reflective-commentary.html#methodological-challenges",
+    "href": "reflective-commentary.html#methodological-challenges",
+    "title": "Insert title here",
+    "section": "Methodological Challenges",
+    "text": "Methodological Challenges\n\n[cite: 1]"
+  },
+  {
+    "objectID": "reflective-commentary.html#ethical-and-reproducibility-considerations",
+    "href": "reflective-commentary.html#ethical-and-reproducibility-considerations",
+    "title": "Insert title here",
+    "section": "Ethical and Reproducibility Considerations",
+    "text": "Ethical and Reproducibility Considerations\n\n[cite: 1]"
+  },
+  {
+    "objectID": "reflective-commentary.html#future-areas-for-development",
+    "href": "reflective-commentary.html#future-areas-for-development",
+    "title": "Insert title here",
+    "section": "Future Areas for Development",
+    "text": "Future Areas for Development\n\n[cite: 1]"
+  },
+  {
+    "objectID": "section-1/section-1.html",
+    "href": "section-1/section-1.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "[cite: 1]"
+  },
+  {
+    "objectID": "section-1/section-1.html#data-statement",
+    "href": "section-1/section-1.html#data-statement",
+    "title": "Insert title here",
+    "section": "",
+    "text": "[cite: 1]"
+  },
+  {
+    "objectID": "section-1/section-1.html#teaching-session-summaries",
+    "href": "section-1/section-1.html#teaching-session-summaries",
+    "title": "Insert title here",
+    "section": "Teaching Session Summaries",
+    "text": "Teaching Session Summaries\n\n[cite: 1]"
+  },
+  {
+    "objectID": "section-1/section-1.html#worked-tutorials-software-implementations",
+    "href": "section-1/section-1.html#worked-tutorials-software-implementations",
+    "title": "Insert title here",
+    "section": "Worked Tutorials & Software Implementations",
+    "text": "Worked Tutorials & Software Implementations\n\n[cite: 1]"
+  },
+  {
+    "objectID": "section-1/section-1.html#topic-exploration",
+    "href": "section-1/section-1.html#topic-exploration",
+    "title": "Insert title here",
+    "section": "Topic Exploration",
+    "text": "Topic Exploration\n\n[cite: 1]"
+  },
+  {
+    "objectID": "section-2/section-2.html",
+    "href": "section-2/section-2.html",
+    "title": "Insert title here",
+    "section": "",
+    "text": "[cite: 1]"
+  },
+  {
+    "objectID": "section-2/section-2.html#data-statement",
+    "href": "section-2/section-2.html#data-statement",
+    "title": "Insert title here",
+    "section": "",
+    "text": "[cite: 1]"
+  },
+  {
+    "objectID": "section-2/section-2.html#teaching-session-summaries",
+    "href": "section-2/section-2.html#teaching-session-summaries",
+    "title": "Insert title here",
+    "section": "Teaching Session Summaries",
+    "text": "Teaching Session Summaries\n\n[cite: 1]"
+  },
+  {
+    "objectID": "section-2/section-2.html#worked-tutorials-software-implementations",
+    "href": "section-2/section-2.html#worked-tutorials-software-implementations",
+    "title": "Insert title here",
+    "section": "Worked Tutorials & Software Implementations",
+    "text": "Worked Tutorials & Software Implementations\n\n[cite: 1]"
+  },
+  {
+    "objectID": "section-2/section-2.html#topic-exploration",
+    "href": "section-2/section-2.html#topic-exploration",
+    "title": "Insert title here",
+    "section": "Topic Exploration",
+    "text": "Topic Exploration\n\n[cite: 1]"
+  }
+]
