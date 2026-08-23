@@ -217,7 +217,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#entry-1-yyyy-mm-dd" id="toc-entry-1-yyyy-mm-dd" class="nav-link active" data-scroll-target="#entry-1-yyyy-mm-dd">Entry 1: YYYY-MM-DD</a></li>
+  <li><a href="#lecture-1" id="toc-lecture-1" class="nav-link active" data-scroll-target="#lecture-1">Lecture 1</a></li>
+  <li><a href="#lecture-2" id="toc-lecture-2" class="nav-link" data-scroll-target="#lecture-2">Lecture 2</a></li>
+  <li><a href="#lecture-3" id="toc-lecture-3" class="nav-link" data-scroll-target="#lecture-3">Lecture 3</a></li>
+  <li><a href="#lecture-4" id="toc-lecture-4" class="nav-link" data-scroll-target="#lecture-4">Lecture 4</a></li>
   </ul>
 </nav>
     </div>
@@ -226,16 +229,70 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="entry-1-yyyy-mm-dd" class="level2">
-<h2 class="anchored" data-anchor-id="entry-1-yyyy-mm-dd">Entry 1: YYYY-MM-DD</h2>
-<ul>
-<li><strong>Session / Topic Covered:</strong>[cite: 1]</li>
-<li><strong>What I Did:</strong>[cite: 1]</li>
-<li><strong>What I Learned:</strong>[cite: 1]</li>
-<li><strong>Difficulties / Open Questions:</strong>[cite: 1]</li>
-<li><strong>What to Do Next:</strong>[cite: 1]</li>
-<li><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a>[cite: 1]</li>
-</ul>
+<section id="lecture-1" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-1">Lecture 1</h2>
+<p><strong>Date:</strong> 27 July 2026</p>
+<p><strong>Topic covered:</strong> Foundations</p>
+<p><strong>What I Did:</strong></p>
+<p>Plotted time series plots for discrete and continuous time series data.</p>
+<p><strong>What I Learned:</strong></p>
+<p>A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).</p>
+<p>Assumption: equally spaced measurements Assumption: autocorrelation across time</p>
+<p>A time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.</p>
+<p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
+<p><strong>Difficulties/Questions:</strong></p>
+<p>Q: How does noise introduce different realisations?</p>
+<p>A:</p>
+<p><strong>What to Do Next:</strong></p>
+<p><em>????</em></p>
+<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+</section>
+<section id="lecture-2" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-2">Lecture 2</h2>
+<p><strong>Date:</strong> 3 August 2026</p>
+<p><strong>Topic covered:</strong> The Forecasting Problem</p>
+<p><strong>What I Did:</strong></p>
+<p><em>????</em></p>
+<p><strong>What I Learned:</strong></p>
+<p>A forecast horizon is how far into the future you try to predict values. When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data).</p>
+<p>Forecasting - a prediction about what will happen in the future based on evidence the we have (with some uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates)</p>
+<p>Goal setting - what we want to happen in the future Planning - how to reach our goal</p>
+<p>A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.</p>
+<p><strong>Difficulties/Questions:</strong></p>
+<p>Q: if a process changes over time, at what point can we discard previous observations when forecasting? A:</p>
+<p><strong>What to Do Next:</strong></p>
+<p><em>????</em></p>
+<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+</section>
+<section id="lecture-3" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-3">Lecture 3</h2>
+<p><strong>Date:</strong> 17 August 2026</p>
+<p><strong>Topic covered:</strong> Exploring a Series, Benchmarks and Forecast Accuracy</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through <em>Time Series Analysis in R</em></p>
+<p><strong>What I Learned:</strong></p>
+<p><strong>Difficulties/Questions:</strong></p>
+<p>Q: A:</p>
+<p><strong>What to Do Next:</strong></p>
+<p><em>????</em></p>
+<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+</section>
+<section id="lecture-4" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-4">Lecture 4</h2>
+<p><strong>Date:</strong> 19 August 2026</p>
+<p><strong>Topic covered:</strong> Three Validation Strategies, Linear Models for the Conditional Mean</p>
+<p><strong>What I Did:</strong></p>
+<p>Plotted time series plots for discrete and continuous time series data.</p>
+<p><strong>What I Learned:</strong></p>
+<p>A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).</p>
+<p>Assumption: equally spaced measurements Assumption: autocorrelation across time</p>
+<p>A time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.</p>
+<p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
+<p><strong>Difficulties/Questions:</strong></p>
+<p>Q: How does noise introduce different realisations? A:</p>
+<p><strong>What to Do Next:</strong></p>
+<p><em>????</em></p>
+<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
 
 
 </section>

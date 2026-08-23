@@ -60,14 +60,35 @@
     "href": "journal/entries.html",
     "title": "Insert title here",
     "section": "",
-    "text": "Session / Topic Covered:[cite: 1]\nWhat I Did:[cite: 1]\nWhat I Learned:[cite: 1]\nDifficulties / Open Questions:[cite: 1]\nWhat to Do Next:[cite: 1]\nLinks: Link to Section Work | Link to AI Log[cite: 1]"
+    "text": "Date: 27 July 2026\nTopic covered: Foundations\nWhat I Did:\nPlotted time series plots for discrete and continuous time series data.\nWhat I Learned:\nA time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).\nAssumption: equally spaced measurements Assumption: autocorrelation across time\nA time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.\nNoise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.\nDifficulties/Questions:\nQ: How does noise introduce different realisations?\nA:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
-    "objectID": "journal/entries.html#entry-1-yyyy-mm-dd",
-    "href": "journal/entries.html#entry-1-yyyy-mm-dd",
+    "objectID": "journal/entries.html#lecture-1",
+    "href": "journal/entries.html#lecture-1",
     "title": "Insert title here",
     "section": "",
-    "text": "Session / Topic Covered:[cite: 1]\nWhat I Did:[cite: 1]\nWhat I Learned:[cite: 1]\nDifficulties / Open Questions:[cite: 1]\nWhat to Do Next:[cite: 1]\nLinks: Link to Section Work | Link to AI Log[cite: 1]"
+    "text": "Date: 27 July 2026\nTopic covered: Foundations\nWhat I Did:\nPlotted time series plots for discrete and continuous time series data.\nWhat I Learned:\nA time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).\nAssumption: equally spaced measurements Assumption: autocorrelation across time\nA time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.\nNoise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.\nDifficulties/Questions:\nQ: How does noise introduce different realisations?\nA:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
+  },
+  {
+    "objectID": "journal/entries.html#lecture-2",
+    "href": "journal/entries.html#lecture-2",
+    "title": "Insert title here",
+    "section": "Lecture 2",
+    "text": "Lecture 2\nDate: 3 August 2026\nTopic covered: The Forecasting Problem\nWhat I Did:\n????\nWhat I Learned:\nA forecast horizon is how far into the future you try to predict values. When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data).\nForecasting - a prediction about what will happen in the future based on evidence the we have (with some uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates)\nGoal setting - what we want to happen in the future Planning - how to reach our goal\nA random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.\nDifficulties/Questions:\nQ: if a process changes over time, at what point can we discard previous observations when forecasting? A:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
+  },
+  {
+    "objectID": "journal/entries.html#lecture-3",
+    "href": "journal/entries.html#lecture-3",
+    "title": "Insert title here",
+    "section": "Lecture 3",
+    "text": "Lecture 3\nDate: 17 August 2026\nTopic covered: Exploring a Series, Benchmarks and Forecast Accuracy\nWhat I Did:\nWorked through Time Series Analysis in R\nWhat I Learned:\nDifficulties/Questions:\nQ: A:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
+  },
+  {
+    "objectID": "journal/entries.html#lecture-4",
+    "href": "journal/entries.html#lecture-4",
+    "title": "Insert title here",
+    "section": "Lecture 4",
+    "text": "Lecture 4\nDate: 19 August 2026\nTopic covered: Three Validation Strategies, Linear Models for the Conditional Mean\nWhat I Did:\nPlotted time series plots for discrete and continuous time series data.\nWhat I Learned:\nA time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).\nAssumption: equally spaced measurements Assumption: autocorrelation across time\nA time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.\nNoise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.\nDifficulties/Questions:\nQ: How does noise introduce different realisations? A:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
     "objectID": "journal/index.html",

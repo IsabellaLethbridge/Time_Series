@@ -3,11 +3,132 @@ format: html
 editor: visual
 ---
 
-## Entry 1: YYYY-MM-DD
+## Lecture 1
 
--   **Session / Topic Covered:**\[cite: 1\]
--   **What I Did:**\[cite: 1\]
--   **What I Learned:**\[cite: 1\]
--   **Difficulties / Open Questions:**\[cite: 1\]
--   **What to Do Next:**\[cite: 1\]
--   **Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)\[cite: 1\]
+**Date:** 27 July 2026
+
+**Topic covered:** Foundations 
+
+**What I Did:**
+
+Plotted time series plots for discrete and continuous time series data. 
+
+**What I Learned:**
+
+A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation). 
+
+Assumption: equally spaced measurements 
+Assumption: autocorrelation across time 
+
+A time series is a 'single' measurement taken at multiple points through time to give a sequence of measurements through time. 
+
+Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them. 
+
+**Difficulties/Questions:**
+
+Q: How does noise introduce different realisations?  
+
+A: 
+
+**What to Do Next:**
+
+*????* 
+
+**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+
+
+## Lecture 2
+
+**Date:** 3 August 2026
+
+**Topic covered:** The Forecasting Problem  
+
+**What I Did:**
+
+ *????*
+
+**What I Learned:**
+
+A forecast horizon is how far into the future you try to predict values. 
+When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data). 
+
+Forecasting - a prediction about what will happen in the future based on evidence the we have (with some uncertainty). 
+This uncertainty gives rise to forecast intervals (not just point estimates)
+
+Goal setting - what we want to happen in the future 
+Planning - how to reach our goal 
+
+A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly.
+A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean. 
+
+
+**Difficulties/Questions:**
+
+Q: if a process changes over time, at what point can we discard previous observations when forecasting? \newline
+A: 
+
+**What to Do Next:**
+
+*????* 
+
+**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+
+
+## Lecture 3
+
+**Date:** 17 August 2026
+
+**Topic covered:** Exploring a Series, Benchmarks and Forecast Accuracy 
+
+**What I Did:**
+
+Worked through *Time Series Analysis in R* 
+
+**What I Learned:**
+
+ 
+
+**Difficulties/Questions:**
+
+Q: 
+A: 
+
+**What to Do Next:**
+
+*????* 
+
+**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+
+
+## Lecture 4
+
+**Date:** 19 August 2026
+
+**Topic covered:** Three Validation Strategies, Linear Models for the Conditional Mean 
+
+**What I Did:**
+
+Plotted time series plots for discrete and continuous time series data. 
+
+**What I Learned:**
+
+A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation). 
+
+Assumption: equally spaced measurements 
+Assumption: autocorrelation across time 
+
+A time series is a 'single' measurement taken at multiple points through time to give a sequence of measurements through time. 
+
+Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them. 
+
+**Difficulties/Questions:**
+
+Q: How does noise introduce different realisations? 
+A: 
+
+**What to Do Next:**
+
+*????* 
+
+**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+
