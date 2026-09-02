@@ -3,16 +3,26 @@ format: html
 editor: visual
 ---
 
+::: {.content-visible when-format="html"}
+# The Temporal Shift
+### Time Series Portfolio
+
+**Author:** Isabella Lethbridge  
+**Student Number:** LTHISA001  
+**Date:** 25 August 2026
+
+:::
+
 ## Overview
 
-Welcome to my portfolio for the Department of Statistical Sciences. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course.
+Welcome to my portfolio for Time Series Analysis. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course.
 
 ## Portfolio Structure
 
--   [Reflective Commentary](reflective-commentary.qmd) (1000--2000 word synthesis)
--   [AI Use Log](ai-use-log.qmd) (Record of generative AI assistance)
--   [Course Section 1](section-1/section-1.qmd) (Tutorials, model fitting, and reflections)
--   [Course Section 2](section-2/section-2.qmd) (Tutorials, model fitting, and reflections)
--   [Substantial Projects](projects-index.qmd) (Four major analytical projects)
--   [Learning Journal](journal-index.qmd) (Chronological progress tracking)
--   [Appendix](appendix/code-and-data.qmd) (Reproducible code and dataset links)\[cite: 1\]
+-   [Reflective Commentary](reflective-commentary.qmd)
+-   [AI Use Log](ai-use-log.qmd)
+-   [Section 1](section-1/section-1.qmd)
+-   [Section 2](section-2/section-2.qmd)
+-   [Projects](projects/index.qmd)
+-   [Journal](journal/index.qmd)
+-   [Appendix](appendix/code-and-data.qmd)

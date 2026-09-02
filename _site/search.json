@@ -2,329 +2,553 @@
   {
     "objectID": "ai-use-log.html",
     "href": "ai-use-log.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Date\nTool Used\nPrompt / Task Description\nLink to Conversation\nVerification & Changes Made\n\n\n\n\nYYYY-MM-DD\nChatGPT / Claude\nDebugging R code for model fit\nLink\nChecked output against manual calculations[cite: 1]"
   },
   {
     "objectID": "appendix/code-and-data.html",
     "href": "appendix/code-and-data.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "scripts/simulation-study.R\nscripts/shiny-app/app.R"
   },
   {
     "objectID": "appendix/code-and-data.html#r-code-scripts",
     "href": "appendix/code-and-data.html#r-code-scripts",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "scripts/simulation-study.R\nscripts/shiny-app/app.R"
   },
   {
     "objectID": "appendix/code-and-data.html#data-access-repositories",
     "href": "appendix/code-and-data.html#data-access-repositories",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Data Access & Repositories",
     "text": "Data Access & Repositories\n\nRaw Data Files & Data Access Instructions[cite: 1]"
   },
   {
     "objectID": "appendix/code-and-data.html#computational-notebooks",
     "href": "appendix/code-and-data.html#computational-notebooks",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Computational Notebooks",
     "text": "Computational Notebooks\n\nExtended Analysis Reports[cite: 1]"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
-    "text": "Welcome to my portfolio for the Department of Statistical Sciences. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
+    "text": "Welcome to my portfolio for Time Series Analysis. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
   },
   {
     "objectID": "index.html#overview",
     "href": "index.html#overview",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
-    "text": "Welcome to my portfolio for the Department of Statistical Sciences. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
+    "text": "Welcome to my portfolio for Time Series Analysis. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
   },
   {
     "objectID": "index.html#portfolio-structure",
     "href": "index.html#portfolio-structure",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Portfolio Structure",
-    "text": "Portfolio Structure\n\nReflective Commentary (1000–2000 word synthesis)\nAI Use Log (Record of generative AI assistance)\nCourse Section 1 (Tutorials, model fitting, and reflections)\nCourse Section 2 (Tutorials, model fitting, and reflections)\nSubstantial Projects (Four major analytical projects)\nLearning Journal (Chronological progress tracking)\nAppendix (Reproducible code and dataset links)[cite: 1]"
+    "text": "Portfolio Structure\n\nReflective Commentary\nAI Use Log\nSection 1\nSection 2\nProjects\nJournal\nAppendix"
   },
   {
     "objectID": "journal/entries.html",
     "href": "journal/entries.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Date: 27 July 2026\nTopic covered: Foundations\nWhat I Did:\nPlotted time series plots for discrete and continuous time series data.\nWhat I Learned:\nA time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).\nAssumption: equally spaced measurements Assumption: autocorrelation across time\nA time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.\nNoise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.\nDifficulties/Questions:\nQ: How does noise introduce different realisations?\nA:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
     "objectID": "journal/entries.html#lecture-1",
     "href": "journal/entries.html#lecture-1",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Date: 27 July 2026\nTopic covered: Foundations\nWhat I Did:\nPlotted time series plots for discrete and continuous time series data.\nWhat I Learned:\nA time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).\nAssumption: equally spaced measurements Assumption: autocorrelation across time\nA time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.\nNoise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.\nDifficulties/Questions:\nQ: How does noise introduce different realisations?\nA:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
     "objectID": "journal/entries.html#lecture-2",
     "href": "journal/entries.html#lecture-2",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Lecture 2",
     "text": "Lecture 2\nDate: 3 August 2026\nTopic covered: The Forecasting Problem\nWhat I Did:\n????\nWhat I Learned:\nA forecast horizon is how far into the future you try to predict values. When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data).\nForecasting - a prediction about what will happen in the future based on evidence the we have (with some uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates)\nGoal setting - what we want to happen in the future Planning - how to reach our goal\nA random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.\nDifficulties/Questions:\nQ: if a process changes over time, at what point can we discard previous observations when forecasting? A:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
     "objectID": "journal/entries.html#lecture-3",
     "href": "journal/entries.html#lecture-3",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Lecture 3",
     "text": "Lecture 3\nDate: 17 August 2026\nTopic covered: Exploring a Series, Benchmarks and Forecast Accuracy\nWhat I Did:\nWorked through Time Series Analysis in R\nWhat I Learned:\nDifficulties/Questions:\nQ: A:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
     "objectID": "journal/entries.html#lecture-4",
     "href": "journal/entries.html#lecture-4",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Lecture 4",
     "text": "Lecture 4\nDate: 19 August 2026\nTopic covered: Three Validation Strategies, Linear Models for the Conditional Mean\nWhat I Did:\nPlotted time series plots for discrete and continuous time series data.\nWhat I Learned:\nA time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).\nAssumption: equally spaced measurements Assumption: autocorrelation across time\nA time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.\nNoise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.\nDifficulties/Questions:\nQ: How does noise introduce different realisations? A:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
   },
   {
+    "objectID": "journal/entries.html#lecture-5",
+    "href": "journal/entries.html#lecture-5",
+    "title": "The Temporal Shift",
+    "section": "Lecture 5",
+    "text": "Lecture 5\nDate: 24 August 2026\nTopic covered: ree Validation Strategies, Linear Models for the Conditional Mean\nWhat I Did:\nWhat I Learned:\nDifficulties/Questions:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
+  },
+  {
+    "objectID": "journal/entries.html#lecture-6",
+    "href": "journal/entries.html#lecture-6",
+    "title": "The Temporal Shift",
+    "section": "Lecture 6",
+    "text": "Lecture 6\nDate: 31 August 2026\nTopic covered:\nWhat I Did:\nWhat I Learned:\nDifficulties/Questions:\nWhat to Do Next:\n????\nLinks: Link to Section Work | Link to AI Log"
+  },
+  {
     "objectID": "journal/index.html",
     "href": "journal/index.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "This journal documents my continuous learning progress throughout the course[cite: 1].\n\nView Chronological Entries[cite: 1]"
   },
   {
+    "objectID": "portfolio.html#overview-1",
+    "href": "portfolio.html#overview-1",
+    "title": "The Temporal Shift",
+    "section": "Overview",
+    "text": "Overview\nWelcome to my portfolio for Time Series Analysis. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course."
+  },
+  {
+    "objectID": "portfolio.html#portfolio-structure",
+    "href": "portfolio.html#portfolio-structure",
+    "title": "The Temporal Shift",
+    "section": "Portfolio Structure",
+    "text": "Portfolio Structure\n\nReflective Commentary\nAI Use Log\nSection 1\nSection 2\nProjects\nJournal\nAppendix"
+  },
+  {
+    "objectID": "portfolio.html#learning-achievements",
+    "href": "portfolio.html#learning-achievements",
+    "title": "The Temporal Shift",
+    "section": "Learning Achievements",
+    "text": "Learning Achievements\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#methodological-challenges",
+    "href": "portfolio.html#methodological-challenges",
+    "title": "The Temporal Shift",
+    "section": "Methodological Challenges",
+    "text": "Methodological Challenges\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#ethical-and-reproducibility-considerations",
+    "href": "portfolio.html#ethical-and-reproducibility-considerations",
+    "title": "The Temporal Shift",
+    "section": "Ethical and Reproducibility Considerations",
+    "text": "Ethical and Reproducibility Considerations\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#future-areas-for-development",
+    "href": "portfolio.html#future-areas-for-development",
+    "title": "The Temporal Shift",
+    "section": "Future Areas for Development",
+    "text": "Future Areas for Development\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#learning-outcomes",
+    "href": "portfolio.html#learning-outcomes",
+    "title": "The Temporal Shift",
+    "section": "Learning outcomes",
+    "text": "Learning outcomes\n\nExplain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.\nTreat an observed series as one realisation of a stochastic process.\nExplain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.\nMatch a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.\nIdentify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.\nProduce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.\nUse the lag and lead operators, and the algebra built on them, to write models compactly.\nDefine weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.\nDefine white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.\nFit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.\nExplain volatility clustering and fit ARCH and GARCH models to it\n\n\nWhat is a time series?\nTime series is a single measurement taken at multiple points across time. Technically we are modelling the same thing over and over again (this makes sense as to why there is sequential correlation).\n\n\n\n\n\n\nNote\n\n\n\nTime series model dependence through sequential observations.\n\n\n\n\n\n\n\n\nAssumption\n\n\n\nEqually spaced measurements.\n\n\n\n\n\n\n\n\nAssumption\n\n\n\nAutocorrelation across time.\n\n\n\n\nQualitative, Continuous and Discrete Series\nExample: Continuous series\n\n\n\n\n\nFigure 1: Time series plot of the number of monthly airline passengers from 1949 to 1960.\n\n\n\n\nFigure 1 plots the number of monthly airline passengers over a 12 year period. This figure clearly illustrates the concepts of seasonality and trend.\nExample: Discrete series\n\n\n\n\n\nFigure 2: Time series plot of the number of seals from 1975 to 1999.\n\n\n\n\nFigure 2 plots the changing number of observed seals over a period of 25 years.\nWhat to do when you have missing observations in a time series?\nIn discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation \\(y_t\\), skip the update step in the kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.\n\n\n\n\n\n\nKalman filtering\n\n\n\nKalman filtering (linear quadratic estimation) is an algorithm that uses a series of measurements over time to estimate unknown variables, by estimating a joint probability distribution over the variables for each time-step.\n\n\nIn continuous time series, missing observations look like irregularly spaced sampling intervals. You can model the underlying system using Stochastic Differential Equations (CARMA) or you can aggregate the irregular time steps into regular, discrete intervals.\n\n\nTemporal granularity and the aggregation effect\nAggregating up can either smooth out high-frequency structure (stock returns, etc) or can reveal low-frequency structure (Sales, etc).\n\n\nOne realisation of a stochastic process\nNoise in the data introduces different realisations. If your model fits one dataset perfectly then it is overfitting."
+  },
+  {
+    "objectID": "portfolio.html#airpassengers-dataset",
+    "href": "portfolio.html#airpassengers-dataset",
+    "title": "The Temporal Shift",
+    "section": "AirPassengers dataset",
+    "text": "AirPassengers dataset\n\n\nClick to toggle source code\n# Run once — install anything missing\npkgs &lt;- c(\"tidyverse\", \"tsibble\", \"feasts\", \"fable\", \"timetk\",\n          \"modeltime\", \"kableExtra\", \"here\")\ninstall.packages(pkgs[!pkgs %in% installed.packages()[, \"Package\"]])\n\n\n\nHandling dates and aggregation\nAirPassengers is already a time series object but to convert a dataset to a time series object you use: ts(c(), start = c(year, month), frequency = #obs/unit time)\n\n\nClick to toggle source code\n# Read in data:\ndata(AirPassengers)\n# View(AirPassengers)\n\nprint(AirPassengers)\n\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1949 112 118 132 129 121 135 148 148 136 119 104 118\n1950 115 126 141 135 125 149 170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274 237 278\n1956 284 277 317 313 318 374 413 405 355 306 271 306\n1957 315 301 356 348 355 422 465 467 404 347 305 336\n1958 340 318 362 348 363 435 491 505 404 359 310 337\n1959 360 342 406 396 420 472 548 559 463 407 362 405\n1960 417 391 419 461 472 535 622 606 508 461 390 432\n\n\n\n\nClick to toggle source code\n# Sum by year:\nannual_sum &lt;- aggregate(AirPassengers, FUN = sum)\n\n# Mean by year:\nannual_mean &lt;- aggregate(AirPassengers, FUN = mean)\n\nprint(annual_sum)\n\n\nTime Series:\nStart = 1949 \nEnd = 1960 \nFrequency = 1 \n [1] 1520 1676 2042 2364 2700 2867 3408 3939 4421 4572 5140 5714\n\n\nClick to toggle source code\nprint(annual_mean)\n\n\nTime Series:\nStart = 1949 \nEnd = 1960 \nFrequency = 1 \n [1] 126.6667 139.6667 170.1667 197.0000 225.0000 238.9167 284.0000 328.2500\n [9] 368.4167 381.0000 428.3333 476.1667\n\n\n\n\nHelper conversions\n\n\nClick to toggle source code\nt &lt;- time(AirPassengers)\n\n# Extract Year and Month\nyears &lt;- floor(t)\nmonths &lt;- round(12 * (t - years)) + 1\n\nhead(data.frame(Decimal = as.numeric(t), Year = years, Month = months))\n\n\n   Decimal Year Month\n1 1949.000 1949     1\n2 1949.083 1949     2\n3 1949.167 1949     3\n4 1949.250 1949     4\n5 1949.333 1949     5\n6 1949.417 1949     6\n\n\n\n\nSubsetting with window()\n\n\nClick to toggle source code\n# Extract only the second half of 2023\nsub_ts &lt;- window(AirPassengers, start = c(1950, 7), end = c(1955, 10))\nprint(sub_ts)\n\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1950                         170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274        \n\n\n\n\nLags and Differences\n\n\nClick to toggle source code\n# Shift the time index forward by 1 period (does not move the values)\nlagged_ts &lt;- stats::lag(AirPassengers, k = -1)\n\n# First-order differencing (removes linear trend)\ndiff_ts &lt;- diff(AirPassengers, differences = 1)\n\n# Seasonal differencing (removes a 12-month seasonal pattern)\nseasonal_diff_ts &lt;- diff(AirPassengers, lag = 12)\n\ndiff_ts\n\n\n      Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec\n1949         6   14   -3   -8   14   13    0  -12  -17  -15   14\n1950   -3   11   15   -6  -10   24   21    0  -12  -25  -19   26\n1951    5    5   28  -15    9    6   21    0  -15  -22  -16   20\n1952    5    9   13  -12    2   35   12   12  -33  -18  -19   22\n1953    2    0   40   -1   -6   14   21    8  -35  -26  -31   21\n1954    3  -16   47   -8    7   30   38   -9  -34  -30  -26   26\n1955   13   -9   34    2    1   45   49  -17  -35  -38  -37   41\n1956    6   -7   40   -4    5   56   39   -8  -50  -49  -35   35\n1957    9  -14   55   -8    7   67   43    2  -63  -57  -42   31\n1958    4  -22   44  -14   15   72   56   14 -101  -45  -49   27\n1959   23  -18   64  -10   24   52   76   11  -96  -56  -45   43\n1960   12  -26   28   42   11   63   87  -16  -98  -47  -71   42\n\n\nFigure 3 illustrates the autocorrelation between AirPassengers and its lag 1.\n\n\nCombing series\n\n\nClick to toggle source code\nts_a &lt;- window(AirPassengers, start = c(1950, 1), end = c(1955, 12))\nts_b &lt;- window(AirPassengers, start = c(1955, 1), end = c(1956, 12))\n\n# Union: keeps full range, fills gaps with NA\ncombined_union &lt;- ts.union(ts_a, ts_b)\n\n# Intersect: keeps only the overlapping months\ncombined_intersect &lt;- ts.intersect(ts_a, ts_b)\n\ncombined_intersect\n\n\n         ts_a ts_b\nJan 1955  242  242\nFeb 1955  233  233\nMar 1955  267  267\nApr 1955  269  269\nMay 1955  270  270\nJun 1955  315  315\nJul 1955  364  364\nAug 1955  347  347\nSep 1955  312  312\nOct 1955  274  274\nNov 1955  237  237\nDec 1955  278  278\n\n\n\n\nMissing data\n\n\nClick to toggle source code\nhas_na &lt;- anyNA(AirPassengers)\ncat(\"Contains missing values:\", has_na, \"\\n\")\n\n\nContains missing values: FALSE \n\n\n\n\nClick to toggle source code\n# Simple linear interpolation for isolated gaps (base R, no extra packages)\nts_with_gap &lt;- AirPassengers\nts_with_gap[5] &lt;- NA\nts_filled &lt;- ts(approx(time(ts_with_gap), \n                       ts_with_gap, \n                       xout = time(ts_with_gap))$y, \n                start = start(ts_with_gap), \n                frequency = frequency(ts_with_gap))\nts_filled\n\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1949 112 118 132 129 132 135 148 148 136 119 104 118\n1950 115 126 141 135 125 149 170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274 237 278\n1956 284 277 317 313 318 374 413 405 355 306 271 306\n1957 315 301 356 348 355 422 465 467 404 347 305 336\n1958 340 318 362 348 363 435 491 505 404 359 310 337\n1959 360 342 406 396 420 472 548 559 463 407 362 405\n1960 417 391 419 461 472 535 622 606 508 461 390 432\n\n\n\n\nTime series plots\nFigure 1 plots the AirPassengers time series.\n\n\n\n\n\nFigure 4: Time series plot of the number of monthly airline passengers from 1949 to 1960.\n\n\n\n\n\n\nCheck attributes of time series\n\n\nClick to toggle source code\n# Check the attributes\ncat(\"Start:\", start(AirPassengers), \"\\n\")\n\n\nStart: 1949 1 \n\n\n\n\nClick to toggle source code\ncat(\"Frequency:\", frequency(AirPassengers), \"\\n\")\n\n\nFrequency: 12 \n\n\n\n\nClick to toggle source code\nlibrary(ggfortify)\n# A first look at structure: naive decomposition (covered in depth in Part B)\ndecomp &lt;- decompose(AirPassengers)\nautoplot(decomp,\n     ts.colour='deeppink')+\n  theme_minimal(base_size = 14)"
+  },
+  {
+    "objectID": "portfolio.html#data-statement",
+    "href": "portfolio.html#data-statement",
+    "title": "The Temporal Shift",
+    "section": "Data Statement",
+    "text": "Data Statement\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#teaching-session-summaries",
+    "href": "portfolio.html#teaching-session-summaries",
+    "title": "The Temporal Shift",
+    "section": "Teaching Session Summaries",
+    "text": "Teaching Session Summaries\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#worked-tutorials-software-implementations",
+    "href": "portfolio.html#worked-tutorials-software-implementations",
+    "title": "The Temporal Shift",
+    "section": "Worked Tutorials & Software Implementations",
+    "text": "Worked Tutorials & Software Implementations\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#topic-exploration",
+    "href": "portfolio.html#topic-exploration",
+    "title": "The Temporal Shift",
+    "section": "Topic Exploration",
+    "text": "Topic Exploration\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#overview-2",
+    "href": "portfolio.html#overview-2",
+    "title": "The Temporal Shift",
+    "section": "Overview",
+    "text": "Overview\nThis section contains four substantial projects spanning Section 1 and Section 2[cite: 1].\n\n\n\nProject\nSection\nProject Type\nFocus Area\nLink\n\n\n\n\nProject 1\nSection 1\nSimulation Study\nModel Comparison\nSummary[cite: 1]\n\n\nProject 2\nSection 1\nR Package Implementation\nComputational Programming\nSummary[cite: 1]\n\n\nProject 3\nSection 2\nShiny Application\nInteractive Visualization\nSummary[cite: 1]\n\n\nProject 4\nSection 2\nExploratory Data Analysis\nReal-World Data\nSummary[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#project-1",
+    "href": "portfolio.html#project-1",
+    "title": "The Temporal Shift",
+    "section": "Project 1",
+    "text": "Project 1\n\nSection & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#key-findings",
+    "href": "portfolio.html#key-findings",
+    "title": "The Temporal Shift",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#reflections",
+    "href": "portfolio.html#reflections",
+    "title": "The Temporal Shift",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#links",
+    "href": "portfolio.html#links",
+    "title": "The Temporal Shift",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#project-2",
+    "href": "portfolio.html#project-2",
+    "title": "The Temporal Shift",
+    "section": "Project 2",
+    "text": "Project 2\n\nSection & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#key-findings-1",
+    "href": "portfolio.html#key-findings-1",
+    "title": "The Temporal Shift",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#reflections-1",
+    "href": "portfolio.html#reflections-1",
+    "title": "The Temporal Shift",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#links-1",
+    "href": "portfolio.html#links-1",
+    "title": "The Temporal Shift",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#project-3",
+    "href": "portfolio.html#project-3",
+    "title": "The Temporal Shift",
+    "section": "Project 3",
+    "text": "Project 3\n\nSection & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#key-findings-2",
+    "href": "portfolio.html#key-findings-2",
+    "title": "The Temporal Shift",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#reflections-2",
+    "href": "portfolio.html#reflections-2",
+    "title": "The Temporal Shift",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#links-2",
+    "href": "portfolio.html#links-2",
+    "title": "The Temporal Shift",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#project-4",
+    "href": "portfolio.html#project-4",
+    "title": "The Temporal Shift",
+    "section": "Project 4",
+    "text": "Project 4\n\nSection & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#key-findings-3",
+    "href": "portfolio.html#key-findings-3",
+    "title": "The Temporal Shift",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#reflections-3",
+    "href": "portfolio.html#reflections-3",
+    "title": "The Temporal Shift",
+    "section": "Reflections",
+    "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#links-3",
+    "href": "portfolio.html#links-3",
+    "title": "The Temporal Shift",
+    "section": "Links",
+    "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#r-code-scripts",
+    "href": "portfolio.html#r-code-scripts",
+    "title": "The Temporal Shift",
+    "section": "R Code & Scripts",
+    "text": "R Code & Scripts\n\nscripts/simulation-study.R\nscripts/shiny-app/app.R"
+  },
+  {
+    "objectID": "portfolio.html#data-access-repositories",
+    "href": "portfolio.html#data-access-repositories",
+    "title": "The Temporal Shift",
+    "section": "Data Access & Repositories",
+    "text": "Data Access & Repositories\n\nRaw Data Files & Data Access Instructions[cite: 1]"
+  },
+  {
+    "objectID": "portfolio.html#computational-notebooks",
+    "href": "portfolio.html#computational-notebooks",
+    "title": "The Temporal Shift",
+    "section": "Computational Notebooks",
+    "text": "Computational Notebooks\n\nExtended Analysis Reports[cite: 1]"
+  },
+  {
     "objectID": "projects/index.html",
     "href": "projects/index.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "This section contains four substantial projects spanning Section 1 and Section 2[cite: 1].\n\n\n\nProject\nSection\nProject Type\nFocus Area\nLink\n\n\n\n\nProject 1\nSection 1\nSimulation Study\nModel Comparison\nSummary[cite: 1]\n\n\nProject 2\nSection 1\nR Package Implementation\nComputational Programming\nSummary[cite: 1]\n\n\nProject 3\nSection 2\nShiny Application\nInteractive Visualization\nSummary[cite: 1]\n\n\nProject 4\nSection 2\nExploratory Data Analysis\nReal-World Data\nSummary[cite: 1]"
   },
   {
     "objectID": "projects/index.html#overview",
     "href": "projects/index.html#overview",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "This section contains four substantial projects spanning Section 1 and Section 2[cite: 1].\n\n\n\nProject\nSection\nProject Type\nFocus Area\nLink\n\n\n\n\nProject 1\nSection 1\nSimulation Study\nModel Comparison\nSummary[cite: 1]\n\n\nProject 2\nSection 1\nR Package Implementation\nComputational Programming\nSummary[cite: 1]\n\n\nProject 3\nSection 2\nShiny Application\nInteractive Visualization\nSummary[cite: 1]\n\n\nProject 4\nSection 2\nExploratory Data Analysis\nReal-World Data\nSummary[cite: 1]"
   },
   {
     "objectID": "projects/project-01.html",
     "href": "projects/project-01.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
   },
   {
     "objectID": "projects/project-01.html#key-findings",
     "href": "projects/project-01.html#key-findings",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Key Findings",
     "text": "Key Findings\n\n[cite: 1]"
   },
   {
     "objectID": "projects/project-01.html#reflections",
     "href": "projects/project-01.html#reflections",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Reflections",
     "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
   },
   {
     "objectID": "projects/project-01.html#links",
     "href": "projects/project-01.html#links",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Links",
     "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
   },
   {
     "objectID": "projects/project-02.html",
     "href": "projects/project-02.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
   },
   {
     "objectID": "projects/project-02.html#key-findings",
     "href": "projects/project-02.html#key-findings",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Key Findings",
     "text": "Key Findings\n\n[cite: 1]"
   },
   {
     "objectID": "projects/project-02.html#reflections",
     "href": "projects/project-02.html#reflections",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Reflections",
     "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
   },
   {
     "objectID": "projects/project-02.html#links",
     "href": "projects/project-02.html#links",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Links",
     "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
   },
   {
     "objectID": "projects/project-03.html",
     "href": "projects/project-03.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
   },
   {
     "objectID": "projects/project-03.html#key-findings",
     "href": "projects/project-03.html#key-findings",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Key Findings",
     "text": "Key Findings\n\n[cite: 1]"
   },
   {
     "objectID": "projects/project-03.html#reflections",
     "href": "projects/project-03.html#reflections",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Reflections",
     "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
   },
   {
     "objectID": "projects/project-03.html#links",
     "href": "projects/project-03.html#links",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Links",
     "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
   },
   {
     "objectID": "projects/project-04.html",
     "href": "projects/project-04.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "Section & Topic:[cite: 1]\nProject Type: (Implementation / Shiny App / Exploration / Simulation)[cite: 1]\nQuestion / Aim:[cite: 1]\nData Used: (Include source details if real-world data)[cite: 1]\nMethods Used:[cite: 1]"
   },
   {
     "objectID": "projects/project-04.html#key-findings",
     "href": "projects/project-04.html#key-findings",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Key Findings",
     "text": "Key Findings\n\n[cite: 1]"
   },
   {
     "objectID": "projects/project-04.html#reflections",
     "href": "projects/project-04.html#reflections",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Reflections",
     "text": "Reflections\n\nWhat I would do differently next time:[cite: 1]"
   },
   {
     "objectID": "projects/project-04.html#links",
     "href": "projects/project-04.html#links",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Links",
     "text": "Links\n\nDetailed Analysis & Code Script[cite: 1]"
   },
   {
     "objectID": "reflective-commentary.html",
     "href": "reflective-commentary.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "[cite: 1]"
   },
   {
     "objectID": "reflective-commentary.html#learning-achievements",
     "href": "reflective-commentary.html#learning-achievements",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "[cite: 1]"
   },
   {
     "objectID": "reflective-commentary.html#methodological-challenges",
     "href": "reflective-commentary.html#methodological-challenges",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Methodological Challenges",
     "text": "Methodological Challenges\n\n[cite: 1]"
   },
   {
     "objectID": "reflective-commentary.html#ethical-and-reproducibility-considerations",
     "href": "reflective-commentary.html#ethical-and-reproducibility-considerations",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Ethical and Reproducibility Considerations",
     "text": "Ethical and Reproducibility Considerations\n\n[cite: 1]"
   },
   {
     "objectID": "reflective-commentary.html#future-areas-for-development",
     "href": "reflective-commentary.html#future-areas-for-development",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Future Areas for Development",
     "text": "Future Areas for Development\n\n[cite: 1]"
   },
   {
     "objectID": "section-1/section-1.html",
     "href": "section-1/section-1.html",
-    "title": "Insert title here",
+    "title": "Foundations",
     "section": "",
-    "text": "[cite: 1]"
+    "text": "Explain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.\nTreat an observed series as one realisation of a stochastic process.\nExplain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.\nMatch a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.\nIdentify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.\nProduce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.\nUse the lag and lead operators, and the algebra built on them, to write models compactly.\nDefine weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.\nDefine white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.\nFit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.\nExplain volatility clustering and fit ARCH and GARCH models to it\n\n\n\nTime series is a single measurement taken at multiple points across time. Technically we are modelling the same thing over and over again (this makes sense as to why there is sequential correlation).\n\n\n\n\n\n\nNote\n\n\n\nTime series model dependence through sequential observations.\n\n\n\n\n\n\n\n\nAssumption\n\n\n\nEqually spaced measurements.\n\n\n\n\n\n\n\n\nAssumption\n\n\n\nAutocorrelation across time.\n\n\n\n\n\nExample: Continuous series\n\n\n\n\n\nFigure 1: Time series plot of the number of monthly airline passengers from 1949 to 1960.\n\n\n\n\nFigure 1 plots the number of monthly airline passengers over a 12 year period. This figure clearly illustrates the concepts of seasonality and trend.\nExample: Discrete series\n\n\n\n\n\nFigure 2: Time series plot of the number of seals from 1975 to 1999.\n\n\n\n\nFigure 2 plots the changing number of observed seals over a period of 25 years.\nWhat to do when you have missing observations in a time series?\nIn discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation \\(y_t\\), skip the update step in the kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.\n\n\n\n\n\n\nKalman filtering\n\n\n\nKalman filtering (linear quadratic estimation) is an algorithm that uses a series of measurements over time to estimate unknown variables, by estimating a joint probability distribution over the variables for each time-step.\n\n\nIn continuous time series, missing observations look like irregularly spaced sampling intervals. You can model the underlying system using Stochastic Differential Equations (CARMA) or you can aggregate the irregular time steps into regular, discrete intervals.\n\n\n\nAggregating up can either smooth out high-frequency structure (stock returns, etc) or can reveal low-frequency structure (Sales, etc).\n\n\n\nNoise in the data introduces different realisations. If your model fits one dataset perfectly then it is overfitting."
   },
   {
-    "objectID": "section-1/section-1.html#data-statement",
-    "href": "section-1/section-1.html#data-statement",
-    "title": "Insert title here",
+    "objectID": "section-1/section-1.html#learning-outcomes",
+    "href": "section-1/section-1.html#learning-outcomes",
+    "title": "Foundations",
     "section": "",
-    "text": "[cite: 1]"
+    "text": "Explain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.\nTreat an observed series as one realisation of a stochastic process.\nExplain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.\nMatch a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.\nIdentify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.\nProduce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.\nUse the lag and lead operators, and the algebra built on them, to write models compactly.\nDefine weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.\nDefine white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.\nFit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.\nExplain volatility clustering and fit ARCH and GARCH models to it\n\n\n\nTime series is a single measurement taken at multiple points across time. Technically we are modelling the same thing over and over again (this makes sense as to why there is sequential correlation).\n\n\n\n\n\n\nNote\n\n\n\nTime series model dependence through sequential observations.\n\n\n\n\n\n\n\n\nAssumption\n\n\n\nEqually spaced measurements.\n\n\n\n\n\n\n\n\nAssumption\n\n\n\nAutocorrelation across time.\n\n\n\n\n\nExample: Continuous series\n\n\n\n\n\nFigure 1: Time series plot of the number of monthly airline passengers from 1949 to 1960.\n\n\n\n\nFigure 1 plots the number of monthly airline passengers over a 12 year period. This figure clearly illustrates the concepts of seasonality and trend.\nExample: Discrete series\n\n\n\n\n\nFigure 2: Time series plot of the number of seals from 1975 to 1999.\n\n\n\n\nFigure 2 plots the changing number of observed seals over a period of 25 years.\nWhat to do when you have missing observations in a time series?\nIn discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation \\(y_t\\), skip the update step in the kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.\n\n\n\n\n\n\nKalman filtering\n\n\n\nKalman filtering (linear quadratic estimation) is an algorithm that uses a series of measurements over time to estimate unknown variables, by estimating a joint probability distribution over the variables for each time-step.\n\n\nIn continuous time series, missing observations look like irregularly spaced sampling intervals. You can model the underlying system using Stochastic Differential Equations (CARMA) or you can aggregate the irregular time steps into regular, discrete intervals.\n\n\n\nAggregating up can either smooth out high-frequency structure (stock returns, etc) or can reveal low-frequency structure (Sales, etc).\n\n\n\nNoise in the data introduces different realisations. If your model fits one dataset perfectly then it is overfitting."
   },
   {
-    "objectID": "section-1/section-1.html#teaching-session-summaries",
-    "href": "section-1/section-1.html#teaching-session-summaries",
-    "title": "Insert title here",
-    "section": "Teaching Session Summaries",
-    "text": "Teaching Session Summaries\n\n[cite: 1]"
-  },
-  {
-    "objectID": "section-1/section-1.html#worked-tutorials-software-implementations",
-    "href": "section-1/section-1.html#worked-tutorials-software-implementations",
-    "title": "Insert title here",
-    "section": "Worked Tutorials & Software Implementations",
-    "text": "Worked Tutorials & Software Implementations\n\n[cite: 1]"
-  },
-  {
-    "objectID": "section-1/section-1.html#topic-exploration",
-    "href": "section-1/section-1.html#topic-exploration",
-    "title": "Insert title here",
-    "section": "Topic Exploration",
-    "text": "Topic Exploration\n\n[cite: 1]"
+    "objectID": "section-1/section-1.html#airpassengers-dataset",
+    "href": "section-1/section-1.html#airpassengers-dataset",
+    "title": "Foundations",
+    "section": "AirPassengers dataset",
+    "text": "AirPassengers dataset\n\n\nCode\n# Run once — install anything missing\npkgs &lt;- c(\"tidyverse\", \"tsibble\", \"feasts\", \"fable\", \"timetk\",\n          \"modeltime\", \"kableExtra\", \"here\")\ninstall.packages(pkgs[!pkgs %in% installed.packages()[, \"Package\"]])\n\n\n\nHandling dates and aggregation\nAirPassengers is already a time series object but to convert a dataset to a time series object you use: ts(c(), start = c(year, month), frequency = #obs/unit time)\n\n\nCode\n# Read in data:\ndata(AirPassengers)\n# View(AirPassengers)\n\nprint(AirPassengers)\n\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1949 112 118 132 129 121 135 148 148 136 119 104 118\n1950 115 126 141 135 125 149 170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274 237 278\n1956 284 277 317 313 318 374 413 405 355 306 271 306\n1957 315 301 356 348 355 422 465 467 404 347 305 336\n1958 340 318 362 348 363 435 491 505 404 359 310 337\n1959 360 342 406 396 420 472 548 559 463 407 362 405\n1960 417 391 419 461 472 535 622 606 508 461 390 432\n\n\n\n\nCode\n# Sum by year:\nannual_sum &lt;- aggregate(AirPassengers, FUN = sum)\n\n# Mean by year:\nannual_mean &lt;- aggregate(AirPassengers, FUN = mean)\n\nprint(annual_sum)\n\n\nTime Series:\nStart = 1949 \nEnd = 1960 \nFrequency = 1 \n [1] 1520 1676 2042 2364 2700 2867 3408 3939 4421 4572 5140 5714\n\n\nCode\nprint(annual_mean)\n\n\nTime Series:\nStart = 1949 \nEnd = 1960 \nFrequency = 1 \n [1] 126.6667 139.6667 170.1667 197.0000 225.0000 238.9167 284.0000 328.2500\n [9] 368.4167 381.0000 428.3333 476.1667\n\n\n\n\nHelper conversions\n\n\nCode\nt &lt;- time(AirPassengers)\n\n# Extract Year and Month\nyears &lt;- floor(t)\nmonths &lt;- round(12 * (t - years)) + 1\n\nhead(data.frame(Decimal = as.numeric(t), Year = years, Month = months))\n\n\n   Decimal Year Month\n1 1949.000 1949     1\n2 1949.083 1949     2\n3 1949.167 1949     3\n4 1949.250 1949     4\n5 1949.333 1949     5\n6 1949.417 1949     6\n\n\n\n\nSubsetting with window()\n\n\nCode\n# Extract only the second half of 2023\nsub_ts &lt;- window(AirPassengers, start = c(1950, 7), end = c(1955, 10))\nprint(sub_ts)\n\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1950                         170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274        \n\n\n\n\nLags and Differences\n\n\nCode\n# Shift the time index forward by 1 period (does not move the values)\nlagged_ts &lt;- stats::lag(AirPassengers, k = -1)\n\n# First-order differencing (removes linear trend)\ndiff_ts &lt;- diff(AirPassengers, differences = 1)\n\n# Seasonal differencing (removes a 12-month seasonal pattern)\nseasonal_diff_ts &lt;- diff(AirPassengers, lag = 12)\n\ndiff_ts\n\n\n      Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec\n1949         6   14   -3   -8   14   13    0  -12  -17  -15   14\n1950   -3   11   15   -6  -10   24   21    0  -12  -25  -19   26\n1951    5    5   28  -15    9    6   21    0  -15  -22  -16   20\n1952    5    9   13  -12    2   35   12   12  -33  -18  -19   22\n1953    2    0   40   -1   -6   14   21    8  -35  -26  -31   21\n1954    3  -16   47   -8    7   30   38   -9  -34  -30  -26   26\n1955   13   -9   34    2    1   45   49  -17  -35  -38  -37   41\n1956    6   -7   40   -4    5   56   39   -8  -50  -49  -35   35\n1957    9  -14   55   -8    7   67   43    2  -63  -57  -42   31\n1958    4  -22   44  -14   15   72   56   14 -101  -45  -49   27\n1959   23  -18   64  -10   24   52   76   11  -96  -56  -45   43\n1960   12  -26   28   42   11   63   87  -16  -98  -47  -71   42\n\n\nFigure 3 illustrates the autocorrelation between AirPassengers and its lag 1.\n\n\nCombing series\n\n\nCode\nts_a &lt;- window(AirPassengers, start = c(1950, 1), end = c(1955, 12))\nts_b &lt;- window(AirPassengers, start = c(1955, 1), end = c(1956, 12))\n\n# Union: keeps full range, fills gaps with NA\ncombined_union &lt;- ts.union(ts_a, ts_b)\n\n# Intersect: keeps only the overlapping months\ncombined_intersect &lt;- ts.intersect(ts_a, ts_b)\n\ncombined_intersect\n\n\n         ts_a ts_b\nJan 1955  242  242\nFeb 1955  233  233\nMar 1955  267  267\nApr 1955  269  269\nMay 1955  270  270\nJun 1955  315  315\nJul 1955  364  364\nAug 1955  347  347\nSep 1955  312  312\nOct 1955  274  274\nNov 1955  237  237\nDec 1955  278  278\n\n\n\n\nMissing data\n\n\nCode\nhas_na &lt;- anyNA(AirPassengers)\ncat(\"Contains missing values:\", has_na, \"\\n\")\n\n\nContains missing values: FALSE \n\n\n\n\nCode\n# Simple linear interpolation for isolated gaps (base R, no extra packages)\nts_with_gap &lt;- AirPassengers\nts_with_gap[5] &lt;- NA\nts_filled &lt;- ts(approx(time(ts_with_gap), \n                       ts_with_gap, \n                       xout = time(ts_with_gap))$y, \n                start = start(ts_with_gap), \n                frequency = frequency(ts_with_gap))\nts_filled\n\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1949 112 118 132 129 132 135 148 148 136 119 104 118\n1950 115 126 141 135 125 149 170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274 237 278\n1956 284 277 317 313 318 374 413 405 355 306 271 306\n1957 315 301 356 348 355 422 465 467 404 347 305 336\n1958 340 318 362 348 363 435 491 505 404 359 310 337\n1959 360 342 406 396 420 472 548 559 463 407 362 405\n1960 417 391 419 461 472 535 622 606 508 461 390 432\n\n\n\n\nTime series plots\nFigure 1 plots the AirPassengers time series.\n\n\n\n\n\nFigure 4: Time series plot of the number of monthly airline passengers from 1949 to 1960.\n\n\n\n\n\n\nCheck attributes of time series\n\n\nCode\n# Check the attributes\ncat(\"Start:\", start(AirPassengers), \"\\n\")\n\n\nStart: 1949 1 \n\n\n\n\nCode\ncat(\"Frequency:\", frequency(AirPassengers), \"\\n\")\n\n\nFrequency: 12 \n\n\n\n\nCode\nlibrary(ggfortify)\n# A first look at structure: naive decomposition (covered in depth in Part B)\ndecomp &lt;- decompose(AirPassengers)\nautoplot(decomp,\n     ts.colour='deeppink')+\n  theme_minimal(base_size = 14)"
   },
   {
     "objectID": "section-2/section-2.html",
     "href": "section-2/section-2.html",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "[cite: 1]"
   },
   {
     "objectID": "section-2/section-2.html#data-statement",
     "href": "section-2/section-2.html#data-statement",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "",
     "text": "[cite: 1]"
   },
   {
     "objectID": "section-2/section-2.html#teaching-session-summaries",
     "href": "section-2/section-2.html#teaching-session-summaries",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Teaching Session Summaries",
     "text": "Teaching Session Summaries\n\n[cite: 1]"
   },
   {
     "objectID": "section-2/section-2.html#worked-tutorials-software-implementations",
     "href": "section-2/section-2.html#worked-tutorials-software-implementations",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Worked Tutorials & Software Implementations",
     "text": "Worked Tutorials & Software Implementations\n\n[cite: 1]"
   },
   {
     "objectID": "section-2/section-2.html#topic-exploration",
     "href": "section-2/section-2.html#topic-exploration",
-    "title": "Insert title here",
+    "title": "The Temporal Shift",
     "section": "Topic Exploration",
     "text": "Topic Exploration\n\n[cite: 1]"
   }

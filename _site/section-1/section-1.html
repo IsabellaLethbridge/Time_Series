@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Insert title here – section-1</title>
+<title>The Temporal Shift – section-1</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -59,6 +93,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -71,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../section-1/section-1.html">Course Sections</a></li><li class="breadcrumb-item"><a href="../section-1/section-1.html">Section 1</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../section-1/section-1.html">Sections</a></li><li class="breadcrumb-item"><a href="../section-1/section-1.html">Section 1</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -86,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Insert title here</a> 
+      <a href="../">The Temporal Shift</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -117,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Course Sections</span></a>
+ <span class="menu-text">Sections</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -181,7 +217,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Journal &amp; Appendix</span></a>
+ <span class="menu-text">Journal</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -199,6 +235,17 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Journal Entries</span></a>
   </div>
 </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendix/code-and-data.html" class="sidebar-item-text sidebar-link">
@@ -217,10 +264,67 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-statement" id="toc-data-statement" class="nav-link active" data-scroll-target="#data-statement">Data Statement</a></li>
-  <li><a href="#teaching-session-summaries" id="toc-teaching-session-summaries" class="nav-link" data-scroll-target="#teaching-session-summaries">Teaching Session Summaries</a></li>
-  <li><a href="#worked-tutorials-software-implementations" id="toc-worked-tutorials-software-implementations" class="nav-link" data-scroll-target="#worked-tutorials-software-implementations">Worked Tutorials &amp; Software Implementations</a></li>
-  <li><a href="#topic-exploration" id="toc-topic-exploration" class="nav-link" data-scroll-target="#topic-exploration">Topic Exploration</a></li>
+  <li><a href="#foundations" id="toc-foundations" class="nav-link active" data-scroll-target="#foundations">Foundations</a>
+  <ul class="collapse">
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes">Learning outcomes</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-time-series" id="toc-what-is-a-time-series" class="nav-link" data-scroll-target="#what-is-a-time-series">What is a time series?</a></li>
+  <li><a href="#qualitative-continuous-and-discrete-series" id="toc-qualitative-continuous-and-discrete-series" class="nav-link" data-scroll-target="#qualitative-continuous-and-discrete-series">Qualitative, Continuous and Discrete Series</a></li>
+  <li><a href="#temporal-granularity-and-the-aggregation-effect" id="toc-temporal-granularity-and-the-aggregation-effect" class="nav-link" data-scroll-target="#temporal-granularity-and-the-aggregation-effect">Temporal granularity and the aggregation effect</a></li>
+  <li><a href="#one-realisation-of-a-stochastic-process" id="toc-one-realisation-of-a-stochastic-process" class="nav-link" data-scroll-target="#one-realisation-of-a-stochastic-process">One realisation of a stochastic process</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#the-forecasting-problem" id="toc-the-forecasting-problem" class="nav-link" data-scroll-target="#the-forecasting-problem">The Forecasting Problem</a>
+  <ul class="collapse">
+  <li><a href="#what-is-forecasting" id="toc-what-is-forecasting" class="nav-link" data-scroll-target="#what-is-forecasting">What is forecasting?</a></li>
+  </ul></li>
+  <li><a href="#exploring-a-series" id="toc-exploring-a-series" class="nav-link" data-scroll-target="#exploring-a-series">Exploring a Series</a>
+  <ul class="collapse">
+  <li><a href="#the-classical-decomposition" id="toc-the-classical-decomposition" class="nav-link" data-scroll-target="#the-classical-decomposition">The classical decomposition</a></li>
+  <li><a href="#two-ways-of-looking-at-a-series" id="toc-two-ways-of-looking-at-a-series" class="nav-link" data-scroll-target="#two-ways-of-looking-at-a-series">Two ways of looking at a series</a></li>
+  <li><a href="#the-components-of-a-series" id="toc-the-components-of-a-series" class="nav-link" data-scroll-target="#the-components-of-a-series">The components of a series</a></li>
+  </ul></li>
+  <li><a href="#time-series-analysis-in-r" id="toc-time-series-analysis-in-r" class="nav-link" data-scroll-target="#time-series-analysis-in-r">Time Series Analysis in R</a>
+  <ul class="collapse">
+  <li><a href="#airpassengers-dataset" id="toc-airpassengers-dataset" class="nav-link" data-scroll-target="#airpassengers-dataset"><code>AirPassengers</code> dataset</a>
+  <ul class="collapse">
+  <li><a href="#handling-dates-and-aggregation" id="toc-handling-dates-and-aggregation" class="nav-link" data-scroll-target="#handling-dates-and-aggregation">Handling dates and aggregation</a></li>
+  <li><a href="#helper-conversions" id="toc-helper-conversions" class="nav-link" data-scroll-target="#helper-conversions">Helper conversions</a></li>
+  <li><a href="#subsetting-with-window" id="toc-subsetting-with-window" class="nav-link" data-scroll-target="#subsetting-with-window">Subsetting with <code>window()</code></a></li>
+  <li><a href="#lags-and-differences" id="toc-lags-and-differences" class="nav-link" data-scroll-target="#lags-and-differences">Lags and Differences</a></li>
+  <li><a href="#combing-series" id="toc-combing-series" class="nav-link" data-scroll-target="#combing-series">Combing series</a></li>
+  <li><a href="#missing-data" id="toc-missing-data" class="nav-link" data-scroll-target="#missing-data">Missing data</a></li>
+  <li><a href="#time-series-plots" id="toc-time-series-plots" class="nav-link" data-scroll-target="#time-series-plots">Time series plots</a></li>
+  <li><a href="#check-attributes-of-time-series" id="toc-check-attributes-of-time-series" class="nav-link" data-scroll-target="#check-attributes-of-time-series">Check attributes of time series</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#benchmarks-and-forecast-accuracy" id="toc-benchmarks-and-forecast-accuracy" class="nav-link" data-scroll-target="#benchmarks-and-forecast-accuracy">Benchmarks and Forecast Accuracy</a>
+  <ul class="collapse">
+  <li><a href="#the-benchmarks-applied" id="toc-the-benchmarks-applied" class="nav-link" data-scroll-target="#the-benchmarks-applied">The benchmarks applied</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross-validation</a></li>
+  <li><a href="#strategies" id="toc-strategies" class="nav-link" data-scroll-target="#strategies">Strategies</a></li>
+  <li><a href="#manual-cross-validation" id="toc-manual-cross-validation" class="nav-link" data-scroll-target="#manual-cross-validation">Manual cross-validation</a></li>
+  <li><a href="#cross-validation-using-tscv" id="toc-cross-validation-using-tscv" class="nav-link" data-scroll-target="#cross-validation-using-tscv">Cross-validation using <code>tsCV()</code></a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul></li>
+  <li><a href="#operators-stationarity-and-white-noise" id="toc-operators-stationarity-and-white-noise" class="nav-link" data-scroll-target="#operators-stationarity-and-white-noise">Operators, Stationarity and White Noise</a>
+  <ul class="collapse">
+  <li><a href="#lag-and-lead-operators" id="toc-lag-and-lead-operators" class="nav-link" data-scroll-target="#lag-and-lead-operators">Lag and lead operators</a></li>
+  <li><a href="#lag-and-lead-in-r" id="toc-lag-and-lead-in-r" class="nav-link" data-scroll-target="#lag-and-lead-in-r">Lag and lead in R</a></li>
+  <li><a href="#differencing" id="toc-differencing" class="nav-link" data-scroll-target="#differencing">Differencing</a></li>
+  <li><a href="#weak-and-strict-stationarity" id="toc-weak-and-strict-stationarity" class="nav-link" data-scroll-target="#weak-and-strict-stationarity">Weak and strict stationarity</a></li>
+  <li><a href="#white-noise" id="toc-white-noise" class="nav-link" data-scroll-target="#white-noise">White noise</a></li>
+  </ul></li>
+  <li><a href="#linear-models-for-the-conditional-mean" id="toc-linear-models-for-the-conditional-mean" class="nav-link" data-scroll-target="#linear-models-for-the-conditional-mean">Linear Models for the Conditional Mean</a>
+  <ul class="collapse">
+  <li><a href="#the-maq-model" id="toc-the-maq-model" class="nav-link" data-scroll-target="#the-maq-model">The MA(<span class="math inline">\(q\)</span>) model</a></li>
+  <li><a href="#the-arp-model" id="toc-the-arp-model" class="nav-link" data-scroll-target="#the-arp-model">The AR(<span class="math inline">\(p\)</span>) model</a></li>
+  <li><a href="#the-armaqq-model" id="toc-the-armaqq-model" class="nav-link" data-scroll-target="#the-armaqq-model">The ARMA(<span class="math inline">\(q,q\)</span>) model</a></li>
+  <li><a href="#the-arimapdq-model" id="toc-the-arimapdq-model" class="nav-link" data-scroll-target="#the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span>) model</a></li>
+  <li><a href="#the-sarimapdqpdqtext_m-model" id="toc-the-sarimapdqpdqtext_m-model" class="nav-link" data-scroll-target="#the-sarimapdqpdqtext_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span>)(<span class="math inline">\(P,D,Q\text{)}_m\)</span> model</a></li>
+  </ul></li>
+  <li><a href="#conditional-variance-models" id="toc-conditional-variance-models" class="nav-link" data-scroll-target="#conditional-variance-models">Conditional Variance Models</a></li>
+  <li><a href="#spectral-analysis" id="toc-spectral-analysis" class="nav-link" data-scroll-target="#spectral-analysis">Spectral Analysis</a></li>
   </ul>
 </nav>
     </div>
@@ -229,25 +333,1071 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="data-statement" class="level2">
-<h2 class="anchored" data-anchor-id="data-statement">Data Statement</h2>
-<!-- Include source, consent, anonymisation, and POPIA compliance if applicable -->
-<p>[cite: 1]</p>
+<section id="foundations" class="level1">
+<h1>Foundations</h1>
+<section id="learning-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="learning-outcomes">Learning outcomes</h2>
+<ol type="1">
+<li><p>Explain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.</p></li>
+<li><p>Treat an observed series as one realisation of a stochastic process.</p></li>
+<li><p>Explain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.</p></li>
+<li><p>Match a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.</p></li>
+<li><p>Identify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.</p></li>
+<li><p>Produce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.</p></li>
+<li><p>Use the lag and lead operators, and the algebra built on them, to write models compactly.</p></li>
+<li><p>Define weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.</p></li>
+<li><p>Define white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.</p></li>
+<li><p>Fit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.</p></li>
+<li><p>Explain volatility clustering and fit ARCH and GARCH models to it</p></li>
+</ol>
+<section id="what-is-a-time-series" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-time-series">What is a time series?</h3>
+<p>Time series is a single measurement taken at multiple points across time. Technically we are modelling the same thing over and over again (this makes sense as to why there is sequential correlation).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Time series model dependence through sequential observations.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Equally spaced measurements.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Autocorrelation across time.</p>
+</div>
+</div>
 </section>
-<section id="teaching-session-summaries" class="level2">
-<h2 class="anchored" data-anchor-id="teaching-session-summaries">Teaching Session Summaries</h2>
-<!-- Fit models, interpret results, compute predictions and prediction intervals -->
-<p>[cite: 1]</p>
+<section id="qualitative-continuous-and-discrete-series" class="level3">
+<h3 class="anchored" data-anchor-id="qualitative-continuous-and-discrete-series">Qualitative, Continuous and Discrete Series</h3>
+<p>Example: Continuous series</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-continuous_ts" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-continuous_ts-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Time series plot of the number of monthly airline passengers from 1949 to 1960.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-continuous_ts">Figure&nbsp;1</a> plots the number of monthly airline passengers over a 12 year period. This figure clearly illustrates the concepts of seasonality and trend.</p>
+<p>Example: Discrete series</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-discrete_ts" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-discrete_ts-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Time series plot of the number of seals from 1975 to 1999.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-discrete_ts">Figure&nbsp;2</a> plots the changing number of observed seals over a period of 25 years.</p>
+<p><strong>What to do when you have missing observations in a time series?</strong></p>
+<p>In discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation <span class="math inline">\(y_t\)</span>, skip the update step in the kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Kalman filtering
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kalman filtering (linear quadratic estimation) is an algorithm that uses a series of measurements over time to estimate unknown variables, by estimating a joint probability distribution over the variables for each time-step.</p>
+</div>
+</div>
+<p>In continuous time series, missing observations look like irregularly spaced sampling intervals. You can model the underlying system using Stochastic Differential Equations (CARMA) or you can aggregate the irregular time steps into regular, discrete intervals.</p>
 </section>
-<section id="worked-tutorials-software-implementations" class="level2">
-<h2 class="anchored" data-anchor-id="worked-tutorials-software-implementations">Worked Tutorials &amp; Software Implementations</h2>
-<!-- Worked tutorials with progress reflections and first-principles R code -->
-<p>[cite: 1]</p>
+<section id="temporal-granularity-and-the-aggregation-effect" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-granularity-and-the-aggregation-effect">Temporal granularity and the aggregation effect</h3>
+<p>Aggregating up can either smooth out high-frequency structure (stock returns, etc) or can reveal low-frequency structure (Sales, etc).</p>
 </section>
-<section id="topic-exploration" class="level2">
-<h2 class="anchored" data-anchor-id="topic-exploration">Topic Exploration</h2>
-<!-- Exploration of an idea or method not directly covered in lectures/notes -->
-<p>[cite: 1]</p>
+<section id="one-realisation-of-a-stochastic-process" class="level3">
+<h3 class="anchored" data-anchor-id="one-realisation-of-a-stochastic-process">One realisation of a stochastic process</h3>
+<p>Noise in the data introduces different realisations. If your model fits one dataset perfectly then it is overfitting.</p>
+</section>
+</section>
+</section>
+<section id="the-forecasting-problem" class="level1">
+<h1>The Forecasting Problem</h1>
+<section id="what-is-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-forecasting">What is forecasting?</h3>
+<p>Forecasting is a prediction about what will happen in the future based on evidence that we have (with some level of uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates). Goal setting is what we want to happen in the future. Planning helps us reach our goal.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A series can only be called predictable if the interval and horizon are stated.</p>
+</div>
+</div>
+<p>Forecast <span class="math inline">\(\rightarrow\)</span> Goal <span class="math inline">\(\rightarrow\)</span> Plan <span class="math inline">\(\rightarrow\)</span> Implementation <span class="math inline">\(\rightarrow\)</span> Outcome <span class="math inline">\(\rightarrow\)</span> Forecast …</p>
+<p>A forecast horizon is how far into the future you try and predict values. When looking at time series data we are looking for stable, informative patterns (not just a lot of data).</p>
+<p>A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.</p>
+<p>Stationary AR(1) process, <span class="math inline">\(h\)</span> step forecast error variance:</p>
+<p><span class="math display">\[
+\text{Var}(e_{T+h}) = \sigma^2 \frac{1-\phi^{2h}}{1-\phi^2} \rightarrow \frac{\sigma^2}{1-\phi^2} \quad \text{as } h \rightarrow \infty
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Forecasts are random variables.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="exploring-a-series" class="level1">
+<h1>Exploring a Series</h1>
+<section id="the-classical-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="the-classical-decomposition">The classical decomposition</h3>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Additive:} \quad y_t &amp;= T_t + S_t + C_t + I_t \\
+\text{Multiplicative:} \quad y_t &amp;= T_t \cdot S_t \cdot C_t \cdot I_t
+\end{aligned}
+\]</span> The nature of the seasonality in a series (additive, multiplicative or drifting) determines whether log transformation or differencing are required.</p>
+</section>
+<section id="two-ways-of-looking-at-a-series" class="level3">
+<h3 class="anchored" data-anchor-id="two-ways-of-looking-at-a-series">Two ways of looking at a series</h3>
+<ol type="1">
+<li>Time domain - this looks at previous observations</li>
+</ol>
+<p>You would use time domain when estimating predictive conditional expectations (forecasting at time <span class="math inline">\(t+1\)</span> given <span class="math inline">\(t, t-1\)</span>), when dealing with short sample sizes.</p>
+<p>A lag is the separation between two observations measured in time units.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Plotting a series against its own first lag is the simplest possible diagnostic for dependence.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-lag_autocor" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-lag_autocor-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: Simple diagnostic test for dependence. Autocorrelation of a series against its own first lag.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Frequency domain - this looks at previous trends</li>
+</ol>
+<p>You would use frequency domain when identifying hidden cycles/patterns or when analysing long-memory dynamics.</p>
+</section>
+<section id="the-components-of-a-series" class="level3">
+<h3 class="anchored" data-anchor-id="the-components-of-a-series">The components of a series</h3>
+<p>Trend is the long run direction of movement. Seasonality is th pattern that repeats at a fixed and known interval. Cycles are long oscillations with no fixed length. Irregular variation (noise) is random variation unexplained by the former.</p>
+</section>
+</section>
+<section id="time-series-analysis-in-r" class="level1">
+<h1>Time Series Analysis in R</h1>
+<section id="airpassengers-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="airpassengers-dataset"><code>AirPassengers</code> dataset</h2>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run once — install anything missing</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"tsibble"</span>, <span class="st">"feasts"</span>, <span class="st">"fable"</span>, <span class="st">"timetk"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">"modeltime"</span>, <span class="st">"kableExtra"</span>, <span class="st">"here"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(pkgs[<span class="sc">!</span>pkgs <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[, <span class="st">"Package"</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="handling-dates-and-aggregation" class="level3">
+<h3 class="anchored" data-anchor-id="handling-dates-and-aggregation">Handling dates and aggregation</h3>
+<p><code>AirPassengers</code> is already a time series object but to convert a dataset to a time series object you use: <code>ts(c(), start = c(year, month), frequency = #obs/unit time)</code></p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(AirPassengers)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View(AirPassengers)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(AirPassengers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+1949 112 118 132 129 121 135 148 148 136 119 104 118
+1950 115 126 141 135 125 149 170 170 158 133 114 140
+1951 145 150 178 163 172 178 199 199 184 162 146 166
+1952 171 180 193 181 183 218 230 242 209 191 172 194
+1953 196 196 236 235 229 243 264 272 237 211 180 201
+1954 204 188 235 227 234 264 302 293 259 229 203 229
+1955 242 233 267 269 270 315 364 347 312 274 237 278
+1956 284 277 317 313 318 374 413 405 355 306 271 306
+1957 315 301 356 348 355 422 465 467 404 347 305 336
+1958 340 318 362 348 363 435 491 505 404 359 310 337
+1959 360 342 406 396 420 472 548 559 463 407 362 405
+1960 417 391 419 461 472 535 622 606 508 461 390 432</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum by year:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>annual_sum <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(AirPassengers, <span class="at">FUN =</span> sum)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean by year:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>annual_mean <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(AirPassengers, <span class="at">FUN =</span> mean)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(annual_sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1949 
+End = 1960 
+Frequency = 1 
+ [1] 1520 1676 2042 2364 2700 2867 3408 3939 4421 4572 5140 5714</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(annual_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1949 
+End = 1960 
+Frequency = 1 
+ [1] 126.6667 139.6667 170.1667 197.0000 225.0000 238.9167 284.0000 328.2500
+ [9] 368.4167 381.0000 428.3333 476.1667</code></pre>
+</div>
+</div>
+</section>
+<section id="helper-conversions" class="level3">
+<h3 class="anchored" data-anchor-id="helper-conversions">Helper conversions</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">time</span>(AirPassengers)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract Year and Month</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">floor</span>(t)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>months <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">12</span> <span class="sc">*</span> (t <span class="sc">-</span> years)) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="at">Decimal =</span> <span class="fu">as.numeric</span>(t), <span class="at">Year =</span> years, <span class="at">Month =</span> months))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Decimal Year Month
+1 1949.000 1949     1
+2 1949.083 1949     2
+3 1949.167 1949     3
+4 1949.250 1949     4
+5 1949.333 1949     5
+6 1949.417 1949     6</code></pre>
+</div>
+</div>
+</section>
+<section id="subsetting-with-window" class="level3">
+<h3 class="anchored" data-anchor-id="subsetting-with-window">Subsetting with <code>window()</code></h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract only the second half of 2023</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sub_ts <span class="ot">&lt;-</span> <span class="fu">window</span>(AirPassengers, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1950</span>, <span class="dv">7</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1955</span>, <span class="dv">10</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sub_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+1950                         170 170 158 133 114 140
+1951 145 150 178 163 172 178 199 199 184 162 146 166
+1952 171 180 193 181 183 218 230 242 209 191 172 194
+1953 196 196 236 235 229 243 264 272 237 211 180 201
+1954 204 188 235 227 234 264 302 293 259 229 203 229
+1955 242 233 267 269 270 315 364 347 312 274        </code></pre>
+</div>
+</div>
+</section>
+<section id="lags-and-differences" class="level3">
+<h3 class="anchored" data-anchor-id="lags-and-differences">Lags and Differences</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shift the time index forward by 1 period (does not move the values)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lagged_ts <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(AirPassengers, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># First-order differencing (removes linear trend)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>diff_ts <span class="ot">&lt;-</span> <span class="fu">diff</span>(AirPassengers, <span class="at">differences =</span> <span class="dv">1</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Seasonal differencing (removes a 12-month seasonal pattern)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>seasonal_diff_ts <span class="ot">&lt;-</span> <span class="fu">diff</span>(AirPassengers, <span class="at">lag =</span> <span class="dv">12</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>diff_ts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+1949         6   14   -3   -8   14   13    0  -12  -17  -15   14
+1950   -3   11   15   -6  -10   24   21    0  -12  -25  -19   26
+1951    5    5   28  -15    9    6   21    0  -15  -22  -16   20
+1952    5    9   13  -12    2   35   12   12  -33  -18  -19   22
+1953    2    0   40   -1   -6   14   21    8  -35  -26  -31   21
+1954    3  -16   47   -8    7   30   38   -9  -34  -30  -26   26
+1955   13   -9   34    2    1   45   49  -17  -35  -38  -37   41
+1956    6   -7   40   -4    5   56   39   -8  -50  -49  -35   35
+1957    9  -14   55   -8    7   67   43    2  -63  -57  -42   31
+1958    4  -22   44  -14   15   72   56   14 -101  -45  -49   27
+1959   23  -18   64  -10   24   52   76   11  -96  -56  -45   43
+1960   12  -26   28   42   11   63   87  -16  -98  -47  -71   42</code></pre>
+</div>
+</div>
+<p><a href="#fig-lag_autocor">Figure&nbsp;3</a> illustrates the autocorrelation between <code>AirPassengers</code> and its lag 1.</p>
+</section>
+<section id="combing-series" class="level3">
+<h3 class="anchored" data-anchor-id="combing-series">Combing series</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ts_a <span class="ot">&lt;-</span> <span class="fu">window</span>(AirPassengers, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1950</span>, <span class="dv">1</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1955</span>, <span class="dv">12</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ts_b <span class="ot">&lt;-</span> <span class="fu">window</span>(AirPassengers, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1955</span>, <span class="dv">1</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1956</span>, <span class="dv">12</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Union: keeps full range, fills gaps with NA</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>combined_union <span class="ot">&lt;-</span> <span class="fu">ts.union</span>(ts_a, ts_b)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Intersect: keeps only the overlapping months</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>combined_intersect <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>(ts_a, ts_b)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>combined_intersect</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         ts_a ts_b
+Jan 1955  242  242
+Feb 1955  233  233
+Mar 1955  267  267
+Apr 1955  269  269
+May 1955  270  270
+Jun 1955  315  315
+Jul 1955  364  364
+Aug 1955  347  347
+Sep 1955  312  312
+Oct 1955  274  274
+Nov 1955  237  237
+Dec 1955  278  278</code></pre>
+</div>
+</div>
+</section>
+<section id="missing-data" class="level3">
+<h3 class="anchored" data-anchor-id="missing-data">Missing data</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>has_na <span class="ot">&lt;-</span> <span class="fu">anyNA</span>(AirPassengers)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Contains missing values:"</span>, has_na, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Contains missing values: FALSE </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple linear interpolation for isolated gaps (base R, no extra packages)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ts_with_gap <span class="ot">&lt;-</span> AirPassengers</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>ts_with_gap[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ts_filled <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">approx</span>(<span class="fu">time</span>(ts_with_gap), </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                       ts_with_gap, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">xout =</span> <span class="fu">time</span>(ts_with_gap))<span class="sc">$</span>y, </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">start =</span> <span class="fu">start</span>(ts_with_gap), </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">frequency =</span> <span class="fu">frequency</span>(ts_with_gap))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>ts_filled</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+1949 112 118 132 129 132 135 148 148 136 119 104 118
+1950 115 126 141 135 125 149 170 170 158 133 114 140
+1951 145 150 178 163 172 178 199 199 184 162 146 166
+1952 171 180 193 181 183 218 230 242 209 191 172 194
+1953 196 196 236 235 229 243 264 272 237 211 180 201
+1954 204 188 235 227 234 264 302 293 259 229 203 229
+1955 242 233 267 269 270 315 364 347 312 274 237 278
+1956 284 277 317 313 318 374 413 405 355 306 271 306
+1957 315 301 356 348 355 422 465 467 404 347 305 336
+1958 340 318 362 348 363 435 491 505 404 359 310 337
+1959 360 342 406 396 420 472 548 559 463 407 362 405
+1960 417 391 419 461 472 535 622 606 508 461 390 432</code></pre>
+</div>
+</div>
+</section>
+<section id="time-series-plots" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-plots">Time series plots</h3>
+<p><a href="#fig-continuous_ts">Figure&nbsp;1</a> plots the <code>AirPassengers</code> time series.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-continuous_simp_ts" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-continuous_simp_ts-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: Time series plot of the number of monthly airline passengers from 1949 to 1960.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="check-attributes-of-time-series" class="level3">
+<h3 class="anchored" data-anchor-id="check-attributes-of-time-series">Check attributes of time series</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the attributes</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Start:"</span>, <span class="fu">start</span>(AirPassengers), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start: 1949 1 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Frequency:"</span>, <span class="fu">frequency</span>(AirPassengers), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Frequency: 12 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A first look at structure: naive decomposition (covered in depth in Part B)</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>decomp <span class="ot">&lt;-</span> <span class="fu">decompose</span>(AirPassengers)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decomp,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ts.colour=</span><span class="st">'deeppink'</span>)<span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="section-1_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="benchmarks-and-forecast-accuracy" class="level1">
+<h1>Benchmarks and Forecast Accuracy</h1>
+<section id="the-benchmarks-applied" class="level3">
+<h3 class="anchored" data-anchor-id="the-benchmarks-applied">The benchmarks applied</h3>
+<p>Mean - the average of all previous observations is carried into the future.</p>
+<p><span class="math display">\[
+\hat{y}_{T+h \mid T} = \bar{y}
+\]</span></p>
+<p>Naive - the last observed value becomes the value that we take into the future.</p>
+<p><span class="math display">\[
+\hat{y}_{T+h \mid T} = y_T
+\]</span></p>
+<p>Seasonal naive - the last observed seasonal pattern is carried into the future.</p>
+<p><span class="math display">\[
+\hat{y}_{T+h \mid T} = y_{T+h-m(k+1)}
+\]</span></p>
+<p>Drift - The trend of the previsou observations is carried into the future.</p>
+<p><span class="math display">\[
+\hat{y}_{T+h \mid T} = y_T + \frac{h(y_T-y_1)}{T-1}
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Residuals are for diagnostics (validation). Forecast errors are for evaluation (test).</p>
+</div>
+</div>
+</section>
+<section id="cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation">Cross-validation</h3>
+<p>In time series successive observations are correlated and their ordering carries information about the data generating process. When performing model validation you cannot have future observations predicting the past.</p>
+<p>Temporal leakage (look-ahead-bias) is when future observations enter model estimation, this artificially inflates accuracy.</p>
+<p>The forecast origin is the last observation available when the forecast is made.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The test set should be at least as long as the largest horizon of interest.</p>
+</div>
+</div>
+</section>
+<section id="strategies" class="level3">
+<h3 class="anchored" data-anchor-id="strategies">Strategies</h3>
+<ol type="1">
+<li>Walk-forward validation</li>
+</ol>
+<p>The forecast origin advances one step at a time.</p>
+<ol start="2" type="1">
+<li>Expanding window validation</li>
+</ol>
+<p>Every historical observation is kept. The training set grows with all past data. When older data is more informative this method reduces estimation variance.</p>
+<ol start="3" type="1">
+<li>Sliding window validation</li>
+</ol>
+<p>The training window has a fixed length. The number of training observations stays the same but the forecast origin is moved forward through time. When older data is less informative this method reduces bias.</p>
+<p><strong>What is the difference between interpolation and forecasting?</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t ignore structural breaks when choosing a validation strategy.</p>
+</div>
+</div>
+</section>
+<section id="manual-cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="manual-cross-validation">Manual cross-validation</h3>
+<p>Cross-validation is performed using an expanding window approach.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data: </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(AirPassengers) </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> AirPassengers</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load libraries:</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(dat) <span class="co"># no. observations</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>train_n <span class="ot">=</span> <span class="dv">60</span>    <span class="co"># no. training data points </span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>h <span class="ot">=</span> <span class="dv">12</span>          <span class="co"># forecast horizon </span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialise error matrix:</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>names  <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'Mean'</span>,<span class="st">'Naive'</span>,<span class="st">'Seasonal naive'</span>, <span class="st">'Drift'</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>splits <span class="ot">=</span> n<span class="sc">-</span>train_n<span class="sc">-</span>h<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">nrow=</span>(n<span class="sc">-</span>h)<span class="sc">-</span>train_n<span class="sc">+</span><span class="dv">1</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol=</span><span class="dv">4</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">dimnames=</span><span class="fu">list</span>(<span class="cn">NULL</span>,names))</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> train_n<span class="sc">:</span>(n<span class="sc">-</span>h)) {</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">=</span> i<span class="sc">-</span>train_n<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Subset training data:</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  train <span class="ot">=</span> <span class="fu">window</span>(dat,</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>                 <span class="at">end=</span><span class="fu">c</span>(<span class="dv">1949</span><span class="sc">+</span>(i<span class="dv">-1</span>)<span class="sc">%/%</span><span class="dv">12</span>,(i<span class="dv">-1</span>)<span class="sc">%%</span><span class="dv">12</span><span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract test data: </span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  test <span class="ot">=</span> <span class="fu">window</span>(dat,</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>                <span class="at">start=</span><span class="fu">c</span>(<span class="dv">1949</span><span class="sc">+</span>i<span class="sc">%/%</span><span class="dv">12</span>,i<span class="sc">%%</span><span class="dv">12</span><span class="sc">+</span><span class="dv">1</span>),</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">end=</span><span class="fu">c</span>(<span class="dv">1949</span><span class="sc">+</span>(i<span class="sc">+</span>h<span class="dv">-1</span>)<span class="sc">%/%</span><span class="dv">12</span>,(i<span class="sc">+</span>h<span class="dv">-1</span>)<span class="sc">%%</span><span class="dv">12</span><span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fit model:</span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>  fits <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean   =</span> <span class="fu">meanf</span>(train,<span class="at">h=</span>h),</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">Naive  =</span> <span class="fu">naive</span>(train,<span class="at">h=</span>h),</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">SNaive =</span> <span class="fu">snaive</span>(train,<span class="at">h=</span>h),</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">Drift  =</span> <span class="fu">rwf</span>(train,<span class="at">h=</span>h,<span class="at">drift=</span><span class="cn">TRUE</span>)</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract rmse for each model:</span></span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>  rmse <span class="ot">=</span> <span class="fu">sapply</span>(fits,\(f) <span class="fu">sqrt</span>(<span class="fu">mean</span>((<span class="fu">as.numeric</span>(test)<span class="sc">-</span><span class="fu">as.numeric</span>(f<span class="sc">$</span>mean))<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Store results:</span></span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  res[idx,] <span class="ot">=</span> rmse</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a><span class="fu">colMeans</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Mean          Naive Seasonal naive          Drift 
+     152.87587       74.08791       39.92124       71.96374 </code></pre>
+</div>
+</div>
+</section>
+<section id="cross-validation-using-tscv" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation-using-tscv">Cross-validation using <code>tsCV()</code></h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>tsCV_m <span class="ot">=</span> <span class="fu">tsCV</span>(AirPassengers,meanf,<span class="at">h=</span><span class="dv">1</span>,<span class="at">window=</span><span class="dv">60</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>m_err  <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(tsCV_m<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>tsCV_n <span class="ot">=</span> <span class="fu">tsCV</span>(AirPassengers,naive,<span class="at">h=</span><span class="dv">1</span>,<span class="at">window=</span><span class="dv">60</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>n_err  <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(tsCV_n<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>tsCV_sn <span class="ot">=</span> <span class="fu">tsCV</span>(AirPassengers,snaive,<span class="at">h=</span><span class="dv">1</span>,<span class="at">window=</span><span class="dv">60</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>sn_err  <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(tsCV_sn<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>tsCV_d <span class="ot">=</span> <span class="fu">tsCV</span>(AirPassengers,rwf,<span class="at">h=</span><span class="dv">1</span>,<span class="at">window=</span><span class="dv">60</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>d_err  <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(tsCV_d<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>err_df <span class="ot">=</span> <span class="fu">cbind</span>(m_err,n_err,sn_err,d_err)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(err_df) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'Mean'</span>,<span class="st">'Naive'</span>,<span class="st">'Seasonal naive'</span>,<span class="st">'Drift'</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>err_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Mean    Naive Seasonal naive    Drift
+[1,] 102.0794 41.52524       40.61316 41.52524</code></pre>
+</div>
+</div>
+<p>When comparing the expanding window vs the sliding window, the sliding window gives lower errors for all models except the seasonal naive model. This is because the <code>AirPassengers</code> dataset does not have constant variance, as seen in <a href="#fig-continuous_ts">Figure&nbsp;1</a>.</p>
+</section>
+<section id="exercises" class="level3">
+<h3 class="anchored" data-anchor-id="exercises">Exercises</h3>
+<ol type="1">
+<li>Why is ordinary random k-fold cross-validation inappropriate for forecasting?</li>
+</ol>
+<p>If you exclude an observation at time t-1 but use observation t, you are technically predicting the past based on future observations. Future observations must never be used when estimating a forecasting model as this violates a fundamental principal of forecasting -</p>
+<ol start="2" type="1">
+<li>Define temporal leakage.</li>
+</ol>
+<p>Future observations enter model estimation. Reported accuracy looks excellent but is unattainable in practice - the future is unknown when real forecasts are made.</p>
+<ol start="3" type="1">
+<li>Contrast Walk_Forward, Expanding Window and Sliding Window validation.</li>
+</ol>
+<p>In expanding window validation every historical observation is kept. The training set grows with all past data. In sliding window validation the training window has a fixed length. The number of training observations stays the same but the forecast origin is moved forward through time. Walk-forward validation is when the forecast origin advances one step at a time.</p>
+<ol start="4" type="1">
+<li>When would Sliding Window outperform Expanding Window?</li>
+</ol>
+<p>When data is non-stationary and older data is less informative.</p>
+<ol start="5" type="1">
+<li>A firm refits its model daily using only the most recent 250 observations. Which strategy is this?</li>
+</ol>
+<p>Sliding window</p>
+<ol start="6" type="1">
+<li>Why must temporal ordering be preserved during validation?</li>
+</ol>
+<p>Otherwise the model knows things it could not have known at forecasting time. This leads to inflated accuracy that is unattainable in practise.</p>
+</section>
+</section>
+<section id="operators-stationarity-and-white-noise" class="level1">
+<h1>Operators, Stationarity and White Noise</h1>
+<section id="lag-and-lead-operators" class="level3">
+<h3 class="anchored" data-anchor-id="lag-and-lead-operators">Lag and lead operators</h3>
+<p>Lag operator <span class="math inline">\(L_{y_{t}} = y_{t-1}\)</span> at time <span class="math inline">\(t\)</span> uses the observation recorded at time <span class="math inline">\(t-1\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The subscript records where a value came from, not where it is displayed.</p>
+</div>
+</div>
+<p>Lead operator <span class="math inline">\(F_{y_{t}} = y_{t+1}\)</span> at time <span class="math inline">\(t\)</span> uses the observation recorded at time <span class="math inline">\(t+1\)</span>, <span class="math inline">\(F = L^{-1}\)</span>.</p>
+</section>
+<section id="lag-and-lead-in-r" class="level3">
+<h3 class="anchored" data-anchor-id="lag-and-lead-in-r">Lag and lead in R</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">5</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">NA</span>, y[<span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(y)<span class="sc">-</span><span class="dv">1</span>)]) <span class="co"># lag by hand</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA  3  7  4  8</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">lag</span>(y, <span class="at">n =</span> <span class="dv">1</span>) <span class="co"># same shift</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA  3  7  4  8</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">lead</span>(y, <span class="at">n =</span> <span class="dv">1</span>) <span class="co"># lead</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  7  4  8  5 NA</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>lag_twice <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(dplyr<span class="sc">::</span><span class="fu">lag</span>(y,<span class="at">n=</span><span class="dv">1</span>),<span class="at">n=</span><span class="dv">1</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>lag_twice</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA NA  3  7  4</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">lag</span>(y,<span class="at">n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA NA  3  7  4</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Built in <code>lag()</code> functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t get confused between <code>stats::lag()</code> and <code>dplyr::lag()</code>. They do different things!</p>
+</div>
+</div>
+</section>
+<section id="differencing" class="level3">
+<h3 class="anchored" data-anchor-id="differencing">Differencing</h3>
+<p>First difference: <span class="math display">\[
+\Delta{y_{t}} = y_t -y_{t-1} = (1-L)y_t,
+\]</span> Seasonal difference (at lag 12): <span class="math display">\[
+\Delta_{12}y_{t} = y_t -y_{t-12} = (1-L^{12})y_t,
+\]</span></p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First differences, by hand and with diff().</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">12</span>, <span class="dv">7</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>y2 <span class="sc">-</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(y2, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA -4  3  3 -5</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(y2) <span class="co"># Note: no NA added </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -4  3  3 -5</code></pre>
+</div>
+</div>
+</section>
+<section id="weak-and-strict-stationarity" class="level3">
+<h3 class="anchored" data-anchor-id="weak-and-strict-stationarity">Weak and strict stationarity</h3>
+<p>When we have a multiplicative model, with expanding variance, we can log-transform it to obtain an additive model. This removes the variance of seasonality but as seen below the series still has a trend.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-additive" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-additive-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: Time series plot of the log-tranformed number of monthly airline passengers from 1949 to 1960.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Taking differences between observations removes the linear trend and taking seasonal differences removes the seasonal trend.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No trends present in data.</p>
+</div>
+</div>
+<p>We can remove both the linear and seasonal trend in the data:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check what sasonal and what regular differences are required: </span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nsdiffs</span>(log_AP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ndiffs</span>(log_AP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-stationary" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-stationary-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: Time series plot of the number of monthly airline passengers from 1949 to 1960 in a stationary distribution.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="white-noise" class="level3">
+<h3 class="anchored" data-anchor-id="white-noise">White noise</h3>
+<p>Weak white noise only requires uncorrelated observations. Strict white noise requires <em>iid</em> observations.</p>
+<p>White noise means unpredictible variance, whatever the variance.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Indicator variables can be included to remove trends when the series has structural breaks in it.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="linear-models-for-the-conditional-mean" class="level1">
+<h1>Linear Models for the Conditional Mean</h1>
+<p>Although white noise is uncorrelated, a weighted combination of neighbouring white noise is not.</p>
+<p>Filtering is the process of building a new series as a weighted combination of the terms of another.</p>
+<section id="the-maq-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-maq-model">The MA(<span class="math inline">\(q\)</span>) model</h3>
+<p><span class="math display">\[
+y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q), \quad \varepsilon_t \sim WN(0,\sigma^2)}.
+\]</span></p>
+<p>The moving average model is driven by lagged shocks not lagged observations. A MA(<span class="math inline">\(q\)</span>) process is stationary for any values of the coefficients, since it is a finite weighted sum of white noise terms with fixed weights. The coefficients must satisfy invertibility.</p>
+</section>
+<section id="the-arp-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-arp-model">The AR(<span class="math inline">\(p\)</span>) model</h3>
+<p><span class="math display">\[
+y_t = c + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + \varepsilon_t, \quad \varepsilon_t \sim WN(0,\sigma^2).
+\]</span></p>
+<p>For the autoregressive model there is a set of correlation in the structure. The current value of a variable depends linearly on its own past. An AR(<span class="math inline">\(p\)</span>) process models memory.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ACF" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-ACF-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;7: Three processes.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ap_process" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-ap_process-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;8: ACF and PACF plots for the AirPassengers dataset.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If you are observing spikes outside of the first few this indicates seasonality in the series. <a href="#fig-ap_process">Figure&nbsp;8</a> suggests that there is still seasonality present in the transformed and differenced <code>AirPassengers</code> dataset, however this could also just be because differencing reduced the number of observations resulting in a more noisy dataset.</p>
+</section>
+<section id="the-armaqq-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-armaqq-model">The ARMA(<span class="math inline">\(q,q\)</span>) model</h3>
+<p>The ARMA model allows for process that show persistence and short lived shocks simultaneously. The series must be stationary.</p>
+<p><span class="math display">\[
+y_t = c + \sum^p_{i=1} \phi_i y_{t-i} + \varepsilon_t + \sum^q_{j=1} \theta_j \varepsilon_{t-j}, \quad \varepsilon_t \sim WN(0,\sigma^2).
+\]</span></p>
+<p>this is equivalent to: <span class="math inline">\(\phi (L)y_t = c + \theta (L) \varepsilon_t.\)</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ARMA models are fitted by maximum likelihood due to the moving average part (not OLS).</p>
+</div>
+</div>
+</section>
+<section id="the-arimapdq-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span>) model</h3>
+<p>The ARIMA model applies <span class="math inline">\(d\)</span> difference to <span class="math inline">\(y_t\)</span> and then fits an ARMA(<span class="math inline">\(p,q\)</span>) to the result.</p>
+<p><span class="math display">\[
+\phi(L)(1-L)^dy_y = c+ \theta(L)\varepsilon_t
+\]</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-arima_equivalents" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;1: Special cases of ARIMA.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Specification</th>
+<th style="text-align: left;">Equivalent to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ARIMA(1,0,0)</td>
+<td style="text-align: left;">AR(1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA(0,0,1)</td>
+<td style="text-align: left;">MA(1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA(1,0,1)</td>
+<td style="text-align: left;">ARMA(1,1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA(0,1,0)</td>
+<td style="text-align: left;">Random walk</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA(0,1,0) with c ≠ 0</td>
+<td style="text-align: left;">Random walk with drift</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA(1,1,1)</td>
+<td style="text-align: left;">One difference, then ARMA(1,1)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Although <a href="#tbl-arima_equivalents">Table&nbsp;1</a> illustrates the special cases of ARIMA, sometimes there is a constant included that must be taken into account.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ap_arima" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-ap_arima-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;9: An ARIMA(1,1,1) model fitted to <code>AirPassengers</code> series with forecasts and prediction intervals for 24 months.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Ljung-Box test
+
+data:  Residuals from ARIMA(1,1,1)
+Q* = 231.49, df = 22, p-value &lt; 2.2e-16
+
+Model df: 2.   Total lags used: 24</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-ap_res" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-ap_res-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;10: Residual diagnostics for the fitted ARIMA(1,1,1) model: the residual series, its ACF and a histogram against a normal density.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-ap_res">Figure&nbsp;10</a> we can see that the residuals do not look like white noise, this is because the seasonality hasn’t been removed from the data with an ARIMA(1,1,1) model.</p>
+</section>
+<section id="the-sarimapdqpdqtext_m-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-sarimapdqpdqtext_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span>)(<span class="math inline">\(P,D,Q\text{)}_m\)</span> model</h3>
+<p><span class="math display">\[
+\Phi(L^m)\phi(L)(1-L^m)^D(1-L)^dy_t = \Theta(L^m)\theta(L)\varepsilon_t.
+\]</span></p>
+<p>When we check an ACF plot of the <code>AirPassengers</code> series, we can see clear seasonality.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ap_acf_season" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-ap_acf_season-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;11: ACF plot of AirPassengers series to illustrate seasonality.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-ap_acf_season">Figure&nbsp;11</a> and <a href="#fig-ap_res">Figure&nbsp;10</a> suggest that we need to model the <code>AirPassengers</code> series with a seasonality component as well.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Which SARIMA model is the best fit: </span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>best_fit <span class="ot">=</span> <span class="fu">auto.arima</span>(AirPassengers,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">lambda=</span><span class="dv">0</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">stepwise=</span><span class="cn">FALSE</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">approximation=</span><span class="cn">FALSE</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(best_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: AirPassengers 
+ARIMA(0,1,1)(0,1,1)[12] 
+Box Cox transformation: lambda= 0 
+
+Coefficients:
+          ma1     sma1
+      -0.4018  -0.5569
+s.e.   0.0896   0.0731
+
+sigma^2 = 0.001371:  log likelihood = 244.7
+AIC=-483.4   AICc=-483.21   BIC=-474.77
+
+Training set error measures:
+                     ME     RMSE      MAE          MPE     MAPE     MASE
+Training set 0.05140418 10.15504 7.357553 -0.004079016 2.623636 0.229706
+                    ACF1
+Training set -0.03689673</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ap_sarima" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="section-1_files/figure-html/fig-ap_sarima-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;12: A SARIMA(1,1,1)(0,1,1) model fitted to AirPassengers series with a stochastic level and an evolving seasonal pattern, forecast three years ahead.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-ap_sarima">Figure&nbsp;12</a> carries the seasonal shape forward while the intervals widen. This is the behaviour a seasonal model is fitted for.</p>
+</section>
+</section>
+<section id="conditional-variance-models" class="level1">
+<h1>Conditional Variance Models</h1>
+</section>
+<section id="spectral-analysis" class="level1">
+<h1>Spectral Analysis</h1>
 
 
 </section>

@@ -3,26 +3,912 @@ format: html
 editor: visual
 ---
 
-## Data Statement
+```{r}
+#| echo: false
+#| warning: false 
 
-<!-- Include source, consent, anonymisation, and POPIA compliance if applicable -->
+library(ggplot2)
+```
 
-\[cite: 1\]
+# Foundations
 
-## Teaching Session Summaries
+## Learning outcomes
 
-<!-- Fit models, interpret results, compute predictions and prediction intervals -->
+1.  Explain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.
 
-\[cite: 1\]
+2.  Treat an observed series as one realisation of a stochastic process.
 
-## Worked Tutorials & Software Implementations
+3.  Explain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.
 
-<!-- Worked tutorials with progress reflections and first-principles R code -->
+4.  Match a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.
 
-\[cite: 1\]
+5.  Identify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.
 
-## Topic Exploration
+6.  Produce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.
 
-<!-- Exploration of an idea or method not directly covered in lectures/notes -->
+7.  Use the lag and lead operators, and the algebra built on them, to write models compactly.
 
-\[cite: 1\]
+8.  Define weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.
+
+9.  Define white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.
+
+10. Fit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.
+
+11. Explain volatility clustering and fit ARCH and GARCH models to it
+
+### What is a time series?
+
+Time series is a single measurement taken at multiple points across time. Technically we are modelling the same thing over and over again (this makes sense as to why there is sequential correlation).
+
+::: callout-note
+## Note
+
+Time series model dependence through sequential observations.
+:::
+
+::: callout-important
+## Assumption
+
+Equally spaced measurements.
+:::
+
+::: callout-important
+## Assumption
+
+Autocorrelation across time.
+:::
+
+### Qualitative, Continuous and Discrete Series
+
+Example: Continuous series
+
+```{r}
+#| echo: false
+#| warning: false
+
+# Read in data:
+data(AirPassengers)
+# View(AirPassengers)
+```
+
+```{r}
+#| label: fig-continuous_ts
+#| fig-cap: "Time series plot of the number of monthly airline passengers from 1949 to 1960."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+AirPassengers_df = data.frame(
+  month  = as.numeric(time(AirPassengers)),
+  count = as.numeric(AirPassengers)
+)
+
+ggplot(data = AirPassengers_df,
+       mapping = aes(x = month,
+                     y = count)) + 
+  geom_point(col = 'deeppink') + 
+  geom_line(col = 'deeppink') + 
+  labs(
+    title = "Monthly airline passenger numbers (1949–1960).",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+```
+
+@fig-continuous_ts plots the number of monthly airline passengers over a 12 year period. This figure clearly illustrates the concepts of seasonality and trend.
+
+Example: Discrete series
+
+```{r}
+#| echo: false 
+#| warning: false 
+
+# Read in data: 
+library(readr)
+seals = read_csv("_data/seals.csv")
+seals_ts = ts(seals,start=1957,end=1999,frequency=1)[,-1]
+# View(seals)
+```
+
+```{r}
+#| label: fig-discrete_ts
+#| fig-cap: "Time series plot of the number of seals from 1975 to 1999."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+seals_df = data.frame(
+  year  = as.numeric(time(seals_ts)),
+  count = as.numeric(seals_ts)
+)
+
+ggplot(data = seals_df,
+       mapping = aes(x = year, y = count)) + 
+  geom_col(fill = "lightblue", 
+           color = "black", 
+           width = 1) +  
+  scale_x_continuous(breaks = seq(1957, 1999, by = 5)) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Annual number of seals (1957–1999).",
+    x = "Year",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+@fig-discrete_ts plots the changing number of observed seals over a period of 25 years.
+
+**What to do when you have missing observations in a time series?**
+
+In discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation $y_t$, skip the update step in the kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.
+
+::: callout-tip
+## Kalman filtering
+
+Kalman filtering (linear quadratic estimation) is an algorithm that uses a series of measurements over time to estimate unknown variables, by estimating a joint probability distribution over the variables for each time-step.
+:::
+
+In continuous time series, missing observations look like irregularly spaced sampling intervals. You can model the underlying system using Stochastic Differential Equations (CARMA) or you can aggregate the irregular time steps into regular, discrete intervals.
+
+### Temporal granularity and the aggregation effect
+
+Aggregating up can either smooth out high-frequency structure (stock returns, etc) or can reveal low-frequency structure (Sales, etc).
+
+### One realisation of a stochastic process
+
+Noise in the data introduces different realisations. If your model fits one dataset perfectly then it is overfitting.
+
+# The Forecasting Problem
+
+### What is forecasting?
+
+Forecasting is a prediction about what will happen in the future based on evidence that we have (with some level of uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates). Goal setting is what we want to happen in the future. Planning helps us reach our goal.
+
+::: callout-note
+## Note
+
+A series can only be called predictable if the interval and horizon are stated.
+:::
+
+Forecast $\rightarrow$ Goal $\rightarrow$ Plan $\rightarrow$ Implementation $\rightarrow$ Outcome $\rightarrow$ Forecast ...
+
+A forecast horizon is how far into the future you try and predict values. When looking at time series data we are looking for stable, informative patterns (not just a lot of data).
+
+A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.
+
+Stationary AR(1) process, $h$ step forecast error variance:
+
+$$
+\text{Var}(e_{T+h}) = \sigma^2 \frac{1-\phi^{2h}}{1-\phi^2} \rightarrow \frac{\sigma^2}{1-\phi^2} \quad \text{as } h \rightarrow \infty
+$$
+
+::: callout-note
+## Note
+
+Forecasts are random variables.
+:::
+
+# Exploring a Series
+
+### The classical decomposition
+
+$$
+\begin{aligned}
+\text{Additive:} \quad y_t &= T_t + S_t + C_t + I_t \\
+\text{Multiplicative:} \quad y_t &= T_t \cdot S_t \cdot C_t \cdot I_t
+\end{aligned}
+$$ The nature of the seasonality in a series (additive, multiplicative or drifting) determines whether log transformation or differencing are required.
+
+### Two ways of looking at a series
+
+1.  Time domain - this looks at previous observations
+
+You would use time domain when estimating predictive conditional expectations (forecasting at time $t+1$ given $t, t-1$), when dealing with short sample sizes.
+
+A lag is the separation between two observations measured in time units.
+
+::: callout-note
+## Note
+
+Plotting a series against its own first lag is the simplest possible diagnostic for dependence.
+:::
+
+```{r}
+#| label: fig-lag_autocor
+#| fig-cap: "Simple diagnostic test for dependence. Autocorrelation of a series against its own first lag."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+# Create the lag (k = -1 aligns Y_{t-1} with Y_t in R's stats::lag)
+lag1 <- stats::lag(AirPassengers, k = -1)
+
+# Intersect to align dates and create a two-column matrix
+aligned_data <- ts.intersect(Y_t = AirPassengers, Y_lag1 = lag1)
+
+# Scatter plot: x = Lagged Series, y = Original Series
+plot(as.numeric(aligned_data[, "Y_lag1"]), 
+     as.numeric(aligned_data[, "Y_t"]),
+     xlab = "AirPassengers (t-1)", 
+     ylab = "AirPassengers (t)",
+     main = "Lag 1 autocorrelation.",
+     col = "deeppink")
+
+```
+
+2.  Frequency domain - this looks at previous trends
+
+You would use frequency domain when identifying hidden cycles/patterns or when analysing long-memory dynamics.
+
+### The components of a series
+
+Trend is the long run direction of movement. Seasonality is th pattern that repeats at a fixed and known interval. Cycles are long oscillations with no fixed length. Irregular variation (noise) is random variation unexplained by the former.
+
+# Time Series Analysis in R
+
+## `AirPassengers` dataset
+
+```{r}
+# Run once — install anything missing
+pkgs <- c("tidyverse", "tsibble", "feasts", "fable", "timetk",
+          "modeltime", "kableExtra", "here")
+install.packages(pkgs[!pkgs %in% installed.packages()[, "Package"]])
+```
+
+### Handling dates and aggregation
+
+`AirPassengers` is already a time series object but to convert a dataset to a time series object you use: `ts(c(), start = c(year, month), frequency = #obs/unit time)`
+
+```{r}
+# Read in data:
+data(AirPassengers)
+# View(AirPassengers)
+
+print(AirPassengers)
+```
+
+```{r}
+# Sum by year:
+annual_sum <- aggregate(AirPassengers, FUN = sum)
+
+# Mean by year:
+annual_mean <- aggregate(AirPassengers, FUN = mean)
+
+print(annual_sum)
+print(annual_mean)
+```
+
+### Helper conversions
+
+```{r}
+t <- time(AirPassengers)
+
+# Extract Year and Month
+years <- floor(t)
+months <- round(12 * (t - years)) + 1
+
+head(data.frame(Decimal = as.numeric(t), Year = years, Month = months))
+```
+
+### Subsetting with `window()`
+
+```{r}
+# Extract only the second half of 2023
+sub_ts <- window(AirPassengers, start = c(1950, 7), end = c(1955, 10))
+print(sub_ts)
+```
+
+### Lags and Differences
+
+```{r}
+# Shift the time index forward by 1 period (does not move the values)
+lagged_ts <- stats::lag(AirPassengers, k = -1)
+
+# First-order differencing (removes linear trend)
+diff_ts <- diff(AirPassengers, differences = 1)
+
+# Seasonal differencing (removes a 12-month seasonal pattern)
+seasonal_diff_ts <- diff(AirPassengers, lag = 12)
+
+diff_ts
+```
+
+@fig-lag_autocor illustrates the autocorrelation between `AirPassengers` and its lag 1.
+
+### Combing series
+
+```{r}
+ts_a <- window(AirPassengers, start = c(1950, 1), end = c(1955, 12))
+ts_b <- window(AirPassengers, start = c(1955, 1), end = c(1956, 12))
+
+# Union: keeps full range, fills gaps with NA
+combined_union <- ts.union(ts_a, ts_b)
+
+# Intersect: keeps only the overlapping months
+combined_intersect <- ts.intersect(ts_a, ts_b)
+
+combined_intersect
+```
+
+### Missing data
+
+```{r}
+has_na <- anyNA(AirPassengers)
+cat("Contains missing values:", has_na, "\n")
+```
+
+```{r}
+# Simple linear interpolation for isolated gaps (base R, no extra packages)
+ts_with_gap <- AirPassengers
+ts_with_gap[5] <- NA
+ts_filled <- ts(approx(time(ts_with_gap), 
+                       ts_with_gap, 
+                       xout = time(ts_with_gap))$y, 
+                start = start(ts_with_gap), 
+                frequency = frequency(ts_with_gap))
+ts_filled
+```
+
+### Time series plots
+
+@fig-continuous_ts plots the `AirPassengers` time series.
+
+```{r}
+#| label: fig-continuous_simp_ts
+#| fig-cap: "Time series plot of the number of monthly airline passengers from 1949 to 1960."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+plot(AirPassengers,
+     main = "Simplified time plot.",
+     col = "deeppink",
+     lty = 2)
+```
+
+### Check attributes of time series
+
+```{r}
+# Check the attributes
+cat("Start:", start(AirPassengers), "\n")
+```
+
+```{r}
+cat("Frequency:", frequency(AirPassengers), "\n")
+```
+
+```{r}
+#| warning: false
+library(ggfortify)
+# A first look at structure: naive decomposition (covered in depth in Part B)
+decomp <- decompose(AirPassengers)
+autoplot(decomp,
+     ts.colour='deeppink')+
+  theme_minimal(base_size = 14)
+```
+
+# Benchmarks and Forecast Accuracy
+
+### The benchmarks applied
+
+Mean - the average of all previous observations is carried into the future.
+
+$$
+\hat{y}_{T+h \mid T} = \bar{y}
+$$
+
+Naive - the last observed value becomes the value that we take into the future.
+
+$$
+\hat{y}_{T+h \mid T} = y_T
+$$
+
+Seasonal naive - the last observed seasonal pattern is carried into the future.
+
+$$
+\hat{y}_{T+h \mid T} = y_{T+h-m(k+1)}
+$$
+
+Drift - The trend of the previsou observations is carried into the future.
+
+$$
+\hat{y}_{T+h \mid T} = y_T + \frac{h(y_T-y_1)}{T-1}
+$$
+
+::: callout-note
+## Note
+
+Residuals are for diagnostics (validation). Forecast errors are for evaluation (test).
+:::
+
+### Cross-validation
+
+In time series successive observations are correlated and their ordering carries information about the data generating process. When performing model validation you cannot have future observations predicting the past.
+
+Temporal leakage (look-ahead-bias) is when future observations enter model estimation, this artificially inflates accuracy.
+
+The forecast origin is the last observation available when the forecast is made.
+
+::: callout-note
+## Note
+
+The test set should be at least as long as the largest horizon of interest.
+:::
+
+### Strategies
+
+1.  Walk-forward validation
+
+The forecast origin advances one step at a time.
+
+2.  Expanding window validation
+
+Every historical observation is kept. The training set grows with all past data. When older data is more informative this method reduces estimation variance.
+
+3.  Sliding window validation
+
+The training window has a fixed length. The number of training observations stays the same but the forecast origin is moved forward through time. When older data is less informative this method reduces bias.
+
+**What is the difference between interpolation and forecasting?**
+
+::: callout-note
+## Note
+
+Don't ignore structural breaks when choosing a validation strategy.
+:::
+
+### Manual cross-validation
+
+Cross-validation is performed using an expanding window approach.
+
+```{r}
+#| warning: false
+
+# Load data: 
+data(AirPassengers) 
+dat = AirPassengers
+
+# Load libraries:
+library(forecast)
+
+n = length(dat) # no. observations
+train_n = 60    # no. training data points 
+h = 12          # forecast horizon 
+
+# Initialise error matrix:
+names  = c('Mean','Naive','Seasonal naive', 'Drift')
+splits = n-train_n-h+1
+
+res = matrix(NA,
+             nrow=(n-h)-train_n+1,
+             ncol=4,
+             dimnames=list(NULL,names))
+
+for (i in train_n:(n-h)) {
+  idx = i-train_n+1
+  # Subset training data:
+  train = window(dat,
+                 end=c(1949+(i-1)%/%12,(i-1)%%12+1))
+  
+  # Extract test data: 
+  test = window(dat,
+                start=c(1949+i%/%12,i%%12+1),
+                end=c(1949+(i+h-1)%/%12,(i+h-1)%%12+1))
+  
+  # Fit model:
+  fits = list(
+    Mean   = meanf(train,h=h),
+    Naive  = naive(train,h=h),
+    SNaive = snaive(train,h=h),
+    Drift  = rwf(train,h=h,drift=TRUE)
+  )
+  
+  # Extract rmse for each model:
+  rmse = sapply(fits,\(f) sqrt(mean((as.numeric(test)-as.numeric(f$mean))^2)))
+  
+  # Store results:
+  res[idx,] = rmse
+}
+
+colMeans(res)
+```
+
+### Cross-validation using `tsCV()`
+
+```{r}
+tsCV_m = tsCV(AirPassengers,meanf,h=1,window=60)
+m_err  = sqrt(mean(tsCV_m^2, na.rm = TRUE))
+
+tsCV_n = tsCV(AirPassengers,naive,h=1,window=60)
+n_err  = sqrt(mean(tsCV_n^2, na.rm = TRUE))
+
+tsCV_sn = tsCV(AirPassengers,snaive,h=1,window=60)
+sn_err  = sqrt(mean(tsCV_sn^2, na.rm = TRUE))
+
+tsCV_d = tsCV(AirPassengers,rwf,h=1,window=60)
+d_err  = sqrt(mean(tsCV_d^2, na.rm = TRUE))
+
+err_df = cbind(m_err,n_err,sn_err,d_err)
+colnames(err_df) = c('Mean','Naive','Seasonal naive','Drift')
+err_df
+```
+
+When comparing the expanding window vs the sliding window, the sliding window gives lower errors for all models except the seasonal naive model. This is because the `AirPassengers` dataset does not have constant variance, as seen in @fig-continuous_ts.
+
+### Exercises
+
+1.  Why is ordinary random k-fold cross-validation inappropriate for forecasting?
+
+If you exclude an observation at time t-1 but use observation t, you are technically predicting the past based on future observations. Future observations must never be used when estimating a forecasting model as this violates a fundamental principal of forecasting -
+
+2.  Define temporal leakage.
+
+Future observations enter model estimation. Reported accuracy looks excellent but is unattainable in practice - the future is unknown when real forecasts are made.
+
+3.  Contrast Walk_Forward, Expanding Window and Sliding Window validation.
+
+In expanding window validation every historical observation is kept. The training set grows with all past data. In sliding window validation the training window has a fixed length. The number of training observations stays the same but the forecast origin is moved forward through time. Walk-forward validation is when the forecast origin advances one step at a time.
+
+4.  When would Sliding Window outperform Expanding Window?
+
+When data is non-stationary and older data is less informative.
+
+5.  A firm refits its model daily using only the most recent 250 observations. Which strategy is this?
+
+Sliding window
+
+6.  Why must temporal ordering be preserved during validation?
+
+Otherwise the model knows things it could not have known at forecasting time. This leads to inflated accuracy that is unattainable in practise.
+
+# Operators, Stationarity and White Noise
+
+### Lag and lead operators
+
+Lag operator $L_{y_{t}} = y_{t-1}$ at time $t$ uses the observation recorded at time $t-1$.
+
+::: callout-note
+## Note
+
+The subscript records where a value came from, not where it is displayed.
+:::
+
+Lead operator $F_{y_{t}} = y_{t+1}$ at time $t$ uses the observation recorded at time $t+1$, $F = L^{-1}$.
+
+### Lag and lead in R
+
+```{r}
+y <- c(3, 7, 4, 8, 5)
+c(NA, y[1:(length(y)-1)]) # lag by hand
+dplyr::lag(y, n = 1) # same shift
+dplyr::lead(y, n = 1) # lead
+```
+
+```{r}
+lag_twice = dplyr::lag(dplyr::lag(y,n=1),n=1)
+lag_twice
+dplyr::lag(y,n=2)
+```
+
+::: callout-warning
+## Built in `lag()` functions
+
+Don't get confused between `stats::lag()` and `dplyr::lag()`. They do different things!
+:::
+
+### Differencing
+
+First difference: $$
+\Delta{y_{t}} = y_t -y_{t-1} = (1-L)y_t,
+$$ Seasonal difference (at lag 12): $$
+\Delta_{12}y_{t} = y_t -y_{t-12} = (1-L^{12})y_t,
+$$
+
+```{r}
+# First differences, by hand and with diff().
+y2 <- c(10, 6, 9, 12, 7)
+y2 - dplyr::lag(y2, 1)
+diff(y2) # Note: no NA added 
+```
+
+### Weak and strict stationarity
+
+When we have a multiplicative model, with expanding variance, we can log-transform it to obtain an additive model. This removes the variance of seasonality but as seen below the series still has a trend.
+
+```{r}
+#| label: fig-additive
+#| fig-cap: "Time series plot of the log-tranformed number of monthly airline passengers from 1949 to 1960."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+log_AP = log(AirPassengers)
+
+logAP_df = data.frame(
+  month  = as.numeric(time(log_AP)),
+  count = as.numeric(log_AP)
+)
+
+ggplot(data = logAP_df,
+       mapping = aes(x = month,
+                     y = count)) +  
+  geom_line(col = 'deeppink') + 
+  labs(
+    title = "Monthly airline passenger numbers (1949–1960).",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+Taking differences between observations removes the linear trend and taking seasonal differences removes the seasonal trend.
+
+::: callout-important
+## Assumption
+
+No trends present in data.
+:::
+
+We can remove both the linear and seasonal trend in the data:
+
+```{r}
+# Check what sasonal and what regular differences are required: 
+nsdiffs(log_AP)
+ndiffs(log_AP)
+```
+
+```{r}
+#| label: fig-stationary
+#| fig-cap: "Time series plot of the number of monthly airline passengers from 1949 to 1960 in a stationary distribution."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+stationary_AP = diff(diff(log_AP,lag=12),differences=1)
+
+
+stationaryAP_df = data.frame(
+  month  = as.numeric(time(stationary_AP)),
+  count = as.numeric(stationary_AP)
+)
+
+ggplot(data = stationaryAP_df,
+       mapping = aes(x = month,
+                     y = count)) +  
+  geom_line(col = 'deeppink') + 
+  labs(
+    title = "Monthly airline passenger numbers (1949–1960).",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+### White noise
+
+Weak white noise only requires uncorrelated observations. Strict white noise requires *iid* observations.
+
+White noise means unpredictible variance, whatever the variance.
+
+::: callout-note
+## Note
+
+Indicator variables can be included to remove trends when the series has structural breaks in it.
+:::
+
+# Linear Models for the Conditional Mean
+
+Although white noise is uncorrelated, a weighted combination of neighbouring white noise is not.
+
+Filtering is the process of building a new series as a weighted combination of the terms of another.
+
+### The MA($q$) model
+
+$$
+y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q), \quad \varepsilon_t \sim WN(0,\sigma^2)}. 
+$$
+
+The moving average model is driven by lagged shocks not lagged observations. A MA($q$) process is stationary for any values of the coefficients, since it is a finite weighted sum of white noise terms with fixed weights. The coefficients must satisfy invertibility.
+
+### The AR($p$) model
+
+$$
+y_t = c + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + \varepsilon_t, \quad \varepsilon_t \sim WN(0,\sigma^2). 
+$$
+
+For the autoregressive model there is a set of correlation in the structure. The current value of a variable depends linearly on its own past. An AR($p$) process models memory.
+
+```{r}
+#| label: fig-ACF
+#| fig-cap: "Three processes."
+#| fig-width: 12
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfrow=c(1,3))
+acf(rnorm(300), main="White noise")
+acf(arima.sim(list(ar=.7),300), main="AR(1)")
+acf(arima.sim(list(ma=.7),300), main="MA(1)")
+
+```
+
+```{r}
+#| label: fig-ap_process
+#| fig-cap: "ACF and PACF plots for the AirPassengers dataset."
+#| fig-width: 12
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfrow=c(1,2))
+acf(stationary_AP,main='ACF',lag.max=50)
+pacf(stationary_AP,main='PACF',lag.max=50)
+```
+
+If you are observing spikes outside of the first few this indicates seasonality in the series. @fig-ap_process suggests that there is still seasonality present in the transformed and differenced `AirPassengers` dataset, however this could also just be because differencing reduced the number of observations resulting in a more noisy dataset.
+
+### The ARMA($q,q$) model
+
+The ARMA model allows for process that show persistence and short lived shocks simultaneously. The series must be stationary.
+
+$$
+y_t = c + \sum^p_{i=1} \phi_i y_{t-i} + \varepsilon_t + \sum^q_{j=1} \theta_j \varepsilon_{t-j}, \quad \varepsilon_t \sim WN(0,\sigma^2). 
+$$
+
+this is equivalent to: $\phi (L)y_t = c + \theta (L) \varepsilon_t.$
+
+::: callout-note
+## Note
+
+ARMA models are fitted by maximum likelihood due to the moving average part (not OLS).
+:::
+
+### The ARIMA($p,d,q$) model
+
+The ARIMA model applies $d$ difference to $y_t$ and then fits an ARMA($p,q$) to the result.
+
+$$
+\phi(L)(1-L)^dy_y = c+ \theta(L)\varepsilon_t
+$$
+
+```{r}
+#| label: tbl-arima_equivalents
+#| tbl-cap: "Special cases of ARIMA."
+#| echo: false
+#| warning: false
+
+library(knitr)
+
+arima_table <- data.frame(
+  Specification = c(
+    "ARIMA(1,0,0)",
+    "ARIMA(0,0,1)",
+    "ARIMA(1,0,1)",
+    "ARIMA(0,1,0)",
+    "ARIMA(0,1,0) with c ≠ 0",
+    "ARIMA(1,1,1)"
+  ),
+  'Equivalent to' = c(
+    "AR(1)",
+    "MA(1)",
+    "ARMA(1,1)",
+    "Random walk",
+    "Random walk with drift",
+    "One difference, then ARMA(1,1)"
+  ),
+  check.names = FALSE
+)
+
+kable(arima_table, align = "ll")
+```
+
+Although @tbl-arima_equivalents illustrates the special cases of ARIMA, sometimes there is a constant included that must be taken into account.
+
+```{r}
+#| label: fig-ap_arima
+#| fig-cap: "An ARIMA(1,1,1) model fitted to `AirPassengers` series with forecasts and prediction intervals for 24 months."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+fit = Arima(AirPassengers,order=c(1,1,1))
+fc = forecast(fit,h=24) # This forecasts for 24 months 
+autoplot(fc)+
+  theme_minimal()+
+  labs(
+    title='Forecasts from ARIMA(1,1,1)',
+    x = 'Month',
+    y = 'Count'
+  )
+```
+
+```{r}
+#| label: fig-ap_res
+#| fig-cap: "Residual diagnostics for the fitted ARIMA(1,1,1) model: the residual series, its ACF and a histogram against a normal density."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+checkresiduals(fit) + 
+  theme_minimal()
+```
+
+In @fig-ap_res we can see that the residuals do not look like white noise, this is because the seasonality hasn't been removed from the data with an ARIMA(1,1,1) model.
+
+### The SARIMA($p,d,q$)($P,D,Q\text{)}_m$ model
+
+$$
+\Phi(L^m)\phi(L)(1-L^m)^D(1-L)^dy_t = \Theta(L^m)\theta(L)\varepsilon_t.
+$$
+
+When we check an ACF plot of the `AirPassengers` series, we can see clear seasonality.
+
+```{r}
+#| label: fig-ap_acf_season
+#| fig-cap: "ACF plot of AirPassengers series to illustrate seasonality."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+acf(AirPassengers,main='ACF',lag.max=50)
+```
+
+@fig-ap_acf_season and @fig-ap_res suggest that we need to model the `AirPassengers` series with a seasonality component as well.
+
+```{r}
+# Which SARIMA model is the best fit: 
+best_fit = auto.arima(AirPassengers,
+                      lambda=0,
+                      stepwise=FALSE,
+                      approximation=FALSE)
+summary(best_fit)
+```
+
+```{r}
+#| label: fig-ap_sarima
+#| fig-cap: "A SARIMA(1,1,1)(0,1,1) model fitted to AirPassengers series with a stochastic level and an evolving seasonal pattern, forecast three years ahead."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+fit <- Arima(AirPassengers, order=c(0,1,1),seasonal=c(0,1,1))
+autoplot(forecast(fit, h = 36)) +
+  theme_minimal()+
+  labs(
+    title='Forecasts from SARIMA(0,1,1)(0,1,1)[12]',
+    x = 'Month',
+    y = 'Count'
+  )
+
+```
+
+@fig-ap_sarima carries the seasonal shape forward while the intervals widen. This is the behaviour a seasonal model is fitted for.
+
+# Conditional Variance Models
+
+# Spectral Analysis

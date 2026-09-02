@@ -22,3 +22,215 @@ editor: visual
 ## Links
 
 -   [Detailed Analysis & Code Script](../appendix/code-and-data.qmd)\[cite: 1\]
+
+```{r}
+#|echo: false
+#|warning: false
+# Load required libraries: 
+library(readr)
+library(tidyverse)
+library(tsibble)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(feasts)
+library(fable)
+```
+
+```{r}
+# Read in dataset: 
+dat = read_csv("_data/Dam_Levels_from_2000.csv")
+# View(dat)
+```
+
+```{r}
+# Sort data:
+dat_ts = dat |>
+  mutate(DATE=dmy(DATE)) |>
+  arrange(DATE) |>
+  distinct(DATE,.keep_all=TRUE) |>
+  as_tsibble(index=DATE) |>
+  fill_gaps()
+
+```
+
+Here we run into some problems as we have duplicates present in the data. We will simply remove the second observation (it looks like a mistake and doesn't make logical sense but I need better justification). 
+
+We are interested in the Theewaterskloof dam current levels. Theewaterskloof is the supplier of water to Cape Town.
+
+```{r}
+# Plot:
+ggplot(data = dat_ts,
+       mapping = aes(x = DATE,
+                     y = THEEWATERSKLOOF_Current)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'Theewaterskloof dam capacity.', 
+       x = 'Time (day)',
+       y = 'Daily dam capacity (%)')
+```
+
+Okay now we aggregate to monthly (there's little need for daily data here)
+
+```{r}
+# Aggregate to monthly values:
+monthly_ts = dat_ts |>
+  index_by(year_month=~yearmonth(.))|>
+  summarise(current_mean=mean(THEEWATERSKLOOF_Current,na.rm=TRUE))
+
+# Plot:
+ggplot(data = monthly_ts,
+       mapping = aes(x = year_month,
+                     y = current_mean)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'Theewaterskloof dam capacity.', 
+       x = 'Time (month)',
+       y = 'Monthly dam capacity (%)')
+
+```
+
+It's very apparent that there is seasonality in this data but the trend is harder to spot. 
+
+Next up we pick a forecast horizon. Since we have 26 years work of daily data we can look to forecast until 2030. What is interesting to note here is that experts are predicting an exceptionally strong 2026/2027 El Nin^~o. We're expected to get below-normal rainfall. The 2023/2024 summer season was the last El Nino experienced so it will be interesting to see if those trends are picked up. We know that there was a severe drought in 2015/2016 and 2018/2019 also saw significant El Nino conditions. Lets have a closer look at those time periods. 
+
+```{r}
+ts_2015_2016 = dat_ts |>
+  filter(DATE>=ymd('2015-01-01')&DATE<=ymd('2016-12-31'))
+
+
+# Plot:
+ggplot(data = ts_2015_2016,
+       mapping = aes(x = DATE,
+                     y = THEEWATERSKLOOF_Current)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'Theewaterskloof dam capacity for 2015-2016.', 
+       x = 'Time (month)',
+       y = 'Monthly dam capacity (%)')
+
+```
+
+```{r}
+ts_2018_2019 = dat_ts |>
+  filter(DATE>=ymd('2018-01-01')&DATE<=ymd('2019-12-31'))
+
+
+# Plot:
+ggplot(data = ts_2018_2019,
+       mapping = aes(x = DATE,
+                     y = THEEWATERSKLOOF_Current)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'Theewaterskloof dam capacity for 2018-2019.', 
+       x = 'Time (month)',
+       y = 'Monthly dam capacity (%)')
+
+```
+
+```{r}
+ts_2023_2024 = dat_ts |>
+  filter(DATE>=ymd('2023-01-01')&DATE<=ymd('2024-12-31'))
+
+
+# Plot:
+ggplot(data = ts_2023_2024,
+       mapping = aes(x = DATE,
+                     y = THEEWATERSKLOOF_Current)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'Theewaterskloof dam capacity for 2023-2024.', 
+       x = 'Time (month)',
+       y = 'Monthly dam capacity (%)')
+
+```
+
+Okay slay, now let's do some exploratory analysis with `feasts`
+
+This is the same as the monthly plot. I just need to decide which one I want to use. 
+```{r}
+# monthly_ts |> 
+#   autoplot(current_mean, 
+#            color="deeppink") +
+#   labs(
+#     title = "Theewaterskloof dam capacity.", 
+#     y = "Average capacity (%)", 
+#     x = "Year") +
+#   theme_minimal(base_size=14)
+```
+
+This plot is really messy
+
+```{r}
+season_plot = monthly_ts |> 
+  gg_season(current_mean, 
+            labels = "right") +
+  labs(title = 'Seasonal pattern from 2000 to 2026.', 
+       x = 'Time (year)',
+       y = 'Average dam capacity (%)') +
+  theme_minimal(base_size=14)
+season_plot
+```
+
+```{r}
+subseries_plot = monthly_ts |>
+  gg_subseries(current_mean) +
+  labs(title = 'Monthly trends from 2000 to 2026.', 
+       x = '',
+       y = 'Average dam capacity (%)') +
+  theme_minimal(base_size=14) + 
+  theme(
+    axis.text.x = element_blank()
+  )
+subseries_plot
+```
+
+```{r}
+lag_plot = monthly_ts |> 
+  gg_lag(current_mean, 
+         geom = 'point', 
+         lags = 1:12) +
+  labs(title = 'Lag plots',
+       subtitle = 'Lags 1 to 12.',
+       x = 'Lag',
+       y = 'Average dam capacity') +
+  theme_minimal(base_size=14)
+lag_plot
+```
+
+```{r}
+# Autocorrelation Function:
+acf_plot = monthly_ts |>
+  ACF(current_mean, 
+      lag_max = 36) |> 
+  autoplot() +
+  labs(title = 'ACF plot for a 3-year horizon.') +
+  theme_minimal(base_size=14)
+acf_plot
+
+# Partial Autocorrelation Function:
+pacf_plot = monthly_ts |>
+  PACF(current_mean, 
+       lag_max = 36) |> 
+  autoplot() +
+  labs(title = "PACF plot for a 3-year horizon.") +
+  theme_minimal(base_size=14)
+pacf_plot
+
+```
+
+```{r}
+# Fit STL model:
+stl_fit = monthly_ts |> 
+  model(STL(current_mean ~ trend(window = 21) + 
+              season(window = 'periodic')))
+
+# Extract components and plot:
+stl_plot = stl_fit |> 
+  components() |> 
+  autoplot(colour='purple') +
+  labs(title = 'STL decomposition of Theewaterskloof dam levels.') +
+  theme_minimal(base_size=14)
+stl_plot
+```
+

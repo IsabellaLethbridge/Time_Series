@@ -22,3 +22,94 @@ editor: visual
 ## Links
 
 -   [Detailed Analysis & Code Script](../appendix/code-and-data.qmd)\[cite: 1\]
+
+```{r}
+#|echo: false
+#|warning: false
+# Load required libraries: 
+library(readr)
+library(tidyverse)
+library(tsibble)
+library(lubridate)
+library(dplyr)
+```
+
+```{r}
+# Read in dataset: 
+dat = read_csv('_data/ESK6816.csv')
+# View(dat)
+```
+
+```{r}
+# Convert data to time series object:
+demand_ts = ts(
+  dat$`RSA Contracted Demand`,
+  start = c(2019, 2161), # Hour 2161 of 2019 (April 1st)
+  frequency = 8766       # Hourly frequency per year
+)
+
+# Convert time series object to dataframe (for plotting):
+demand_df = data.frame(
+  hour    = as.numeric(time(demand_ts)),
+  count   = as.numeric(demand_ts)
+)
+
+# Plot:
+ggplot(data = demand_df,
+       mapping = aes(x = hour,
+                     y = count)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'South Africa hourly electricity demand.', 
+       x = 'Time (hours)',
+       y = 'Hourly peak demand')
+```
+
+As seen in the above plot, we cannot get a clear idea of the seasonality. We need to aggregate the data.
+
+To handle the leap years present in the data we will use tsibble.
+
+```{r}
+# Create a tsibble dataframe:
+df_ts = tibble(datetime=seq(from=as.POSIXct('2019-04-01 00:00:00'),
+                              length.out=length(demand_ts),
+                              by='hour'),
+               demand=as.numeric(demand_ts)
+               ) |>
+  as_tsibble(index=datetime)
+
+# Aggregate to daily values:
+demand_daily_ts = df_ts |>
+  index_by(date=~as.Date(.))|>
+  summarise(demand_mean=mean(demand,na.rm=TRUE))
+
+# Plot:
+ggplot(data = demand_daily_ts,
+       mapping = aes(x = date,
+                     y = demand_mean)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'South Africa daily electricity demand.', 
+       x = 'Time (days)',
+       y = 'Daily peak demand')
+```
+
+Again, there is still a lot of unnecessary noise in the data so we're going to aggregate to months. 
+
+```{r}
+# Aggregate to monthly values:
+demand_monthly_ts = df_ts |>
+  index_by(year_month=~yearmonth(.))|>
+  summarise(demand_mean=mean(demand,na.rm=TRUE))
+
+# Plot:
+ggplot(data = demand_monthly_ts,
+       mapping = aes(x = year_month,
+                     y = demand_mean)) +  
+  geom_line(col = 'deeppink')  +
+  theme_minimal(base_size=14) +
+  labs(title = 'South Africa monthly electricity demand.', 
+       x = 'Time (months)',
+       y = 'Monthly peak demand')
+
+```

@@ -4,5 +4,5 @@ editor: visual
 ---
 
 | Date       | Tool Used        | Prompt / Task Description      | Link to Conversation | Verification & Changes Made                           |
-|-------------|-------------|----------------|-------------|-----------------|
+|------------|------------------|--------------------------------|----------------------|-------------------------------------------------------|
 | YYYY-MM-DD | ChatGPT / Claude | Debugging R code for model fit | [Link](#)            | Checked output against manual calculations\[cite: 1\] |

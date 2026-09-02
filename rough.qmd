@@ -180,6 +180,7 @@ ggplot(data = aggAP_df,
 
 ```
 
+
 NOTE: Noise in data introduces different realisations. Noise is stochastic.
 
 # Chapter 2: The Forecasting Problem
