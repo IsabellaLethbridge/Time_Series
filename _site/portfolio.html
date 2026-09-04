@@ -267,8 +267,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#portfolio-summary" id="toc-portfolio-summary" class="nav-link" data-scroll-target="#portfolio-summary">Portfolio Summary</a>
+  <li><a href="#the-temporal-shift" id="toc-the-temporal-shift" class="nav-link" data-scroll-target="#the-temporal-shift">The Temporal Shift</a>
   <ul class="collapse">
+  <li><a href="#time-series-portfolio" id="toc-time-series-portfolio" class="nav-link" data-scroll-target="#time-series-portfolio">Time Series Portfolio</a></li>
   <li><a href="#overview-1" id="toc-overview-1" class="nav-link" data-scroll-target="#overview-1">Overview</a></li>
   <li><a href="#portfolio-structure" id="toc-portfolio-structure" class="nav-link" data-scroll-target="#portfolio-structure">Portfolio Structure</a></li>
   </ul></li>
@@ -360,6 +361,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#key-findings-1" id="toc-key-findings-1" class="nav-link" data-scroll-target="#key-findings-1">Key Findings</a></li>
   <li><a href="#reflections-1" id="toc-reflections-1" class="nav-link" data-scroll-target="#reflections-1">Reflections</a></li>
   <li><a href="#links-1" id="toc-links-1" class="nav-link" data-scroll-target="#links-1">Links</a></li>
+  </ul></li>
+  <li><a href="#predicting-drought-in-southern-africa" id="toc-predicting-drought-in-southern-africa" class="nav-link" data-scroll-target="#predicting-drought-in-southern-africa">Predicting drought in Southern Africa</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">Model fitting</a>
+  <ul class="collapse">
+  <li><a href="#dam-levels" id="toc-dam-levels" class="nav-link" data-scroll-target="#dam-levels">Dam levels</a></li>
+  <li><a href="#sea-surface-temperature" id="toc-sea-surface-temperature" class="nav-link" data-scroll-target="#sea-surface-temperature">Sea surface temperature</a></li>
+  </ul></li>
   <li><a href="#project-3" id="toc-project-3" class="nav-link" data-scroll-target="#project-3">Project 3</a></li>
   <li><a href="#key-findings-2" id="toc-key-findings-2" class="nav-link" data-scroll-target="#key-findings-2">Key Findings</a></li>
   <li><a href="#reflections-2" id="toc-reflections-2" class="nav-link" data-scroll-target="#reflections-2">Reflections</a></li>
@@ -382,35 +392,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">The Temporal Shift</h1>
-<p class="subtitle lead">Time Series Portfolio</p>
-</div>
 
-
-
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">last-modified</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
-
-</header>
 
 <section id="overview" class="level1">
 <h1>Overview</h1>
 </section>
-<section id="portfolio-summary" class="level1">
-<h1>Portfolio Summary</h1>
+<section id="the-temporal-shift" class="level1">
+<h1>The Temporal Shift</h1>
+<section id="time-series-portfolio" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-portfolio">Time Series Portfolio</h3>
+<p><strong>Author:</strong> Isabella Lethbridge<br>
+<strong>Student Number:</strong> LTHISA001<br>
+<strong>Date:</strong> 25 August 2026</p>
+</section>
 <section id="overview-1" class="level2">
 <h2 class="anchored" data-anchor-id="overview-1">Overview</h2>
 <p>Welcome to my portfolio for Time Series Analysis. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course.</p>
@@ -1615,6 +1609,7 @@ Training set -0.03689673</code></pre>
 </section>
 <section id="project-1" class="level2">
 <h2 class="anchored" data-anchor-id="project-1">Project 1</h2>
+<p>This is just basic EDA so far. I might only use this dataset to fit a hidden markov model once we’ve covered that topic in class.</p>
 <ul>
 <li><strong>Section &amp; Topic:</strong>[cite: 1]</li>
 <li><strong>Project Type:</strong> (Implementation / Shiny App / Exploration / Simulation)[cite: 1]</li>
@@ -1639,15 +1634,125 @@ Training set -0.03689673</code></pre>
 <ul>
 <li><a href="../appendix/code-and-data.qmd">Detailed Analysis &amp; Code Script</a>[cite: 1]</li>
 </ul>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co">#|warning: false</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries: </span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tsibble)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in dataset: </span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">'_data/ESK6816.csv'</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View(dat)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert data to time series object:</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>demand_ts <span class="ot">=</span> <span class="fu">ts</span>(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span><span class="st">`</span><span class="at">RSA Contracted Demand</span><span class="st">`</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2019</span>, <span class="dv">2161</span>), <span class="co"># Hour 2161 of 2019 (April 1st)</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">frequency =</span> <span class="dv">8766</span>       <span class="co"># Hourly frequency per year</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert time series object to dataframe (for plotting):</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>demand_df <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hour    =</span> <span class="fu">as.numeric</span>(<span class="fu">time</span>(demand_ts)),</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">count   =</span> <span class="fu">as.numeric</span>(demand_ts)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_df,</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> hour,</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> count)) <span class="sc">+</span>  </span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa hourly electricity demand.'</span>, </span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (hours)'</span>,</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Hourly peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="portfolio_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As seen in the above plot, we cannot get a clear idea of the seasonality. We need to aggregate the data.</p>
+<p>To handle the leap years present in the data we will use tsibble.</p>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a tsibble dataframe:</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>df_ts <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">datetime=</span><span class="fu">seq</span>(<span class="at">from=</span><span class="fu">as.POSIXct</span>(<span class="st">'2019-04-01 00:00:00'</span>),</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">length.out=</span><span class="fu">length</span>(demand_ts),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by=</span><span class="st">'hour'</span>),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">demand=</span><span class="fu">as.numeric</span>(demand_ts)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>               ) <span class="sc">|&gt;</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index=</span>datetime)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to daily values:</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>demand_daily_ts <span class="ot">=</span> df_ts <span class="sc">|&gt;</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_by</span>(<span class="at">date=</span><span class="sc">~</span><span class="fu">as.Date</span>(.))<span class="sc">|&gt;</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">demand_mean=</span><span class="fu">mean</span>(demand,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_daily_ts,</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> date,</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> demand_mean)) <span class="sc">+</span>  </span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa daily electricity demand.'</span>, </span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (days)'</span>,</span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Daily peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="portfolio_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Again, there is still a lot of unnecessary noise in the data so we’re going to aggregate to months.</p>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to monthly values:</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>demand_monthly_ts <span class="ot">=</span> df_ts <span class="sc">|&gt;</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_by</span>(<span class="at">year_month=</span><span class="sc">~</span><span class="fu">yearmonth</span>(.))<span class="sc">|&gt;</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">demand_mean=</span><span class="fu">mean</span>(demand,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_monthly_ts,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year_month,</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> demand_mean)) <span class="sc">+</span>  </span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa monthly electricity demand.'</span>, </span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (months)'</span>,</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Monthly peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="portfolio_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 <section id="project-2" class="level2">
 <h2 class="anchored" data-anchor-id="project-2">Project 2</h2>
+<p>The plan for this project is to fit all the autoregressive models to both datasets, compare them and forecast using the best models. I’m hoping to then use these same datasets in another projects to see if SST and historic dam levels can be used to predict drought in Southern Africa (I’m not 100% sure how I’m going to do this but I think it’ll be interesting)</p>
+<p>Purely for interests sake, here is a website that maps the sea surface temperature anomlaies: https://earth.nullschool.net/#current/ocean/surface/currents/overlay=sea_surface_temp_anomaly/orthographic=-100.92,9.72,366/loc=-99.041,-1.152</p>
+<p>SST along the equatorial band in the eastern and central Pacific is much higher than past temperatures. This is aligning with experts prediciting a super El Nino in 2026/2027.</p>
 <ul>
-<li><strong>Section &amp; Topic:</strong>[cite: 1]</li>
-<li><strong>Project Type:</strong> (Implementation / Shiny App / Exploration / Simulation)[cite: 1]</li>
-<li><strong>Question / Aim:</strong>[cite: 1]</li>
-<li><strong>Data Used:</strong> (Include source details if real-world data)[cite: 1]</li>
-<li><strong>Methods Used:</strong>[cite: 1]</li>
+<li><strong>Section &amp; Topic:</strong> Autoregressive Models</li>
+<li><strong>Project Type:</strong> Model implementaion</li>
+<li><strong>Question / Aim:</strong> Is sea surface temperature in the eastern Pacific Ocean and Theewaterskloof dam levels predictable?<br>
+</li>
+<li><strong>Data Used:</strong> [https://www.pmel.noaa.gov/tao/drupal/disdel/] [https://odp-cctegis.opendata.arcgis.com/] I will reference this properly!</li>
+<li><strong>Methods Used:</strong> AR,MA,ARMA,ARIMA,SARIMA,SARIMAX (at least this is the plan)</li>
 </ul>
 </section>
 <section id="key-findings-1" class="level2">
@@ -1666,6 +1771,265 @@ Training set -0.03689673</code></pre>
 <ul>
 <li><a href="../appendix/code-and-data.qmd">Detailed Analysis &amp; Code Script</a>[cite: 1]</li>
 </ul>
+</section>
+</section>
+<section id="predicting-drought-in-southern-africa" class="level1">
+<h1>Predicting drought in Southern Africa</h1>
+<p>The aim of this project is to predict Theewaterskloof dam levels as well changes in sea surface temperatures in the eastern Pacific Ocean (along 95W) and use this data to predict drought occurrence in Southern Africa.</p>
+<p>The El Nino phase of the El Nino Southern Oscillation (ENSO) is characterise by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak in December. An El Nino event causes warm and dry conditions over Southern Africa, typically taking effect 3-6 months after the onset of El Nino, in the Pacific. Over the 2015-2016 season, the El Nino weather patterns resulted in prolonged drought in Southern Africa with dam levels dropping and severe water restrictions being implemented.</p>
+<p>The South African Weather Service (SAWS) is warning against a super El nino event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Nino.</p>
+<p>We are interested in the Theewaterskloof dam current levels as Theewaterskloof is the main supplier of water to Cape Town.</p>
+<p>References:</p>
+<p>[https://onlinelibrary.wiley.com/doi/abs/10.1002/env.476?casa_token=Eg_zhVj43usAAAAA%3Ar0WptInFBau9fa2gbi2g7VfKEkwccQlk-l0YIV8mbMZnQvBcHiz9Cc_yBXPmfHgftiHsExL1riAtWaHZKw]</p>
+<p>[https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(03)12421-X/fulltext]</p>
+<p>[https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/]</p>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<p>In the <code>Dam_Levels_from_2000</code> dataset there was one duplicated observation. The second observation was removed as, compared to the other observations, it appeared to be a mistake.</p>
+<p><em>I need better justification for this</em></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-daily_damlvl" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-daily_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;13: Theewaterskloof dam capacity from January 2000 to October 2021.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-daily_sst" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-daily_sst-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;14: Average Pacific sea surface temperature from January 2000 to October 2021.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>As seen in both <a href="#fig-daily_damlvl">Figure&nbsp;13</a> and <a href="#fig-daily_sst">Figure&nbsp;14</a> there is noise in the daily observations. The data is aggregated to monthyl observations to obtain a clearer visualisation of the seasonality present in the data.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-monthly_damlvl" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-monthly_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;15: Theewaterskloof dam capacity from January 2000 to October 2021.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-monthly_sst" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-monthly_sst-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;16: Average Pacific sea surface temperature from January 2000 to October 2021.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>From <a href="#fig-monthly_damlvl">Figure&nbsp;15</a> and <a href="#fig-monthly_sst">Figure&nbsp;16</a> it is apparent that there is seasonality in the dataset.</p>
+<p>We have 21 years worth of data. The <code>Dam_Levels_from_2000</code> dataset has observations until January 2026 but due to missing observations in the <code>sst</code> dataset we have truncated the data. We are interested in forecasting until 2028. As the forecast horizon grows we can expect increased uncertainty in our predictions. Experts are prediciting an exceptionally strong El Nino event in 2026/2027. It will be interesting to see if these trends are picked up.</p>
+<p>Southern Africa experienced severe droughts in 2015/2016 and 2018/2019. These years also saw significant El nino conditions.</p>
+<p><em>I need to have a closer look at the data, the sst data has observations all the way up until today (continuoulsy uodating). It’s also worth noting that there is approximately a 3-6 month lag between increased sst and drought in southern africa - we could expand the number of observations for the dam levels dataset by approximately 6 months because of this</em></p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig_15161819-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Theewaterskloof dam capacity fro 2015-2016 and 2018-2019.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Look at the actual El Nino events here as well as sea surface temperatures 6 months before these observations for comparison.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-season" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-season-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;17: Seasonal pattern of Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The sea surface temperatures and the dam levels have inverse trends. When sea surface tempertures are high, dam levels are low.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-subseries" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-subseries-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;18: Monthly trends in Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-lag" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-lag-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;19: Lad plots of Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Need to mention autocorrelation herte.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-acf_pacf_dam" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-acf_pacf_dam-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;20: ACF and PACF plots for Theewaterskloof dam capacity.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-acf_pacf_sst" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-acf_pacf_sst-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;21: ACF and PACF plots for Pacific sea surface temperature.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-decomp_damlvl" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-decomp_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;22: Decomposition of Theewaterskloof dam capacity series.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-decomp_sst" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-decomp_sst-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;23: Decomposition of average Pacific sea surface temperature series.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Comment on trends, seasonality etc for both sst and dam levels.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>        Mean    Naive Seasonal naive    Drift
+[1,] 26.1521 7.320172       17.53497 7.320172</code></pre>
+</div>
+</div>
+<p>Here we can see the errors assocated with each of our benchmark models. Since the Naive and Drift models both have the same error associated with them we will use the Drift model as a comparison to the other time series models used.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  nsdiffs
+    &lt;int&gt;
+1       1</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  ndiffs
+   &lt;int&gt;
+1      0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  nsdiffs
+    &lt;int&gt;
+1       1</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  ndiffs
+   &lt;int&gt;
+1      0</code></pre>
+</div>
+</div>
+<p>We only need to seasonally difference the <code>Dam_Levels_from_2000</code> and <code>sst</code> datasets, no linear differencing is required.</p>
+</section>
+<section id="model-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="model-fitting">Model fitting</h2>
+<p>I have naively fitted MA,AR,ARMA,ARIMA,SARIMA here just to get a gauge of how they look.</p>
+<section id="dam-levels" class="level3">
+<h3 class="anchored" data-anchor-id="dam-levels">Dam levels</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A mable: 6 x 2
+# Key:     Model [6]
+  Model                             Fit
+  &lt;chr&gt;                         &lt;model&gt;
+1 ar             &lt;ARIMA(1,0,0) w/ mean&gt;
+2 ma             &lt;ARIMA(0,0,1) w/ mean&gt;
+3 arma           &lt;ARIMA(1,0,1) w/ mean&gt;
+4 arima                  &lt;ARIMA(1,1,1)&gt;
+5 sarima      &lt;ARIMA(1,0,1)(1,1,1)[12]&gt;
+6 auto_sarima &lt;ARIMA(3,0,1)(1,1,0)[12]&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-naive_forecast_damlvl" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-naive_forecast_damlvl-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;24: Naive forecasting of fitted models.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-naive_forecast_damlvl_2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-naive_forecast_damlvl_2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;25: Naive forecasting of fitted models.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sea-surface-temperature" class="level3">
+<h3 class="anchored" data-anchor-id="sea-surface-temperature">Sea surface temperature</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A mable: 6 x 2
+# Key:     Model [6]
+  Model                             Fit
+  &lt;chr&gt;                         &lt;model&gt;
+1 ar             &lt;ARIMA(1,0,0) w/ mean&gt;
+2 ma             &lt;ARIMA(0,0,1) w/ mean&gt;
+3 arma           &lt;ARIMA(1,0,1) w/ mean&gt;
+4 arima                  &lt;ARIMA(1,1,1)&gt;
+5 sarima      &lt;ARIMA(1,0,1)(1,1,1)[12]&gt;
+6 auto_sarima &lt;ARIMA(2,0,1)(2,1,0)[12]&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-naive_forecast_sst" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-naive_forecast_sst-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;26: Naive forecasting of fitted models.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-naive_forecast_sst_2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-naive_forecast_sst_2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;27: Naive forecasting of fitted models.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="project-3" class="level2">
 <h2 class="anchored" data-anchor-id="project-3">Project 3</h2>

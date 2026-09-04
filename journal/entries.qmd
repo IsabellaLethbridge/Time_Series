@@ -11,19 +11,29 @@ editor: visual
 
 **What I Did:**
 
-Plotted time series plots for discrete and continuous time series data.
+Plotted time series plots for discrete and continuous time series data: [Section 1](../section-1/section-1.qmd)
 
 **What I Learned:**
 
 A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).
 
-Assumption: equally spaced measurements Assumption: autocorrelation across time
+::: callout-important
+## Assumption
 
-A time series is a 'single' measurement taken at multiple points through time to give a sequence of measurements through time.
+Equally spaced measurements.
+:::
+
+::: callout-important
+## Assumption
+
+Autocorrelation across time.
+:::
+
+A time series is a 'single' measurement taken at multiple points through time to give a series of measurements through time.
 
 Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.
 
-**Difficulties/Questions:**
+**Questions:**
 
 Q: How does noise introduce different realisations?
 
@@ -31,9 +41,9 @@ A:
 
 **What to Do Next:**
 
-*????*
+The Forecasting Problem
 
-**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+**Links:** [AI Log](../ai-use-log.qmd)
 
 ## Lecture 2
 
@@ -43,49 +53,78 @@ A:
 
 **What I Did:**
 
-*????*
+Looked at stationary AR processes: [Section 1](../section-1/section-1.qmd)
 
 **What I Learned:**
 
 A forecast horizon is how far into the future you try to predict values. When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data).
 
-Forecasting - a prediction about what will happen in the future based on evidence the we have (with some uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates)
+::: callout-tip
+## Forecasting vs Goal setting vs Planning
 
-Goal setting - what we want to happen in the future Planning - how to reach our goal
+A forecast is prediction about what will happen in the future based on evidence the we have (with some uncertainty). Goal setting is what we want to happen in the future and planning is how we reach our goal.
+:::
 
-A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.
+The uncertainty associated with forecasting gives rise to forecast intervals (not just point estimates).
 
-**Difficulties/Questions:**
+A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks die out, forcing the forecast back to the process mean.
 
-Q: if a process changes over time, at what point can we discard previous observations when forecasting? \newline A:
+**Questions:**
+
+Q: If a process changes over time, at what point can we discard previous observations when forecasting?
+
+A:
 
 **What to Do Next:**
 
-*????*
+Exploring a Series
 
-**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+**Links:** [AI Log](../ai-use-log.qmd)
 
 ## Lecture 3
 
 **Date:** 17 August 2026
 
-**Topic covered:** Exploring a Series, Benchmarks and Forecast Accuracy
+**Topics covered:** Exploring a Series, Benchmarks and Forecast Accuracy
 
 **What I Did:**
 
-Worked through *Time Series Analysis in R*
+Worked through *Time Series Analysis in R* using the `AirPassengers` dataset: [Section 1](../section-1/section-1.qmd)
 
 **What I Learned:**
 
-**Difficulties/Questions:**
+Time domain looks at previous observations whereas the frequency domain looks at previous trends. Often you will need to look at both of these domains.
 
-Q: A:
+::: callout-tip
+## Trend vs Seasonality vs Cycles
+
+A trend is the long-run direction of movement in a time series. Seasonality models a pattern that repeats itself at a fixed AND known interval. A cycle is a long oscillation where the length is NOT fixed.
+:::
+
+When dealing with time series data you may encounter changing variability. Here you need to transform the data to remove the heteroskedasticity. When outliers/structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.
+
+There are 4 benchmark forecasting models: mean, naive, seasonal naive and drift. 
+
+::: callout-warning
+## Residuals are not forecast errors
+
+Residuals are for diagnostics; forecast errors are for evaluation!
+:::
+
+You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model. 
+
+**Questions:**
+
+Q: How do you identify a significant structural break?
+
+A:
 
 **What to Do Next:**
 
-*????*
+Operators, Stationarity and White Noise
 
-**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+**Links:** [AI Log](../ai-use-log.qmd)
+
 
 ## Lecture 4
 
@@ -95,72 +134,94 @@ Q: A:
 
 **What I Did:**
 
-Plotted time series plots for discrete and continuous time series data.
+Continued working through *Time Series Analysis in R* using the `AirPassengers` dataset: [Section 1](../section-1/section-1.qmd)
 
 **What I Learned:**
 
-A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).
+Since you can't perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observations while moving the forecast origin forward. Sliding window validation keep the training window length fixed while moving the forecast origin forward. 
 
-Assumption: equally spaced measurements Assumption: autocorrelation across time
+Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.  
 
-A time series is a 'single' measurement taken at multiple points through time to give a sequence of measurements through time.
+We want our data to be stationary and look like white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model. 
 
-Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.
+Weak white noise requires uncorrelated observations but strict white noise requires *iid* observations. 
 
-**Difficulties/Questions:**
+**Questions:**
 
-Q: How does noise introduce different realisations? A:
+Q: What is the difference between walk-forward and expanding window?
+
+A:
 
 **What to Do Next:**
 
-*????*
+Conditional Variance Models
 
-**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+**Links:** [AI Log](../ai-use-log.qmd)
+
 
 ## Lecture 5
 
 **Date:** 24 August 2026
 
-**Topic covered:** ree Validation Strategies, Linear Models for the Conditional Mean
+**Topic covered:** Linear Models for the Conditional Mean
 
 **What I Did:**
 
-
+Fit both ARIMA and SARIMA to the `AirPassengers` dataset:[Section 1](../section-1/section-1.qmd)
 
 **What I Learned:**
 
+The moving average, MA($q$), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. 
 
+The autoregressive, AR($p$), model regresses a series on its own path. 
+
+ARMA combines both MA and AR models. 
+
+::: callout-note
+## Note
+
+ACF and PACF graphs are used to determine which ARMA model to fit. 
+:::
+
+The ARIMA($p,d,q$) model allows for differencing and the SARIMA model includes seasonality.
 
 **Difficulties/Questions:**
 
+Q:
 
+A:
 
 **What to Do Next:**
 
-*????*
+Conditional Variance Models
 
-**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+**Links:** [AI Log](../ai-use-log.qmd)
+
 
 ## Lecture 6
 
 **Date:** 31 August 2026
 
-**Topic covered:** 
+**Topic covered:** Time Series Analysis Revision 
 
 **What I Did:**
 
+Finished working through *Time Series Analysis in R*: [Section 1](../section-1/section-1.qmd)
 
+*I still need to do this! Aim to have it done by Monday 7 September.*
 
 **What I Learned:**
 
+Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a tsibble(), time series plots, time series patterns, autocorrelation functions, time series models, stationarity, differencing, unit root tests, 
 
+**Questions:**
 
-**Difficulties/Questions:**
+Q:
 
-
+A:
 
 **What to Do Next:**
 
-*????*
+Conditional Variance Models, Spectral Analysis
 
-**Links:** [Link to Section Work](../section-1/section-1.qmd) \| [Link to AI Log](../ai-use-log.qmd)
+**Links:** [AI Log](../ai-use-log.qmd)

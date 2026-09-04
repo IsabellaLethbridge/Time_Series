@@ -3,6 +3,8 @@ format: html
 editor: visual
 ---
 
+This is just basic EDA so far. I might only use this dataset to fit a hidden markov model once we've covered that topic in class. 
+
 -   **Section & Topic:**\[cite: 1\]
 -   **Project Type:** (Implementation / Shiny App / Exploration / Simulation)\[cite: 1\]
 -   **Question / Aim:**\[cite: 1\]
@@ -94,7 +96,7 @@ ggplot(data = demand_daily_ts,
        y = 'Daily peak demand')
 ```
 
-Again, there is still a lot of unnecessary noise in the data so we're going to aggregate to months. 
+Again, there is still a lot of unnecessary noise in the data so we're going to aggregate to months.
 
 ```{r}
 # Aggregate to monthly values:

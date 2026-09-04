@@ -59,6 +59,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -247,87 +249,182 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Date:</strong> 27 July 2026</p>
 <p><strong>Topic covered:</strong> Foundations</p>
 <p><strong>What I Did:</strong></p>
-<p>Plotted time series plots for discrete and continuous time series data.</p>
+<p>Plotted time series plots for discrete and continuous time series data: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
 <p>A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).</p>
-<p>Assumption: equally spaced measurements Assumption: autocorrelation across time</p>
-<p>A time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Equally spaced measurements.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Autocorrelation across time.</p>
+</div>
+</div>
+<p>A time series is a ‘single’ measurement taken at multiple points through time to give a series of measurements through time.</p>
 <p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
-<p><strong>Difficulties/Questions:</strong></p>
+<p><strong>Questions:</strong></p>
 <p>Q: How does noise introduce different realisations?</p>
 <p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p><em>????</em></p>
-<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+<p>The Forecasting Problem</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
 <section id="lecture-2" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-2">Lecture 2</h2>
 <p><strong>Date:</strong> 3 August 2026</p>
 <p><strong>Topic covered:</strong> The Forecasting Problem</p>
 <p><strong>What I Did:</strong></p>
-<p><em>????</em></p>
+<p>Looked at stationary AR processes: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
 <p>A forecast horizon is how far into the future you try to predict values. When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data).</p>
-<p>Forecasting - a prediction about what will happen in the future based on evidence the we have (with some uncertainty). This uncertainty gives rise to forecast intervals (not just point estimates)</p>
-<p>Goal setting - what we want to happen in the future Planning - how to reach our goal</p>
-<p>A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.</p>
-<p><strong>Difficulties/Questions:</strong></p>
-<p>Q: if a process changes over time, at what point can we discard previous observations when forecasting? A:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Forecasting vs Goal setting vs Planning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A forecast is prediction about what will happen in the future based on evidence the we have (with some uncertainty). Goal setting is what we want to happen in the future and planning is how we reach our goal.</p>
+</div>
+</div>
+<p>The uncertainty associated with forecasting gives rise to forecast intervals (not just point estimates).</p>
+<p>A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks die out, forcing the forecast back to the process mean.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: If a process changes over time, at what point can we discard previous observations when forecasting?</p>
+<p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p><em>????</em></p>
-<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+<p>Exploring a Series</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
 <section id="lecture-3" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-3">Lecture 3</h2>
 <p><strong>Date:</strong> 17 August 2026</p>
-<p><strong>Topic covered:</strong> Exploring a Series, Benchmarks and Forecast Accuracy</p>
+<p><strong>Topics covered:</strong> Exploring a Series, Benchmarks and Forecast Accuracy</p>
 <p><strong>What I Did:</strong></p>
-<p>Worked through <em>Time Series Analysis in R</em></p>
+<p>Worked through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p><strong>Difficulties/Questions:</strong></p>
-<p>Q: A:</p>
+<p>Time domain looks at previous observations whereas the frequency domain looks at previous trends. Often you will need to look at both of these domains.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Trend vs Seasonality vs Cycles
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A trend is the long-run direction of movement in a time series. Seasonality models a pattern that repeats itself at a fixed AND known interval. A cycle is a long oscillation where the length is NOT fixed.</p>
+</div>
+</div>
+<p>When dealing with time series data you may encounter changing variability. Here you need to transform the data to remove the heteroskedasticity. When outliers/structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.</p>
+<p>There are 4 benchmark forecasting models: mean, naive, seasonal naive and drift.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Residuals are not forecast errors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Residuals are for diagnostics; forecast errors are for evaluation!</p>
+</div>
+</div>
+<p>You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: How do you identify a significant structural break?</p>
+<p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p><em>????</em></p>
-<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+<p>Operators, Stationarity and White Noise</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
 <section id="lecture-4" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-4">Lecture 4</h2>
 <p><strong>Date:</strong> 19 August 2026</p>
 <p><strong>Topic covered:</strong> Three Validation Strategies, Linear Models for the Conditional Mean</p>
 <p><strong>What I Did:</strong></p>
-<p>Plotted time series plots for discrete and continuous time series data.</p>
+<p>Continued working through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).</p>
-<p>Assumption: equally spaced measurements Assumption: autocorrelation across time</p>
-<p>A time series is a ‘single’ measurement taken at multiple points through time to give a sequence of measurements through time.</p>
-<p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
-<p><strong>Difficulties/Questions:</strong></p>
-<p>Q: How does noise introduce different realisations? A:</p>
+<p>Since you can’t perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observations while moving the forecast origin forward. Sliding window validation keep the training window length fixed while moving the forecast origin forward.</p>
+<p>Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.</p>
+<p>We want our data to be stationary and look like white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model.</p>
+<p>Weak white noise requires uncorrelated observations but strict white noise requires <em>iid</em> observations.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: What is the difference between walk-forward and expanding window?</p>
+<p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p><em>????</em></p>
-<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+<p>Conditional Variance Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
 <section id="lecture-5" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-5">Lecture 5</h2>
 <p><strong>Date:</strong> 24 August 2026</p>
-<p><strong>Topic covered:</strong> ree Validation Strategies, Linear Models for the Conditional Mean</p>
+<p><strong>Topic covered:</strong> Linear Models for the Conditional Mean</p>
 <p><strong>What I Did:</strong></p>
+<p>Fit both ARIMA and SARIMA to the <code>AirPassengers</code> dataset:<a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
+<p>The moving average, MA(<span class="math inline">\(q\)</span>), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory.</p>
+<p>The autoregressive, AR(<span class="math inline">\(p\)</span>), model regresses a series on its own path.</p>
+<p>ARMA combines both MA and AR models.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ACF and PACF graphs are used to determine which ARMA model to fit.</p>
+</div>
+</div>
+<p>The ARIMA(<span class="math inline">\(p,d,q\)</span>) model allows for differencing and the SARIMA model includes seasonality.</p>
 <p><strong>Difficulties/Questions:</strong></p>
+<p>Q:</p>
+<p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p><em>????</em></p>
-<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+<p>Conditional Variance Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
 <section id="lecture-6" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-6">Lecture 6</h2>
 <p><strong>Date:</strong> 31 August 2026</p>
-<p><strong>Topic covered:</strong></p>
+<p><strong>Topic covered:</strong> Time Series Analysis Revision</p>
 <p><strong>What I Did:</strong></p>
+<p>Finished working through <em>Time Series Analysis in R</em>: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><em>I still need to do this! Aim to have it done by Monday 7 September.</em></p>
 <p><strong>What I Learned:</strong></p>
-<p><strong>Difficulties/Questions:</strong></p>
+<p>Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a tsibble(), time series plots, time series patterns, autocorrelation functions, time series models, stationarity, differencing, unit root tests,</p>
+<p><strong>Questions:</strong></p>
+<p>Q:</p>
+<p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p><em>????</em></p>
-<p><strong>Links:</strong> <a href="../section-1/section-1.html">Link to Section Work</a> | <a href="../ai-use-log.html">Link to AI Log</a></p>
+<p>Conditional Variance Models, Spectral Analysis</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 
 
 </section>
