@@ -103,7 +103,7 @@ A trend is the long-run direction of movement in a time series. Seasonality mode
 
 When dealing with time series data you may encounter changing variability. Here you need to transform the data to remove the heteroskedasticity. When outliers/structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.
 
-There are 4 benchmark forecasting models: mean, naive, seasonal naive and drift. 
+There are 4 benchmark forecasting models: mean, naive, seasonal naive and drift.
 
 ::: callout-warning
 ## Residuals are not forecast errors
@@ -111,7 +111,7 @@ There are 4 benchmark forecasting models: mean, naive, seasonal naive and drift.
 Residuals are for diagnostics; forecast errors are for evaluation!
 :::
 
-You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model. 
+You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model.
 
 **Questions:**
 
@@ -125,7 +125,6 @@ Operators, Stationarity and White Noise
 
 **Links:** [AI Log](../ai-use-log.qmd)
 
-
 ## Lecture 4
 
 **Date:** 19 August 2026
@@ -138,13 +137,13 @@ Continued working through *Time Series Analysis in R* using the `AirPassengers` 
 
 **What I Learned:**
 
-Since you can't perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observations while moving the forecast origin forward. Sliding window validation keep the training window length fixed while moving the forecast origin forward. 
+Since you can't perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observations while moving the forecast origin forward. Sliding window validation keep the training window length fixed while moving the forecast origin forward.
 
-Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.  
+Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.
 
-We want our data to be stationary and look like white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model. 
+We want our data to be stationary and look like white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model.
 
-Weak white noise requires uncorrelated observations but strict white noise requires *iid* observations. 
+Weak white noise requires uncorrelated observations but strict white noise requires *iid* observations.
 
 **Questions:**
 
@@ -158,7 +157,6 @@ Conditional Variance Models
 
 **Links:** [AI Log](../ai-use-log.qmd)
 
-
 ## Lecture 5
 
 **Date:** 24 August 2026
@@ -171,16 +169,16 @@ Fit both ARIMA and SARIMA to the `AirPassengers` dataset:[Section 1](../section-
 
 **What I Learned:**
 
-The moving average, MA($q$), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. 
+The moving average, MA($q$), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory.
 
-The autoregressive, AR($p$), model regresses a series on its own path. 
+The autoregressive, AR($p$), model regresses a series on its own path.
 
-ARMA combines both MA and AR models. 
+ARMA combines both MA and AR models.
 
 ::: callout-note
 ## Note
 
-ACF and PACF graphs are used to determine which ARMA model to fit. 
+ACF and PACF graphs are used to determine which ARMA model to fit.
 :::
 
 The ARIMA($p,d,q$) model allows for differencing and the SARIMA model includes seasonality.
@@ -197,12 +195,11 @@ Conditional Variance Models
 
 **Links:** [AI Log](../ai-use-log.qmd)
 
-
 ## Lecture 6
 
 **Date:** 31 August 2026
 
-**Topic covered:** Time Series Analysis Revision 
+**Topic covered:** Time Series Analysis Revision
 
 **What I Did:**
 
@@ -212,7 +209,7 @@ Finished working through *Time Series Analysis in R*: [Section 1](../section-1/s
 
 **What I Learned:**
 
-Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a tsibble(), time series plots, time series patterns, autocorrelation functions, time series models, stationarity, differencing, unit root tests, 
+Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a tsibble(), time series plots, time series patterns, autocorrelation functions, time series models, stationarity, differencing, unit root tests,
 
 **Questions:**
 
@@ -225,3 +222,30 @@ A:
 Conditional Variance Models, Spectral Analysis
 
 **Links:** [AI Log](../ai-use-log.qmd)
+
+## Lecture 7
+
+**Date:** 14 September 2026
+
+**Topic covered:** Exponential Smoothing
+
+**What I Did:**
+
+Worked through Exponential Smoothing exercises: [Section 2](../section-2/section-2.qmd)
+
+**What I Learned:**
+
+
+
+**Questions:**
+
+Q:
+
+A:
+
+**What to Do Next:**
+
+Time Series Regression Models
+
+**Links:** [AI Log](../ai-use-log.qmd)
+

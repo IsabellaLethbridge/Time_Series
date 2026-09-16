@@ -911,4 +911,30 @@ autoplot(forecast(fit, h = 36)) +
 
 # Conditional Variance Models
 
+```{r}
+#| echo: false
+#| warning: false 
+data(Tbrate,package='Ecdat')
+library(tseries)
+library(fGarch)
+```
+
+```{r}
+Tbill = Tbrate[,1]
+Del.Tbill = diff(Tbill)
+```
+
+## Problem 1
+
+```{r}
+library(FinTS)
+library(rugarch)
+
+plot(Tbrate[,2],type='l',main='Raw data')
+plot(Tbrate[,1],type='l',main='Returns')
+plot(Del.Tbrill)
+```
+
+
+
 # Spectral Analysis

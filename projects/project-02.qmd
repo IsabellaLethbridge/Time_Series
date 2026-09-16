@@ -3,16 +3,16 @@ format: html
 editor: visual
 ---
 
-The plan for this project is to fit all the autoregressive models to both datasets, compare them and forecast using the best models. I'm hoping to then use these same datasets in another projects to see if SST and historic dam levels can be used to predict drought in Southern Africa (I'm not 100% sure how I'm going to do this but I think it'll be interesting) 
+The plan for this project is to fit all the autoregressive models to both datasets, compare them and forecast using the best models. I'm hoping to then use these same datasets in another projects to see if SST and historic dam levels can be used to predict drought in Southern Africa (I'm not 100% sure how I'm going to do this but I think it'll be interesting)
 
 Purely for interests sake, here is a website that maps the sea surface temperature anomlaies: https://earth.nullschool.net/#current/ocean/surface/currents/overlay=sea_surface_temp_anomaly/orthographic=-100.92,9.72,366/loc=-99.041,-1.152
 
-SST along the equatorial band in the eastern and central Pacific is much higher than past temperatures. This is aligning with experts prediciting a super El Nino in 2026/2027. 
+SST along the equatorial band in the eastern and central Pacific is much higher than past temperatures. This is aligning with experts prediciting a super El Nino in 2026/2027.
 
 -   **Section & Topic:** Autoregressive Models
 -   **Project Type:** Model implementaion
--   **Question / Aim:** Is sea surface temperature in the eastern Pacific Ocean and Theewaterskloof dam levels predictable?  
--   **Data Used:** [https://www.pmel.noaa.gov/tao/drupal/disdel/] [https://odp-cctegis.opendata.arcgis.com/] I will reference this properly!
+-   **Question / Aim:** Is sea surface temperature in the eastern Pacific Ocean and Theewaterskloof dam levels predictable?\
+-   **Data Used:** \[https://www.pmel.noaa.gov/tao/drupal/disdel/\] \[https://odp-cctegis.opendata.arcgis.com/\] I will reference this properly!
 -   **Methods Used:** AR,MA,ARMA,ARIMA,SARIMA,SARIMAX (at least this is the plan)
 
 ## Key Findings
@@ -50,24 +50,23 @@ library(patchwork)
 library(forecast)
 ```
 
-# Predicting drought in Southern Africa 
+# Predicting drought in Southern Africa
 
-The aim of this project is to predict Theewaterskloof dam levels as well changes in sea surface temperatures in the eastern Pacific Ocean (along 95W) and use this data to predict drought occurrence in Southern Africa. 
+The aim of this project is to predict Theewaterskloof dam levels as well changes in sea surface temperatures in the eastern Pacific Ocean (along 95W) and use this data to predict drought occurrence in Southern Africa.
 
 The El Nino phase of the El Nino Southern Oscillation (ENSO) is characterise by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak in December. An El Nino event causes warm and dry conditions over Southern Africa, typically taking effect 3-6 months after the onset of El Nino, in the Pacific. Over the 2015-2016 season, the El Nino weather patterns resulted in prolonged drought in Southern Africa with dam levels dropping and severe water restrictions being implemented.
 
-The South African Weather Service (SAWS) is warning against a super El nino event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Nino. 
+The South African Weather Service (SAWS) is warning against a super El nino event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Nino.
 
-We are interested in the Theewaterskloof dam current levels as Theewaterskloof is the main supplier of water to Cape Town.
+We are interested in the Theewaterskloof dam current levels as Theewaterskloof dam is the main supplier of water to Cape Town.
 
-References: 
+References:
 
-[https://onlinelibrary.wiley.com/doi/abs/10.1002/env.476?casa_token=Eg_zhVj43usAAAAA%3Ar0WptInFBau9fa2gbi2g7VfKEkwccQlk-l0YIV8mbMZnQvBcHiz9Cc_yBXPmfHgftiHsExL1riAtWaHZKw]
+\[https://onlinelibrary.wiley.com/doi/abs/10.1002/env.476?casa_token=Eg_zhVj43usAAAAA%3Ar0WptInFBau9fa2gbi2g7VfKEkwccQlk-l0YIV8mbMZnQvBcHiz9Cc_yBXPmfHgftiHsExL1riAtWaHZKw\]
 
-[https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(03)12421-X/fulltext]
+\[https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(03)12421-X/fulltext\]
 
-[https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/]
-
+\[https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/\]
 
 ```{r}
 #| echo: false
@@ -197,9 +196,7 @@ cut_ts = all_ts[1:7974,]
 
 ## Exploratory Data Analysis
 
-In the `Dam_Levels_from_2000` dataset there was one duplicated observation. The second observation was removed as, compared to the other observations, it appeared to be a mistake. 
-
-*I need better justification for this* 
+The duplicate observation in the `Dam_Levels_from_2000` dataset was removed as.
 
 ```{r}
 #| label: fig-daily_damlvl
@@ -216,7 +213,7 @@ ggplot(data = damlvl_ts,
                      y = THEEWATERSKLOOF_Current)) +  
   geom_line(col = 'purple')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Theewaterskloof dam capacity.', 
+  labs(title = 'Theewaterskloof dam capacity from 2000 to 2021.', 
        x = 'Time (day)',
        y = 'Daily dam capacity (%)')+
   theme(
@@ -248,7 +245,7 @@ ggplot(data = cut_ts,
 
 ```
 
-As seen in both @fig-daily_damlvl and @fig-daily_sst there is noise in the daily observations. The data is aggregated to monthyl observations to obtain a clearer visualisation of the seasonality present in the data. 
+As seen in both @fig-daily_damlvl and @fig-daily_sst there is noise in the daily observations. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise. 
 
 ```{r}
 #| label: fig-monthly_damlvl
@@ -270,7 +267,7 @@ ggplot(data = monthly_damlvl_ts,
                      y = current_mean)) +  
   geom_line(col = 'purple')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Theewaterskloof dam capacity.', 
+  labs(title = 'Theewaterskloof dam capacity from 2000 to 2021.', 
        x = 'Time (month)',
        y = 'Monthly dam capacity (%)')+
   theme(
@@ -298,7 +295,7 @@ ggplot(data = monthly_ts,
                      y = current_mean)) +  
   geom_line(col = 'deeppink')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Sea surface temperature in the Pacific from 2000 to 2026.',
+  labs(title = 'Sea surface temperature in the Pacific from 2000 to 2021.',
        x = 'Time (day)',
        y = 'Sea surface temperature (C)')+
   theme(
@@ -306,13 +303,15 @@ ggplot(data = monthly_ts,
   )
 ```
 
-From @fig-monthly_damlvl and @fig-monthly_sst it is apparent that there is seasonality in the dataset. 
+As seen in @fig-monthly_damlvl and @fig-monthly_sst, both datasets display strong 12-month seasonal patterns.
 
-We have 21 years worth of data. The `Dam_Levels_from_2000` dataset has observations until January 2026 but due to missing observations in the `sst` dataset we have truncated the data. We are interested in forecasting until 2028. As the forecast horizon grows we can expect increased uncertainty in our predictions. Experts are prediciting an exceptionally strong El Nino event in 2026/2027. It will be interesting to see if these trends are picked up. 
+Both datasets have 21 years worth of data. The `Dam_Levels_from_2000` dataset has observations until January 2026 but due to missing observations in the `sst` dataset we have truncated the data. We are interested in forecasting until 2023, this will allow for the evaluation of the model against the actual dam levels that were observed over this period. 
 
-Southern Africa experienced severe droughts in 2015/2016 and 2018/2019. These years also saw significant El nino conditions. 
+As the forecast horizon grows we can expect increased uncertainty in our predictions. Experts are predicting an exceptionally strong El Nino event in 2026/2027. It will be interesting to see if these trends are picked up.
 
-*I need to have a closer look at the data, the sst data has observations all the way up until today (continuoulsy uodating). It's also worth noting that there is approximately a 3-6 month lag between increased sst and drought in southern africa - we could expand the number of observations for the dam levels dataset by approximately 6 months because of this* 
+Southern Africa experienced severe droughts in 2015/2016 and 2018/2019. These years also saw significant El nino conditions.
+
+*I need to have a closer look at the data, the sst data has observations all the way up until today (continuoulsy uodating). It's also worth noting that there is approximately a 3-6 month lag between increased sst and drought in southern africa - we could expand the number of observations for the dam levels dataset by approximately 6 months because of this*
 
 ```{r}
 #| label: fig_15161819
@@ -359,7 +358,7 @@ plot_20182019 = ggplot(data = damlvl_2018_2019,
 plot_20152016 + plot_20182019
 ```
 
-Look at the actual El Nino events here as well as sea surface temperatures 6 months before these observations for comparison. 
+Look at the actual El Nino events here as well as sea surface temperatures 6 months before these observations for comparison.
 
 ```{r}
 #| echo: false
@@ -436,7 +435,7 @@ season_plot = monthly_ts |>
 season_damlvl_plot + season_plot
 ```
 
-The sea surface temperatures and the dam levels have inverse trends. When sea surface tempertures are high, dam levels are low. 
+The sea surface temperatures and the dam levels have inverse trends. When sea surface tempertures are high, dam levels are low.
 
 ```{r}
 #| label: fig-subseries
@@ -586,7 +585,6 @@ pacf_plot = monthly_ts |>
 acf_plot + pacf_plot
 ```
 
-
 ```{r}
 #| label: fig-decomp_damlvl
 #| fig-cap: "Decomposition of Theewaterskloof dam capacity series."
@@ -649,7 +647,7 @@ stl_plot = stl_fit |>
 stl_plot
 ```
 
-Comment on trends, seasonality etc for both sst and dam levels. 
+Comment on trends, seasonality etc for both sst and dam levels.
 
 ```{r}
 #| echo: false
@@ -672,7 +670,7 @@ colnames(err_damlvl_df) = c('Mean','Naive','Seasonal naive','Drift')
 err_damlvl_df
 ```
 
-Here we can see the errors assocated with each of our benchmark models. Since the Naive and Drift models both have the same error associated with them we will use the Drift model as a comparison to the other time series models used. 
+Here we can see the errors assocated with each of our benchmark models. Since the Naive and Drift models both have the same error associated with them we will use the Drift model as a comparison to the other time series models used.
 
 ```{r}
 #| echo: false
@@ -696,7 +694,7 @@ monthly_ts |>
   features(current_mean,unitroot_ndiffs)
 ```
 
-We only need to seasonally difference the `Dam_Levels_from_2000` and `sst` datasets, no linear differencing is required. 
+We only need to seasonally difference the `Dam_Levels_from_2000` and `sst` datasets, no linear differencing is required.
 
 ```{r}
 #| echo: false
@@ -709,9 +707,9 @@ We only need to seasonally difference the `Dam_Levels_from_2000` and `sst` datas
 # plot(diff_damlvl_ts)
 ```
 
-## Model fitting 
+## Model fitting
 
-I have naively fitted MA,AR,ARMA,ARIMA,SARIMA here just to get a gauge of how they look. 
+I have naively fitted MA,AR,ARMA,ARIMA,SARIMA here just to get a gauge of how they look.
 
 ### Dam levels
 
@@ -874,4 +872,3 @@ sst_fc |>
   theme_minimal(base_size=14) +
   theme(legend.position = "none")
 ```
-
