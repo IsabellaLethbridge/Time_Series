@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -236,6 +270,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#lecture-4" id="toc-lecture-4" class="nav-link" data-scroll-target="#lecture-4">Lecture 4</a></li>
   <li><a href="#lecture-5" id="toc-lecture-5" class="nav-link" data-scroll-target="#lecture-5">Lecture 5</a></li>
   <li><a href="#lecture-6" id="toc-lecture-6" class="nav-link" data-scroll-target="#lecture-6">Lecture 6</a></li>
+  <li><a href="#additional-lecture-1-with-sulaiman" id="toc-additional-lecture-1-with-sulaiman" class="nav-link" data-scroll-target="#additional-lecture-1-with-sulaiman">Additional Lecture 1 with Sulaiman</a></li>
+  <li><a href="#additional-lecture-2-with-sulaiman" id="toc-additional-lecture-2-with-sulaiman" class="nav-link" data-scroll-target="#additional-lecture-2-with-sulaiman">Additional Lecture 2 with Sulaiman</a></li>
+  <li><a href="#lecture-7" id="toc-lecture-7" class="nav-link" data-scroll-target="#lecture-7">Lecture 7</a></li>
+  <li><a href="#lecture-8" id="toc-lecture-8" class="nav-link" data-scroll-target="#lecture-8">Lecture 8</a></li>
+  <li><a href="#lecture-9" id="toc-lecture-9" class="nav-link" data-scroll-target="#lecture-9">Lecture 9</a></li>
+  <li><a href="#lecture-10" id="toc-lecture-10" class="nav-link" data-scroll-target="#lecture-10">Lecture 10</a></li>
   </ul>
 </nav>
     </div>
@@ -278,11 +318,26 @@ Assumption
 <p>Autocorrelation across time.</p>
 </div>
 </div>
-<p>A time series is a ‘single’ measurement taken at multiple points through time to give a series of measurements through time.</p>
+<p>A time series is a <em>single</em> measurement taken at multiple points through time to give a series of measurements through time.</p>
 <p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: How does noise introduce different realisations?</p>
-<p>A:</p>
+<p>A: In normal regression the pattern is fixed and the noise sits on top of it</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_i + e_i,
+\]</span> where each error term is independent.</p>
+<p>In an AR process the noise actually builds the pattern. This means that every apparent trend is made of past shocks that haven’t died away yet. A different set of shocks will give a different shape because the shape of the path comes from noise. It isn’t that time series errors are correlated but that each observation is a weighted sum of every past shock making observations correlated.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="fu">plot</span>(<span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.9</span>), <span class="at">n =</span> <span class="dv">100</span>), <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Realisation"</span>, i), <span class="at">ylab =</span> <span class="st">"y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="entries_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 <p><strong>What to Do Next:</strong></p>
 <p>The Forecasting Problem</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -294,7 +349,7 @@ Assumption
 <p><strong>What I Did:</strong></p>
 <p>Looked at stationary AR processes: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>A forecast horizon is how far into the future you try to predict values. When looking at time series data we are we are looking for stable, informative patterns (not just a lot of data).</p>
+<p>A forecast horizon is how far into the future you try to predict values. When looking at time series data we are looking for stable, informative patterns (not just a lot of data).</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -305,14 +360,27 @@ Forecasting vs Goal setting vs Planning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A forecast is prediction about what will happen in the future based on evidence the we have (with some uncertainty). Goal setting is what we want to happen in the future and planning is how we reach our goal.</p>
+<p>A forecast is a prediction about what will happen in the future based on evidence that we have (with some uncertainty). Goal setting is what we want to happen in the future and planning is how we reach our goal.</p>
 </div>
 </div>
 <p>The uncertainty associated with forecasting gives rise to forecast intervals (not just point estimates).</p>
 <p>A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks die out, forcing the forecast back to the process mean.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: If a process changes over time, at what point can we discard previous observations when forecasting?</p>
-<p>A:</p>
+<p>A: This is decided by the model and is called the model’s memory. A mean benchmark will use every observation and just forecast the mean, the naive benchmark will use the most recent observation, exponential smoothing uses all observations but weights them differently (older observations are given less weight). You would also discard observations if a structural break occurs.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When determining the number of observations to estimate the model (training set) more is usually better, unless the process has changed.</p>
+</div>
+</div>
 <p><strong>What to Do Next:</strong></p>
 <p>Exploring a Series</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -324,7 +392,7 @@ Forecasting vs Goal setting vs Planning
 <p><strong>What I Did:</strong></p>
 <p>Worked through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>Time domain looks at previous observations whereas the frequency domain looks at previous trends. Often you will need to look at both of these domains.</p>
+<p>Time domain looks at previous observations whereas the frequency domain looks at previous cycles. Often you will need to look at both of these domains.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -338,8 +406,8 @@ Trend vs Seasonality vs Cycles
 <p>A trend is the long-run direction of movement in a time series. Seasonality models a pattern that repeats itself at a fixed AND known interval. A cycle is a long oscillation where the length is NOT fixed.</p>
 </div>
 </div>
-<p>When dealing with time series data you may encounter changing variability. Here you need to transform the data to remove the heteroskedasticity. When outliers/structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.</p>
-<p>There are 4 benchmark forecasting models: mean, naive, seasonal naive and drift.</p>
+<p>When dealing with time series data you may encounter changing variability. Here you need to transform the data to stabilise variance and difference to remove trend anf seasonality. When structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.</p>
+<p>There are 4 benchmark forecasting models: Mean, Naive, Seasonal naive and Drift.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -356,7 +424,7 @@ Residuals are not forecast errors
 <p>You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: How do you identify a significant structural break?</p>
-<p>A:</p>
+<p>A: This can be done using formal tests, dependent on whether the date of the break is known prior to looking at the data. If the date is known in advance, if there was a policy change, you can use Chow’s test. Chow’s test fits the model before and after the date of the break and uses an F-test to check if there is a statistically significant difference in model parameters. If the date is unknown you can run a Chow test at every possible date and take the largest F, compared against adjusted critical values. This is a sup-F test and accounts for having searched over every date, making it harder to declare a break.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Operators, Stationarity and White Noise</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -368,9 +436,9 @@ Residuals are not forecast errors
 <p><strong>What I Did:</strong></p>
 <p>Continued working through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>Since you can’t perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observations while moving the forecast origin forward. Sliding window validation keep the training window length fixed while moving the forecast origin forward.</p>
+<p>Since you can’t perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observation while moving the forecast origin forward. Sliding window validation keeps the training window length fixed while moving the forecast origin forward.</p>
 <p>Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.</p>
-<p>We want our data to be stationary and look like white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model.</p>
+<p>We want our data to be stationary and for the residuals to be white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model.</p>
 <p>Weak white noise requires uncorrelated observations but strict white noise requires <em>iid</em> observations.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: What is the difference between walk-forward and expanding window?</p>
@@ -386,9 +454,9 @@ Residuals are not forecast errors
 <p><strong>What I Did:</strong></p>
 <p>Fit both ARIMA and SARIMA to the <code>AirPassengers</code> dataset:<a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>The moving average, MA(<span class="math inline">\(q\)</span>), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory.</p>
+<p>The moving average, MA(<span class="math inline">\(q\)</span>), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. An MA(<span class="math inline">\(q\)</span>) is always stationary is restricted to be invertible.</p>
 <p>The autoregressive, AR(<span class="math inline">\(p\)</span>), model regresses a series on its own path.</p>
-<p>ARMA combines both MA and AR models.</p>
+<p>ARMA combines both MA and AR models and is fitted by maximum likelihood, not OLS, since the past chocks are never observed.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -399,13 +467,13 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>ACF and PACF graphs are used to determine which ARMA model to fit.</p>
+<p>ACF and PACF graphs are used to determine which ARMA model to fit. An AR(<span class="math inline">\(p\)</span>) has a PACF that cuts off after lag <span class="math inline">\(p\)</span>. An MA(<span class="math inline">\(q\)</span>) has an ACF that cuts off after lag <span class="math inline">\(q\)</span>.</p>
 </div>
 </div>
 <p>The ARIMA(<span class="math inline">\(p,d,q\)</span>) model allows for differencing and the SARIMA model includes seasonality.</p>
-<p><strong>Difficulties/Questions:</strong></p>
-<p>Q:</p>
-<p>A:</p>
+<p><strong>Questions:</strong></p>
+<p>Q: How can you determine if there is additional seasonality in a dataset after differencing or if it is just noise? For example in <a href="../section-1/section-1.html">Section 1</a>, there were still spikes at some lags in the PACF after log-transforming and differencing the <code>AirPassengers</code> dataset.</p>
+<p>A: You can check if the residuals look like white noise by using a Ljung-Box test. A non-significant test means that there is no remaining proof of autocorrelation (even if there are will a few lags that spike in the ACF/PACF).</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Conditional Variance Models</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -418,12 +486,255 @@ Note
 <p>Finished working through <em>Time Series Analysis in R</em>: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><em>I still need to do this! Aim to have it done by Monday 7 September.</em></p>
 <p><strong>What I Learned:</strong></p>
-<p>Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a tsibble(), time series plots, time series patterns, autocorrelation functions, time series models, stationarity, differencing, unit root tests,</p>
+<p>Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a <code>tsibble()</code>, time series plots, seasonal and subseries plots, lag plots, autocorrelation functions, time series models, stationarity, differencing and unit root tests.</p>
+<p><strong>Questions:</strong></p>
+<p>No new questions :)</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Conditional Variance Models, Spectral Analysis</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="additional-lecture-1-with-sulaiman" class="level2">
+<h2 class="anchored" data-anchor-id="additional-lecture-1-with-sulaiman">Additional Lecture 1 with Sulaiman</h2>
+<p><strong>Date:</strong> 16 September 2026</p>
+<p><strong>Topic covered:</strong> Conditional Variance Models (ARCH and GARCH)</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through the provided Lab: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>All previous models have simply modelled the conditional mean and assumed constant variance. This fails for financial return data as it understates risk during periods where risk is highest and overstates risk when it is lowest. We now have both a mean (predictable component of the series) and a variance (conditional variance) equation.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A series can be uncorrelated and still highly predictable in magnitude.</p>
+</div>
+</div>
+<p>The ARCH model specifies conditional variance as a function of past squared innovations. The simplest case being <span class="math inline">\(\sigma^2_t = \alpha_0 + \alpha_1 \varepsilon_{t-1}^2\)</span>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Volatility clustering
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Large changes tend to follow large changes and small changes tend to follow small changes. Returns are often uncorrelated, hence why the ACF of returns indicates very little, however squared returns can be strongly autocorrelated.</p>
+</div>
+</div>
+<p>The GARCH model includes the previous variance to the ARCH equation. This makes it equivalent to an ARCH model with infinite memory. a GARCH(1,1) model is usually sufficient in practice.</p>
+<p><span class="math display">\[
+\sigma_t^2 = \alpha_0 + \alpha_1 \varepsilon_{t-1}^2 + \beta_1 \sigma_{t-1}^2,
+\]</span> where <span class="math inline">\(\alpha_1\)</span> measures how strongly volatility reacts to a new shock, <span class="math inline">\(\beta_1\)</span> measures how long that reaction lasts, <span class="math inline">\(\alpha_1 + \beta_1\)</span> is the persistence.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: Why must <span class="math inline">\(\alpha_1 + \beta_1 &lt; 1\)</span>?</p>
+<p>A: When <span class="math inline">\(\alpha_1 + \beta_1 &lt; 1\)</span> this ensures that the long-run variance is <span class="math inline">\(\bar{\sigma}^2 = \frac{\alpha_0}{1- \alpha_1 - \beta_1}\)</span> and that the process has a benchmark variance for the volatility to return to. When <span class="math inline">\(\alpha_1 + \beta_1 = 1\)</span> (IGARCH) the shocks to volatility are permanent. This means that all the weight is on the past and none is on the long-run level. This is the variance equivalent of a random walk.</p>
+<p><strong>What to Do Next:</strong> Spectral Analysis</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="additional-lecture-2-with-sulaiman" class="level2">
+<h2 class="anchored" data-anchor-id="additional-lecture-2-with-sulaiman">Additional Lecture 2 with Sulaiman</h2>
+<p><strong>Date:</strong></p>
+<p><strong>Topic covered:</strong></p>
+<p><strong>What I Did:</strong></p>
+<p><strong>What I Learned:</strong></p>
 <p><strong>Questions:</strong></p>
 <p>Q:</p>
 <p>A:</p>
 <p><strong>What to Do Next:</strong></p>
-<p>Conditional Variance Models, Spectral Analysis</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-7" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-7">Lecture 7</h2>
+<p><strong>Date:</strong> 14 September 2026</p>
+<p><strong>Topic covered:</strong> Exponential Smoothing</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through <em>Exponential Smoothing Exercises</em>: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Exponential smoothing forecasts are weighted averages of past observations. Weights decrease exponentially the further back in time you go. The smoothing parameter <span class="math inline">\(\alpha\)</span> adjusts the weight put on past observations. A large <span class="math inline">\(\alpha\)</span> puts a lot of weight on the most recent observation, similar to the Naive forecast. A small <span class="math inline">\(\alpha\)</span> averages over a long history, similar to the Mean forecast. This is similar to GARCH but applied to observations instead of squared shocks.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+SES vs Holt vs Holt-Winters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Simple exponential smoothing (SES) only updates a level resulting in flat forecasts. Holt’s method adds a trend equation, that describes the slope, so forecasts follow a straight line. Holt-Winters adds a seasonal equation. Each component gets its own smoothing parameter (<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>).</p>
+</div>
+</div>
+<p>The smoothing parameters and initial states (<span class="math inline">\(\ell_0\)</span>, <span class="math inline">\(b_0\)</span>) are estimated by minimising the sum of squared one-step-ahead errors. Fitted values are one-step-ahead forecasts, so residuals are always one-step-ahead errors.</p>
+<p>To turn the exponential smoothing algorithm into a state-space model we can write it in error-corrected form: <span class="math inline">\(y_t = \ell_{t-1} + e_t\)</span>, <span class="math inline">\(\ell_t = \ell_{t-1} + \alpha e_t\)</span>. This allows us to estimate <span class="math inline">\(\sigma\)</span> and build prediction intervals.</p>
+<p>This is what <code>ets()</code> does.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prediction intervals are usually too narrow
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Standard prediction intervals only capture the random error and ignore the uncertainty in parameter estimates and choice of model.</p>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: How do we get variances of SES forecasts (<span class="math inline">\(\sigma^2[1+\alpha^2(h-1)]\)</span>) if the point forecasts are flat?</p>
+<p>A: The point forecast stays at <span class="math inline">\(\ell_T\)</span>, but every future error also moves the level by <span class="math inline">\(\alpha e_t\)</span>. These shifts add up, so uncertainty grows linearly with <span class="math inline">\(h\)</span> even though the mean does not change.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Time Series Regression Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-8" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-8">Lecture 8</h2>
+<p><strong>Date:</strong> 21 September 2026</p>
+<p><strong>Topic covered:</strong> Time Series Regression Models</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through <em>Chapter 2: Time Series Regression Models</em> and the provided slides, rerunning the R code that had been included. Used a Kalman filter to estimate regression coefficients in the US consumption example: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Time Series Regression includes explanatory variables in time series models. This allows one to include trend and seasonality covariates in the model instead of just differencing the series to make it stationary.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+ARMAX vs regression with ARMA errors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ARMAX includes lagged values of the response as predictors, <span class="math inline">\(y_t = \beta x_t + \phi y_{t-1} + \dots\)</span>. This means that <span class="math inline">\(\beta\)</span> can no longer be interpreted as the effect of <span class="math inline">\(x\)</span> on the mean of <span class="math inline">\(y\)</span>. Regression with ARMA errors keeps the normal regression equation and lets the errors follow an ARMA process, <span class="math inline">\(y_t = \beta_0 + \beta_1 x_t + \eta_t\)</span>. This means that <span class="math inline">\(\beta_1\)</span> can still be interpreted in the usual way.</p>
+</div>
+</div>
+<p>Harmonic regression assumes that the seasonal pattern stays the same over time.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Autocorrelated errors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When errors are autocorrelated, OLS still gives unbiased estimates but they are no longer efficient. This means that the standard errors, tests and intervals are also wrong.</p>
+<p>This can be fixed with generalised least squares by using <code>gls()</code> with <code>corAR1()</code> or <code>corARMA()</code> or with <code>arima(..., xreg = )</code>.</p>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: When should I add a lagged response instead of modelling the errors as ARMA?</p>
+<p>A:</p>
+<p><strong>What to Do Next:</strong></p>
+<p>State-Space Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-9" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-9">Lecture 9</h2>
+<p><strong>Date:</strong> 28 September 2026</p>
+<p><strong>Topic covered:</strong> State-Space Models</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through the <code>dlm</code> practical and the <code>State Space and Kalman Filter</code> tutorial: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>A state-space model has both an observation equation and a state equation.</p>
+<p>The observation equation <span class="math inline">\(y_t = F\theta_t + v_t\)</span> links what we observe to an unobserved state whereas the state equation <span class="math inline">\(\theta_t = G\theta_{t-1} + w_t\)</span> describes how the state changes over time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Regression, ARIMA and exponential smoothing models can all be written in state-space form. State-space models don’t need stationarity since trend and seasonality are modelled directly and allowed to change over time.</p>
+</div>
+</div>
+<p>The Kalman filter is a recursive algorithm that first predicts and then updates. First the state, <span class="math inline">\(a_t, R_t\)</span>, and the next observation, <span class="math inline">\(f_t, Q_t\)</span>, are predicted. Then the state estimate, <span class="math inline">\(m_t, C_t\)</span>, is updated. The updated estimate is a weighted average of the prediction and the new observation where the Kalman gain decides how much weight is assigned to the observation.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Bayesian Framework
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Kalman filter works in a Bayesian way where, <span class="math inline">\(\text{posterior} \propto \text{prior} \times \text{likelihood}\)</span>. The posterior becomes the prior of the next step.</p>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: How do I decide which variances in <span class="math inline">\(W\)</span> should be allowed to be non-zero?</p>
+<p>A:</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Kalman Filter</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-10" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-10">Lecture 10</h2>
+<p><strong>Date:</strong> 5 October 2026</p>
+<p><strong>Topic covered:</strong> Kalman Filter</p>
+<p><strong>What I Did:</strong></p>
+<p>Continued working through the <code>dlm</code> practical and the <code>State Space and Kalman Filter</code> tutorial: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>The Kalman filter is used to filter and forecast in dynamic linear Gaussian systems. This filter is recursive so we can process new observations as they arrive. The Kalman smoother starts at the end of a series and works backwards. This is better for looking backwards (not prediction).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Filtering vs Smoothing vs Forecasting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If we estimate the state at time <span class="math inline">\(t\)</span> using data up to time <span class="math inline">\(s\)</span>:</p>
+<ul>
+<li><span class="math inline">\(s &lt; t\)</span> = forecasting</li>
+<li><span class="math inline">\(s = t\)</span> = filtering</li>
+<li><span class="math inline">\(s &gt; t\)</span> = smoothing</li>
+</ul>
+</div>
+</div>
+<p>Forecasting and filtering are done using the Kalman filter. Smoothing is done using the Kalman smoother.</p>
+<p>The likelihood is the product of one-step-ahead predictive densities, <span class="math inline">\(y_t \mid y_{1:t-1} \sim N(f_t, Q_t)\)</span>. The unknown variances, <span class="math inline">\(V\)</span> and <span class="math inline">\(W\)</span>, can be estimated by maximum likelihood.</p>
+<p>Prediction intervals use <span class="math inline">\(Q_t = FR_tF' + V\)</span>. They are prediction intervals (not confidence intervals) because they are for a future observation and include the observation noise, <span class="math inline">\(V\)</span>, as well as the uncertainty about the state.</p>
+<p>If there are missing observations present in the data, there is nothing to update with and the Kalman gain will be zero. Consecutive missing observations increase uncertainty.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Method (conceptual)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The prior predicts the next state from the previous estimate of the state, with some uncertainty (state equation).</li>
+<li>The likelihood asks how likely the new observation is given all possible states (observation equation).</li>
+<li>The new posterior, for the current state, is given by combining the likelihood and the prior</li>
+</ol>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: Why does the Kalman filter only work for linear Gaussian state-space models?</p>
+<p>A: The Kalman filter does a linear transformation of a Gaussian which gives another Gaussian.</p>
+<p><span class="math display">\[
+\text{Gaussian prior} \times \text{Gaussian likelihood} \propto \text{Gaussian posterior}
+\]</span> The Kalman filter only keeps track of the mean and variance. When we have a non-linear or non-Gaussian distribution we either end up with a skewed distribution or a posterior with no closed form.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Hidden Markov Models</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 
 

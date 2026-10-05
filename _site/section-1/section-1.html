@@ -323,7 +323,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-arimapdq-model" id="toc-the-arimapdq-model" class="nav-link" data-scroll-target="#the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span>) model</a></li>
   <li><a href="#the-sarimapdqpdqtext_m-model" id="toc-the-sarimapdqpdqtext_m-model" class="nav-link" data-scroll-target="#the-sarimapdqpdqtext_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span>)(<span class="math inline">\(P,D,Q\text{)}_m\)</span> model</a></li>
   </ul></li>
-  <li><a href="#conditional-variance-models" id="toc-conditional-variance-models" class="nav-link" data-scroll-target="#conditional-variance-models">Conditional Variance Models</a></li>
+  <li><a href="#conditional-variance-models" id="toc-conditional-variance-models" class="nav-link" data-scroll-target="#conditional-variance-models">Conditional Variance Models</a>
+  <ul class="collapse">
+  <li><a href="#problem-1" id="toc-problem-1" class="nav-link" data-scroll-target="#problem-1">Problem 1</a></li>
+  </ul></li>
   <li><a href="#spectral-analysis" id="toc-spectral-analysis" class="nav-link" data-scroll-target="#spectral-analysis">Spectral Analysis</a></li>
   </ul>
 </nav>
@@ -1094,7 +1097,8 @@ Built in <code>lag()</code> functions
 <h3 class="anchored" data-anchor-id="differencing">Differencing</h3>
 <p>First difference: <span class="math display">\[
 \Delta{y_{t}} = y_t -y_{t-1} = (1-L)y_t,
-\]</span> Seasonal difference (at lag 12): <span class="math display">\[
+\]</span></p>
+<p>Seasonal difference (at lag 12): <span class="math display">\[
 \Delta_{12}y_{t} = y_t -y_{t-12} = (1-L^{12})y_t,
 \]</span></p>
 <div class="cell">
@@ -1395,6 +1399,71 @@ Training set -0.03689673</code></pre>
 </section>
 <section id="conditional-variance-models" class="level1">
 <h1>Conditional Variance Models</h1>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Tbill <span class="ot">=</span> Tbrate[,<span class="dv">1</span>]</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>Del.Tbill <span class="ot">=</span> <span class="fu">diff</span>(Tbill)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="problem-1" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FinTS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: zoo</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'zoo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'FinTS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:forecast':
+
+    Acf</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: parallel</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Tbrate[,<span class="dv">2</span>],<span class="at">type=</span><span class="st">'l'</span>,<span class="at">main=</span><span class="st">'Raw data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="section-1_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Tbrate[,<span class="dv">1</span>],<span class="at">type=</span><span class="st">'l'</span>,<span class="at">main=</span><span class="st">'Returns'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="section-1_files/figure-html/unnamed-chunk-25-2.png" class="img-fluid" width="672"></p>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Del.Tbill)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="section-1_files/figure-html/unnamed-chunk-25-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 <section id="spectral-analysis" class="level1">
 <h1>Spectral Analysis</h1>

@@ -3,17 +3,23 @@ format: html
 editor: visual
 ---
 
-The plan for this project is to fit all the autoregressive models to both datasets, compare them and forecast using the best models. I'm hoping to then use these same datasets in another projects to see if SST and historic dam levels can be used to predict drought in Southern Africa (I'm not 100% sure how I'm going to do this but I think it'll be interesting)
+This project fits and compares autoregressive models (AR, MA, ARMA, ARIMA, SARIMA) to the Theewaterskloof dam level and eastern Pacific sea surface temperature (SST) individually. SST is then included as a covariate in a SARIMAX model to determine if it can be used to improve dam level forecasts. 
 
-Purely for interests sake, here is a website that maps the sea surface temperature anomlaies: https://earth.nullschool.net/#current/ocean/surface/currents/overlay=sea_surface_temp_anomaly/orthographic=-100.92,9.72,366/loc=-99.041,-1.152
+For interest's sake, here is a website that maps the sea surface temperature anomalies: https://earth.nullschool.net/#current/ocean/surface/currents/overlay=sea_surface_temp_anomaly/orthographic=-100.92,9.72,366/loc=-99.041,-1.152 
 
-SST along the equatorial band in the eastern and central Pacific is much higher than past temperatures. This is aligning with experts prediciting a super El Nino in 2026/2027.
+The SST along the equatorial band in the eastern Pacific ocean is currently higher than past norms. This is consistent with the South African Weather Service's warning of a super El Niño in 2026/2027. 
 
 -   **Section & Topic:** Autoregressive Models
+
 -   **Project Type:** Model implementaion
--   **Question / Aim:** Is sea surface temperature in the eastern Pacific Ocean and Theewaterskloof dam levels predictable?\
--   **Data Used:** \[https://www.pmel.noaa.gov/tao/drupal/disdel/\] \[https://odp-cctegis.opendata.arcgis.com/\] I will reference this properly!
--   **Methods Used:** AR,MA,ARMA,ARIMA,SARIMA,SARIMAX (at least this is the plan)
+
+-   **Aim:** Is the sea surface temperature in the eastern Pacific Ocean and the Theewaterskloof dam levels predictable?
+
+-   **Data Used:**
+
+    \[https://www.pmel.noaa.gov/tao/drupal/disdel/\] \[https://odp-cctegis.opendata.arcgis.com/\] I will reference this properly!
+
+-   **Methods Used:** AR, MA, ARMA, ARIMA, SARIMA, SARIMAX (dynamic regression with sea surface temperature as a predictor), compared against Mean, Naive, Seasonal naive and Drift benchmarks.
 
 ## Key Findings
 
@@ -32,6 +38,7 @@ SST along the equatorial band in the eastern and central Pacific is much higher 
 ```{r}
 #| echo: false
 #| warning: false 
+#| message: false
 
 # Load required libraries: 
 library(readr)
@@ -50,27 +57,28 @@ library(patchwork)
 library(forecast)
 ```
 
-# Predicting drought in Southern Africa
+# Predicting drought in the Western Cape, South Africa
 
-The aim of this project is to predict Theewaterskloof dam levels as well changes in sea surface temperatures in the eastern Pacific Ocean (along 95W) and use this data to predict drought occurrence in Southern Africa.
+The aim of this project is to use autoregressive models to forecast Theewaterskloof Dam levels and eastern Pacific sea surface temperature (along 95W), individually, as well as using SST as a lagged predictor to try and improve dam-level forecasts. This project will be used to test the hypothesis that eastern Pacific SST can be used as a leading indicator of drought risk in the Western Cape.
 
-The El Nino phase of the El Nino Southern Oscillation (ENSO) is characterise by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak in December. An El Nino event causes warm and dry conditions over Southern Africa, typically taking effect 3-6 months after the onset of El Nino, in the Pacific. Over the 2015-2016 season, the El Nino weather patterns resulted in prolonged drought in Southern Africa with dam levels dropping and severe water restrictions being implemented.
+The El Niño phase of the El Niño Southern Oscillation (ENSO) is characterise by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak around the following December/January (Mason,2001). An El Niño event typically cause warm and dry conditions over Southern Africa, with effects emerging within the year following the El Niño onset in the Pacific. Over the 2015-2016 season, Southern Africa experienced severe drought with the 2015/2016 El Niño being identified as a contributing factor (Thomson et al., 2003). This saw a drop in dam levels and severe water restrictions being implemented. 
 
-The South African Weather Service (SAWS) is warning against a super El nino event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Nino.
+The South African Weather Service (SAWS) is warning against a super El Niño event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Niño.
 
-We are interested in the Theewaterskloof dam current levels as Theewaterskloof dam is the main supplier of water to Cape Town.
+This project focuses on Theewaterskloof Dam, the single largest reservoir in the Western Cape Water Supply System. 
 
 References:
 
-\[https://onlinelibrary.wiley.com/doi/abs/10.1002/env.476?casa_token=Eg_zhVj43usAAAAA%3Ar0WptInFBau9fa2gbi2g7VfKEkwccQlk-l0YIV8mbMZnQvBcHiz9Cc_yBXPmfHgftiHsExL1riAtWaHZKw\]
+1. Mason, S. J. (2001). El Niño, climate change, and Southern African climate. Environmetrics, 12(4), 327-345. https://doi.org/10.1002/env.476
 
-\[https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(03)12421-X/fulltext\]
+2. Thomson, M. C., Abayomi, K., Barnston, A. G., Levy, M., & Dilley, M. (2003). El Niño and drought in southern Africa. The Lancet, 361(9358), 626-627. https://doi.org/10.1016/S0140-6736(03)12421-X
 
-\[https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/\]
+3. Mail & Guardian. (2026, September 1). The SAWS warns exceptionally strong 2026/2027 El Niño could bring severe heatwaves to SA. https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/
 
 ```{r}
 #| echo: false
 #| warning: false 
+#| message: false
 
 # Read in data:
 damlvl_dat = read_csv('_data/Dam_Levels_from_2000.csv')
@@ -83,103 +91,63 @@ damlvl_ts = damlvl_dat |>
   as_tsibble(index=DATE) |>
   fill_gaps() # fills missing dates with NAs
 
-damlvl_ts = damlvl_ts[damlvl_ts$DATE<='2021-10-31',]
+# damlvl_ts = damlvl_ts[damlvl_ts$DATE<='2021-10-31',]
 ```
 
 ```{r}
 #| echo: false
 #| warning: false 
+#| message: false
 
-# Read in sea surface temperature dataset 1:
-# Read raw text lines:
-raw_line1 = readLines("_data/sst0n95w_dy.ascii")
-raw_line2 = readLines("_data/sst2n95w_dy.ascii")
-raw_line3 = readLines("_data/sst5n95w_dy.ascii")
-raw_line4 = readLines("_data/sst8n95w_dy.ascii")
-raw_line5 = readLines("_data/sst2s95w_dy.ascii")
-raw_line6 = readLines("_data/sst5s95w_dy.ascii")
-raw_line7 = readLines("_data/sst8s95w_dy.ascii")
+# # Check dam level data for missing values: 
+# damlvl_ts |>
+#   as_tibble() |>
+#   summarise(
+#     n_missing   = sum(is.na(THEEWATERSKLOOF_Current))
+#   )
+```
 
-# Extract only lines starting with date:
-data_lines1 = raw_line1[grepl("^[0-9]{8}\\s",str_trim(raw_line1))]
-data_lines2 = raw_line2[grepl("^[0-9]{8}\\s",str_trim(raw_line2))]
-data_lines3 = raw_line3[grepl("^[0-9]{8}\\s",str_trim(raw_line3))]
-data_lines4 = raw_line4[grepl("^[0-9]{8}\\s",str_trim(raw_line4))]
-data_lines5 = raw_line5[grepl("^[0-9]{8}\\s",str_trim(raw_line5))]
-data_lines6 = raw_line6[grepl("^[0-9]{8}\\s",str_trim(raw_line6))]
-data_lines7 = raw_line7[grepl("^[0-9]{8}\\s",str_trim(raw_line7))]
+```{r}
+#| echo: false
+#| warning: false 
+#| message: false
 
-# Read cleaned lines into dataframe:
-dat1 = read.table(text=data_lines1, header = FALSE)
-dat2 = read.table(text=data_lines2, header = FALSE)
-dat3 = read.table(text=data_lines3, header = FALSE)
-dat4 = read.table(text=data_lines4, header = FALSE)
-dat5 = read.table(text=data_lines5, header = FALSE)
-dat6 = read.table(text=data_lines6, header = FALSE)
-dat7 = read.table(text=data_lines7, header = FALSE)
-colnames(dat1) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
-colnames(dat2) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
-colnames(dat3) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
-colnames(dat4) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
-colnames(dat5) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
-colnames(dat6) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
-colnames(dat7) = c("YYYYMMDD", "HHMM", "SST", "Q", "S")
+# Store sea surface temperature files: 
+sst_files = c(
+  "_data/sst0n95w_dy.ascii",
+  "_data/sst2n95w_dy.ascii",
+  "_data/sst5n95w_dy.ascii",
+  "_data/sst8n95w_dy.ascii",
+  "_data/sst2s95w_dy.ascii",
+  "_data/sst5s95w_dy.ascii",
+  "_data/sst8s95w_dy.ascii"
+)
 
-# Clean up missing values:
-dat1 = dat1 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
-dat2 = dat2 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
-dat3 = dat3 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
-dat4 = dat4 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
-dat5 = dat5 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
-dat6 = dat6 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
-dat7 = dat7 |>
-  filter(SST!=-9.99) |>
-  mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d"))
+# Function to compile all sst files into one dataset:
 
-# Sort data:
-ts1 = dat1 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
-ts2 = dat2 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
-ts3 = dat3 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
-ts4 = dat4 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
-ts5 = dat5 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
-ts6 = dat6 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
-ts7 = dat7 |>
-  mutate(Date=as.Date(Date)) |>
-  as_tsibble(index=Date) |>
-  fill_gaps()
+sst_files_fxn = function(path){
+  # Read raw lines:
+  raw_lines  = readLines(path)
+  
+  # Extract only lines starting with date:
+  data_lines = raw_lines[grepl("^[0-9]{8}\\s",str_trim(raw_lines))]
+  
+  # Read into dataframe:
+  read.table(
+    text      =data_lines,
+    header    =FALSE,
+    col.names =c("YYYYMMDD", "HHMM", "SST", "Q", "S")
+  ) |>
+    filter(SST!=-9.99) |>
+    mutate(Date=as.Date(as.character(YYYYMMDD),format="%Y%m%d")) |>
+    mutate(Date=as.Date(Date)) |>
+    as_tsibble(index=Date) |>
+    fill_gaps() |>
+    as_tibble()
+}
 
-all_ts = list(ts1,ts2,ts3,ts4,ts5,ts6,ts7) |>
-  map_dfr(as_tibble,.id='station_id') |>
+all_ts = sst_files |>
+  map_dfr(sst_files_fxn,.id='station_id') |>
   group_by(Date) |>
   summarise(
     mean_SST   = if (all(is.na(SST))) NA_real_ else mean(SST, na.rm = TRUE),
@@ -190,17 +158,31 @@ all_ts = list(ts1,ts2,ts3,ts4,ts5,ts6,ts7) |>
   ) |> 
   as_tsibble(index = Date)
 
-# Truncate time series data:
-cut_ts = all_ts[1:7974,]
+# Determine how many missing values exists and time between them:
+r = rle(is.na(all_ts$mean_SST))
+
+threshold_days = 14 # no. days we can smooth over
+imputed_full = na_kalman(all_ts$mean_SST) # smooth over EVERY gap
+
+cut_ts = all_ts |>
+  mutate(
+    is_missing = is.na(all_ts$mean_SST),
+    run_len    = rep(r$lengths,r$lengths),
+    
+    # If day is missing and gap is < 14, smooth else leave as NA
+    mean_SST   = if_else(is_missing&run_len<=threshold_days,imputed_full,mean_SST)
+  ) |>
+  select(-is_missing,-run_len) |>
+  filter(Date>=as.Date('2000-01-01'))
 ```
 
 ## Exploratory Data Analysis
 
-The duplicate observation in the `Dam_Levels_from_2000` dataset was removed as.
+The duplicate observation in the `Dam_Levels_from_2000` dataset was removed by retaining only the first occurrence of each date. The dam level series contained only 1 missing value that was left as `NA`.
 
 ```{r}
 #| label: fig-daily_damlvl
-#| fig-cap: "Theewaterskloof dam capacity from January 2000 to October 2021."
+#| fig-cap: "Theewaterskloof dam capacity from January 2000 to January 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -213,7 +195,7 @@ ggplot(data = damlvl_ts,
                      y = THEEWATERSKLOOF_Current)) +  
   geom_line(col = 'purple')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Theewaterskloof dam capacity from 2000 to 2021.', 
+  labs(title = 'Theewaterskloof dam capacity from 2000 to 2026.', 
        x = 'Time (day)',
        y = 'Daily dam capacity (%)')+
   theme(
@@ -223,7 +205,7 @@ ggplot(data = damlvl_ts,
 
 ```{r}
 #| label: fig-daily_sst
-#| fig-cap: "Average Pacific sea surface temperature from January 2000 to October 2021."
+#| fig-cap: "Average Pacific sea surface temperature from January 2000 to April 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -236,7 +218,7 @@ ggplot(data = cut_ts,
                      y = mean_SST)) +
   geom_line(col = 'deeppink')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Pacific sea surface temperature from 2000 to 2021.',
+  labs(title = 'Pacific sea surface temperature from 2000 to 2026.',
        x = 'Time (day)',
        y = 'Sea surface temperature (C)')+
   theme(
@@ -245,11 +227,11 @@ ggplot(data = cut_ts,
 
 ```
 
-As seen in both @fig-daily_damlvl and @fig-daily_sst there is noise in the daily observations. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise. 
+Both @fig-daily_damlvl and @fig-daily_sst show that these series are noisy. The dam levels data has multiple year drops and slow recoveries whereas the the SST oscillates more uniformly around its mean. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise.
 
 ```{r}
 #| label: fig-monthly_damlvl
-#| fig-cap: "Theewaterskloof dam capacity from January 2000 to October 2021."
+#| fig-cap: "Theewaterskloof dam capacity from January 2000 to January 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -267,7 +249,7 @@ ggplot(data = monthly_damlvl_ts,
                      y = current_mean)) +  
   geom_line(col = 'purple')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Theewaterskloof dam capacity from 2000 to 2021.', 
+  labs(title = 'Theewaterskloof dam capacity from 2000 to 2026.', 
        x = 'Time (month)',
        y = 'Monthly dam capacity (%)')+
   theme(
@@ -277,7 +259,7 @@ ggplot(data = monthly_damlvl_ts,
 
 ```{r}
 #| label: fig-monthly_sst
-#| fig-cap: "Average Pacific sea surface temperature from January 2000 to October 2021."
+#| fig-cap: "Average Pacific sea surface temperature from January 2000 to April 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -289,157 +271,100 @@ monthly_ts = cut_ts |>
   index_by(year_month=~yearmonth(.))|>
   summarise(current_mean=mean(mean_SST,na.rm=TRUE))
 
+monthly_ts_pre2021 = monthly_ts |>
+  filter(year_month <= yearmonth("2021 Oct")) |>
+  mutate(current_mean = na_interpolation(current_mean))
+
 # Plot:
 ggplot(data = monthly_ts,
        mapping = aes(x = year_month,
                      y = current_mean)) +  
   geom_line(col = 'deeppink')  +
   theme_minimal(base_size=14) +
-  labs(title = 'Sea surface temperature in the Pacific from 2000 to 2021.',
-       x = 'Time (day)',
+  labs(title = 'Sea surface temperature in the Pacific from 2000 to 2026.',
+       x = 'Time (month)',
        y = 'Sea surface temperature (C)')+
   theme(
     plot.title = element_text(hjust = 0.5)
   )
 ```
 
-As seen in @fig-monthly_damlvl and @fig-monthly_sst, both datasets display strong 12-month seasonal patterns.
+As seen in @fig-monthly_damlvl and @fig-monthly_sst, both datasets display strong 12-month seasonal patterns. The dam level data also has an irregular drought/recovery cycle that appears to follows the hydrological cycle. 
 
-Both datasets have 21 years worth of data. The `Dam_Levels_from_2000` dataset has observations until January 2026 but due to missing observations in the `sst` dataset we have truncated the data. We are interested in forecasting until 2023, this will allow for the evaluation of the model against the actual dam levels that were observed over this period. 
+Both the `Dam_Levels_from_2000` dataset and the `sst` dataset have observations from 2000 to 2026. The SST series has two periods of missing observations, November 2021 to March 2023 and October 2024 to March 2025, due to the bouy array not recording. These gaps cannot be reliable smoothed over and have been left as missing observations. 
 
-As the forecast horizon grows we can expect increased uncertainty in our predictions. Experts are predicting an exceptionally strong El Nino event in 2026/2027. It will be interesting to see if these trends are picked up.
-
-Southern Africa experienced severe droughts in 2015/2016 and 2018/2019. These years also saw significant El nino conditions.
-
-*I need to have a closer look at the data, the sst data has observations all the way up until today (continuoulsy uodating). It's also worth noting that there is approximately a 3-6 month lag between increased sst and drought in southern africa - we could expand the number of observations for the dam levels dataset by approximately 6 months because of this*
+Southern Africa experienced severe droughts between 2015 and 2018. In the figures below, dam capacity across this period is compared with lagged SST, approximately 3 months earlier. 
 
 ```{r}
-#| label: fig_15161819
-#| fig-cap: "Theewaterskloof dam capacity fro 2015-2016 and 2018-2019."
+#| label: fig-1519
+#| fig-cap: "Theewaterskloof dam capacity for 2015 to 2019 and sea surface temperature from 3 months earlier."
 #| fig-width: 12
+#| fig-height: 8
+#| echo: false
+#| message: false
+#| warning: false
+
+damlvl_2015_2019 = monthly_damlvl_ts |>
+  filter(year_month >= yearmonth("2015 Jan") & year_month <= yearmonth("2019 Dec"))
+
+sst_2015_2019 = monthly_ts |>
+  filter(year_month >= yearmonth("2014 Oct") & year_month <= yearmonth("2019 Sep"))
+
+plot_dam_1519 = ggplot(damlvl_2015_2019, aes(year_month, current_mean)) +
+  geom_line(col = "purple") + theme_minimal(base_size = 12) +
+  labs(title = "Dam capacity.", x = NULL, y = "Dam capacity (%)")
+
+plot_sst_1519 = ggplot(sst_2015_2019, aes(year_month, current_mean)) +
+  geom_line(col = "deeppink") + theme_minimal(base_size = 12) +
+  labs(title = "Sea surface temperature.", x = "Time (month)", y = "SST (°C)")
+
+plot_dam_1519 / plot_sst_1519
+```
+In @fig-1519, dam capacity declines to reach a minimum around 2018 and then recovers into 2020. The SST series has missing values for March and April 2017 but still shows a slightly elevated double peak in both 2015 and 2016. This is consistent with the El Nino that occurred during that period. Both series maintain their strong seasonal patterns, however it is difficult to determine the lagged relationship. 
+
+```{r}
+#| label: fig-lag_deseason
+#| fig-cap: "Deseasonalised dam capacity from 2015 to 2019 and sea surface temperature from 3 months earlier."
+#| fig-width: 10
 #| fig-height: 5
 #| echo: false
 #| message: false
 #| warning: false
 
-damlvl_2015_2016 = damlvl_ts |>
-  filter(DATE>=ymd('2015-01-01')&DATE<=ymd('2016-12-31'))
+# Fit STL model:
+stl_damlvl_fit = monthly_damlvl_ts |> 
+  model(STL(current_mean ~ trend(window = 21) + 
+              season(window = 'periodic')))
 
-damlvl_2018_2019 = damlvl_ts |>
-  filter(DATE>=ymd('2018-01-01')&DATE<=ymd('2019-12-31'))
+stl_sst_fit = monthly_ts_pre2021 |>
+  model(STL(current_mean ~ trend(window = 21) + 
+              season(window = "periodic")))
 
+dam_adj = stl_damlvl_fit |> components() |> as_tsibble() |> select(year_month, season_adjust)
+sst_adj = stl_sst_fit  |> components() |> as_tsibble() |> select(year_month, season_adjust)
 
-# Plot:
-plot_20152016 = ggplot(data = damlvl_2015_2016,
-       mapping = aes(x = DATE,
-                     y = THEEWATERSKLOOF_Current)) +  
-  geom_line(col = 'purple')  +
-  theme_minimal(base_size=14) +
-  labs(title = 'Theewaterskloof dam capacity for 2015-2016.', 
-       x = 'Time (month)',
-       y = 'Monthly dam capacity (%)')+
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
+damlvl_window = dam_adj |> 
+  filter(year_month >= yearmonth("2015 Jan") & year_month <= yearmonth("2019 Dec"))
 
-# Plot:
-plot_20182019 = ggplot(data = damlvl_2018_2019,
-       mapping = aes(x = DATE,
-                     y = THEEWATERSKLOOF_Current)) +  
-  geom_line(col = 'purple')  +
-  theme_minimal(base_size=14) +
-  labs(title = 'Theewaterskloof dam capacity for 2018-2019.', 
-       x = 'Time (month)',
-       y = 'Monthly dam capacity (%)')+
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
+sst_window = sst_adj |> 
+  filter(year_month >= yearmonth("2014 Oct") & year_month <= yearmonth("2019 Sep"))
 
-plot_20152016 + plot_20182019
+plot_dam = ggplot(damlvl_window, aes(year_month, season_adjust)) +
+  geom_line(col = "purple") + theme_minimal(base_size = 12) +
+  labs(title = "Deseasonalised dam capacity.", x = NULL, y = "Dam capacity anomaly (%)")
+
+plot_sst = ggplot(sst_window, aes(year_month, season_adjust)) +
+  geom_line(col = "deeppink") + theme_minimal(base_size = 12) +
+  labs(title = "Deseasonalised sea surface temperature.", x = "Time (month)", y = "SST anomaly (°C)")
+
+plot_dam / plot_sst
 ```
 
-Look at the actual El Nino events here as well as sea surface temperatures 6 months before these observations for comparison.
-
-```{r}
-#| echo: false
-#| warning: false
-
-# damlvl_2023_2024 = damlvl_ts |>
-#   filter(DATE>=ymd('2023-01-01')&DATE<=ymd('2024-12-31'))
-# 
-# 
-# # Plot:
-# ggplot(data = damlvl_2023_2024,
-#        mapping = aes(x = DATE,
-#                      y = THEEWATERSKLOOF_Current)) +  
-#   geom_line(col = 'deeppink')  +
-#   theme_minimal(base_size=14) +
-#   labs(title = 'Theewaterskloof dam capacity for 2023-2024.', 
-#        x = 'Time (month)',
-#        y = 'Monthly dam capacity (%)')+
-#   theme(
-#     plot.title = element_text(hjust = 0.5)
-#   )
-
-```
-
-```{r}
-#| echo: false
-#| warning: false
-
-# This is the same as the monthly plot. I just need to decide which one I want to use.
-
-# monthly_damlvl_ts |> 
-#   autoplot(current_mean, 
-#            color="deeppink") +
-#   labs(
-#     title = "Theewaterskloof dam capacity.", 
-#     y = "Average capacity (%)", 
-#     x = "Year") +
-#   theme_minimal(base_size=14)
-```
-
-```{r}
-#| label: fig-season
-#| fig-cap: "Seasonal pattern of Theewaterskloof dam capacity and average Pacific sea surface temperature."
-#| fig-width: 12
-#| fig-height: 5
-#| echo: false
-#| message: false
-#| warning: false
-
-# Season
-season_damlvl_plot = monthly_damlvl_ts |> 
-  ggtime::gg_season(current_mean, 
-            labels = "right") +
-  labs(title = 'Seasonal pattern from 2000 to 2026.', 
-       x = 'Month',
-       y = 'Average dam capacity (%)') +
-  theme_minimal(base_size=14)+
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
-
-# Season: 
-season_plot = monthly_ts |> 
-  ggtime::gg_season(current_mean, 
-                    labels = "right") +
-  labs(title = 'Seasonal pattern from 2000 to 2021.', 
-       x = 'Month',
-       y = 'Average sea surface temperature (C)') +
-  theme_minimal(base_size=14)+
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
-
-season_damlvl_plot + season_plot
-```
-
-The sea surface temperatures and the dam levels have inverse trends. When sea surface tempertures are high, dam levels are low.
+@fig-lag_deseason re-illustrates the cycle identified in @fig-1519. With the seasonality of the series removed, dam capacity decreases smoothly to a minimum around 2018 and recovers steadily through 2019. Rising SST in the deseasonalised plot precedes the decreased dam capacity during the 2015 to 2016 period, however during the 2018 to 2019 recovery phase, SST is rising. This suggests that the relationship between dam capacity and SST is not a stable relationship across the whole period and that other drivers are likely contributing to the dam level recovery.  
 
 ```{r}
 #| label: fig-subseries
-#| fig-cap: "Monthly trends in Theewaterskloof dam capacity and average Pacific sea surface temperature."
+#| fig-cap: "Monthly trends in Theewaterskloof dam capacity and average Pacific sea surface temperature from 2000 to 2026. The blue line in each panel indicates the mean for that month."
 #| fig-width: 12
 #| fig-height: 5
 #| echo: false
@@ -461,7 +386,7 @@ subseries_damlvl_plot = monthly_damlvl_ts |>
 # Subseries:
 subseries_plot = monthly_ts |>
   ggtime::gg_subseries(current_mean) +
-  labs(title = 'Monthly trends from 2000 to 2021.', 
+  labs(title = 'Monthly trends from 2000 to 2026.', 
        x = '',
        y = 'Average sea surface temperature (C)') +
   theme_minimal(base_size=14) + 
@@ -472,50 +397,8 @@ subseries_plot = monthly_ts |>
 
 subseries_damlvl_plot + subseries_plot
 ```
-
-```{r}
-#| label: fig-lag
-#| fig-cap: "Lad plots of Theewaterskloof dam capacity and average Pacific sea surface temperature."
-#| fig-width: 12
-#| fig-height: 5
-#| echo: false
-#| message: false
-#| warning: false
-
-# Lag:
-lag_damlvl_plot = monthly_damlvl_ts |> 
-  ggtime::gg_lag(current_mean, 
-         geom = 'point', 
-         lags = 1:12) +
-  labs(title = 'Lag plots',
-       subtitle = 'Lags 1 to 12.',
-       x = 'Lag',
-       y = 'Average dam capacity (%)') +
-  theme_minimal(base_size=14)+
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust=0.5)
-  )
-
-# Lag:
-lag_plot = monthly_ts |> 
-  ggtime::gg_lag(current_mean, 
-                 geom = 'point', 
-                 lags = 1:12) +
-  labs(title = 'Lag plots',
-       subtitle = 'Lags 1 to 12.',
-       x = 'Lag',
-       y = 'Average sea surface temperature (C)') +
-  theme_minimal(base_size=14)+
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust=0.5)
-  )
-
-lag_damlvl_plot + lag_plot
-```
-
-Need to mention autocorrelation herte.
+@fig-subseries illustrates the strong seasonal pattern already identified in @fig-monthly_damlvl and @fig-monthly_sst. Dam levels reach a minimum around May and peak in September. The variation in dam levels within the months is approximately the same across all months. SST peaks in April and is lowest in September. Unlike the dam levels, the months with lower temperatures experience greater variability in the recorded temperatures compared to months where the temperature is higher. Dam capacity (%) and SST (°C) are measured on different scales. This means that the two series' overall variability cannot be directly compared. 
+It is worth noting that the structural gaps present in the sea surface temperature series result in some months having more observations than others.
 
 ```{r}
 #| label: fig-acf_pacf_dam
@@ -561,7 +444,7 @@ acf_damlvl_plot + pacf_damlvl_plot
 #| warning: false
 
 # Autocorrelation Function:
-acf_plot = monthly_ts |>
+acf_plot = monthly_ts_pre2021 |>
   ACF(current_mean, 
       lag_max = 36) |> 
   ggtime::autoplot() +
@@ -572,7 +455,7 @@ acf_plot = monthly_ts |>
   )
 
 # Partial Autocorrelation Function:
-pacf_plot = monthly_ts |>
+pacf_plot = monthly_ts_pre2021 |>
   PACF(current_mean, 
        lag_max = 36) |> 
   ggtime::autoplot() +
@@ -585,19 +468,16 @@ pacf_plot = monthly_ts |>
 acf_plot + pacf_plot
 ```
 
+Both @fig-acf_pacf_dam and @fig-acf_pacf_sst indicate that these time series are non-stationary. The ACF of the sea surface temperature illustrates a regular seasonal pattern with sharp peaks occurring at regular intervals compared to the ACF of dam levels which has a less stable seasonal pattern seen by the less regularly-spaced peaks. This suggests that the dam level pattern is influenced by a long-term irregular hydrological cycle as opposed to the seasonal rainfall pattern alone. Both PACF plots have a large spike at lag 1. This is typical of a non-stationary process. The dam level PACF plot has a large negative spike at lag 2, indicative of an AR(2) process. This is followed by a few significant positive spiked that indicate a further short-run structure. The SST PACF plot has the same pattern as the dam levels PACF plot, with a large positive spike at lag 1 followed by a large negative spike at lag 2. There is also a second series of significant positive spikes from lag 7 to 10. The order selection for the AR and SARIMA models is based on the ACF and PACF plots of the seasonally differenced series.
+
 ```{r}
 #| label: fig-decomp_damlvl
 #| fig-cap: "Decomposition of Theewaterskloof dam capacity series."
 #| fig-width: 10
-#| fig-height: 5
+#| fig-height: 6
 #| echo: false
 #| message: false
 #| warning: false
-
-# Fit STL model:
-stl_damlvl_fit = monthly_damlvl_ts |> 
-  model(STL(current_mean ~ trend(window = 21) + 
-              season(window = 'periodic')))
 
 # Extract components and plot:
 stl_damlvl_plot = stl_damlvl_fit |> 
@@ -609,14 +489,15 @@ stl_damlvl_plot = stl_damlvl_fit |>
   theme_minimal(base_size=14)+
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust=0.5)
+    plot.subtitle = element_text(hjust=0.5),
+    strip.text.y = element_text(size = 10)
   )
 stl_damlvl_plot
 ```
 
 ```{r}
 #| label: fig-decomp_sst
-#| fig-cap: "Decomposition of average Pacific sea surface temperature series."
+#| fig-cap: "Decomposition of average Pacific sea surface temperature series from 2000 to 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -624,13 +505,11 @@ stl_damlvl_plot
 #| warning: false
 
 # Fit STL model:
-monthly_ts_clean = monthly_ts |>
-  fill_gaps() |>
-  mutate(current_mean = na_kalman(current_mean)) # is this okay? 
+monthly_ts_for_decomp = monthly_ts |>
+  mutate(current_mean = na_kalman(current_mean))
 
-stl_fit = monthly_ts_clean |> 
-  model(STL(current_mean ~ trend(window = 21) + 
-              season(window = 'periodic')))
+stl_fit = monthly_ts_for_decomp |>
+  model(STL(current_mean ~ trend(window = 21) + season(window = "periodic")))
 
 # Extract components and plot:
 stl_plot = stl_fit |> 
@@ -642,233 +521,181 @@ stl_plot = stl_fit |>
   theme_minimal(base_size=14)+
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust=0.5)
+    plot.subtitle = element_text(hjust=0.5),
+    strip.text.y = element_text(size = 10)
   )
 stl_plot
 ```
 
-Comment on trends, seasonality etc for both sst and dam levels.
+@fig-decomp_sst plots the decomposition of the sea surface temperature series. There are missing observations from November 2021 to March 2023 and October 2024 to March 2025. These observations have been interpolated, not observed, for completeness of the decomposition across the entire series and should not be interpreted as true measurements.
 
-```{r}
-#| echo: false
-#| warning: false
-
-tsCV_m_damlvl = tsCV(monthly_damlvl_ts,meanf,h=1,window=60)
-m_damlvl_err  = sqrt(mean(tsCV_m_damlvl^2, na.rm = TRUE))
-
-tsCV_n_damlvl = tsCV(monthly_damlvl_ts,naive,h=1,window=60)
-n_damlvl_err  = sqrt(mean(tsCV_n_damlvl^2, na.rm = TRUE))
-
-tsCV_sn_damlvl = tsCV(monthly_damlvl_ts,snaive,h=1,window=60)
-sn_damlvl_err  = sqrt(mean(tsCV_sn_damlvl^2, na.rm = TRUE))
-
-tsCV_d_damlvl = tsCV(monthly_damlvl_ts,rwf,h=1,window=60)
-d_damlvl_err  = sqrt(mean(tsCV_d_damlvl^2, na.rm = TRUE))
-
-err_damlvl_df = cbind(m_damlvl_err,n_damlvl_err,sn_damlvl_err,d_damlvl_err)
-colnames(err_damlvl_df) = c('Mean','Naive','Seasonal naive','Drift')
-err_damlvl_df
-```
-
-Here we can see the errors assocated with each of our benchmark models. Since the Naive and Drift models both have the same error associated with them we will use the Drift model as a comparison to the other time series models used.
-
-```{r}
-#| echo: false
-#| warning: false
-
-monthly_damlvl_ts |>
-  features(current_mean,unitroot_nsdiffs)
-
-monthly_damlvl_ts |>
-  features(current_mean,unitroot_ndiffs)
-```
-
-```{r}
-#| echo: false
-#| warning: false
-
-monthly_ts |>
-  features(current_mean,unitroot_nsdiffs)
-
-monthly_ts |>
-  features(current_mean,unitroot_ndiffs)
-```
-
-We only need to seasonally difference the `Dam_Levels_from_2000` and `sst` datasets, no linear differencing is required.
-
-```{r}
-#| echo: false
-#| warning: false
-
-# diff_damlvl_ts = diff(monthly_damlvl_ts$current_mean,differences=1)
-# season_diff_damlvl_ts = diff(monthly_damlvl_ts$current_mean,differences=12)
-# 
-# plot(season_diff_damlvl_ts)
-# plot(diff_damlvl_ts)
-```
+As seen in @fig-decomp_damlvl and @fig-decomp_sst, both the dam level and sea surface temperature series show strong seasonal trends with @fig-decomp_damlvl showing multi-year drought and recovery cycles. There are noticeable dips in 2005 and, more severely, 2018, as opposed to a stable long-run trend. The SST trend is more stable than the dam trend for majority of the observed period. This can be attributed to SST being driven by the annual warming and cooling due to heating angles whereas dam levels are driven not only by seasonal patterns but also by the long-term irregular hydrological cycle. Towards the end of the SST series there is a sharp drop followed by a steep increase, this is consistent with the predicted 2026/2027 El Nino even but should be interpreted carefully. 
 
 ## Model fitting
 
-I have naively fitted MA,AR,ARMA,ARIMA,SARIMA here just to get a gauge of how they look.
+This project fits and compares AR,MA,ARMA,ARIMA and SARIMA against the benchmark models: Mean, Naive, Seasonal naive and Drift, for both the `Dam_Levels_from_2000` and `sst` datasets. A time series regression model is then fit on `Dam_Levels_from_2000` using the sea surface temperature as a predictor to determine if sea surface temperature in the eastern Pacific can improve the prediciton of Theewaterskloof dam levels to aid in drought prediction.
 
-### Dam levels
+```{r}
+#| label: fig-acf_pacf_differenced
+#| fig-cap: "ACF and PACF plots for both dam levels and sea surface temperature for the seasonally differenced data."
+#| fig-width: 12
+#| fig-height: 8
+#| echo: false
+#| message: false
+#| warning: false
+
+# Plot ACF and PACF for differenced series:
+damlvl_diff = monthly_damlvl_ts |>
+  mutate(diff_mean = difference(current_mean, lag = 12))
+
+sst_diff = monthly_ts_pre2021 |>
+  mutate(diff_mean = difference(current_mean, lag = 12))
+
+acf_damlvl_diff = damlvl_diff |>
+  ACF(diff_mean, lag_max = 36) |>
+  autoplot() +
+  labs(title = "Dam capacity.") +
+  theme_minimal(base_size = 12)
+
+pacf_damlvl_diff = damlvl_diff |>
+  PACF(diff_mean, lag_max = 36) |>
+  autoplot() +
+  labs(title = "Dam capacity.") +
+  theme_minimal(base_size = 12)
+
+acf_sst_diff = sst_diff |>
+  ACF(diff_mean, lag_max = 36) |>
+  autoplot() +
+  labs(title = "Sea surface temperature.") +
+  theme_minimal(base_size = 12)
+
+pacf_sst_diff = sst_diff |>
+  PACF(diff_mean, lag_max = 36) |>
+  autoplot() +
+  labs(title = "Sea surface temperature.") +
+  theme_minimal(base_size = 12)
+
+(acf_damlvl_diff + pacf_damlvl_diff) / (acf_sst_diff + pacf_sst_diff)
+```
+
+@fig-acf_pacf_differenced shows the ACF and PACF of both the dam level and SST series after seasonal differencing. The dam level ACF decays monotonically from lag 1. The PACF has significant spikes at lags 1 and 2, this is consistent with the AR(2) structure identified in the EDA. There are some significant spikes at lags 12-14 which is more indicative of a seasonal MA term than a seasonal AR term. The SST PACF is noisier than the dam level one, with a few additional significant spikes. This irregular autocorrelation structure provides evidence that SST does not reduce to a low-order SARIMA model. 
 
 ```{r}
 #| echo: false
+#| message: false
 #| warning: false
+# Dam: full series available to 2026, hold out the last 2 years as test
+dam_train = monthly_damlvl_ts |> filter_index(. ~ "2023 Dec")
+dam_test  = monthly_damlvl_ts |> filter_index("2024 Jan" ~ .)
 
-# Fit all model variations to damlvl data: 
-dam_models = monthly_damlvl_ts |>
+# SST: use the clean pre-2021 segment (consistent with your unit-root/ACF work),
+# hold out the last ~2 years of that clean stretch
+sst_train = monthly_ts_pre2021 |> filter_index(. ~ "2019 Dec")
+sst_test  = monthly_ts_pre2021 |> filter_index("2020 Jan" ~ .)
+```
+
+Dam level data are available from 2000 to 2026. The most recent 2 years are held out as a test set and the remainder is used as the training set. SST uses the clean pre-2021 subset as the training set with the last two years, 2020-2021 as the test set. 
+
+```{r}
+#| label: tbl-dam_accuracy
+#| tbl-cap: "Out-of-sample accuracy of benchmark and ARIMA-family models on the test set: Theewaterskloof dam capacity."
+#| echo: false
+#| message: false
+#| warning: false
+dam_fit = dam_train |>
   model(
-    # AR(2): 
-    ar = ARIMA(current_mean~pdq(1,0,0)+PDQ(0,0,0)),
-    # MA(2):
-    ma = ARIMA(current_mean~pdq(0,0,1)+PDQ(0,0,0)),
-    # ARMA(2,2):
-    arma = ARIMA(current_mean~pdq(1,0,1)+PDQ(0,0,0)), # no differencing
-    # ARIMA(2,1,2):
-    arima = ARIMA(current_mean~pdq(1,1,1)+PDQ(0,0,0)), # linear differencing
-    # SARIMA(2,0,2)(1,1,1)[12]:
-    sarima = ARIMA(current_mean~pdq(1,0,1)+PDQ(1,1,1)), # seasonal differencing
-    # Auto-ARIMA:
-    auto_sarima = ARIMA(current_mean~pdq(d=0)+PDQ(D=1))
+    mean   = MEAN(current_mean),
+    naive  = RW(current_mean),
+    snaive = SNAIVE(current_mean),
+    drift  = RW(current_mean ~ drift()),
+    ar     = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(0,1,0)),
+    ma     = ARIMA(current_mean ~ pdq(0,0,1) + PDQ(0,1,0)),
+    arma   = ARIMA(current_mean ~ pdq(1,0,1) + PDQ(0,1,0)),
+    sarima = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),
+    auto   = ARIMA(current_mean)
   )
 
-# Inspect fitted parameters:
-dam_models |> 
-  pivot_longer(everything(), 
-               names_to="Model",
-               values_to="Fit")
+dam_fc = dam_fit |> forecast(new_data = dam_test)
+
+dam_accuracy = dam_fc |>
+  accuracy(monthly_damlvl_ts,
+           measures = list(point_accuracy_measures, distribution_accuracy_measures))
+
+dam_accuracy |>
+  select(.model, RMSE, MAE, MAPE, CRPS) |>
+  knitr::kable(
+    digits = 3,
+    col.names = c("Model", "RMSE", "MAE", "MAPE (%)", "CRPS")
+  )
 ```
 
 ```{r}
-#| label: fig-naive_forecast_damlvl
-#| fig-cap: "Naive forecasting of fitted models."
-#| fig-width: 7
-#| fig-height: 5
+#| label: tbl-sst_accuracy
+#| tbl-cap: "Out-of-sample accuracy of benchmark and ARIMA-family models on the test set: sea surface temperature."
 #| echo: false
 #| message: false
 #| warning: false
 
-# 24 month forecast:
-dam_fc = dam_models |>
-  forecast(h = "2 years")
-
-# Plot:
-dam_fc |> 
-  ggtime::autoplot(monthly_damlvl_ts, level = NULL) +
-  labs(
-    title = "24 month dam level forecasts for different model fits.",
-    y = "Average dam capacity (%)",
-    x = "Time (month)"
-  ) +
-  theme_minimal(base_size = 14)
-```
-
-```{r}
-#| label: fig-naive_forecast_damlvl_2
-#| fig-cap: "Naive forecasting of fitted models."
-#| fig-width: 7
-#| fig-height: 5
-#| echo: false
-#| message: false
-#| warning: false
-
-# Plot each model in its own facet with confidence bands
-dam_fc |> 
-  autoplot(
-    # Show last 5 years of historical data to keep plot readable
-    monthly_damlvl_ts |> 
-      filter_index("2019 Jan"~.), 
-    level = c(80,95)
-  ) +
-  facet_wrap(~ .model, ncol = 2) +
-  labs(
-    title = "Model forecasts with 80% and 95% prediction intervals.",
-    y = "Average dam capacity (%)",
-    x = "Time (month)"
-  ) +
-  theme_minimal(base_size=14) +
-  theme(legend.position = "none")
-```
-
-### Sea surface temperature
-
-```{r}
-#| echo: false
-#| warning: false
-
-# Fit all model variations to damlvl data: 
-sst_models = monthly_ts |>
+sst_fit = sst_train |>
   model(
-    # AR(2): 
-    ar = ARIMA(current_mean~pdq(1,0,0)+PDQ(0,0,0)),
-    # MA(2):
-    ma = ARIMA(current_mean~pdq(0,0,1)+PDQ(0,0,0)),
-    # ARMA(2,2):
-    arma = ARIMA(current_mean~pdq(1,0,1)+PDQ(0,0,0)), # no differencing
-    # ARIMA(2,1,2):
-    arima = ARIMA(current_mean~pdq(1,1,1)+PDQ(0,0,0)), # linear differencing
-    # SARIMA(2,0,2)(1,1,1)[12]:
-    sarima = ARIMA(current_mean~pdq(1,0,1)+PDQ(1,1,1)), # seasonal differencing
-    # Auto-ARIMA:
-    auto_sarima = ARIMA(current_mean~pdq(d=0)+PDQ(D=1))
+    mean   = MEAN(current_mean),
+    naive  = RW(current_mean),
+    snaive = SNAIVE(current_mean),
+    drift  = RW(current_mean ~ drift()),
+    ar     = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(0,1,0)),
+    ma     = ARIMA(current_mean ~ pdq(0,0,1) + PDQ(0,1,0)),
+    arma   = ARIMA(current_mean ~ pdq(1,0,1) + PDQ(0,1,0)),
+    sarima = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),
+    auto   = ARIMA(current_mean)
   )
 
-# Inspect fitted parameters:
-sst_models |> 
-  pivot_longer(everything(), 
-               names_to="Model",
-               values_to="Fit")
+sst_fc = sst_fit |> forecast(new_data = sst_test)
+
+sst_accuracy = sst_fc |>
+  accuracy(monthly_ts_pre2021,
+           measures = list(point_accuracy_measures, distribution_accuracy_measures))
+
+sst_accuracy |>
+  select(.model, RMSE, MAE, MAPE, CRPS) |>
+  knitr::kable(
+    digits = 3,
+    col.names = c("Model", "RMSE", "MAE", "MAPE (%)", "CRPS")
+  )
 ```
 
 ```{r}
-#| label: fig-naive_forecast_sst
-#| fig-cap: "Naive forecasting of fitted models."
-#| fig-width: 7
-#| fig-height: 5
-#| echo: false
-#| message: false
-#| warning: false
-
-# 24 month forecast:
-sst_fc = sst_models |>
-  forecast(h = "2 years")
-
-# Plot:
-sst_fc |> 
-  ggtime::autoplot(monthly_ts, level = NULL) +
-  labs(
-    title = "24 month sea surface temperature forecasts for different model fits.",
-    y = "Sea surface temperature (C)",
-    x = "Time (month)"
-  ) +
-  theme_minimal(base_size = 14)
+dam_fit |> select(auto) |> report()
 ```
 
 ```{r}
-#| label: fig-naive_forecast_sst_2
-#| fig-cap: "Naive forecasting of fitted models."
-#| fig-width: 7
-#| fig-height: 5
-#| echo: false
-#| message: false
-#| warning: false
-
-# Plot each model in its own facet with confidence bands
-sst_fc |> 
-  autoplot(
-    # Show last 5 years of historical data to keep plot readable
-    monthly_ts |> 
-      filter_index("2019 Jan"~.), 
-    level = c(80,95)
-  ) +
-  facet_wrap(~ .model, ncol = 2) +
-  labs(
-    title = "Model forecasts with 80% and 95% prediction intervals.",
-    y = "sea surface temperature (C)",
-    x = "Time (month)"
-  ) +
-  theme_minimal(base_size=14) +
-  theme(legend.position = "none")
+polyroot(c(1, -2.1082, 1.5153, -0.5226, 0.1241))  # non-seasonal AR roots
+polyroot(c(1, -0.7272))                            # non-seasonal MA root
 ```
+
+```{r}
+dam_fit2 = dam_train |>
+  model(
+    sarima_p1 = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),   # your original manual read
+    sarima_p2 = ARIMA(current_mean ~ pdq(2,0,0) + PDQ(0,1,1)),
+    sarima_p3 = ARIMA(current_mean ~ pdq(3,0,0) + PDQ(0,1,1)),
+    sarima_p4 = ARIMA(current_mean ~ pdq(4,0,0) + PDQ(0,1,1)),   # auto's AR order, MA term dropped
+    auto      = ARIMA(current_mean)
+  )
+
+dam_fc2 = dam_fit2 |> forecast(new_data = dam_test)
+
+dam_fc2 |>
+  accuracy(monthly_damlvl_ts, measures = list(point_accuracy_measures, distribution_accuracy_measures)) |>
+  knitr::kable(digits = 3)
+
+dam_fit2 |> glance() |> knitr::kable(digits = 2)
+
+# check each candidate's coefficient SEs directly:
+dam_fit2 |> select(sarima_p4) |> report()
+```
+
+```{r}
+dam_fit2 |> select(sarima_p2) |> report()
+```
+
+As the forecast horizon grows, uncertainty in the predictions increases. Experts are predicting an exceptionally strong El Niño event in 2026/2027 and since both series extend to the present year it will be interesting to bee if the fitted models pick up the El Niño phenomenon as it develops

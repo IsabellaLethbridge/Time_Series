@@ -341,7 +341,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-arimapdq-model" id="toc-the-arimapdq-model" class="nav-link" data-scroll-target="#the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span>) model</a></li>
   <li><a href="#the-sarimapdqpdqtext_m-model" id="toc-the-sarimapdqpdqtext_m-model" class="nav-link" data-scroll-target="#the-sarimapdqpdqtext_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span>)(<span class="math inline">\(P,D,Q\text{)}_m\)</span> model</a></li>
   </ul></li>
-  <li><a href="#conditional-variance-models" id="toc-conditional-variance-models" class="nav-link" data-scroll-target="#conditional-variance-models">Conditional Variance Models</a></li>
+  <li><a href="#conditional-variance-models" id="toc-conditional-variance-models" class="nav-link" data-scroll-target="#conditional-variance-models">Conditional Variance Models</a>
+  <ul class="collapse">
+  <li><a href="#problem-1" id="toc-problem-1" class="nav-link" data-scroll-target="#problem-1">Problem 1</a></li>
+  </ul></li>
   <li><a href="#spectral-analysis" id="toc-spectral-analysis" class="nav-link" data-scroll-target="#spectral-analysis">Spectral Analysis</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">Section 2</a>
   <ul class="collapse">
@@ -365,7 +368,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#predicting-drought-in-southern-africa" id="toc-predicting-drought-in-southern-africa" class="nav-link" data-scroll-target="#predicting-drought-in-southern-africa">Predicting drought in Southern Africa</a>
   <ul class="collapse">
   <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
-  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">Model fitting</a>
+  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">Model fitting</a></li>
+  <li><a href="#model-fitting-1" id="toc-model-fitting-1" class="nav-link" data-scroll-target="#model-fitting-1">Model fitting</a>
   <ul class="collapse">
   <li><a href="#dam-levels" id="toc-dam-levels" class="nav-link" data-scroll-target="#dam-levels">Dam levels</a></li>
   <li><a href="#sea-surface-temperature" id="toc-sea-surface-temperature" class="nav-link" data-scroll-target="#sea-surface-temperature">Sea surface temperature</a></li>
@@ -1232,7 +1236,8 @@ Built in <code>lag()</code> functions
 <h3 class="anchored" data-anchor-id="differencing">Differencing</h3>
 <p>First difference: <span class="math display">\[
 \Delta{y_{t}} = y_t -y_{t-1} = (1-L)y_t,
-\]</span> Seasonal difference (at lag 12): <span class="math display">\[
+\]</span></p>
+<p>Seasonal difference (at lag 12): <span class="math display">\[
 \Delta_{12}y_{t} = y_t -y_{t-12} = (1-L^{12})y_t,
 \]</span></p>
 <div class="cell">
@@ -1533,6 +1538,42 @@ Training set -0.03689673</code></pre>
 </section>
 <section id="conditional-variance-models" class="level1">
 <h1>Conditional Variance Models</h1>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Tbill <span class="ot">=</span> Tbrate[,<span class="dv">1</span>]</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>Del.Tbill <span class="ot">=</span> <span class="fu">diff</span>(Tbill)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="problem-1" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FinTS)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Tbrate[,<span class="dv">2</span>],<span class="at">type=</span><span class="st">'l'</span>,<span class="at">main=</span><span class="st">'Raw data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="portfolio_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Tbrate[,<span class="dv">1</span>],<span class="at">type=</span><span class="st">'l'</span>,<span class="at">main=</span><span class="st">'Returns'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="portfolio_files/figure-html/unnamed-chunk-25-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Del.Tbill)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="portfolio_files/figure-html/unnamed-chunk-25-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 <section id="spectral-analysis" class="level1">
 <h1>Spectral Analysis</h1>
@@ -1637,52 +1678,52 @@ Training set -0.03689673</code></pre>
 <div class="cell">
 <details>
 <summary>Click to toggle source code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co">#|warning: false</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries: </span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tsibble)</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co">#|warning: false</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries: </span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tsibble)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Click to toggle source code</summary>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in dataset: </span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">'_data/ESK6816.csv'</span>)</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View(dat)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in dataset: </span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">'_data/ESK6816.csv'</span>)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View(dat)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Click to toggle source code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert data to time series object:</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>demand_ts <span class="ot">=</span> <span class="fu">ts</span>(</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span><span class="st">`</span><span class="at">RSA Contracted Demand</span><span class="st">`</span>,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2019</span>, <span class="dv">2161</span>), <span class="co"># Hour 2161 of 2019 (April 1st)</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">frequency =</span> <span class="dv">8766</span>       <span class="co"># Hourly frequency per year</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert time series object to dataframe (for plotting):</span></span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>demand_df <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hour    =</span> <span class="fu">as.numeric</span>(<span class="fu">time</span>(demand_ts)),</span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">count   =</span> <span class="fu">as.numeric</span>(demand_ts)</span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
-<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_df,</span>
-<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> hour,</span>
-<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> count)) <span class="sc">+</span>  </span>
-<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
-<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa hourly electricity demand.'</span>, </span>
-<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (hours)'</span>,</span>
-<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Hourly peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert data to time series object:</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>demand_ts <span class="ot">=</span> <span class="fu">ts</span>(</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span><span class="st">`</span><span class="at">RSA Contracted Demand</span><span class="st">`</span>,</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2019</span>, <span class="dv">2161</span>), <span class="co"># Hour 2161 of 2019 (April 1st)</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">frequency =</span> <span class="dv">8766</span>       <span class="co"># Hourly frequency per year</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert time series object to dataframe (for plotting):</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>demand_df <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hour    =</span> <span class="fu">as.numeric</span>(<span class="fu">time</span>(demand_ts)),</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">count   =</span> <span class="fu">as.numeric</span>(demand_ts)</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_df,</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> hour,</span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> count)) <span class="sc">+</span>  </span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa hourly electricity demand.'</span>, </span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (hours)'</span>,</span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Hourly peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="portfolio_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<p><img src="portfolio_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>As seen in the above plot, we cannot get a clear idea of the seasonality. We need to aggregate the data.</p>
@@ -1690,54 +1731,54 @@ Training set -0.03689673</code></pre>
 <div class="cell">
 <details>
 <summary>Click to toggle source code</summary>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a tsibble dataframe:</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>df_ts <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">datetime=</span><span class="fu">seq</span>(<span class="at">from=</span><span class="fu">as.POSIXct</span>(<span class="st">'2019-04-01 00:00:00'</span>),</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">length.out=</span><span class="fu">length</span>(demand_ts),</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by=</span><span class="st">'hour'</span>),</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">demand=</span><span class="fu">as.numeric</span>(demand_ts)</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>               ) <span class="sc">|&gt;</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index=</span>datetime)</span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to daily values:</span></span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>demand_daily_ts <span class="ot">=</span> df_ts <span class="sc">|&gt;</span></span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_by</span>(<span class="at">date=</span><span class="sc">~</span><span class="fu">as.Date</span>(.))<span class="sc">|&gt;</span></span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">demand_mean=</span><span class="fu">mean</span>(demand,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
-<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_daily_ts,</span>
-<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> date,</span>
-<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> demand_mean)) <span class="sc">+</span>  </span>
-<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
-<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa daily electricity demand.'</span>, </span>
-<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (days)'</span>,</span>
-<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Daily peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a tsibble dataframe:</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>df_ts <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">datetime=</span><span class="fu">seq</span>(<span class="at">from=</span><span class="fu">as.POSIXct</span>(<span class="st">'2019-04-01 00:00:00'</span>),</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">length.out=</span><span class="fu">length</span>(demand_ts),</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by=</span><span class="st">'hour'</span>),</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">demand=</span><span class="fu">as.numeric</span>(demand_ts)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>               ) <span class="sc">|&gt;</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index=</span>datetime)</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to daily values:</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>demand_daily_ts <span class="ot">=</span> df_ts <span class="sc">|&gt;</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_by</span>(<span class="at">date=</span><span class="sc">~</span><span class="fu">as.Date</span>(.))<span class="sc">|&gt;</span></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">demand_mean=</span><span class="fu">mean</span>(demand,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_daily_ts,</span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> date,</span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> demand_mean)) <span class="sc">+</span>  </span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa daily electricity demand.'</span>, </span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (days)'</span>,</span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Daily peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="portfolio_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<p><img src="portfolio_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Again, there is still a lot of unnecessary noise in the data so we’re going to aggregate to months.</p>
 <div class="cell">
 <details>
 <summary>Click to toggle source code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to monthly values:</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>demand_monthly_ts <span class="ot">=</span> df_ts <span class="sc">|&gt;</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_by</span>(<span class="at">year_month=</span><span class="sc">~</span><span class="fu">yearmonth</span>(.))<span class="sc">|&gt;</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">demand_mean=</span><span class="fu">mean</span>(demand,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_monthly_ts,</span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year_month,</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> demand_mean)) <span class="sc">+</span>  </span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa monthly electricity demand.'</span>, </span>
-<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (months)'</span>,</span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Monthly peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to monthly values:</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>demand_monthly_ts <span class="ot">=</span> df_ts <span class="sc">|&gt;</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_by</span>(<span class="at">year_month=</span><span class="sc">~</span><span class="fu">yearmonth</span>(.))<span class="sc">|&gt;</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">demand_mean=</span><span class="fu">mean</span>(demand,<span class="at">na.rm=</span><span class="cn">TRUE</span>))</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot:</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> demand_monthly_ts,</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year_month,</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> demand_mean)) <span class="sc">+</span>  </span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'deeppink'</span>)  <span class="sc">+</span></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'South Africa monthly electricity demand.'</span>, </span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Time (months)'</span>,</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Monthly peak demand'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="portfolio_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+<p><img src="portfolio_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1778,21 +1819,28 @@ Training set -0.03689673</code></pre>
 <p>The aim of this project is to predict Theewaterskloof dam levels as well changes in sea surface temperatures in the eastern Pacific Ocean (along 95W) and use this data to predict drought occurrence in Southern Africa.</p>
 <p>The El Nino phase of the El Nino Southern Oscillation (ENSO) is characterise by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak in December. An El Nino event causes warm and dry conditions over Southern Africa, typically taking effect 3-6 months after the onset of El Nino, in the Pacific. Over the 2015-2016 season, the El Nino weather patterns resulted in prolonged drought in Southern Africa with dam levels dropping and severe water restrictions being implemented.</p>
 <p>The South African Weather Service (SAWS) is warning against a super El nino event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Nino.</p>
-<p>We are interested in the Theewaterskloof dam current levels as Theewaterskloof is the main supplier of water to Cape Town.</p>
+<p>We are interested in the Theewaterskloof dam current levels as Theewaterskloof dam is the main supplier of water to Cape Town.</p>
 <p>References:</p>
 <p>[https://onlinelibrary.wiley.com/doi/abs/10.1002/env.476?casa_token=Eg_zhVj43usAAAAA%3Ar0WptInFBau9fa2gbi2g7VfKEkwccQlk-l0YIV8mbMZnQvBcHiz9Cc_yBXPmfHgftiHsExL1riAtWaHZKw]</p>
 <p>[https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(03)12421-X/fulltext]</p>
 <p>[https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/]</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  n_missing
+      &lt;int&gt;
+1         1</code></pre>
+</div>
+</div>
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
-<p>In the <code>Dam_Levels_from_2000</code> dataset there was one duplicated observation. The second observation was removed as, compared to the other observations, it appeared to be a mistake.</p>
-<p><em>I need better justification for this</em></p>
+<p>The duplicate observation in the <code>Dam_Levels_from_2000</code> dataset was removed by retaining only the first occurrence of each date, using <code>distinct(DATE,.keep_all=TRUE)</code>. The dam level series contained only 1 missing value that was linearly interpolated.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-daily_damlvl" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-daily_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;13: Theewaterskloof dam capacity from January 2000 to October 2021.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;13: Theewaterskloof dam capacity from January 2000 to January 2026.</figcaption>
 </figure>
 </div>
 </div>
@@ -1802,18 +1850,18 @@ Training set -0.03689673</code></pre>
 <div id="fig-daily_sst" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-daily_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;14: Average Pacific sea surface temperature from January 2000 to October 2021.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;14: Average Pacific sea surface temperature from January 2000 to April 2026.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>As seen in both <a href="#fig-daily_damlvl">Figure&nbsp;13</a> and <a href="#fig-daily_sst">Figure&nbsp;14</a> there is noise in the daily observations. The data is aggregated to monthyl observations to obtain a clearer visualisation of the seasonality present in the data.</p>
+<p>As seen in both <a href="#fig-daily_damlvl">Figure&nbsp;13</a> and <a href="#fig-daily_sst">Figure&nbsp;14</a> there is noise in the daily observations. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-monthly_damlvl" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-monthly_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;15: Theewaterskloof dam capacity from January 2000 to October 2021.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;15: Theewaterskloof dam capacity from January 2000 to January 2026.</figcaption>
 </figure>
 </div>
 </div>
@@ -1823,64 +1871,121 @@ Training set -0.03689673</code></pre>
 <div id="fig-monthly_sst" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-monthly_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;16: Average Pacific sea surface temperature from January 2000 to October 2021.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;16: Average Pacific sea surface temperature from January 2000 to April 2026.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>From <a href="#fig-monthly_damlvl">Figure&nbsp;15</a> and <a href="#fig-monthly_sst">Figure&nbsp;16</a> it is apparent that there is seasonality in the dataset.</p>
-<p>We have 21 years worth of data. The <code>Dam_Levels_from_2000</code> dataset has observations until January 2026 but due to missing observations in the <code>sst</code> dataset we have truncated the data. We are interested in forecasting until 2028. As the forecast horizon grows we can expect increased uncertainty in our predictions. Experts are prediciting an exceptionally strong El Nino event in 2026/2027. It will be interesting to see if these trends are picked up.</p>
-<p>Southern Africa experienced severe droughts in 2015/2016 and 2018/2019. These years also saw significant El nino conditions.</p>
-<p><em>I need to have a closer look at the data, the sst data has observations all the way up until today (continuoulsy uodating). It’s also worth noting that there is approximately a 3-6 month lag between increased sst and drought in southern africa - we could expand the number of observations for the dam levels dataset by approximately 6 months because of this</em></p>
+<p>As seen in <a href="#fig-monthly_damlvl">Figure&nbsp;15</a> and <a href="#fig-monthly_sst">Figure&nbsp;16</a>, both datasets display strong 12-month seasonal patterns.</p>
+<p>Both the <code>Dam_Levels_from_2000</code> dataset and the <code>sst</code> dataset have observations from 2000 to 2026. The sea surface temperature series has a period of missing observations from November 2021 to March 2023 due to the buoy array not recording observations. This gap cannot be reliably smoothed over and thus has been left as missing.</p>
+<p>As the forecast horizon grows, uncertainty in the predictions increases. Experts are predicting an exceptionally strong El Nino event in 2026/2027 and since both series extend to the present year it will be interesting to bee if the fitted models pick up the El Nino phenomenon as it develops.</p>
+<p>Southern Africa experienced severe droughts in 2015/2016 and 2018/2019. Both of these periods saw significant El Nino conditions which supports the idea that eastern Pacific sea surface temperature can be used to predict Theewaterskloof dam levels.</p>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># #| label: fig_15161819</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #| fig-cap: "Theewaterskloof dam capacity fro 2015-2016 and 2018-2019."</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #| fig-width: 12</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co"># #| fig-height: 5</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># #| echo: false</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="co"># #| message: false</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co"># #| warning: false</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="co"># damlvl_2015_2016 = damlvl_ts |&gt;</span></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(DATE&gt;=ymd('2015-01-01')&amp;DATE&lt;=ymd('2016-12-31'))</span></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a><span class="co"># damlvl_2018_2019 = damlvl_ts |&gt;</span></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(DATE&gt;=ymd('2018-01-01')&amp;DATE&lt;=ymd('2019-12-31'))</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a><span class="co"># # Plot:</span></span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_20152016 = ggplot(data = damlvl_2015_2016,</span></span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a><span class="co">#        mapping = aes(x = DATE,</span></span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a><span class="co">#                      y = THEEWATERSKLOOF_Current)) +  </span></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(col = 'purple')  +</span></span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_minimal(base_size=14) +</span></span>
+<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = 'Theewaterskloof dam capacity for 2015-2016.', </span></span>
+<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a><span class="co">#        x = 'Time (month)',</span></span>
+<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a><span class="co">#        y = 'Monthly dam capacity (%)')+</span></span>
+<span id="cb61-25"><a href="#cb61-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(</span></span>
+<span id="cb61-26"><a href="#cb61-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     plot.title = element_text(hjust = 0.5)</span></span>
+<span id="cb61-27"><a href="#cb61-27" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span>
+<span id="cb61-28"><a href="#cb61-28" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb61-29"><a href="#cb61-29" aria-hidden="true" tabindex="-1"></a><span class="co"># # Plot:</span></span>
+<span id="cb61-30"><a href="#cb61-30" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_20182019 = ggplot(data = damlvl_2018_2019,</span></span>
+<span id="cb61-31"><a href="#cb61-31" aria-hidden="true" tabindex="-1"></a><span class="co">#        mapping = aes(x = DATE,</span></span>
+<span id="cb61-32"><a href="#cb61-32" aria-hidden="true" tabindex="-1"></a><span class="co">#                      y = THEEWATERSKLOOF_Current)) +  </span></span>
+<span id="cb61-33"><a href="#cb61-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(col = 'purple')  +</span></span>
+<span id="cb61-34"><a href="#cb61-34" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_minimal(base_size=14) +</span></span>
+<span id="cb61-35"><a href="#cb61-35" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = 'Theewaterskloof dam capacity for 2018-2019.', </span></span>
+<span id="cb61-36"><a href="#cb61-36" aria-hidden="true" tabindex="-1"></a><span class="co">#        x = 'Time (month)',</span></span>
+<span id="cb61-37"><a href="#cb61-37" aria-hidden="true" tabindex="-1"></a><span class="co">#        y = 'Monthly dam capacity (%)')+</span></span>
+<span id="cb61-38"><a href="#cb61-38" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(</span></span>
+<span id="cb61-39"><a href="#cb61-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     plot.title = element_text(hjust = 0.5)</span></span>
+<span id="cb61-40"><a href="#cb61-40" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span>
+<span id="cb61-41"><a href="#cb61-41" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb61-42"><a href="#cb61-42" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_20152016 + plot_20182019</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="portfolio_files/figure-html/fig_15161819-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Theewaterskloof dam capacity fro 2015-2016 and 2018-2019.</figcaption>
+<p><img src="portfolio_files/figure-html/fig_1516_1819_sst-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Theewaterskloof dam capacity for 2015-2016 and 2018-2019, alongside sea surface temperature from six months earlier (each panel on its own true observation dates).</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Look at the actual El Nino events here as well as sea surface temperatures 6 months before these observations for comparison.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-lag_deseason" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-lag_deseason-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;17: Deseasonalised lag comparison of dam level and sea surface temperature.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-season" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-season-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;17: Seasonal pattern of Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;18: Seasonal pattern of Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The sea surface temperatures and the dam levels have inverse trends. When sea surface tempertures are high, dam levels are low.</p>
+<p>Sea surface temperatures and dam levels both show strong seasonal patterns. Dam levels dip around April/May and peak around August. Sea surface temperatures peak around February/March and drop around September/October.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-subseries" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-subseries-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;18: Monthly trends in Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;19: Monthly trends in Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>It is worth noting that the structural gaps present in the sea surface temperature series result in some months having more observations than others.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-lag" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-lag-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;19: Lad plots of Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;20: Lag plots of Theewaterskloof dam capacity and average Pacific sea surface temperature.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Need to mention autocorrelation herte.</p>
+<p>Need to mention autocorrelation here.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-acf_pacf_dam" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-acf_pacf_dam-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;20: ACF and PACF plots for Theewaterskloof dam capacity.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;21: ACF and PACF plots for Theewaterskloof dam capacity.</figcaption>
 </figure>
 </div>
 </div>
@@ -1890,17 +1995,18 @@ Training set -0.03689673</code></pre>
 <div id="fig-acf_pacf_sst" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-acf_pacf_sst-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;21: ACF and PACF plots for Pacific sea surface temperature.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;22: ACF and PACF plots for Pacific sea surface temperature.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>Both <a href="#fig-acf_pacf_dam">Figure&nbsp;21</a> and <a href="#fig-acf_pacf_sst">Figure&nbsp;22</a> indicate that these time series are non-stationary. The ACF of the sea surface temperature illustrates a regular seasonal pattern with sharp peaks occurring at regular intervals compared to the ACF of dam levels which has a less stable seasonal pattern seen by the less regularly-spaced peaks. This suggests that the dam level pattern is influenced by a long-term irregular hydrological cycle as opposed to seasonal rainfall patterns. Both PACF plots have a large spike at lag 1. This is typical of a non-stationary process. The dam level series has some weaker spikes around lag 6-8 that indicate short-run structure but the sea surface temperature PACF is mostly within the bounds after lag 1. The order selection for the AR and SARIMA models is based on the ACF and PACF plots of the seasonally differenced series.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-decomp_damlvl" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-decomp_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;22: Decomposition of Theewaterskloof dam capacity series.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;23: Decomposition of Theewaterskloof dam capacity series.</figcaption>
 </figure>
 </div>
 </div>
@@ -1910,19 +2016,36 @@ Training set -0.03689673</code></pre>
 <div id="fig-decomp_sst" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-decomp_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;23: Decomposition of average Pacific sea surface temperature series.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;24: Decomposition of average Pacific sea surface temperature series from 2000 to 2026.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Comment on trends, seasonality etc for both sst and dam levels.</p>
+<p><a href="#fig-decomp_sst">Figure&nbsp;24</a> plots the decomposition of the sea surface temperature series. There are missing observations from November 2021 to March 2023 and October 2024 to March 2025. These observations have been interpolated not observed for completeness of the decomposition across the entire series and should not be interpreted as true measurements.</p>
+<p>As seen in <a href="#fig-decomp_damlvl">Figure&nbsp;23</a> and <a href="#fig-decomp_sst">Figure&nbsp;24</a> both the dam level and sea surface temperature series show strong seasonal trends with <a href="#fig-decomp_damlvl">Figure&nbsp;23</a> showing multi-year drought and recovery cycles. There are noticeable dips in 2005 and 2018, as opposed to a stable long-run trend. The SST trend observed in the sea surface temperature series is more stable with a slightly smoother trend. This can be attributed to sea surface temperatures being driven by the annual warming and cooling due to heating angles whereas dam levels are driven not only by seasonal patterns by also by the long-term irregular hydrological cycle.</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>        Mean    Naive Seasonal naive    Drift
-[1,] 26.1521 7.320172       17.53497 7.320172</code></pre>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">Naive</th>
+<th style="text-align: right;">Seasonal naive</th>
+<th style="text-align: right;">Drift</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">24.945</td>
+<td style="text-align: right;">7.521</td>
+<td style="text-align: right;">17.308</td>
+<td style="text-align: right;">7.65</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>Here we can see the errors assocated with each of our benchmark models. Since the Naive and Drift models both have the same error associated with them we will use the Drift model as a comparison to the other time series models used.</p>
+<p>The naive model produces the smallest residuals when compared to the other benchmark models that were fit.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
@@ -1955,6 +2078,857 @@ Training set -0.03689673</code></pre>
 </section>
 <section id="model-fitting" class="level2">
 <h2 class="anchored" data-anchor-id="model-fitting">Model fitting</h2>
+<p>This project fits and compares AR,MA,ARMA,ARIMA and SARIMA against the benchmark models: Mean, Naive, Seasonal naive and Drift, for both the <code>Dam_Levels_from_2000</code> and <code>sst</code> datasets. A time series regression model is then fit on <code>Dam_Levels_from_2000</code> using the sea surface temperature as a predictor to determine if sea surface temperature in the eastern Pacific can improve the prediciton of Theewaterskloof dam levels to aid in drought prediction.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-acf_pacf_differenced" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="portfolio_files/figure-html/fig-acf_pacf_differenced-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;25: ACF and PACF plots for both dam levels and sea surface temperature for the seasonally differenced data.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>@</p>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dam: full series available to 2026, hold out the last 2 years as test</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>dam_train <span class="ot">=</span> monthly_damlvl_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(. <span class="sc">~</span> <span class="st">"2023 Dec"</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>dam_test  <span class="ot">=</span> monthly_damlvl_ts <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"2024 Jan"</span> <span class="sc">~</span> .)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="co"># SST: use the clean pre-2021 segment (consistent with your unit-root/ACF work),</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="co"># hold out the last ~2 years of that clean stretch</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>sst_train <span class="ot">=</span> monthly_ts_pre2021 <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(. <span class="sc">~</span> <span class="st">"2019 Dec"</span>)</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>sst_test  <span class="ot">=</span> monthly_ts_pre2021 <span class="sc">|&gt;</span> <span class="fu">filter_index</span>(<span class="st">"2020 Jan"</span> <span class="sc">~</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>dam_fit <span class="ot">=</span> dam_train <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean   =</span> <span class="fu">MEAN</span>(current_mean),</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">naive  =</span> <span class="fu">RW</span>(current_mean),</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">snaive =</span> <span class="fu">SNAIVE</span>(current_mean),</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drift  =</span> <span class="fu">RW</span>(current_mean <span class="sc">~</span> <span class="fu">drift</span>()),</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">ar     =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">ma     =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">arma   =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sarima =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">auto   =</span> <span class="fu">ARIMA</span>(current_mean)</span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>dam_fc <span class="ot">=</span> dam_fit <span class="sc">|&gt;</span> <span class="fu">forecast</span>(<span class="at">new_data =</span> dam_test)</span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a>dam_accuracy <span class="ot">=</span> dam_fc <span class="sc">|&gt;</span></span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(monthly_damlvl_ts,</span>
+<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">measures =</span> <span class="fu">list</span>(point_accuracy_measures, distribution_accuracy_measures))</span>
+<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(dam_accuracy, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 12%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.model</th>
+<th style="text-align: left;">.type</th>
+<th style="text-align: right;">ME</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: right;">MPE</th>
+<th style="text-align: right;">MAPE</th>
+<th style="text-align: right;">MASE</th>
+<th style="text-align: right;">RMSSE</th>
+<th style="text-align: right;">ACF1</th>
+<th style="text-align: right;">percentile</th>
+<th style="text-align: right;">CRPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ar</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-24.587</td>
+<td style="text-align: right;">29.244</td>
+<td style="text-align: right;">24.587</td>
+<td style="text-align: right;">-33.246</td>
+<td style="text-align: right;">33.246</td>
+<td style="text-align: right;">1.579</td>
+<td style="text-align: right;">1.605</td>
+<td style="text-align: right;">0.795</td>
+<td style="text-align: right;">17.088</td>
+<td style="text-align: right;">16.921</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">arma</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-20.100</td>
+<td style="text-align: right;">24.536</td>
+<td style="text-align: right;">20.176</td>
+<td style="text-align: right;">-27.246</td>
+<td style="text-align: right;">27.346</td>
+<td style="text-align: right;">1.296</td>
+<td style="text-align: right;">1.346</td>
+<td style="text-align: right;">0.774</td>
+<td style="text-align: right;">13.532</td>
+<td style="text-align: right;">13.399</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">auto</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">1.173</td>
+<td style="text-align: right;">7.061</td>
+<td style="text-align: right;">5.740</td>
+<td style="text-align: right;">0.515</td>
+<td style="text-align: right;">7.276</td>
+<td style="text-align: right;">0.369</td>
+<td style="text-align: right;">0.387</td>
+<td style="text-align: right;">0.713</td>
+<td style="text-align: right;">4.911</td>
+<td style="text-align: right;">4.864</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drift</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-13.694</td>
+<td style="text-align: right;">19.590</td>
+<td style="text-align: right;">16.836</td>
+<td style="text-align: right;">-21.284</td>
+<td style="text-align: right;">24.383</td>
+<td style="text-align: right;">1.081</td>
+<td style="text-align: right;">1.075</td>
+<td style="text-align: right;">0.774</td>
+<td style="text-align: right;">12.097</td>
+<td style="text-align: right;">11.978</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ma</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-4.042</td>
+<td style="text-align: right;">14.809</td>
+<td style="text-align: right;">12.188</td>
+<td style="text-align: right;">-5.398</td>
+<td style="text-align: right;">16.576</td>
+<td style="text-align: right;">0.783</td>
+<td style="text-align: right;">0.813</td>
+<td style="text-align: right;">0.757</td>
+<td style="text-align: right;">8.442</td>
+<td style="text-align: right;">8.359</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">8.134</td>
+<td style="text-align: right;">16.144</td>
+<td style="text-align: right;">13.067</td>
+<td style="text-align: right;">7.561</td>
+<td style="text-align: right;">15.544</td>
+<td style="text-align: right;">0.839</td>
+<td style="text-align: right;">0.886</td>
+<td style="text-align: right;">0.776</td>
+<td style="text-align: right;">9.593</td>
+<td style="text-align: right;">9.499</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">naive</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-12.871</td>
+<td style="text-align: right;">18.977</td>
+<td style="text-align: right;">16.266</td>
+<td style="text-align: right;">-20.186</td>
+<td style="text-align: right;">23.542</td>
+<td style="text-align: right;">1.045</td>
+<td style="text-align: right;">1.041</td>
+<td style="text-align: right;">0.776</td>
+<td style="text-align: right;">11.756</td>
+<td style="text-align: right;">11.641</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-9.287</td>
+<td style="text-align: right;">14.855</td>
+<td style="text-align: right;">11.578</td>
+<td style="text-align: right;">-13.483</td>
+<td style="text-align: right;">15.990</td>
+<td style="text-align: right;">0.744</td>
+<td style="text-align: right;">0.815</td>
+<td style="text-align: right;">0.794</td>
+<td style="text-align: right;">7.917</td>
+<td style="text-align: right;">7.840</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">snaive</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-2.300</td>
+<td style="text-align: right;">15.560</td>
+<td style="text-align: right;">12.768</td>
+<td style="text-align: right;">-3.053</td>
+<td style="text-align: right;">17.006</td>
+<td style="text-align: right;">0.820</td>
+<td style="text-align: right;">0.854</td>
+<td style="text-align: right;">0.737</td>
+<td style="text-align: right;">9.254</td>
+<td style="text-align: right;">9.164</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AIC/BIC only meaningful within the ARIMA family (same d, D) -- excludes</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the benchmark models, which aren't fit by the same likelihood</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>dam_fit <span class="sc">|&gt;</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ar, ma, arma, sarima, auto) <span class="sc">|&gt;</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>() <span class="sc">|&gt;</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 44%">
+<col style="width: 49%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.model</th>
+<th style="text-align: right;">sigma2</th>
+<th style="text-align: right;">log_lik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: left;">ar_roots</th>
+<th style="text-align: left;">ma_roots</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ar</td>
+<td style="text-align: right;">26.33</td>
+<td style="text-align: right;">-843.72</td>
+<td style="text-align: right;">1691.43</td>
+<td style="text-align: right;">1691.48</td>
+<td style="text-align: right;">1698.67</td>
+<td style="text-align: left;">1.042843+0i</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ma</td>
+<td style="text-align: right;">99.36</td>
+<td style="text-align: right;">-1027.47</td>
+<td style="text-align: right;">2058.95</td>
+<td style="text-align: right;">2058.99</td>
+<td style="text-align: right;">2066.19</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-1.016376+0i</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">arma</td>
+<td style="text-align: right;">22.53</td>
+<td style="text-align: right;">-821.86</td>
+<td style="text-align: right;">1649.73</td>
+<td style="text-align: right;">1649.82</td>
+<td style="text-align: right;">1660.59</td>
+<td style="text-align: left;">1.072577+0i</td>
+<td style="text-align: left;">-2.489425+0i</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima</td>
+<td style="text-align: right;">21.20</td>
+<td style="text-align: right;">-814.73</td>
+<td style="text-align: right;">1635.46</td>
+<td style="text-align: right;">1635.55</td>
+<td style="text-align: right;">1646.32</td>
+<td style="text-align: left;">0.7535235+7.535235e-01i, -0.7535235+7.535235e-01i, -0.2758087-1.029332e+00i, 0.2758087+1.029332e+00i, -1.0293323+2.758087e-01i, -0.7535235-7.535235e-01i, 1.0274617+3.908262e-15i, -0.2758087+1.029332e+00i, -1.0293323-2.758087e-01i, 0.2758087-1.029332e+00i, 1.0293323-2.758087e-01i, 1.0293323+2.758087e-01i, 0.7535235-7.535235e-01i</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">auto</td>
+<td style="text-align: right;">13.45</td>
+<td style="text-align: right;">-757.51</td>
+<td style="text-align: right;">1529.02</td>
+<td style="text-align: right;">1529.44</td>
+<td style="text-align: right;">1554.36</td>
+<td style="text-align: left;">1.1078373+0.02943642i, 1.1078373-0.02943642i, 0.9976095-2.35916622i, 0.9976095+2.35916622i</td>
+<td style="text-align: left;">5.052511e-01+8.751206e-01i, -8.751206e-01+5.052511e-01i, -5.052511e-01-8.751206e-01i, 8.751206e-01-5.052511e-01i, 1.035264e-16+1.010502e+00i, -1.010502e+00+5.222335e-16i, -9.933165e-16-1.010502e+00i, 1.010502e+00-3.578530e-15i, -5.052511e-01+8.751206e-01i, -8.751206e-01-5.052511e-01i, 5.052511e-01-8.751206e-01i, 8.751206e-01+5.052511e-01i, 1.375095e+00+6.749240e-15i</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>sst_fit <span class="ot">=</span> sst_train <span class="sc">|&gt;</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean   =</span> <span class="fu">MEAN</span>(current_mean),</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">naive  =</span> <span class="fu">RW</span>(current_mean),</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">snaive =</span> <span class="fu">SNAIVE</span>(current_mean),</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drift  =</span> <span class="fu">RW</span>(current_mean <span class="sc">~</span> <span class="fu">drift</span>()),</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">ar     =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">ma     =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">arma   =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sarima =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">auto   =</span> <span class="fu">ARIMA</span>(current_mean)</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a>sst_fc <span class="ot">=</span> sst_fit <span class="sc">|&gt;</span> <span class="fu">forecast</span>(<span class="at">new_data =</span> sst_test)</span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a>sst_accuracy <span class="ot">=</span> sst_fc <span class="sc">|&gt;</span></span>
+<span id="cb69-17"><a href="#cb69-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(monthly_ts_pre2021,</span>
+<span id="cb69-18"><a href="#cb69-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">measures =</span> <span class="fu">list</span>(point_accuracy_measures, distribution_accuracy_measures))</span>
+<span id="cb69-19"><a href="#cb69-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-20"><a href="#cb69-20" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(sst_accuracy, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 13%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.model</th>
+<th style="text-align: left;">.type</th>
+<th style="text-align: right;">ME</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: right;">MPE</th>
+<th style="text-align: right;">MAPE</th>
+<th style="text-align: right;">MASE</th>
+<th style="text-align: right;">RMSSE</th>
+<th style="text-align: right;">ACF1</th>
+<th style="text-align: right;">percentile</th>
+<th style="text-align: right;">CRPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ar</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.420</td>
+<td style="text-align: right;">1.785</td>
+<td style="text-align: right;">1.420</td>
+<td style="text-align: right;">-5.898</td>
+<td style="text-align: right;">5.898</td>
+<td style="text-align: right;">1.829</td>
+<td style="text-align: right;">1.779</td>
+<td style="text-align: right;">0.412</td>
+<td style="text-align: right;">1.044</td>
+<td style="text-align: right;">1.035</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">arma</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.642</td>
+<td style="text-align: right;">1.990</td>
+<td style="text-align: right;">1.642</td>
+<td style="text-align: right;">-6.833</td>
+<td style="text-align: right;">6.833</td>
+<td style="text-align: right;">2.116</td>
+<td style="text-align: right;">1.983</td>
+<td style="text-align: right;">0.438</td>
+<td style="text-align: right;">1.195</td>
+<td style="text-align: right;">1.184</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">auto</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.667</td>
+<td style="text-align: right;">1.808</td>
+<td style="text-align: right;">1.667</td>
+<td style="text-align: right;">-7.071</td>
+<td style="text-align: right;">7.071</td>
+<td style="text-align: right;">2.148</td>
+<td style="text-align: right;">1.802</td>
+<td style="text-align: right;">0.527</td>
+<td style="text-align: right;">1.297</td>
+<td style="text-align: right;">1.285</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drift</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-0.438</td>
+<td style="text-align: right;">1.773</td>
+<td style="text-align: right;">1.545</td>
+<td style="text-align: right;">-2.329</td>
+<td style="text-align: right;">6.531</td>
+<td style="text-align: right;">1.991</td>
+<td style="text-align: right;">1.767</td>
+<td style="text-align: right;">0.786</td>
+<td style="text-align: right;">1.115</td>
+<td style="text-align: right;">1.104</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ma</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-2.073</td>
+<td style="text-align: right;">2.376</td>
+<td style="text-align: right;">2.073</td>
+<td style="text-align: right;">-8.551</td>
+<td style="text-align: right;">8.551</td>
+<td style="text-align: right;">2.671</td>
+<td style="text-align: right;">2.368</td>
+<td style="text-align: right;">0.468</td>
+<td style="text-align: right;">1.604</td>
+<td style="text-align: right;">1.590</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.512</td>
+<td style="text-align: right;">2.289</td>
+<td style="text-align: right;">1.918</td>
+<td style="text-align: right;">-6.805</td>
+<td style="text-align: right;">8.333</td>
+<td style="text-align: right;">2.472</td>
+<td style="text-align: right;">2.282</td>
+<td style="text-align: right;">0.786</td>
+<td style="text-align: right;">1.406</td>
+<td style="text-align: right;">1.392</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">naive</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-0.442</td>
+<td style="text-align: right;">1.775</td>
+<td style="text-align: right;">1.547</td>
+<td style="text-align: right;">-2.349</td>
+<td style="text-align: right;">6.540</td>
+<td style="text-align: right;">1.993</td>
+<td style="text-align: right;">1.769</td>
+<td style="text-align: right;">0.786</td>
+<td style="text-align: right;">1.107</td>
+<td style="text-align: right;">1.096</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.818</td>
+<td style="text-align: right;">2.025</td>
+<td style="text-align: right;">1.818</td>
+<td style="text-align: right;">-7.615</td>
+<td style="text-align: right;">7.615</td>
+<td style="text-align: right;">2.342</td>
+<td style="text-align: right;">2.018</td>
+<td style="text-align: right;">0.416</td>
+<td style="text-align: right;">1.373</td>
+<td style="text-align: right;">1.361</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">snaive</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-2.158</td>
+<td style="text-align: right;">2.440</td>
+<td style="text-align: right;">2.158</td>
+<td style="text-align: right;">-8.898</td>
+<td style="text-align: right;">8.898</td>
+<td style="text-align: right;">2.781</td>
+<td style="text-align: right;">2.432</td>
+<td style="text-align: right;">0.437</td>
+<td style="text-align: right;">1.610</td>
+<td style="text-align: right;">1.596</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>sst_fit <span class="sc">|&gt;</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ar, ma, arma, sarima, auto) <span class="sc">|&gt;</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>() <span class="sc">|&gt;</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 32%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.model</th>
+<th style="text-align: right;">sigma2</th>
+<th style="text-align: right;">log_lik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: left;">ar_roots</th>
+<th style="text-align: left;">ma_roots</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ar</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">-175.46</td>
+<td style="text-align: right;">354.92</td>
+<td style="text-align: right;">354.97</td>
+<td style="text-align: right;">361.78</td>
+<td style="text-align: left;">1.168917+0i</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ma</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">-221.54</td>
+<td style="text-align: right;">447.08</td>
+<td style="text-align: right;">447.14</td>
+<td style="text-align: right;">453.94</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-1.193003+0i</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">arma</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-163.43</td>
+<td style="text-align: right;">332.86</td>
+<td style="text-align: right;">332.97</td>
+<td style="text-align: right;">343.15</td>
+<td style="text-align: left;">1.332228+0i</td>
+<td style="text-align: left;">-2.366284+0i</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">-147.33</td>
+<td style="text-align: right;">300.66</td>
+<td style="text-align: right;">300.77</td>
+<td style="text-align: right;">310.95</td>
+<td style="text-align: left;">0.7494589+7.494589e-01i, -0.7494589+7.494589e-01i, -0.7494589-7.494589e-01i, 0.7494589-7.494589e-01i, 0.2743210+1.023780e+00i, -1.0237799+2.743210e-01i, -0.2743210-1.023780e+00i, 1.0237799-2.743210e-01i, -0.2743210+1.023780e+00i, -1.0237799-2.743210e-01i, 0.2743210-1.023780e+00i, 1.0237799+2.743210e-01i, 1.1639525-1.947873e-16i</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">auto</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">-117.96</td>
+<td style="text-align: right;">249.93</td>
+<td style="text-align: right;">250.44</td>
+<td style="text-align: right;">273.93</td>
+<td style="text-align: left;">0.7591442+7.591442e-01i, -0.7591442+7.591442e-01i, -0.7591442-7.591442e-01i, 0.7591442-7.591442e-01i, 0.2778661+1.037010e+00i, -1.0370102+2.778661e-01i, -0.2778661-1.037010e+00i, 1.0370102-2.778661e-01i, -0.2778661+1.037010e+00i, -1.0370102-2.778661e-01i, 0.2778661-1.037010e+00i, 1.0370102+2.778661e-01i, 1.3623796+2.927723e-15i, 95.8091264-1.405386e-16i</td>
+<td style="text-align: left;">7.544354e-01+7.544354e-01i, -8.750016e-01+5.051824e-01i, -5.051824e-01-8.750016e-01i, 8.750016e-01-5.051824e-01i, 5.051824e-01+8.750016e-01i, -1.030578e+00+2.761425e-01i, 1.648505e-16-1.010365e+00i, 1.010365e+00-2.149852e-17i, -4.865643e-17+1.010365e+00i, -1.010365e+00-2.965801e-17i, -2.761425e-01-1.030578e+00i, 1.030578e+00-2.761425e-01i, 2.761425e-01+1.030578e+00i, -8.750016e-01-5.051824e-01i, 5.051824e-01-8.750016e-01i, 8.750016e-01+5.051824e-01i, -5.051824e-01+8.750016e-01i, -1.030578e+00-2.761425e-01i, 7.544354e-01-7.544354e-01i, 1.030578e+00+2.761425e-01i, -7.544354e-01+7.544354e-01i, -7.544354e-01-7.544354e-01i, 2.761425e-01-1.030578e+00i, -2.761425e-01+1.030578e+00i, -2.813881e+00+5.962123e-15i</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>dam_fit <span class="sc">|&gt;</span> <span class="fu">select</span>(auto) <span class="sc">|&gt;</span> <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: current_mean 
+Model: ARIMA(4,0,1)(0,1,1)[12] 
+
+Coefficients:
+         ar1      ar2     ar3      ar4      ma1     sma1
+      2.1082  -1.5153  0.5226  -0.1241  -0.7272  -0.8822
+s.e.     NaN      NaN     NaN   0.0573      NaN   0.0445
+
+sigma^2 estimated as 13.45:  log likelihood=-757.51
+AIC=1529.02   AICc=1529.44   BIC=1554.36</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">2.1082</span>, <span class="fl">1.5153</span>, <span class="sc">-</span><span class="fl">0.5226</span>, <span class="fl">0.1241</span>))  <span class="co"># non-seasonal AR roots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.1078701+0.02855804i 1.1078701-0.02855804i 0.9976899-2.35912992i
+[4] 0.9976899+2.35912992i</code></pre>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.7272</span>))                            <span class="co"># non-seasonal MA root</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.375138+0i</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>dam_fit2 <span class="ot">=</span> dam_train <span class="sc">|&gt;</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sarima_p1 =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)),   <span class="co"># your original manual read</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sarima_p2 =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)),</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sarima_p3 =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)),</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sarima_p4 =</span> <span class="fu">ARIMA</span>(current_mean <span class="sc">~</span> <span class="fu">pdq</span>(<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)),   <span class="co"># auto's AR order, MA term dropped</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">auto      =</span> <span class="fu">ARIMA</span>(current_mean)</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>dam_fc2 <span class="ot">=</span> dam_fit2 <span class="sc">|&gt;</span> <span class="fu">forecast</span>(<span class="at">new_data =</span> dam_test)</span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>dam_fc2 <span class="sc">|&gt;</span></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(monthly_damlvl_ts, <span class="at">measures =</span> <span class="fu">list</span>(point_accuracy_measures, distribution_accuracy_measures)) <span class="sc">|&gt;</span></span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 12%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.model</th>
+<th style="text-align: left;">.type</th>
+<th style="text-align: right;">ME</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: right;">MPE</th>
+<th style="text-align: right;">MAPE</th>
+<th style="text-align: right;">MASE</th>
+<th style="text-align: right;">RMSSE</th>
+<th style="text-align: right;">ACF1</th>
+<th style="text-align: right;">percentile</th>
+<th style="text-align: right;">CRPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">auto</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">1.173</td>
+<td style="text-align: right;">7.061</td>
+<td style="text-align: right;">5.740</td>
+<td style="text-align: right;">0.515</td>
+<td style="text-align: right;">7.276</td>
+<td style="text-align: right;">0.369</td>
+<td style="text-align: right;">0.387</td>
+<td style="text-align: right;">0.713</td>
+<td style="text-align: right;">4.911</td>
+<td style="text-align: right;">4.864</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima_p1</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-9.287</td>
+<td style="text-align: right;">14.855</td>
+<td style="text-align: right;">11.578</td>
+<td style="text-align: right;">-13.483</td>
+<td style="text-align: right;">15.990</td>
+<td style="text-align: right;">0.744</td>
+<td style="text-align: right;">0.815</td>
+<td style="text-align: right;">0.794</td>
+<td style="text-align: right;">7.917</td>
+<td style="text-align: right;">7.840</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sarima_p2</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.748</td>
+<td style="text-align: right;">7.484</td>
+<td style="text-align: right;">6.091</td>
+<td style="text-align: right;">-3.357</td>
+<td style="text-align: right;">7.988</td>
+<td style="text-align: right;">0.391</td>
+<td style="text-align: right;">0.411</td>
+<td style="text-align: right;">0.725</td>
+<td style="text-align: right;">4.994</td>
+<td style="text-align: right;">4.946</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima_p3</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-2.292</td>
+<td style="text-align: right;">7.670</td>
+<td style="text-align: right;">6.207</td>
+<td style="text-align: right;">-4.074</td>
+<td style="text-align: right;">8.214</td>
+<td style="text-align: right;">0.399</td>
+<td style="text-align: right;">0.421</td>
+<td style="text-align: right;">0.725</td>
+<td style="text-align: right;">5.013</td>
+<td style="text-align: right;">4.964</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sarima_p4</td>
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">-1.911</td>
+<td style="text-align: right;">7.538</td>
+<td style="text-align: right;">6.125</td>
+<td style="text-align: right;">-3.573</td>
+<td style="text-align: right;">8.052</td>
+<td style="text-align: right;">0.393</td>
+<td style="text-align: right;">0.414</td>
+<td style="text-align: right;">0.725</td>
+<td style="text-align: right;">5.035</td>
+<td style="text-align: right;">4.986</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>dam_fit2 <span class="sc">|&gt;</span> <span class="fu">glance</span>() <span class="sc">|&gt;</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 44%">
+<col style="width: 49%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">.model</th>
+<th style="text-align: right;">sigma2</th>
+<th style="text-align: right;">log_lik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: left;">ar_roots</th>
+<th style="text-align: left;">ma_roots</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">sarima_p1</td>
+<td style="text-align: right;">21.20</td>
+<td style="text-align: right;">-814.73</td>
+<td style="text-align: right;">1635.46</td>
+<td style="text-align: right;">1635.55</td>
+<td style="text-align: right;">1646.32</td>
+<td style="text-align: left;">0.7535235+7.535235e-01i, -0.7535235+7.535235e-01i, -0.2758087-1.029332e+00i, 0.2758087+1.029332e+00i, -1.0293323+2.758087e-01i, -0.7535235-7.535235e-01i, 1.0274617+3.908262e-15i, -0.2758087+1.029332e+00i, -1.0293323-2.758087e-01i, 0.2758087-1.029332e+00i, 1.0293323-2.758087e-01i, 1.0293323+2.758087e-01i, 0.7535235-7.535235e-01i</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima_p2</td>
+<td style="text-align: right;">14.20</td>
+<td style="text-align: right;">-757.26</td>
+<td style="text-align: right;">4025.04</td>
+<td style="text-align: right;">4025.19</td>
+<td style="text-align: right;">4039.52</td>
+<td style="text-align: left;">1.041886+2.584939e-26i, 2.597578-2.584939e-26i</td>
+<td style="text-align: left;">5.067280e-01+8.776786e-01i, -8.776786e-01+5.067280e-01i, -5.067280e-01-8.776786e-01i, 8.776786e-01-5.067280e-01i, 7.886302e-17+1.013456e+00i, -1.013456e+00-1.259849e-14i, 1.324044e-14-1.013456e+00i, 1.013456e+00+1.069647e-14i, -5.067280e-01+8.776786e-01i, -8.776786e-01-5.067280e-01i, 5.067280e-01-8.776786e-01i, 8.776786e-01+5.067280e-01i</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sarima_p3</td>
+<td style="text-align: right;">14.04</td>
+<td style="text-align: right;">-755.66</td>
+<td style="text-align: right;">4023.84</td>
+<td style="text-align: right;">4024.07</td>
+<td style="text-align: right;">4041.95</td>
+<td style="text-align: left;">1.036349+3.698349e-14i, 3.197276+2.237974e+00i, 3.197276-2.237974e+00i</td>
+<td style="text-align: left;">5.061894e-01+8.767458e-01i, -8.767458e-01+5.061894e-01i, -5.061894e-01-8.767458e-01i, 8.767458e-01-5.061894e-01i, -2.611509e-17+1.012379e+00i, -1.012379e+00-1.261335e-14i, 1.293492e-14-1.012379e+00i, 1.012379e+00+1.099314e-14i, -5.061894e-01+8.767458e-01i, -8.767458e-01-5.061894e-01i, 5.061894e-01-8.767458e-01i, 8.767458e-01+5.061894e-01i</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sarima_p4</td>
+<td style="text-align: right;">14.08</td>
+<td style="text-align: right;">-756.14</td>
+<td style="text-align: right;">4026.81</td>
+<td style="text-align: right;">4027.12</td>
+<td style="text-align: right;">4048.53</td>
+<td style="text-align: left;">1.0398127+1.593150e-21i, -0.1230387+3.244173e+00i, -0.1230387-3.244173e+00i, 2.2099509+0.000000e+00i</td>
+<td style="text-align: left;">5.065219e-01+8.773217e-01i, -8.773217e-01+5.065219e-01i, -5.065219e-01-8.773217e-01i, 8.773217e-01-5.065219e-01i, 7.047274e-17+1.013044e+00i, -1.013044e+00-1.256684e-14i, 1.269695e-14-1.013044e+00i, 1.013044e+00+1.080034e-14i, -5.065219e-01+8.773217e-01i, -8.773217e-01-5.065219e-01i, 5.065219e-01-8.773217e-01i, 8.773217e-01+5.065219e-01i</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">auto</td>
+<td style="text-align: right;">13.45</td>
+<td style="text-align: right;">-757.51</td>
+<td style="text-align: right;">1529.02</td>
+<td style="text-align: right;">1529.44</td>
+<td style="text-align: right;">1554.36</td>
+<td style="text-align: left;">1.1078373+0.02943642i, 1.1078373-0.02943642i, 0.9976095-2.35916622i, 0.9976095+2.35916622i</td>
+<td style="text-align: left;">5.052511e-01+8.751206e-01i, -8.751206e-01+5.052511e-01i, -5.052511e-01-8.751206e-01i, 8.751206e-01-5.052511e-01i, 1.035264e-16+1.010502e+00i, -1.010502e+00+5.222335e-16i, -9.933165e-16-1.010502e+00i, 1.010502e+00-3.578530e-15i, -5.052511e-01+8.751206e-01i, -8.751206e-01-5.052511e-01i, 5.052511e-01-8.751206e-01i, 8.751206e-01+5.052511e-01i, 1.375095e+00+6.749240e-15i</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check each candidate's coefficient SEs directly:</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>dam_fit2 <span class="sc">|&gt;</span> <span class="fu">select</span>(sarima_p4) <span class="sc">|&gt;</span> <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: current_mean 
+Model: ARIMA(4,0,0)(0,1,1)[12] 
+
+Coefficients:
+         ar1      ar2     ar3      ar4     sma1
+      1.3909  -0.4970  0.1240  -0.0413  -0.8560
+s.e.  0.0602   0.1029  0.1022   0.0598   0.0319
+
+sigma^2 estimated as 14.08:  log likelihood=-756.14
+AIC=4026.81   AICc=4027.12   BIC=4048.53</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Click to toggle source code</summary>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>dam_fit2 <span class="sc">|&gt;</span> <span class="fu">select</span>(sarima_p2) <span class="sc">|&gt;</span> <span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: current_mean 
+Model: ARIMA(2,0,0)(0,1,1)[12] 
+
+Coefficients:
+         ar1      ar2     sma1
+      1.3448  -0.3695  -0.8518
+s.e.  0.0553   0.0554   0.0318
+
+sigma^2 estimated as 14.2:  log likelihood=-757.26
+AIC=4025.04   AICc=4025.19   BIC=4039.52</code></pre>
+</div>
+</div>
+</section>
+<section id="model-fitting-1" class="level2">
+<h2 class="anchored" data-anchor-id="model-fitting-1">Model fitting</h2>
 <p>I have naively fitted MA,AR,ARMA,ARIMA,SARIMA here just to get a gauge of how they look.</p>
 <section id="dam-levels" class="level3">
 <h3 class="anchored" data-anchor-id="dam-levels">Dam levels</h3>
@@ -1969,7 +2943,7 @@ Training set -0.03689673</code></pre>
 3 arma           &lt;ARIMA(1,0,1) w/ mean&gt;
 4 arima                  &lt;ARIMA(1,1,1)&gt;
 5 sarima      &lt;ARIMA(1,0,1)(1,1,1)[12]&gt;
-6 auto_sarima &lt;ARIMA(3,0,1)(1,1,0)[12]&gt;</code></pre>
+6 auto_sarima &lt;ARIMA(3,0,1)(0,1,1)[12]&gt;</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -1977,7 +2951,7 @@ Training set -0.03689673</code></pre>
 <div id="fig-naive_forecast_damlvl" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-naive_forecast_damlvl-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;24: Naive forecasting of fitted models.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;26: Naive forecasting of fitted models.</figcaption>
 </figure>
 </div>
 </div>
@@ -1987,7 +2961,7 @@ Training set -0.03689673</code></pre>
 <div id="fig-naive_forecast_damlvl_2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-naive_forecast_damlvl_2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;25: Naive forecasting of fitted models.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;27: Naive forecasting of fitted models.</figcaption>
 </figure>
 </div>
 </div>
@@ -2006,7 +2980,7 @@ Training set -0.03689673</code></pre>
 3 arma           &lt;ARIMA(1,0,1) w/ mean&gt;
 4 arima                  &lt;ARIMA(1,1,1)&gt;
 5 sarima      &lt;ARIMA(1,0,1)(1,1,1)[12]&gt;
-6 auto_sarima &lt;ARIMA(2,0,1)(2,1,0)[12]&gt;</code></pre>
+6 auto_sarima &lt;ARIMA(1,0,1)(2,1,0)[12]&gt;</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -2014,7 +2988,7 @@ Training set -0.03689673</code></pre>
 <div id="fig-naive_forecast_sst" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-naive_forecast_sst-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;26: Naive forecasting of fitted models.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;28: Naive forecasting of fitted models.</figcaption>
 </figure>
 </div>
 </div>
@@ -2024,7 +2998,7 @@ Training set -0.03689673</code></pre>
 <div id="fig-naive_forecast_sst_2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="portfolio_files/figure-html/fig-naive_forecast_sst_2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;27: Naive forecasting of fitted models.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;29: Naive forecasting of fitted models.</figcaption>
 </figure>
 </div>
 </div>

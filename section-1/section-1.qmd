@@ -608,9 +608,13 @@ Don't get confused between `stats::lag()` and `dplyr::lag()`. They do different 
 
 ### Differencing
 
-First difference: $$
+First difference: 
+$$
 \Delta{y_{t}} = y_t -y_{t-1} = (1-L)y_t,
-$$ Seasonal difference (at lag 12): $$
+$$ 
+
+Seasonal difference (at lag 12): 
+$$
 \Delta_{12}y_{t} = y_t -y_{t-12} = (1-L^{12})y_t,
 $$
 
@@ -821,6 +825,7 @@ kable(arima_table, align = "ll")
 
 Although @tbl-arima_equivalents illustrates the special cases of ARIMA, sometimes there is a constant included that must be taken into account.
 
+
 ```{r}
 #| label: fig-ap_arima
 #| fig-cap: "An ARIMA(1,1,1) model fitted to `AirPassengers` series with forecasts and prediction intervals for 24 months."
@@ -932,9 +937,7 @@ library(rugarch)
 
 plot(Tbrate[,2],type='l',main='Raw data')
 plot(Tbrate[,1],type='l',main='Returns')
-plot(Del.Tbrill)
+plot(Del.Tbill)
 ```
-
-
 
 # Spectral Analysis
