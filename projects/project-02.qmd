@@ -3,33 +3,35 @@ format: html
 editor: visual
 ---
 
-This project fits and compares autoregressive models (AR, MA, ARMA, ARIMA, SARIMA) to the Theewaterskloof dam level and eastern Pacific sea surface temperature (SST) individually. SST is then included as a covariate in a SARIMAX model to determine if it can be used to improve dam level forecasts. 
+# Predicting drought in the Western Cape
 
-For interest's sake, here is a website that maps the sea surface temperature anomalies: https://earth.nullschool.net/#current/ocean/surface/currents/overlay=sea_surface_temp_anomaly/orthographic=-100.92,9.72,366/loc=-99.041,-1.152 
+This project fits and compares autoregressive models (AR, MA, ARMA, SARIMA) to the Theewaterskloof dam level and eastern Pacific sea surface temperature (SST) individually. SST is then included as a covariate in a SARIMAX model to determine if it can be used to improve dam level forecasts.
 
-The SST along the equatorial band in the eastern Pacific ocean is currently higher than past norms. This is consistent with the South African Weather Service's warning of a super El Niño in 2026/2027. 
+**Section & Topic:** Autoregressive Models
 
--   **Section & Topic:** Autoregressive Models
+**Project Type:** Model implementation
 
--   **Project Type:** Model implementaion
+**Aim:** Are the sea surface temperature in the eastern Pacific Ocean and the Theewaterskloof dam levels predictable?
 
--   **Aim:** Is the sea surface temperature in the eastern Pacific Ocean and the Theewaterskloof dam levels predictable?
+**Data Used:**
 
--   **Data Used:**
+```         
+[https://www.pmel.noaa.gov/tao/drupal/disdel/] [https://odp-cctegis.opendata.arcgis.com/]
+```
 
-    \[https://www.pmel.noaa.gov/tao/drupal/disdel/\] \[https://odp-cctegis.opendata.arcgis.com/\] I will reference this properly!
+**Methods Used:** AR, MA, ARMA, SARIMA, SARIMAX (dynamic regression with sea surface temperature as a predictor), compared against Mean, Naive, Seasonal naive and Drift benchmarks.
 
--   **Methods Used:** AR, MA, ARMA, ARIMA, SARIMA, SARIMAX (dynamic regression with sea surface temperature as a predictor), compared against Mean, Naive, Seasonal naive and Drift benchmarks.
+The aim of this project is to use autoregressive models to forecast Theewaterskloof Dam levels and eastern Pacific sea surface temperature (along 95W), individually, as well as using SST as a lagged predictor to try and improve dam-level forecasts. This project will be used to test the hypothesis that eastern Pacific SST can be used as a leading indicator of drought risk in the Western Cape.
+
+The El Niño phase of the El Niño Southern Oscillation (ENSO) is characterised by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak around the following December/January (Mason, 2001). An El Niño event typically causes warm and dry conditions over Southern Africa, with effects emerging within the year following the El Niño onset in the Pacific (Thomson et al., 2003). Over the 2015-2016 season, Southern Africa experienced severe drought with the 2015/2016 El Niño being identified as a contributing factor. This saw a drop in dam levels and severe water restrictions being implemented.
+
+The South African Weather Service (SAWS) is warning against a super El Niño event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Niño (Mail & Guardian, 2026).
+
+This project focuses on Theewaterskloof Dam, the single largest reservoir in the Western Cape Water Supply System.
 
 ## Key Findings
 
-<!-- Summary of findings -->
-
-\[cite: 1\]
-
 ## Reflections
-
--   **What I would do differently next time:**\[cite: 1\]
 
 ## Links
 
@@ -56,24 +58,6 @@ library(ggplot2)
 library(patchwork)
 library(forecast)
 ```
-
-# Predicting drought in the Western Cape, South Africa
-
-The aim of this project is to use autoregressive models to forecast Theewaterskloof Dam levels and eastern Pacific sea surface temperature (along 95W), individually, as well as using SST as a lagged predictor to try and improve dam-level forecasts. This project will be used to test the hypothesis that eastern Pacific SST can be used as a leading indicator of drought risk in the Western Cape.
-
-The El Niño phase of the El Niño Southern Oscillation (ENSO) is characterise by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak around the following December/January (Mason,2001). An El Niño event typically cause warm and dry conditions over Southern Africa, with effects emerging within the year following the El Niño onset in the Pacific. Over the 2015-2016 season, Southern Africa experienced severe drought with the 2015/2016 El Niño being identified as a contributing factor (Thomson et al., 2003). This saw a drop in dam levels and severe water restrictions being implemented. 
-
-The South African Weather Service (SAWS) is warning against a super El Niño event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Niño.
-
-This project focuses on Theewaterskloof Dam, the single largest reservoir in the Western Cape Water Supply System. 
-
-References:
-
-1. Mason, S. J. (2001). El Niño, climate change, and Southern African climate. Environmetrics, 12(4), 327-345. https://doi.org/10.1002/env.476
-
-2. Thomson, M. C., Abayomi, K., Barnston, A. G., Levy, M., & Dilley, M. (2003). El Niño and drought in southern Africa. The Lancet, 361(9358), 626-627. https://doi.org/10.1016/S0140-6736(03)12421-X
-
-3. Mail & Guardian. (2026, September 1). The SAWS warns exceptionally strong 2026/2027 El Niño could bring severe heatwaves to SA. https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/
 
 ```{r}
 #| echo: false
@@ -205,7 +189,7 @@ ggplot(data = damlvl_ts,
 
 ```{r}
 #| label: fig-daily_sst
-#| fig-cap: "Average Pacific sea surface temperature from January 2000 to April 2026."
+#| fig-cap: "Average eastern Pacific sea surface temperature from January 2000 to April 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -220,14 +204,14 @@ ggplot(data = cut_ts,
   theme_minimal(base_size=14) +
   labs(title = 'Pacific sea surface temperature from 2000 to 2026.',
        x = 'Time (day)',
-       y = 'Sea surface temperature (C)')+
+       y = 'Sea surface temperature (°C)')+
   theme(
     plot.title = element_text(hjust = 0.5)
   )
 
 ```
 
-Both @fig-daily_damlvl and @fig-daily_sst show that these series are noisy. The dam levels data has multiple year drops and slow recoveries whereas the the SST oscillates more uniformly around its mean. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise.
+Both @fig-daily_damlvl and @fig-daily_sst show that these series are noisy. The dam levels data has multiple year drops and slow recoveries whereas the SST oscillates more uniformly around its mean. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise.
 
 ```{r}
 #| label: fig-monthly_damlvl
@@ -259,7 +243,7 @@ ggplot(data = monthly_damlvl_ts,
 
 ```{r}
 #| label: fig-monthly_sst
-#| fig-cap: "Average Pacific sea surface temperature from January 2000 to April 2026."
+#| fig-cap: "Average eastern Pacific sea surface temperature from January 2000 to April 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -283,21 +267,21 @@ ggplot(data = monthly_ts,
   theme_minimal(base_size=14) +
   labs(title = 'Sea surface temperature in the Pacific from 2000 to 2026.',
        x = 'Time (month)',
-       y = 'Sea surface temperature (C)')+
+       y = 'Sea surface temperature (°C)')+
   theme(
     plot.title = element_text(hjust = 0.5)
   )
 ```
 
-As seen in @fig-monthly_damlvl and @fig-monthly_sst, both datasets display strong 12-month seasonal patterns. The dam level data also has an irregular drought/recovery cycle that appears to follows the hydrological cycle. 
+As seen in @fig-monthly_damlvl and @fig-monthly_sst, both datasets display strong 12-month seasonal patterns. The dam level data also has an irregular drought/recovery cycle that appears to follow the hydrological cycle.
 
-Both the `Dam_Levels_from_2000` dataset and the `sst` dataset have observations from 2000 to 2026. The SST series has two periods of missing observations, November 2021 to March 2023 and October 2024 to March 2025, due to the bouy array not recording. These gaps cannot be reliable smoothed over and have been left as missing observations. 
+Both the `Dam_Levels_from_2000` dataset and the `sst` dataset have observations from 2000 to 2026. The SST series has two periods of missing observations, November 2021 to March 2023 and October 2024 to March 2025, due to the buoy array not recording. These gaps cannot be reliable smoothed over and have been left as missing observations.
 
-Southern Africa experienced severe droughts between 2015 and 2018. In the figures below, dam capacity across this period is compared with lagged SST, approximately 3 months earlier. 
+Southern Africa experienced a severe drought between 2015 and 2018. In the figures below, dam capacity across this period is compared with lagged SST, approximately 3 months earlier.
 
 ```{r}
 #| label: fig-1519
-#| fig-cap: "Theewaterskloof dam capacity for 2015 to 2019 and sea surface temperature from 3 months earlier."
+#| fig-cap: "Theewaterskloof dam capacity from 2015 to 2019 with sea surface temperature from 3 months earlier."
 #| fig-width: 12
 #| fig-height: 8
 #| echo: false
@@ -320,11 +304,12 @@ plot_sst_1519 = ggplot(sst_2015_2019, aes(year_month, current_mean)) +
 
 plot_dam_1519 / plot_sst_1519
 ```
-In @fig-1519, dam capacity declines to reach a minimum around 2018 and then recovers into 2020. The SST series has missing values for March and April 2017 but still shows a slightly elevated double peak in both 2015 and 2016. This is consistent with the El Nino that occurred during that period. Both series maintain their strong seasonal patterns, however it is difficult to determine the lagged relationship. 
+
+In @fig-1519, dam capacity declines to reach a minimum around 2018 and then recovers through 2019. The SST series has missing values for March and April 2017 but still shows a slightly elevated double peak in both 2015 and 2016. This is consistent with the El Niñothat occurred during that period. Both series maintain their strong seasonal patterns, however it is difficult to determine the lagged relationship.
 
 ```{r}
 #| label: fig-lag_deseason
-#| fig-cap: "Deseasonalised dam capacity from 2015 to 2019 and sea surface temperature from 3 months earlier."
+#| fig-cap: "Deseasonalised dam capacity from 2015 to 2019 with sea surface temperature from 3 months earlier."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -360,7 +345,7 @@ plot_sst = ggplot(sst_window, aes(year_month, season_adjust)) +
 plot_dam / plot_sst
 ```
 
-@fig-lag_deseason re-illustrates the cycle identified in @fig-1519. With the seasonality of the series removed, dam capacity decreases smoothly to a minimum around 2018 and recovers steadily through 2019. Rising SST in the deseasonalised plot precedes the decreased dam capacity during the 2015 to 2016 period, however during the 2018 to 2019 recovery phase, SST is rising. This suggests that the relationship between dam capacity and SST is not a stable relationship across the whole period and that other drivers are likely contributing to the dam level recovery.  
+@fig-lag_deseason re-illustrates the cycle identified in @fig-1519. With the seasonality of the series removed, dam capacity decreases smoothly to a minimum around 2018 and recovers steadily through 2019. Rising SST in the deseasonalised plot precedes the decreased dam capacity during the 2015 to 2016 period, however during the 2018 to 2019 recovery phase, SST is rising. This suggests that the relationship between dam capacity and SST is not a stable relationship across the whole period and that other drivers are likely contributing to the dam level recovery.
 
 ```{r}
 #| label: fig-subseries
@@ -388,7 +373,7 @@ subseries_plot = monthly_ts |>
   ggtime::gg_subseries(current_mean) +
   labs(title = 'Monthly trends from 2000 to 2026.', 
        x = '',
-       y = 'Average sea surface temperature (C)') +
+       y = 'Average SST (°C)') +
   theme_minimal(base_size=14) + 
   theme(
     axis.text.x = element_blank(),
@@ -397,8 +382,8 @@ subseries_plot = monthly_ts |>
 
 subseries_damlvl_plot + subseries_plot
 ```
-@fig-subseries illustrates the strong seasonal pattern already identified in @fig-monthly_damlvl and @fig-monthly_sst. Dam levels reach a minimum around May and peak in September. The variation in dam levels within the months is approximately the same across all months. SST peaks in April and is lowest in September. Unlike the dam levels, the months with lower temperatures experience greater variability in the recorded temperatures compared to months where the temperature is higher. Dam capacity (%) and SST (°C) are measured on different scales. This means that the two series' overall variability cannot be directly compared. 
-It is worth noting that the structural gaps present in the sea surface temperature series result in some months having more observations than others.
+
+@fig-subseries illustrates the strong seasonal pattern already identified in @fig-monthly_damlvl and @fig-monthly_sst. Dam levels reach a minimum around May and peak in September. The variation in dam levels within the months is approximately the same across all months. SST peaks in April and is lowest in September. Unlike the dam levels, the months with lower temperatures experience greater variability in the recorded temperatures compared to months where the temperature is higher. Dam capacity (%) and SST (°C) are measured on different scales. This means that the two series' overall variability cannot be directly compared. It is worth noting that the structural gaps present in the sea surface temperature series result in some months having more observations than others.
 
 ```{r}
 #| label: fig-acf_pacf_dam
@@ -436,7 +421,7 @@ acf_damlvl_plot + pacf_damlvl_plot
 
 ```{r}
 #| label: fig-acf_pacf_sst
-#| fig-cap: "ACF and PACF plots for Pacific sea surface temperature."
+#| fig-cap: "ACF and PACF plots for eastern Pacific sea surface temperature."
 #| fig-width: 12
 #| fig-height: 5
 #| echo: false
@@ -468,11 +453,11 @@ pacf_plot = monthly_ts_pre2021 |>
 acf_plot + pacf_plot
 ```
 
-Both @fig-acf_pacf_dam and @fig-acf_pacf_sst indicate that these time series are non-stationary. The ACF of the sea surface temperature illustrates a regular seasonal pattern with sharp peaks occurring at regular intervals compared to the ACF of dam levels which has a less stable seasonal pattern seen by the less regularly-spaced peaks. This suggests that the dam level pattern is influenced by a long-term irregular hydrological cycle as opposed to the seasonal rainfall pattern alone. Both PACF plots have a large spike at lag 1. This is typical of a non-stationary process. The dam level PACF plot has a large negative spike at lag 2, indicative of an AR(2) process. This is followed by a few significant positive spiked that indicate a further short-run structure. The SST PACF plot has the same pattern as the dam levels PACF plot, with a large positive spike at lag 1 followed by a large negative spike at lag 2. There is also a second series of significant positive spikes from lag 7 to 10. The order selection for the AR and SARIMA models is based on the ACF and PACF plots of the seasonally differenced series.
+Both @fig-acf_pacf_dam and @fig-acf_pacf_sst indicate that these time series are non-stationary. The ACF of the sea surface temperature illustrates a regular seasonal pattern with sharp peaks occurring at regular intervals compared to the ACF of dam levels which has a less stable seasonal pattern seen by the less regularly-spaced peaks. This suggests that the dam level pattern is influenced by a long-term irregular hydrological cycle as opposed to the seasonal rainfall pattern alone. Both PACF plots have a large spike at lag 1. This is typical of a non-stationary process. The dam level PACF plot has a large negative spike at lag 2, indicative of an AR(2) process. This is followed by a few significant positive spikes that indicate a further short-run structure. The SST PACF plot has the same pattern as the dam levels PACF plot, with a large positive spike at lag 1 followed by a large negative spike at lag 2. There is also a second series of significant positive spikes from lag 7 to 10. The order selection for the AR and SARIMA models is based on the ACF and PACF plots of the seasonally differenced series.
 
 ```{r}
 #| label: fig-decomp_damlvl
-#| fig-cap: "Decomposition of Theewaterskloof dam capacity series."
+#| fig-cap: "Decomposition of Theewaterskloof dam capacity series from 2000 to 2026."
 #| fig-width: 10
 #| fig-height: 6
 #| echo: false
@@ -497,7 +482,7 @@ stl_damlvl_plot
 
 ```{r}
 #| label: fig-decomp_sst
-#| fig-cap: "Decomposition of average Pacific sea surface temperature series from 2000 to 2026."
+#| fig-cap: "Decomposition of eastern Pacific sea surface temperature series from 2000 to 2026."
 #| fig-width: 10
 #| fig-height: 5
 #| echo: false
@@ -529,11 +514,11 @@ stl_plot
 
 @fig-decomp_sst plots the decomposition of the sea surface temperature series. There are missing observations from November 2021 to March 2023 and October 2024 to March 2025. These observations have been interpolated, not observed, for completeness of the decomposition across the entire series and should not be interpreted as true measurements.
 
-As seen in @fig-decomp_damlvl and @fig-decomp_sst, both the dam level and sea surface temperature series show strong seasonal trends with @fig-decomp_damlvl showing multi-year drought and recovery cycles. There are noticeable dips in 2005 and, more severely, 2018, as opposed to a stable long-run trend. The SST trend is more stable than the dam trend for majority of the observed period. This can be attributed to SST being driven by the annual warming and cooling due to heating angles whereas dam levels are driven not only by seasonal patterns but also by the long-term irregular hydrological cycle. Towards the end of the SST series there is a sharp drop followed by a steep increase, this is consistent with the predicted 2026/2027 El Nino even but should be interpreted carefully. 
+As seen in @fig-decomp_damlvl and @fig-decomp_sst, both the dam level and sea surface temperature series show strong seasonal trends with @fig-decomp_damlvl showing multi-year drought and recovery cycles. There are noticeable dips in 2005 and, more severely, 2018, as opposed to a stable long-run trend. The SST trend is more stable than the dam trend for majority of the observed period. This can be attributed to SST being driven by the annual warming and cooling due to heating angles whereas dam levels are driven not only by seasonal patterns but also by the long-term irregular hydrological cycle. Towards the end of the SST series there is a sharp drop followed by a steep increase, this is consistent with the predicted 2026/2027 El Niñoeven but should be interpreted carefully.
 
 ## Model fitting
 
-This project fits and compares AR,MA,ARMA,ARIMA and SARIMA against the benchmark models: Mean, Naive, Seasonal naive and Drift, for both the `Dam_Levels_from_2000` and `sst` datasets. A time series regression model is then fit on `Dam_Levels_from_2000` using the sea surface temperature as a predictor to determine if sea surface temperature in the eastern Pacific can improve the prediciton of Theewaterskloof dam levels to aid in drought prediction.
+This project fits and compares AR,MA,ARMA and SARIMA against the benchmark models: Mean, Naive, Seasonal naive and Drift, for both the `Dam_Levels_from_2000` and `sst` datasets. A time series regression model is then fit on `Dam_Levels_from_2000` using the sea surface temperature as a predictor to determine if sea surface temperature in the eastern Pacific can improve the prediction of Theewaterskloof dam levels to aid in drought prediction.
 
 ```{r}
 #| label: fig-acf_pacf_differenced
@@ -578,7 +563,7 @@ pacf_sst_diff = sst_diff |>
 (acf_damlvl_diff + pacf_damlvl_diff) / (acf_sst_diff + pacf_sst_diff)
 ```
 
-@fig-acf_pacf_differenced shows the ACF and PACF of both the dam level and SST series after seasonal differencing. The dam level ACF decays monotonically from lag 1. The PACF has significant spikes at lags 1 and 2, this is consistent with the AR(2) structure identified in the EDA. There are some significant spikes at lags 12-14 which is more indicative of a seasonal MA term than a seasonal AR term. The SST PACF is noisier than the dam level one, with a few additional significant spikes. This irregular autocorrelation structure provides evidence that SST does not reduce to a low-order SARIMA model. 
+@fig-acf_pacf_differenced shows the ACF and PACF of both the dam level and SST series after seasonal differencing. The dam level ACF decays monotonically from lag 1. The PACF has significant spikes at lags 1 and 2, this is consistent with the AR(2) structure identified in the EDA. There are some significant spikes at lags 12-14 which is more indicative of a seasonal MA term than a seasonal AR term. The SST PACF is noisier than the dam level one, with a few additional significant spikes. This irregular autocorrelation structure provides evidence that SST does not reduce to a low-order SARIMA model.
 
 ```{r}
 #| echo: false
@@ -594,11 +579,13 @@ sst_train = monthly_ts_pre2021 |> filter_index(. ~ "2019 Dec")
 sst_test  = monthly_ts_pre2021 |> filter_index("2020 Jan" ~ .)
 ```
 
-Dam level data are available from 2000 to 2026. The most recent 2 years are held out as a test set and the remainder is used as the training set. SST uses the clean pre-2021 subset as the training set with the last two years, 2020-2021 as the test set. 
+### Theewaterskloof dam capacity
+
+Dam level data are available from 2000 to 2026. The most recent 2 years are held out as a test set and the remainder is used as the training set. SST uses the clean pre-2021 dataset with the last two years, 2020-2021 as the test set and the previous years as the training set.
 
 ```{r}
 #| label: tbl-dam_accuracy
-#| tbl-cap: "Out-of-sample accuracy of benchmark and ARIMA-family models on the test set: Theewaterskloof dam capacity."
+#| tbl-cap: "Out-of-sample error metrics for the benchmark and ARIMA-family models on the Theewaterskloof dam capacity series."
 #| echo: false
 #| message: false
 #| warning: false
@@ -611,8 +598,7 @@ dam_fit = dam_train |>
     ar     = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(0,1,0)),
     ma     = ARIMA(current_mean ~ pdq(0,0,1) + PDQ(0,1,0)),
     arma   = ARIMA(current_mean ~ pdq(1,0,1) + PDQ(0,1,0)),
-    sarima = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),
-    auto   = ARIMA(current_mean)
+    sarima = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0))
   )
 
 dam_fc = dam_fit |> forecast(new_data = dam_test)
@@ -623,15 +609,60 @@ dam_accuracy = dam_fc |>
 
 dam_accuracy |>
   select(.model, RMSE, MAE, MAPE, CRPS) |>
+  mutate(.model = recode(.model,
+    mean   = "Mean",
+    naive  = "Naive",
+    snaive = "Seasonal naive",
+    drift  = "Drift",
+    ar     = "AR",
+    ma     = "MA",
+    arma   = "ARMA",
+    sarima = "SARIMA"
+  )) |>
   knitr::kable(
     digits = 3,
     col.names = c("Model", "RMSE", "MAE", "MAPE (%)", "CRPS")
   )
 ```
 
+From the error metrics displayed in @tbl-dam_accuracy, RMSE classifies MA as the optimal model (14.809), MAPE(%) classified Mean as the optimal model (15.544) while both MAE and CRPS show SARIMA having the lowest errors (11.578 and 7.840 respectively). This suggests that the optimal model for the dam levels series is the SARIMA model. Both AR and ARMA perform poorly across all metrics, indicating that a large amount of the series predictability comes from the seasonal component as opposed to just short-run autocorrelation.
+
+```{r}
+#| label: tbl-dam_fit2_accuracy
+#| tbl-cap: "Out-of-sample error metrics for the two SARIMA models on the Theewaterskloof dam capacity series."
+#| echo: false
+#| message: false
+#| warning: false
+
+dam_fit2 = dam_train |>
+  model(
+    sarima_p1 = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),
+    sarima_p2 = ARIMA(current_mean ~ pdq(2,0,0) + PDQ(0,1,1))
+  )
+
+dam_fc2 = dam_fit2 |> forecast(new_data = dam_test)
+
+dam_accuracy2 = dam_fc2 |>
+  accuracy(monthly_damlvl_ts, measures = list(point_accuracy_measures, distribution_accuracy_measures))
+
+dam_accuracy2 |>
+  select(.model, RMSE, MAE, MAPE, CRPS) |>mutate(.model = recode(.model,
+    sarima_p1   = "SARIMA (p=1)",
+    sarima_p2  = "SARIMA (p=2)"
+  )) |>
+  knitr::kable(
+    digits = 3,
+    col.names = c("Model", "RMSE", "MAE", "MAPE (%)", "CRPS")
+  )
+```
+
+@tbl-dam_fit2_accuracy shows the error metrics for a SARIMA(1,0,0)(1,1,0)\[12\] model compared to a SARIMA(2,0,0)(0,1,1)\[12\]. The second model outperforms the first, roughly halving every error metric, and is thus the final model selected for the dam level series.
+
+### Eastern Pacific sea surface temperature
+
 ```{r}
 #| label: tbl-sst_accuracy
-#| tbl-cap: "Out-of-sample accuracy of benchmark and ARIMA-family models on the test set: sea surface temperature."
+#| tbl-cap: "Out-of-sample error metrics for the benchmark and ARIMA-family models on the sea surface temperature series."
 #| echo: false
 #| message: false
 #| warning: false
@@ -645,8 +676,7 @@ sst_fit = sst_train |>
     ar     = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(0,1,0)),
     ma     = ARIMA(current_mean ~ pdq(0,0,1) + PDQ(0,1,0)),
     arma   = ARIMA(current_mean ~ pdq(1,0,1) + PDQ(0,1,0)),
-    sarima = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),
-    auto   = ARIMA(current_mean)
+    sarima = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0))
   )
 
 sst_fc = sst_fit |> forecast(new_data = sst_test)
@@ -657,45 +687,249 @@ sst_accuracy = sst_fc |>
 
 sst_accuracy |>
   select(.model, RMSE, MAE, MAPE, CRPS) |>
+  mutate(.model = recode(.model,
+    mean   = "Mean",
+    naive  = "Naive",
+    snaive = "Seasonal naive",
+    drift  = "Drift",
+    ar     = "AR",
+    ma     = "MA",
+    arma   = "ARMA",
+    sarima = "SARIMA"
+  )) |>
   knitr::kable(
     digits = 3,
     col.names = c("Model", "RMSE", "MAE", "MAPE (%)", "CRPS")
   )
 ```
 
-```{r}
-dam_fit |> select(auto) |> report()
-```
+@tbl-sst_accuracy provides the error metrics for all the fitted models, with the model ranking remaining fairly similar across all metrics. The seasonal naive and SARIMA models perform poorly in comparison to the ARMA model, suggesting that the seasonal component in this series does not provide the same level of predictability as it did in the dam levels data. This agrees with @fig-acf_pacf_differenced which illustrated noisier post-seasonal differencing in the PACF plot. AR is the optimal model overall, outperforming Drift and Naive on MAE, MAPE and CRPS, although Drift and Naive have slightly lower RMSE values. This suggests that the short-run autocorrelation aids in prediction as opposed to the seasonality present in the series.
+
+### Predicting drought using sea surface temperature as a covariate
+
+The above fitted models model the dam level and SST independently. Next, a dynamic regression (SARIMAX) model is fitted using lagged SST as a predictor of dam levels. This is done to try and achieve the projects aim of predicting drought in the Western cape using eastern Pacific sea surface temperature.
 
 ```{r}
-polyroot(c(1, -2.1082, 1.5153, -0.5226, 0.1241))  # non-seasonal AR roots
-polyroot(c(1, -0.7272))                            # non-seasonal MA root
+#| label: fig-ccf_dam_sst
+#| fig-cap: "Cross-correlation between dam capacity and sea surface temperature."
+#| fig-width: 10
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+# Restricted to the window where SST has no structural gaps, consistent
+# with monthly_ts_pre2021 used throughout the SST modelling above
+dam_sst = monthly_damlvl_ts |>
+  filter(year_month <= yearmonth("2021 Oct")) |>
+  left_join(
+    monthly_ts_pre2021 |> as_tibble() |> select(year_month, sst_mean = current_mean),
+    by = "year_month"
+  ) |>
+  as_tsibble(index = year_month)
+
+dam_sst |>
+  CCF(current_mean, sst_mean, lag_max = 24) |>
+  autoplot() +
+  labs(title = "Cross correlation between dam capacity and sea surface temperature.") +
+  theme_minimal(base_size = 14)
 ```
 
+The CCF in @fig-ccf_dam_sst oscillates with approximately a 12 month period. This is seen by the troughs at -24,-12,0,12 and 24 and peaks at -18,-6,6 and 18. This illustrates the seasonal pattern already observed in @fig-monthly_damlvl and @fig-monthly_sst and does not necessarily indicate a clean lead-lag relationship. Considering the lags for where SST precedes dam levels, the strongest correlation is at lag 6. This is used as the optimal lag in the SARIMAX model.
+
 ```{r}
-dam_fit2 = dam_train |>
+#| echo: false
+#| warning: false
+#| message: false
+
+# Specify best lag
+best_lag = 6
+
+dam_sst_lagged = dam_sst |>
+  mutate(sst_lag = lag(sst_mean, best_lag)) |>
+  filter(!is.na(sst_lag))
+
+dam_sst_train = dam_sst_lagged |> filter_index(. ~ "2018 Dec")
+dam_sst_test  = dam_sst_lagged |> filter_index("2019 Jan" ~ .)
+
+reg_fit = dam_sst_train |>
   model(
-    sarima_p1 = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(1,1,0)),   # your original manual read
-    sarima_p2 = ARIMA(current_mean ~ pdq(2,0,0) + PDQ(0,1,1)),
-    sarima_p3 = ARIMA(current_mean ~ pdq(3,0,0) + PDQ(0,1,1)),
-    sarima_p4 = ARIMA(current_mean ~ pdq(4,0,0) + PDQ(0,1,1)),   # auto's AR order, MA term dropped
-    auto      = ARIMA(current_mean)
+    tslm   = TSLM(current_mean ~ sst_lag),
+    dynreg = ARIMA(current_mean ~ sst_lag + pdq(2,0,0) + PDQ(0,1,1))
+  )
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+reg_fit |> select(tslm) |> report()
+```
+
+The Time Series Linear Model baseline suggests that dam level is significantly related to lagged SST (6 months prior). This baseline model has a small adjusted R$^2$ value (0.168) indicating that SST alone is a weak predictor of dam levels. What is interesting to note is that the positive sign of the coefficient (6.866) suggests that warmer SST is associated with higher dam levels, this is opposite to what was expected.
+
+```{r}
+#| label: fig-tslm_resid
+#| fig-cap: "Residual diagnostics for the Time Series Linear Model baseline: dam capacity ~ lagged SST."
+#| fig-width: 10
+#| fig-height: 6
+#| echo: false
+#| message: false
+#| warning: false
+
+reg_fit |> select(tslm) |> gg_tsresiduals()
+```
+
+@fig-tslm_resid shows strongly correlated residuals in benchmark linear model with the ACF decaying gradually from approximately 1 at lag 1. It is also clear that the residuals are not white noise which violates the assumption of independent residuals that Time Series Linear Models make. This motivates modelling the errors using a SARIMA model.
+
+```{r}
+#| label: tbl-dynreg_coef
+#| tbl-cap: "Dynamic regression (SARIMAX) coefficient estimates for dam capacity."
+#| echo: false
+#| warning: false
+#| message: false
+
+reg_fit |> select(dynreg) |>
+  tidy() |>
+  select(term, estimate, std.error, statistic, p.value) |>
+  knitr::kable(
+    digits = 3,
+    col.names = c("Term", "Estimate", "Std. Error", "t value", "p value")
+  )
+```
+
+@tbl-dynreg_coef indicates that if the errors are modelled using SARIMA(2,0,0)(0,1,1)\[12\], the same model specified when modelling dam levels individually, SST is insignificant ($p = 0.977$). All non-SST terms are statistically significant ($p < 0.001$). This confirms that the dam level series is explained by its own history as opposed to SST in the eastern Pacific. The significant relationship found in the baseline linear model can be attributed to shared persistence and seasonality as opposed to genuine predictions from SST.
+
+```{r}
+#| label: fig-dynreg_resid
+#| fig-cap: "Residual diagnostics for the SARIMAX model."
+#| fig-width: 10
+#| fig-height: 6
+#| echo: false
+#| message: false
+#| warning: false
+
+reg_fit |> select(dynreg) |> gg_tsresiduals()
+```
+
+In comparison to @fig-tslm_resid, @fig-dynreg_resid confirms that modelling the errors using a SARIMA model fixes the autocorrelation issue present in the baseline linear model aside from one marginal spike at the seasonal lag. Thus, the SARIMA(2,0,0)(0,1,1)\[12\] structure is appropriate for the dam level series autocorrelation.
+
+```{r}
+#| label: tbl-reg_accuracy
+#| tbl-cap: "Out-of-sample error metrics of the regression models and univariate benchmarks on the same test window."
+#| echo: false
+#| message: false
+#| warning: false
+
+reg_fc = reg_fit |> forecast(new_data = dam_sst_test)
+
+dam_compare_fit = dam_sst_train |>
+  model(
+    naive  = RW(current_mean),
+    snaive = SNAIVE(current_mean),
+    drift  = RW(current_mean ~ drift()),
+    sarima = ARIMA(current_mean ~ pdq(2,0,0) + PDQ(0,1,1))
   )
 
-dam_fc2 = dam_fit2 |> forecast(new_data = dam_test)
+dam_compare_fc = dam_compare_fit |> forecast(new_data = dam_sst_test)
 
-dam_fc2 |>
-  accuracy(monthly_damlvl_ts, measures = list(point_accuracy_measures, distribution_accuracy_measures)) |>
+bind_rows(
+  reg_fc |> accuracy(dam_sst_lagged, measures = list(point_accuracy_measures, distribution_accuracy_measures)),
+  dam_compare_fc |> accuracy(dam_sst_lagged, measures = list(point_accuracy_measures, distribution_accuracy_measures))
+) |> 
+  mutate(.model = recode(.model,
+    tslm       = "Time series linear model",
+    naive      = "Naive",
+    dynreg     = "Dynamic regression",
+    sarima     = "SARIMA",
+    drift      = "Drift",
+    snaive     = "Seasonal naive"
+  )) |>
+  select(Model = .model, RMSE, MAE, MAPE, CRPS) |>
+  arrange(RMSE) |>
   knitr::kable(digits = 3)
-
-dam_fit2 |> glance() |> knitr::kable(digits = 2)
-
-# check each candidate's coefficient SEs directly:
-dam_fit2 |> select(sarima_p4) |> report()
 ```
+
+@tbl-reg_accuracy shows that the dynamic linear regression model is approximately equivalent to the SARIMA model when compared on the same test set. This is expected since the lagged SST added no improved prediction accuracy in the linear regression model when the errors were modelled with SARIMA. Although the error values for the benchmark linear model are on average the lowest out of all models, this is misleading. @fig-tslm_resid showed clear autocorrelated residuals and thus the model is not correctly modelling a genuine predictive relationship but rather a short-run overlap due to both dam levels and SST sharing an upward trend from 2018 to 2019 (@fig-lag_deseason). This provides no evidence that eastern Pacific sea surface temperatures improve dam level forecasts more than what the series history does.
+
+## Forecasting
+
+### Theewaterskloof dam capacity
 
 ```{r}
-dam_fit2 |> select(sarima_p2) |> report()
+#| label: fig-forecast_damlvl_final
+#| fig-cap: "2-year forecasts of Theewaterskloof dam capacity using a SARIMA(2,0,0)(0,1,1)[12] model."
+#| fig-width: 10
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+# Refit on the full series (train + test) before forecasting genuinely
+# beyond the end of the data -- the train/test split above was only for
+# model comparison
+dam_final_fit = monthly_damlvl_ts |>
+  model(sarima = ARIMA(current_mean ~ pdq(2,0,0) + PDQ(0,1,1)))
+
+dam_final_fc = dam_final_fit |> forecast(h = "2 years")
+
+dam_final_fc |>
+  autoplot(monthly_damlvl_ts |> filter_index("2019 Jan" ~ .), level = c(80, 95)) +
+  labs(title = "Dam capacity forecast using SARIMA(2,0,0)(0,1,1)[12]",
+       y = "Average dam capacity (%)", x = "Time (month)") +
+  theme_minimal(base_size = 14)
 ```
 
-As the forecast horizon grows, uncertainty in the predictions increases. Experts are predicting an exceptionally strong El Niño event in 2026/2027 and since both series extend to the present year it will be interesting to bee if the fitted models pick up the El Niño phenomenon as it develops
+@fig-forecast_damlvl_final shows the forecast using SARIMA(2,0,0)(0,1,1)\[12\] on the dam levels series through 2026 and 2027. The strong seasonal cycle is maintained although the forecasted peaks are slightly lower than the previous few years. The model is reverting back towards more typical levels as opposed to just extrapolating the most recent observations. The uncertainty associated with these forecasts grows substantially with the forecast horizon. Since this model is built on its own history with no covariate added it cannot predict the onset of an El Niñoevent nor drought in the Western Cape.
+
+### Eastern Pacific sea surface temperature
+
+```{r}
+#| label: fig-forecast_sst_final
+#| fig-cap: "2-year forecasts of eastern Pacific sea surface temperature using an AR(1,0,0)(0,1,0)[12] model."
+#| fig-width: 10
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+sst_final_fit = monthly_ts_pre2021 |>
+  model(ar = ARIMA(current_mean ~ pdq(1,0,0) + PDQ(0,1,0)))
+
+sst_final_fc = sst_final_fit |> forecast(h = "2 years")
+
+sst_final_fc |>
+  autoplot(monthly_ts_pre2021 |> filter_index("2017 Jan" ~ .), level = c(80, 95)) +
+  labs(title = "Sea surface temperature forecast using AR(1,0,0)(0,1,0)[12]",
+       y = "Sea surface temperature (°C)", x = "Time (month)") +
+  theme_minimal(base_size = 14)
+```
+
+@fig-forecast_sst_final shows the forecast using AR(1,0,0)(0,1,0)\[12\] on the sea surface temperature series through 2022 and 2023. The series maintains its strong seasonal pattern with temperatures peaking around 26°C and dropping to approximately 22°C. This is similar to the historical pattern. Uncertainty in the prediction intervals grows with the forecast horizon but not as much as for the dam level series. The prediction only extends into 2023 since the model was built on pre-2021 data due to large portions of missing observations after 2021. A simple AR process is unable to predict unprecedented events as the model forecasts revert towards typical seasonal values. Even if the model was forecasting into 2027 it would be unable to pick up the anticipated 2026/2027 El Niñoevent.
+
+## Discussion
+
+### Model recommendations
+
+The optimal model for the Theewaterskloof dam capacity series is the SARIMA(2,0,0)(0,1,1)[12] model. This model was selected based on the PACF plot in @fig-acf_pacf_differenced as well as a comparison of its error metrics with the initial SARIMA model specification. For sea surface temperature, @fig-acf_pacf_differenced's PACF plot suggested that SST prediction would not be improved by a more complex seasonal model. This was confirmed when the AR(1,0,0)(0,1,0)[12] model, on average, outperformed all other candidate models, when their error metrics were compared. Using SST as a lagged predictor for dam capacity was statistically insignificant as it did not improve predictive accuracy beyond what the series history already did.
+
+### Limitations
+
+There were several limitations when working with these datasets. The structural gaps present in the SST series (November 2021 - March 2023, October 2024 - March 2025) meant that the regression analysis could only use pre-2021 data. This loss of information decreased the size of the training set and meant that the model could not predict into 2027, when the super El Niñois anticipated.
+
+The CCF-derived 6 month lag is consistent with the typical literature-motivated 3-6 month window for El Nino, however, the CCF is dominated by the common 12-month seasonality of both the series rather than a clean lead-lag signal. Thus, it cannot be accurately determined if a 6 month lag is the true lag.
+
+### Improvements
+
+To predict drought in the Western Cape, it would be more useful to use rainfall data as this has a direct impact on dam levels. Monitoring water usage across the country may also provide improved predictive information that eastern Pacific sea surface temperature.
+
+The structural gaps in the SST data could be worked around by using a more comprehensive set of buoy observations that span a wider longitudinal range than the single 95W array used here. By replacing the buoy array with an array that averages over a larger region of the Pacific, there would be fewer missing observations and the series would not need to be truncated to avoid large structural gaps. The El Niño Southern Oscillation (ENSO) moves through El Nino, La Niña and neutral periods. It may be useful to use a regime-switching model that would capture this variability as opposed to a model with fixed coefficients.
+
+## References
+
+1.  Mason, S. J. (2001). El Niño, climate change, and Southern African climate. Environmetrics, 12(4), 327-345. https://doi.org/10.1002/env.476
+
+2.  Thomson, M. C., Abayomi, K., Barnston, A. G., Levy, M., & Dilley, M. (2003). El Niño and drought in southern Africa. The Lancet, 361(9358), 626-627. https://doi.org/10.1016/S0140-6736(03)12421-X
+
+3.  Mail & Guardian. (2026, September 1). The SAWS warns exceptionally strong 2026/2027 El Niño could bring severe heatwaves to SA. https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/

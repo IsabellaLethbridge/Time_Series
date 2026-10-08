@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -59,6 +93,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -228,9 +264,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-findings" id="toc-key-findings" class="nav-link active" data-scroll-target="#key-findings">Key Findings</a></li>
+  <li><a href="#predicting-the-volatility-of-daily-johannesburg-stock-exchange-all-share-index-returns" id="toc-predicting-the-volatility-of-daily-johannesburg-stock-exchange-all-share-index-returns" class="nav-link active" data-scroll-target="#predicting-the-volatility-of-daily-johannesburg-stock-exchange-all-share-index-returns">Predicting the volatility of daily Johannesburg Stock Exchange All Share Index returns</a>
+  <ul class="collapse">
+  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">Key Findings</a></li>
   <li><a href="#reflections" id="toc-reflections" class="nav-link" data-scroll-target="#reflections">Reflections</a></li>
   <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+  <li><a href="#model-specification" id="toc-model-specification" class="nav-link" data-scroll-target="#model-specification">Model specification</a></li>
+  <li><a href="#determing-the-optimal-arima-model-and-testing-for-arch-effects" id="toc-determing-the-optimal-arima-model-and-testing-for-arch-effects" class="nav-link" data-scroll-target="#determing-the-optimal-arima-model-and-testing-for-arch-effects">Determing the optimal ARIMA model and testing for ARCH effects</a></li>
+  <li><a href="#conditonal-variance-model-selection-and-estimation" id="toc-conditonal-variance-model-selection-and-estimation" class="nav-link" data-scroll-target="#conditonal-variance-model-selection-and-estimation">Conditonal variance model selection and estimation</a>
+  <ul class="collapse">
+  <li><a href="#arch-mode-parameters" id="toc-arch-mode-parameters" class="nav-link" data-scroll-target="#arch-mode-parameters">ARCH mode parameters</a></li>
+  </ul></li>
+  <li><a href="#candidate-models" id="toc-candidate-models" class="nav-link" data-scroll-target="#candidate-models">Candidate models</a></li>
+  <li><a href="#garch11-from-first-principles" id="toc-garch11-from-first-principles" class="nav-link" data-scroll-target="#garch11-from-first-principles">GARCH(1,1) from first principles</a></li>
+  <li><a href="#model-diagnostics" id="toc-model-diagnostics" class="nav-link" data-scroll-target="#model-diagnostics">Model diagnostics</a></li>
+  <li><a href="#out-of-sample-model-evaluation" id="toc-out-of-sample-model-evaluation" class="nav-link" data-scroll-target="#out-of-sample-model-evaluation">Out-of-Sample Model evaluation</a></li>
+  <li><a href="#model-forecasting" id="toc-model-forecasting" class="nav-link" data-scroll-target="#model-forecasting">Model forecasting</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -239,28 +292,1796 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<ul>
-<li><strong>Section &amp; Topic:</strong>[cite: 1]</li>
-<li><strong>Project Type:</strong> (Implementation / Shiny App / Exploration / Simulation)[cite: 1]</li>
-<li><strong>Question / Aim:</strong>[cite: 1]</li>
-<li><strong>Data Used:</strong> (Include source details if real-world data)[cite: 1]</li>
-<li><strong>Methods Used:</strong>[cite: 1]</li>
-</ul>
+<section id="predicting-the-volatility-of-daily-johannesburg-stock-exchange-all-share-index-returns" class="level1">
+<h1>Predicting the volatility of daily Johannesburg Stock Exchange All Share Index returns</h1>
+<p>This project aims to predict the volatility of the JSE All Share Index (ALSI) returns by fitting both ARCH and GARCH models and determining which models yield the best out-of-sample volatility forecasts. These models are compared to the Exponentially Weighted Moving Average (EWMA) benchmark.</p>
+<p><strong>Section &amp; Topic:</strong> Conditional Variance Models</p>
+<p><strong>Project Type:</strong> Model implementation and comparison on real-world data. This includes a GARCH(1,1) likelihood from first principles.</p>
+<p><strong>Aim:</strong> To predict the volatility of JSE ALSI returns and to determine, from the above mentioned models, the optimal one for out-of-sample volatility and Value-at-Risk forecasts.</p>
+<p><strong>Data Used:</strong></p>
+<p>Gebbie, T. (2020) <em>Daily Sampled South African Market Index Data 1994-2017</em>, University of Cape Town, Dataset, https://doi.org/10.25375/uct.11302325.v1</p>
+<p><strong>Methods Used:</strong> ARCH, GARCH and GARCH extensions models are fitted to the JSE ALSI returns.</p>
+<p>The aim of this project is to use conditional variance models to predict the volatility of the JSE ALSI returns. JSE return risk is not constant with periods of high volatility following periods of high volatility and periods of low volatility following periods of low volatility. Modelling returns with a constant-variance model results in the risk being understated when it is high and overstated when it is low.</p>
+<p>ARCH (Engle, 1982) and GARCH (Bollerslev, 1986) models let the current conditional variance depends on recent shocks as well as yesterday’s variance. GJR-GARCH (Glosten et al., 1993) extends the GARCH model to let negative shocks have a larger effect on volatility than positive ones, this is known as the leverage effect.</p>
 <section id="key-findings" class="level2">
 <h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
-<!-- Summary of findings -->
-<p>[cite: 1]</p>
 </section>
 <section id="reflections" class="level2">
 <h2 class="anchored" data-anchor-id="reflections">Reflections</h2>
-<ul>
-<li><strong>What I would do differently next time:</strong>[cite: 1]</li>
-</ul>
 </section>
 <section id="links" class="level2">
 <h2 class="anchored" data-anchor-id="links">Links</h2>
 <ul>
 <li><a href="../appendix/code-and-data.html">Detailed Analysis &amp; Code Script</a>[cite: 1]</li>
+</ul>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>The financial series used is the daily FTSE/JSE All Share Index total return index <span class="math inline">\(P_t\)</span> (ticker J203, dividends reinvested) over the period from 30 June 1995 to 3 February 2017. The time index used is “trading day” since weekends are excluded. The daily log returns (%) are modelled,</p>
+<p><span class="math display">\[
+r_t = 100[lnP_t - lnP_{t-}].
+\]</span> Log returns are modelled since asset prices wander and their variance grows without bound. The series consists of 5396 total daily returns. The models are estimated using the training set (July 1995 - December 2012) and evaluated on the test set (January 2013 - February 2017).</p>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify project plotting theme:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>theme_proj <span class="ot">=</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title    =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Aesthetics: </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>col_main   <span class="ot">=</span> <span class="st">"purple"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>col_accent <span class="ot">=</span> <span class="st">"deeppink"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>model_cols <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Constant"</span>    <span class="ot">=</span> <span class="st">"grey50"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>               <span class="st">"EWMA"</span>        <span class="ot">=</span> <span class="st">"darkorange"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">"ARCH"</span>        <span class="ot">=</span> <span class="st">"gold3"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">"GARCH-N"</span>     <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">"GARCH-t"</span>     <span class="ot">=</span> <span class="st">"navy"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">"GJR-GARCH-t"</span> <span class="ot">=</span> <span class="st">"deeppink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility: </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify data paths: </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data_path  <span class="ot">=</span> <span class="st">"_data/PT-DATA-ALBI-JIBAR-JSEIND-Daily-1994-2017.xlsx"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>pt_path    <span class="ot">=</span> <span class="st">"_data/balancedDataTable.xlsx"</span>   <span class="co"># monthly data (STEFI,ALBI,ALSI)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sheet_name <span class="ot">=</span> <span class="st">"JSE Various Indices"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ticker     <span class="ot">=</span> <span class="st">"J203:XJSE:IND"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>field      <span class="ot">=</span> <span class="st">"TRI"</span>    </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Training and test sets: </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>train_end   <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2012-12-31"</span>)   </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>pt_start    <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2004-11-30"</span>)   </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>pt_end      <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2016-12-31"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>ann_factor  <span class="ot">=</span> <span class="dv">252</span> <span class="co"># trading days per year</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>refit_every <span class="ot">=</span> <span class="dv">50</span>  <span class="co"># rolling models are re-estimated every 50 trading days</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Read header rows (rows 1-4):</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>hdr <span class="ot">=</span> <span class="fu">read_excel</span>(data_path, </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sheet        =</span> sheet_name, </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                 <span class="at">col_names    =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                 <span class="at">n_max        =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `` -&gt; `...1`
+• `` -&gt; `...2`
+• `` -&gt; `...3`
+• `` -&gt; `...4`
+• `` -&gt; `...5`
+• `` -&gt; `...6`
+• `` -&gt; `...7`
+• `` -&gt; `...8`
+• `` -&gt; `...9`
+• `` -&gt; `...10`
+• `` -&gt; `...11`
+• `` -&gt; `...12`
+• `` -&gt; `...13`
+• `` -&gt; `...14`
+• `` -&gt; `...15`
+• `` -&gt; `...16`
+• `` -&gt; `...17`
+• `` -&gt; `...18`
+• `` -&gt; `...19`
+• `` -&gt; `...20`
+• `` -&gt; `...21`
+• `` -&gt; `...22`</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tickers <span class="ot">=</span> <span class="fu">as.character</span>(<span class="fu">unlist</span>(hdr[<span class="dv">1</span>, ]))   <span class="co"># row 1: ticker codes</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fields  <span class="ot">=</span> <span class="fu">as.character</span>(<span class="fu">unlist</span>(hdr[<span class="dv">2</span>, ]))   <span class="co"># row 2: field names</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data (starts row 5):</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">=</span> <span class="fu">read_excel</span>(data_path, </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sheet =</span> sheet_name, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">col_names =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">skip =</span> <span class="dv">4</span>, </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"#N/A"</span>, <span class="st">""</span>, <span class="st">"NA"</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">guess_max =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `` -&gt; `...1`
+• `` -&gt; `...2`
+• `` -&gt; `...3`
+• `` -&gt; `...4`
+• `` -&gt; `...5`
+• `` -&gt; `...6`
+• `` -&gt; `...7`
+• `` -&gt; `...8`
+• `` -&gt; `...9`
+• `` -&gt; `...10`
+• `` -&gt; `...11`
+• `` -&gt; `...12`
+• `` -&gt; `...13`
+• `` -&gt; `...14`
+• `` -&gt; `...15`
+• `` -&gt; `...16`
+• `` -&gt; `...17`
+• `` -&gt; `...18`
+• `` -&gt; `...19`
+• `` -&gt; `...20`
+• `` -&gt; `...21`
+• `` -&gt; `...22`</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the date column:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>date_col <span class="ot">=</span> <span class="fu">which</span>(<span class="fu">sapply</span>(raw, <span class="cf">function</span>(x) <span class="fu">inherits</span>(x, <span class="fu">c</span>(<span class="st">"POSIXct"</span>, <span class="st">"Date"</span>))))[<span class="dv">1</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the ALSI column from header rows</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>alsi_col <span class="ot">=</span> <span class="fu">find_col</span>(hdr, ticker, field)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>alsi <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">as.Date</span>(raw[[date_col]]),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tri  =</span> <span class="fu">as.numeric</span>(raw[[alsi_col]])) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date), <span class="sc">!</span><span class="fu">is.na</span>(tri)) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(date, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">r =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">log</span>(tri) <span class="sc">-</span> <span class="fu">lag</span>(<span class="fu">log</span>(tri)))) <span class="sc">|&gt;</span>   </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(r)) <span class="sc">|&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sample =</span> <span class="fu">if_else</span>(date <span class="sc">&lt;=</span> train_end, <span class="st">"Train"</span>, <span class="st">"Test"</span>))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">=</span> <span class="fu">sum</span>(alsi<span class="sc">$</span>sample <span class="sc">==</span> <span class="st">"Train"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>n_test  <span class="ot">=</span> <span class="fu">sum</span>(alsi<span class="sc">$</span>sample <span class="sc">==</span> <span class="st">"Test"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>r_all   <span class="ot">=</span> alsi<span class="sc">$</span>r</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>r_train <span class="ot">=</span> alsi<span class="sc">$</span>r[alsi<span class="sc">$</span>sample <span class="sc">==</span> <span class="st">"Train"</span>]</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>r_test  <span class="ot">=</span> alsi<span class="sc">$</span>r[alsi<span class="sc">$</span>sample <span class="sc">==</span> <span class="st">"Test"</span>]</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Save cleaned series</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(alsi, <span class="st">"_data/project03_alsi_clean.rds"</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># alsi_clean= readRDS("_data/project03_alsi_clean.rds")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p_level <span class="ot">=</span> <span class="fu">ggplot</span>(<span class="at">data =</span> alsi, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> tri)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> col_main) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> train_end, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"ALSI total return index."</span>, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Index (log scale)"</span>) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  theme_proj</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>p_level</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-series1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-series1-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: ALSI total log-return index. The dashed line indicates the end of the training period.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p_ret <span class="ot">=</span> <span class="fu">ggplot</span>(alsi, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> r)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> col_main, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> train_end, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Daily log returns."</span>, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Return (%)"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  theme_proj</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>p_ret</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-series2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-series2-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Daily log returns. The dashed line indicates the end of the training period.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to calculate summary statistics:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>summary_fxn <span class="ot">=</span> <span class="cf">function</span>(x){</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  n            <span class="ot">=</span> <span class="fu">length</span>(x)               <span class="co"># no. observations</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  avg          <span class="ot">=</span> <span class="fu">mean</span>(x)                 <span class="co"># Average returns</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  sd           <span class="ot">=</span> <span class="fu">sd</span>(x)                   <span class="co"># Standard deviation</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  min_         <span class="ot">=</span> <span class="fu">min</span>(x)                  <span class="co"># Minimum</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  max_         <span class="ot">=</span> <span class="fu">max</span>(x)                  <span class="co"># Maximum</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  annualised_v <span class="ot">=</span> sd<span class="sc">*</span><span class="fu">sqrt</span>(ann_factor)     <span class="co"># Annualised volatility</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  skewness     <span class="ot">=</span> <span class="fu">mean</span>((x<span class="sc">-</span>avg)<span class="sc">^</span><span class="dv">3</span>)<span class="sc">/</span>sd<span class="sc">^</span><span class="dv">3</span>    <span class="co"># Skewness</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  kurtosis     <span class="ot">=</span> <span class="fu">mean</span>((x<span class="sc">-</span>avg)<span class="sc">^</span><span class="dv">4</span>)<span class="sc">/</span>sd<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span><span class="dv">3</span> <span class="co"># Kurtosis</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">n=</span>n,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">mean=</span>avg,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd=</span>sd,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">min=</span>min_,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">max=</span>max_,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">annualised_v=</span>annualised_v,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">skewness=</span>skewness,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>              <span class="at">kurtosis=</span>kurtosis))</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>full_summary  <span class="ot">=</span> <span class="fu">summary_fxn</span>(r_all)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>train_summary <span class="ot">=</span> <span class="fu">summary_fxn</span>(r_train)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>test_summary  <span class="ot">=</span> <span class="fu">summary_fxn</span>(r_test)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>summary_tbl <span class="ot">=</span> <span class="fu">bind_rows</span>(<span class="at">Full     =</span> full_summary,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Training =</span> train_summary,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Test     =</span> test_summary,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>                        <span class="at">.id      =</span> <span class="st">"Sample"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sample,</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">N                   =</span> n,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">Mean                =</span> mean,</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Std dev</span><span class="st">`</span>           <span class="ot">=</span> sd,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Annual volatility</span><span class="st">`</span> <span class="ot">=</span> annualised_v,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">Skewness            =</span> skewness,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Excess kurtosis</span><span class="st">`</span>   <span class="ot">=</span> kurtosis,</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">Min                 =</span> min,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">Max                 =</span> max)</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>  summary_tbl,</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits=</span><span class="dv">3</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-summary" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;1: Summary statistics of daily ALSI log returns (%).</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 21%">
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 9%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Sample</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">Std dev</th>
+<th style="text-align: right;">Annual volatility</th>
+<th style="text-align: right;">Skewness</th>
+<th style="text-align: right;">Excess kurtosis</th>
+<th style="text-align: right;">Min</th>
+<th style="text-align: right;">Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Full</td>
+<td style="text-align: right;">5396</td>
+<td style="text-align: right;">0.055</td>
+<td style="text-align: right;">1.225</td>
+<td style="text-align: right;">19.444</td>
+<td style="text-align: right;">-0.446</td>
+<td style="text-align: right;">6.005</td>
+<td style="text-align: right;">-12.689</td>
+<td style="text-align: right;">7.423</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Training</td>
+<td style="text-align: right;">4373</td>
+<td style="text-align: right;">0.059</td>
+<td style="text-align: right;">1.278</td>
+<td style="text-align: right;">20.284</td>
+<td style="text-align: right;">-0.463</td>
+<td style="text-align: right;">6.067</td>
+<td style="text-align: right;">-12.689</td>
+<td style="text-align: right;">7.423</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Test</td>
+<td style="text-align: right;">1023</td>
+<td style="text-align: right;">0.040</td>
+<td style="text-align: right;">0.967</td>
+<td style="text-align: right;">15.353</td>
+<td style="text-align: right;">-0.253</td>
+<td style="text-align: right;">1.169</td>
+<td style="text-align: right;">-3.622</td>
+<td style="text-align: right;">4.159</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#fig-series1">Figure&nbsp;1</a> shows an increasing index level trend from 1994 through to 2017, however <a href="#fig-series2">Figure&nbsp;2</a> illustrates the returns fluctuating around a mean of approximately zero. This is indicative of volatility clustering. <a href="#fig-series2">Figure&nbsp;2</a> shows the high volatility during the 1997-1998 and 2008-2009 financial crises. The summary statistics recorded in <a href="#tbl-summary">Table&nbsp;1</a> suggest a negatively skewed distribution (skewness = -0.446) with heavy tails (excess kurtosis = 6.005).</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>acf_returns <span class="ot">=</span> <span class="fu">ggAcf</span>(r_train, <span class="at">lag.max =</span> <span class="dv">40</span>) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Returns."</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Lag (trading days)"</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ACF"</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  theme_proj</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>acf_sq_returns <span class="ot">=</span> <span class="fu">ggAcf</span>(r_train<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag.max =</span> <span class="dv">40</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Squared returns."</span>, </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Lag (trading days)"</span>, </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ACF"</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  theme_proj</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>acf_abs_returns <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">abs</span>(r_train), <span class="at">lag.max =</span> <span class="dv">40</span>) <span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Absolute returns."</span>, </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Lag (trading days)"</span>, </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ACF"</span>) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  theme_proj </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>acf_returns <span class="sc">|</span> acf_sq_returns <span class="sc">|</span> acf_abs_returns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-acf" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-acf-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: ACF of daily returns, squared residuals and absolute returns of the training set. The dashed lines indicate approximate 95% bounds.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-acf">Figure&nbsp;3</a> illustrates weak autocorrelation in the returns as most sample autocorrelations lie within the 95% bounds. Both the squared returns and absolute returns ACF plots show significant, slowly decaying autocorrelations. This is indicative of volatility clustering and motivates the use of conditional variance models such as ARCH and GARCH.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ljung-Bx test:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>LB  <span class="ot">=</span> <span class="fu">Box.test</span>(r_train<span class="sc">^</span><span class="dv">2</span>,<span class="at">lag=</span><span class="dv">10</span>,<span class="at">type=</span><span class="st">"Ljung-Box"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>LB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Ljung test
+
+data:  r_train^2
+X-squared = 1538.3, df = 10, p-value &lt; 2.2e-16</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Engle's ARCH LM test:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ELM <span class="ot">=</span> FinTS<span class="sc">::</span><span class="fu">ArchTest</span>(r_train, <span class="at">lags =</span> <span class="dv">10</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ELM</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    ARCH LM-test; Null hypothesis: no ARCH effects
+
+data:  r_train
+Chi-squared = 656.6, df = 10, p-value &lt; 2.2e-16</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>arch_tests <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Test        =</span> <span class="fu">c</span>(<span class="st">"Ljung–Box on squared residuals"</span>, <span class="st">"Engle's LM"</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statistic   =</span> <span class="fu">c</span>(LB<span class="sc">$</span>statistic, ELM<span class="sc">$</span>statistic),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">df          =</span> <span class="fu">c</span>(LB<span class="sc">$</span>parameter, ELM<span class="sc">$</span>parameter),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">p-value</span><span class="st">`</span>   <span class="ot">=</span> <span class="fu">c</span>(LB<span class="sc">$</span>p.value,   ELM<span class="sc">$</span>p.value)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span><span class="ot">=</span><span class="fu">format.pval</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span>,<span class="at">digits=</span><span class="dv">3</span>,<span class="at">eps=</span><span class="fl">0.001</span>))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(arch_tests, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Test</th>
+<th style="text-align: right;">Statistic</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: left;">p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ljung–Box on squared residuals</td>
+<td style="text-align: right;">1538.293</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Engle’s LM</td>
+<td style="text-align: right;">656.604</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">&lt;0.001</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In <strong>?@tbl-arch_tests</strong> the small p-values provide evidence that the squared residuals are serially correlated and thus the series has time varying conditional variance.</p>
+</section>
+<section id="model-specification" class="level2">
+<h2 class="anchored" data-anchor-id="model-specification">Model specification</h2>
+<p>Conditional variance models consist of both a mean and a variance equation:</p>
+<p><span class="math display">\[
+r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \overset{iid}{\sim} D(0,1),
+\]</span></p>
+<p>where <span class="math inline">\(\mu_t=\mu+\phi r_{t-1}\)</span>, <span class="math inline">\(\sigma_t^2\)</span> is the conditional variance and <span class="math inline">\(D\)</span> is the standard normal or a standardised Student-<span class="math inline">\(t\)</span> distribution with <span class="math inline">\(\nu\)</span> degrees of freedom.</p>
+<p>In the ARCH model, the conditional variance depends on past squared shocks. The GARCH model lets the conditional variance depend on its own past as well as on past squared shocks. The GJR-GARCH model is a threshold model that captures the asymmetric leverage effect, where negative shocks increase volatility more than positive shocks of the same magnitude.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Conditional variance <span class="math inline">\(\sigma_t^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ARCH(<span class="math inline">\(q\)</span>)</td>
+<td><span class="math inline">\(\alpha_0 + \sum_{i=1}^{q}\alpha_i\varepsilon_{t-i}^2\)</span></td>
+</tr>
+<tr class="even">
+<td>GARCH(<span class="math inline">\(p,q\)</span>)</td>
+<td><span class="math inline">\(\alpha_0 + \sum^q_{i=1} \alpha_i \varepsilon_{t-i}^2 + \sum^p_{j=1} \beta_j \sigma_{t-j}^2\)</span></td>
+</tr>
+<tr class="odd">
+<td>GJR-GARCH(<span class="math inline">\(p,q\)</span>)</td>
+<td><span class="math inline">\(\alpha_0 + \sum^q_{i=1} (\alpha_i + \gamma_iI_{t-i})\varepsilon^2_{t-i} + \sum^p_{j=1}\beta_j \sigma_{t-j}^2\)</span>, where <span class="math inline">\(I_{t-i} = 1\)</span> if <span class="math inline">\(\varepsilon_{t-i} &lt; 0\)</span> and <span class="math inline">\(0\)</span> otherwise</td>
+</tr>
+</tbody>
+</table>
+<p>with <span class="math inline">\(\alpha_0 &gt; 0\)</span> and <span class="math inline">\(\alpha_i, \beta_i, \gamma_i \ge 0\)</span>. The GARCH and GJR-GARCH models are fitted with <span class="math inline">\(p = q = 1\)</span>. The persistence is denoted as <span class="math inline">\(\rho = \alpha + \beta\)</span> for GARCH(1,1) and for a GJR-GARCH with a symmetric <span class="math inline">\(D\)</span>: <span class="math inline">\(\rho = \alpha + \beta + \gamma/2\)</span>. If <span class="math inline">\(\rho &lt; 1\)</span> the variance process of the series is stationary. The unconditional variance is defined as <span class="math inline">\(\alpha_0/(1-\rho)\)</span>, and the half-life of a volatility shock is <span class="math inline">\(\log(0.5)/\log(\rho)\)</span>.</p>
+<p>The three models above are compared to a constant variance model, <span class="math inline">\(\sigma_t^2 = s^2\)</span>, where <span class="math inline">\(s\)</span> denotes the sample variance as well as EWMA with <span class="math inline">\(\sigma_t^2 = 0.94\,\sigma_{t-1}^2 + 0.06\,\varepsilon_{t-1}^2\)</span>, a GARCH(1,1) with <span class="math inline">\(\omega = 0\)</span>, <span class="math inline">\(\alpha + \beta = 1\)</span> and no parameters estimated.</p>
+<p>All ARCH and GARCH models are estimated by maximum likelihood using the <code>rugarch</code> package.</p>
+</section>
+<section id="determing-the-optimal-arima-model-and-testing-for-arch-effects" class="level2">
+<h2 class="anchored" data-anchor-id="determing-the-optimal-arima-model-and-testing-for-arch-effects">Determing the optimal ARIMA model and testing for ARCH effects</h2>
+<p>Conditional variance models consist of both a mean and variance equation. The conditional mean must be modelled before modelling the volatility. Returns are modelled using the best ARIMA model to capture any predictable structure in the mean. The residuals of the ARIMA model represent the shocks, <span class="math inline">\(\varepsilon_t\)</span>. Any autocorrelation left unexplained by the mean model would distort the variance model fitted to the residuals. An ARIMA model assumes constant variance and Engle’s (1982) LM test is used to test if this assumption holds. A small p-value rejects the null hypothesis of no ARCH effect, suggests volatility clustering and justifies an ARCH/GARCH model.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameter grid:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>arima_grid <span class="ot">=</span> <span class="fu">expand_grid</span>(<span class="at">p=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>,<span class="at">q=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>)  <span class="co"># Test different arma models</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to fit multiple ARIMA models:</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>arima_fxn <span class="ot">=</span> <span class="cf">function</span>(dat,p,q) {</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> <span class="fu">arima</span>(dat,<span class="at">order=</span><span class="fu">c</span>(p,<span class="dv">0</span>,q),<span class="at">method=</span><span class="st">"ML"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="st">`</span><span class="at">ARIMA(p,d,q)</span><span class="st">`</span>  <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"("</span>,p,<span class="st">",0,"</span>,q,<span class="st">")"</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">loglik =</span><span class="fu">as.numeric</span>(<span class="fu">logLik</span>(fit)),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">AIC    =</span> <span class="fu">AIC</span>(fit),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">BIC    =</span> <span class="fu">BIC</span>(fit))</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>arima_res <span class="ot">=</span> arima_grid <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pmap</span>(\(p,q) <span class="fu">arima_fxn</span>(r_train,p,q)) <span class="sc">|&gt;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(BIC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in arima(dat, order = c(p, 0, q), method = "ML"): possible convergence
+problem: optim gave code = 1</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>arima_order <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>) <span class="co"># best p and q</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(arima_res,<span class="at">digits=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-arima" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;2: Comparison of the log-likelihood, BIC and AIC for candidate mean models.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ARIMA(p,d,q)</th>
+<th style="text-align: right;">loglik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(1,0,0)</td>
+<td style="text-align: right;">-7266.18</td>
+<td style="text-align: right;">14538.35</td>
+<td style="text-align: right;">14557.50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(0,0,1)</td>
+<td style="text-align: right;">-7266.52</td>
+<td style="text-align: right;">14539.05</td>
+<td style="text-align: right;">14558.20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">(2,0,2)</td>
+<td style="text-align: right;">-7254.24</td>
+<td style="text-align: right;">14520.49</td>
+<td style="text-align: right;">14558.79</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(0,0,2)</td>
+<td style="text-align: right;">-7265.33</td>
+<td style="text-align: right;">14538.66</td>
+<td style="text-align: right;">14564.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">(2,0,0)</td>
+<td style="text-align: right;">-7265.83</td>
+<td style="text-align: right;">14539.67</td>
+<td style="text-align: right;">14565.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(1,0,1)</td>
+<td style="text-align: right;">-7266.03</td>
+<td style="text-align: right;">14540.07</td>
+<td style="text-align: right;">14565.60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">(0,0,0)</td>
+<td style="text-align: right;">-7276.33</td>
+<td style="text-align: right;">14556.66</td>
+<td style="text-align: right;">14569.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(1,0,2)</td>
+<td style="text-align: right;">-7264.23</td>
+<td style="text-align: right;">14538.45</td>
+<td style="text-align: right;">14570.37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">(2,0,1)</td>
+<td style="text-align: right;">-7264.72</td>
+<td style="text-align: right;">14539.45</td>
+<td style="text-align: right;">14571.36</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#tbl-arima">Table&nbsp;2</a> displays the log-likelihood, AIC and BIC values for all candidate ARIMA models. BIC selects ARIMA(1,0,0) while AIC selects ARIMA(2,0,2). The log-likelihood will always favour a more complicated model as additional parameters will always improve the log-likelihood, however, this leads to overfitting. The candidate models are compared using BIC as this penalises the inclusion of additional parameters more heavily than AIC and thus ARIMA(1,0,0) is selected.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit      <span class="ot">=</span> <span class="fu">arima</span>(r_train,<span class="at">order=</span><span class="fu">c</span>(arima_order[<span class="dv">1</span>],<span class="dv">0</span>,arima_order[<span class="dv">2</span>]),<span class="at">method=</span><span class="st">"ML"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fit_mean <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">residuals</span>(fit))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>lags    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">20</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>sqr_res <span class="ot">=</span> (fit_mean <span class="sc">-</span> <span class="fu">mean</span>(fit_mean))<span class="sc">^</span><span class="dv">2</span> <span class="co"># squared (demeaned) residuals</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>arch_tbl <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lag =</span> lags,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Engle's LM</span><span class="st">`</span>     <span class="ot">=</span> <span class="fu">sapply</span>(lags, <span class="cf">function</span>(L) <span class="fu">ArchTest</span>(fit_mean, <span class="at">lags =</span> L)<span class="sc">$</span>statistic),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">ELM p-value</span><span class="st">`</span>   <span class="ot">=</span> <span class="fu">sapply</span>(lags, <span class="cf">function</span>(L) <span class="fu">ArchTest</span>(fit_mean, <span class="at">lags =</span> L)<span class="sc">$</span>p.value),</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">LB squared residuals</span><span class="st">`</span>  <span class="ot">=</span> <span class="fu">sapply</span>(lags, <span class="cf">function</span>(L) <span class="fu">Box.test</span>(fit_mean<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag =</span> L, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>)<span class="sc">$</span>statistic),</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">LB p-value</span><span class="st">`</span><span class="ot">=</span> <span class="fu">sapply</span>(lags, <span class="cf">function</span>(L) <span class="fu">Box.test</span>(fit_mean<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag =</span> L, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>)<span class="sc">$</span>p.value)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">`</span><span class="at">ELM p-value</span><span class="st">`</span>, <span class="st">`</span><span class="at">LB p-value</span><span class="st">`</span>), <span class="sc">~</span> <span class="fu">format.pval</span>(.x, <span class="at">eps =</span> <span class="fl">0.001</span>)))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(arch_tbl,<span class="at">digits=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-arch_effects" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;3: Ljung–Box tests on the residuals and squared residuals of the ARIMA(1,0,0) and the Engle’s ARCH LM test, at lags 5, 10 and 20.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Lag</th>
+<th style="text-align: right;">Engle’s LM</th>
+<th style="text-align: left;">ELM p-value</th>
+<th style="text-align: right;">LB squared residuals</th>
+<th style="text-align: left;">LB p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">646.753</td>
+<td style="text-align: left;">&lt; 0.001</td>
+<td style="text-align: right;">1201.460</td>
+<td style="text-align: left;">&lt; 0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">710.147</td>
+<td style="text-align: left;">&lt; 0.001</td>
+<td style="text-align: right;">1663.234</td>
+<td style="text-align: left;">&lt; 0.001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">735.903</td>
+<td style="text-align: left;">&lt; 0.001</td>
+<td style="text-align: right;">2239.527</td>
+<td style="text-align: left;">&lt; 0.001</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>In <strong>?@tbl-arch_effect</strong>, both the Ljung-Box test on squared residuals and Engle’s ARCH LM test have p-values <span class="math inline">\(&lt;0.001\)</span> at all tested lags, so the null hypothesis of no ARCH effects is rejected. The squared shocks are autocorrelated, indicating volatility clustering. This provides evidence that the constant-variance assumption does not hold and justifies the use of a conditional variance model.</p>
+</section>
+<section id="conditonal-variance-model-selection-and-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="conditonal-variance-model-selection-and-estimation">Conditonal variance model selection and estimation</h2>
+<section id="arch-mode-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="arch-mode-parameters">ARCH mode parameters</h3>
+<div class="cell" data-hash="project-03_cache/html/arch-order_24290ab019d2d9ff43fe23b6b144963c">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ARCH(q) and store BIC:</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>q_values     <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>arch_results <span class="ot">=</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="fu">length</span>(q_values))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="fu">seq_along</span>(q_values)) {</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Specify ARCH(q) model</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  arch_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>, </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">garchOrder =</span> <span class="fu">c</span>(q, <span class="dv">0</span>)),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> arima_order, </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fit model to training set:</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  arch_fit <span class="ot">=</span> <span class="fu">tryCatch</span>(<span class="fu">ugarchfit</span>(<span class="at">spec =</span> arch_spec, </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                                <span class="at">data =</span> r_train, </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>                                <span class="at">solver =</span> <span class="st">"hybrid"</span>),</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract BIC:</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(arch_fit) <span class="sc">||</span> <span class="fu">convergence</span>(arch_fit) <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    bic <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    ic <span class="ot">=</span> <span class="fu">infocriteria</span>(arch_fit)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  arch_results[[q]] <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">Model  =</span> <span class="fu">paste0</span>(<span class="st">"ARCH("</span>, q, <span class="st">")"</span>),</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>                             <span class="at">q      =</span> q,</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>                             <span class="at">loglik =</span> <span class="fu">likelihood</span>(arch_fit),</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>                             <span class="at">AIC    =</span> ic[<span class="st">"Akaike"</span>, <span class="dv">1</span>],</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>                             <span class="at">BIC    =</span> ic[<span class="st">"Bayes"</span>, <span class="dv">1</span>])</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>arch_results <span class="ot">=</span> <span class="fu">list_rbind</span>(arch_results)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(arch_results,<span class="at">digits=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">q</th>
+<th style="text-align: right;">loglik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ARCH(1)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-7042.627</td>
+<td style="text-align: right;">3.2228</td>
+<td style="text-align: right;">3.2286</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(2)</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-6857.410</td>
+<td style="text-align: right;">3.1385</td>
+<td style="text-align: right;">3.1458</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(3)</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-6737.751</td>
+<td style="text-align: right;">3.0843</td>
+<td style="text-align: right;">3.0930</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(4)</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-6689.647</td>
+<td style="text-align: right;">3.0627</td>
+<td style="text-align: right;">3.0729</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(5)</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-6660.464</td>
+<td style="text-align: right;">3.0498</td>
+<td style="text-align: right;">3.0615</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(6)</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">-6649.111</td>
+<td style="text-align: right;">3.0451</td>
+<td style="text-align: right;">3.0582</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(7)</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">-6628.903</td>
+<td style="text-align: right;">3.0363</td>
+<td style="text-align: right;">3.0509</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(8)</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">-6621.367</td>
+<td style="text-align: right;">3.0333</td>
+<td style="text-align: right;">3.0494</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(9)</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">-6617.911</td>
+<td style="text-align: right;">3.0322</td>
+<td style="text-align: right;">3.0497</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(10)</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">-6603.667</td>
+<td style="text-align: right;">3.0261</td>
+<td style="text-align: right;">3.0451</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(11)</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">-6594.670</td>
+<td style="text-align: right;">3.0225</td>
+<td style="text-align: right;">3.0429</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(12)</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">-6590.513</td>
+<td style="text-align: right;">3.0210</td>
+<td style="text-align: right;">3.0429</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(13)</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-6588.614</td>
+<td style="text-align: right;">3.0206</td>
+<td style="text-align: right;">3.0440</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(14)</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">-6582.753</td>
+<td style="text-align: right;">3.0184</td>
+<td style="text-align: right;">3.0432</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(15)</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">-6581.449</td>
+<td style="text-align: right;">3.0183</td>
+<td style="text-align: right;">3.0445</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(16)</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">-6580.490</td>
+<td style="text-align: right;">3.0183</td>
+<td style="text-align: right;">3.0460</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(17)</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">-6577.576</td>
+<td style="text-align: right;">3.0174</td>
+<td style="text-align: right;">3.0466</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(18)</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">-6577.977</td>
+<td style="text-align: right;">3.0181</td>
+<td style="text-align: right;">3.0487</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARCH(19)</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">-6578.564</td>
+<td style="text-align: right;">3.0188</td>
+<td style="text-align: right;">3.0509</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH(20)</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">-6576.426</td>
+<td style="text-align: right;">3.0183</td>
+<td style="text-align: right;">3.0518</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ARCH order with the lowest BIC:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>q_star <span class="ot">=</span> arch_results<span class="sc">$</span>q[<span class="fu">which.min</span>(arch_results<span class="sc">$</span>BIC)]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit GARCH(1,1) with the same mean and distribution for comparison:</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>garch11_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>, </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> arima_order, </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>garch11_fit  <span class="ot">=</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> garch11_spec, <span class="at">data =</span> r_train, <span class="at">solver =</span> <span class="st">"hybrid"</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>garch11_bic  <span class="ot">=</span> <span class="fu">infocriteria</span>(garch11_fit)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> arch_results,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> q, <span class="at">y =</span> BIC)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> col_main) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> col_main, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> arch_results[arch_results<span class="sc">$</span>q <span class="sc">==</span> q_star, ],   <span class="co"># highlight the best ARCH order</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> col_accent, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> garch11_bic,                          <span class="co"># GARCH(1,1) for comparison</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col =</span> col_accent) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> q_values) <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Choosing the ARCH order."</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"ARCH order (q)"</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"BIC (per observation)"</span>) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-arch-order" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-arch-order-1.png" class="img-fluid figure-img" width="864"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: BIC (per observation) of ARCH(q) candidate models with normal innovations. The pink dashed line indicates the BIC of GARCH(1,1) with the same mean and distribution.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>?@fig-arch_order</strong> shows the BIC of ARCH(<span class="math inline">\(q\)</span>) models for <span class="math inline">\(q = 1, \dots, 20\)</span>. The BIC decreases as <span class="math inline">\(q\)</span> increases and is lowest at <span class="math inline">\(q=11\)</span>. Beyond <span class="math inline">\(q=11\)</span>, BIC increases slightly as the additional parameters results in greater penalisation. This indicates that a pure ARCH model needs a large number of lags to capture the slow decay of the volatility. This is consistent with the slowly decaying autocorrelation of the squared residuals in the EDA. All cancidate ARCH models have larger BIC values than a GARCH(1,1) model. This motivates the use of GARCH models that will give geometrically declining weight to all past squared shocks.</p>
+</section>
+</section>
+<section id="candidate-models" class="level2">
+<h2 class="anchored" data-anchor-id="candidate-models">Candidate models</h2>
+<div class="cell" data-hash="project-03_cache/html/fit-candidates_c95e1aee1172762a5cda4abcf7985952">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify candidate models (all use the same AR(1) mean equation):</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>arch_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">garchOrder =</span> <span class="fu">c</span>(q_star, <span class="dv">0</span>)),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> arima_order, </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>garchN_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>, </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> arima_order, </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>garchT_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>, </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> arima_order, </span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">distribution.model =</span> <span class="st">"std"</span>)      <span class="co"># Student-t errors</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>gjrT_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>, </span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)),</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> arima_order, </span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>                       <span class="at">distribution.model =</span> <span class="st">"std"</span>)        <span class="co"># GJR with Student-t errors</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>spec_list <span class="ot">=</span> <span class="fu">list</span>(<span class="st">"ARCH"</span>        <span class="ot">=</span> arch_spec,</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"GARCH-N"</span>     <span class="ot">=</span> garchN_spec,</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"GARCH-t"</span>     <span class="ot">=</span> garchT_spec,</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"GJR-GARCH-t"</span> <span class="ot">=</span> gjrT_spec)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit each model to the training set:</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> <span class="fu">names</span>(spec_list)) {</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  fits[[model]] <span class="ot">=</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> spec_list[[model]], </span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> r_train, </span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>                            <span class="at">solver =</span> <span class="st">"hybrid"</span>)</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare models:</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>ic_table <span class="ot">=</span> <span class="fu">tibble</span>()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> <span class="fu">names</span>(fits)) {</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> fits[[model]]</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ic  <span class="ot">=</span> <span class="fu">infocriteria</span>(fit)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  ic_table <span class="ot">=</span> <span class="fu">bind_rows</span>(ic_table,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">tibble</span>(<span class="at">Model       =</span> model,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                              <span class="at">Parameters  =</span> <span class="fu">length</span>(<span class="fu">coef</span>(fit)),</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">LogLik      =</span> <span class="fu">likelihood</span>(fit),</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                              <span class="at">AIC         =</span> ic[<span class="st">"Akaike"</span>, <span class="dv">1</span>],</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                              <span class="at">BIC         =</span> ic[<span class="st">"Bayes"</span>, <span class="dv">1</span>],</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                              <span class="at">Persistence =</span> <span class="fu">persistence</span>(fit),</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                              <span class="st">`</span><span class="at">Half-life</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">halflife</span>(fit),</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>                              <span class="st">`</span><span class="at">Unconditional volatility (%)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(fit)<span class="sc">*</span>ann_factor)))</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>ic_table <span class="ot">=</span> <span class="fu">arrange</span>(ic_table, BIC)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(ic_table, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-ic" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;4: In-sample comparison of the candidate models (training sample). AIC/BIC are per observation (rugarch convention). Half-life in trading days; unconditional volatility annualised.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">Parameters</th>
+<th style="text-align: right;">LogLik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">Persistence</th>
+<th style="text-align: right;">Half-life</th>
+<th style="text-align: right;">Unconditional volatility (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">GJR-GARCH-t</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">-6493.542</td>
+<td style="text-align: right;">2.973</td>
+<td style="text-align: right;">2.983</td>
+<td style="text-align: right;">0.987</td>
+<td style="text-align: right;">54.893</td>
+<td style="text-align: right;">20.065</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GARCH-t</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">-6513.097</td>
+<td style="text-align: right;">2.982</td>
+<td style="text-align: right;">2.990</td>
+<td style="text-align: right;">0.992</td>
+<td style="text-align: right;">84.966</td>
+<td style="text-align: right;">23.862</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GARCH-N</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-6577.512</td>
+<td style="text-align: right;">3.011</td>
+<td style="text-align: right;">3.018</td>
+<td style="text-align: right;">0.993</td>
+<td style="text-align: right;">98.205</td>
+<td style="text-align: right;">25.862</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">-6594.670</td>
+<td style="text-align: right;">3.022</td>
+<td style="text-align: right;">3.043</td>
+<td style="text-align: right;">0.864</td>
+<td style="text-align: right;">4.754</td>
+<td style="text-align: right;">22.662</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Best model (lowest BIC):</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>best_name <span class="ot">=</span> ic_table<span class="sc">$</span>Model[<span class="dv">1</span>]</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>best_fit  <span class="ot">=</span> fits[[best_name]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="#tbl-ic">Table&nbsp;4</a> compares the candidate models that were fitted on the training set. GJR-GARCH-<span class="math inline">\(t\)</span> is selected as the best model as it has the lowest AIC (2.973) and BIC (2.983). Changing from normal to Student-<span class="math inline">\(t\)</span> innovations increases the log-likelihood by 64.4 for one additional parameter and lowers AIC and BIC values. By permitting asymmetry, GJR-GARCH-<span class="math inline">\(t\)</span> increases the log-likelihood by a further 19.6. The ARCH(11) model performs worst despite having the most parameters, which confirms that GARCH captures the persistence in volatility far more efficiently.</p>
+<p>All of the fitted models have persistence less than 1, thus volatility will revert to a long-run level. The GARCH models are highly persistent (0.987–0.993), with volatility shocks taking between 55 and 98 trading days to halve. In comparison, ARCH(11) has a half-life of just less than 5 days and thus cannot accurately capture the length of time that high volatility lasts. The unconditional volatility of GJR-GARCH-<span class="math inline">\(t\)</span> (20.1%/year) is close to the sample volatility of the training set (20.3%, <a href="#tbl-summary">Table&nbsp;1</a>), whereas the symmetric GARCH models overestimate it (23.9% and 25.9%).</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient table of the best model: estimate, standard error, t value, p-value</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> best_fit<span class="sc">@</span>fit<span class="sc">$</span>robust.matcoef</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>param_table <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Parameter   =</span> <span class="fu">c</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">mu$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">phi$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">omega$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">alpha$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">beta$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">gamma$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">nu$"</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Description =</span> <span class="fu">c</span>(<span class="st">"Mean daily return (%)"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"AR(1) coefficient"</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Variance intercept"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Reaction to last shock (ARCH)"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Carry-over of last variance (GARCH)"</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Extra reaction to negative shocks (leverage)"</span>,</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Student-t degrees of freedom"</span>),</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estimate    =</span> coefs[, <span class="dv">1</span>],</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Robust SE</span><span class="st">`</span> <span class="ot">=</span> coefs[, <span class="dv">2</span>],</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">p-value</span><span class="st">`</span>   <span class="ot">=</span> coefs[, <span class="dv">4</span>]</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(param_table, <span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-params" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;5: Parameter estimates of the selected GJR-GARCH(1,1) model with Student-t innovations (training sample), with robust standard errors.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 54%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Robust SE</th>
+<th style="text-align: right;">p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\mu\)</span></td>
+<td style="text-align: left;">Mean daily return (%)</td>
+<td style="text-align: right;">0.0784</td>
+<td style="text-align: right;">0.0156</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\phi\)</span></td>
+<td style="text-align: left;">AR(1) coefficient</td>
+<td style="text-align: right;">0.0745</td>
+<td style="text-align: right;">0.0141</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\omega\)</span></td>
+<td style="text-align: left;">Variance intercept</td>
+<td style="text-align: right;">0.0200</td>
+<td style="text-align: right;">0.0063</td>
+<td style="text-align: right;">0.0016</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\alpha\)</span></td>
+<td style="text-align: left;">Reaction to last shock (ARCH)</td>
+<td style="text-align: right;">0.0492</td>
+<td style="text-align: right;">0.0123</td>
+<td style="text-align: right;">0.0001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\beta\)</span></td>
+<td style="text-align: left;">Carry-over of last variance (GARCH)</td>
+<td style="text-align: right;">0.8931</td>
+<td style="text-align: right;">0.0141</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\gamma\)</span></td>
+<td style="text-align: left;">Extra reaction to negative shocks (leverage)</td>
+<td style="text-align: right;">0.0903</td>
+<td style="text-align: right;">0.0186</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\nu\)</span></td>
+<td style="text-align: left;">Student-t degrees of freedom</td>
+<td style="text-align: right;">9.8673</td>
+<td style="text-align: right;">1.5616</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#tbl-params">Table&nbsp;5</a> displays the estimated parameters of the chosen GJR-GARCH-<span class="math inline">\(t\)</span> model. All parameters have p-values <span class="math inline">\(&lt;0.01\)</span> and are thus statistically significant at the 1% level. Considering the mean equation, the average daily return is <span class="math inline">\(\hat\mu\)</span> = 0.078% and the AR(1) coefficient is small, <span class="math inline">\(\hat\phi\)</span> = 0.075. This suggests that returns are only weakly predictable from the previous day’s return.</p>
+<p>In the variance equation, <span class="math inline">\(\hat\alpha\)</span> = 0.049 measures the volatility reaction to a positive shock, while <span class="math inline">\(\hat\alpha + \hat\gamma\)</span> = 0.140 measures the volatility reaction to a negative shock. A negative shock increases the following day’s variance by approximately 2.8 times more than a positive shock of the same magnitude. This provides evidence of a leverage effect. The large <span class="math inline">\(\hat\beta\)</span> value (0.893) indicates that almost 90% of today’s variance is carried over to tomorrow. The persistence of the GJR-GARCH-<span class="math inline">\(t\)</span> model, <span class="math inline">\(\hat\alpha + \hat\beta + \hat\gamma/2\)</span> = 0.987, in <a href="#tbl-ic">Table&nbsp;4</a>, indicates that the volatility shocks die out slowly. The estimated degrees of freedom, <span class="math inline">\(\hat\nu\)</span> = 9.9, indicate heavier tails than the normal distribution, even after volatility clustering is accounted for. This supports the use of Student-<span class="math inline">\(t\)</span> innovations.</p>
+</section>
+<section id="garch11-from-first-principles" class="level2">
+<h2 class="anchored" data-anchor-id="garch11-from-first-principles">GARCH(1,1) from first principles</h2>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to calculate the negative log-likelihood of a Gaussian GARCH(1,1)</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># with a constant mean: </span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>garch11_nll_fxn <span class="ot">=</span> <span class="cf">function</span>(par, r) {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  mu    <span class="ot">=</span> par[<span class="dv">1</span>]</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  omega <span class="ot">=</span> par[<span class="dv">2</span>] <span class="co"># this is alpha0 in notes </span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">=</span> par[<span class="dv">3</span>]</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  beta  <span class="ot">=</span> par[<span class="dv">4</span>]</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check: return a very large value if the parameter constraints are broken:</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (omega <span class="sc">&lt;=</span> <span class="dv">0</span> <span class="sc">||</span> alpha <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">||</span> beta <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">||</span> alpha <span class="sc">+</span> beta <span class="sc">&gt;=</span> <span class="dv">1</span>) {</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fl">1e10</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate shocks:</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  e <span class="ot">=</span> r <span class="sc">-</span> mu</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Initialise: </span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  n     <span class="ot">=</span> <span class="fu">length</span>(r)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  s2    <span class="ot">=</span> <span class="fu">numeric</span>(n)</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  s2[<span class="dv">1</span>] <span class="ot">=</span> <span class="fu">mean</span>((r <span class="sc">-</span> <span class="fu">mean</span>(r))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For loop to calculate the conditional variance: </span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n) {</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    s2[t] <span class="ot">=</span> omega<span class="sc">+</span>alpha<span class="sc">*</span>e[t<span class="dv">-1</span>]<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>beta<span class="sc">*</span>s2[t<span class="dv">-1</span>]</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate negative log-likelihood:</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># optim minimises -&gt; minimise -loglik:</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  nll <span class="ot">=</span> <span class="fl">0.5</span><span class="sc">*</span><span class="fu">sum</span>(<span class="fu">log</span>(<span class="dv">2</span><span class="sc">*</span>pi)<span class="sc">+</span><span class="fu">log</span>(s2)<span class="sc">+</span>e<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>s2)</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(nll)</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting values: mean return, small omega, typical alpha and beta:</span></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>start_val <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">mean</span>(r_train),<span class="fl">0.05</span><span class="sc">*</span><span class="fu">var</span>(r_train),<span class="fl">0.08</span>,<span class="fl">0.90</span>)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Maximise the log-likelihood:</span></span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>own_fit <span class="ot">=</span> <span class="fu">optim</span>(<span class="at">par     =</span> start_val,</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>                <span class="at">fn      =</span> garch11_nll_fxn,</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>                <span class="at">r       =</span> r_train,</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>                <span class="at">method  =</span> <span class="st">"L-BFGS-B"</span>,</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">lower   =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">1e-8</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>                <span class="at">upper   =</span> <span class="fu">c</span>(<span class="cn">Inf</span>, <span class="cn">Inf</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>                <span class="at">hessian =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>own_est <span class="ot">=</span> own_fit<span class="sc">$</span>par</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>own_se  <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(<span class="fu">solve</span>(own_fit<span class="sc">$</span>hessian)))<span class="co"># std err from inverse H</span></span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit GARCH(1,1) using built in package `rugarch`:</span></span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>pkg_spec <span class="ot">=</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>, </span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)),</span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">include.mean =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>                      <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>pkg_fit  <span class="ot">=</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> pkg_spec, <span class="at">data =</span> r_train, <span class="at">solver =</span> <span class="st">"hybrid"</span>)</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>pkg_est <span class="ot">=</span> <span class="fu">coef</span>(pkg_fit)</span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>pkg_se  <span class="ot">=</span> pkg_fit<span class="sc">@</span>fit<span class="sc">$</span>matcoef[, <span class="dv">2</span>]</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare:</span></span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>own_tbl <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">Parameter =</span> <span class="fu">c</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">mu$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">alpha_0$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">alpha$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">beta$"</span>, <span class="st">"Log-likelihood"</span>),</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>                   <span class="st">`</span><span class="at">First principles</span><span class="st">`</span>    <span class="ot">=</span> <span class="fu">c</span>(own_est, <span class="sc">-</span>own_fit<span class="sc">$</span>value),</span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>                   <span class="st">`</span><span class="at">First principles SE</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(own_se, <span class="cn">NA</span>),</span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>                   <span class="at">rugarch               =</span> <span class="fu">c</span>(pkg_est, <span class="fu">likelihood</span>(pkg_fit)),</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>                   <span class="st">`</span><span class="at">rugarch SE</span><span class="st">`</span>          <span class="ot">=</span> <span class="fu">c</span>(pkg_se, <span class="cn">NA</span>))</span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">knitr.kable.NA =</span> <span class="st">"-"</span>)</span>
+<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(own_tbl, <span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-own-garch" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;6: Gaussian GARCH(1,1) with a constant mean: own maximum likelihood implementation (optim) compared with rugarch (training sample).</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 22%">
+<col style="width: 27%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">First principles</th>
+<th style="text-align: right;">First principles SE</th>
+<th style="text-align: right;">rugarch</th>
+<th style="text-align: right;">rugarch SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\mu\)</span></td>
+<td style="text-align: right;">0.0952</td>
+<td style="text-align: right;">0.0143</td>
+<td style="text-align: right;">0.0951</td>
+<td style="text-align: right;">0.0143</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\alpha_0\)</span></td>
+<td style="text-align: right;">0.0194</td>
+<td style="text-align: right;">0.0046</td>
+<td style="text-align: right;">0.0194</td>
+<td style="text-align: right;">0.0046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\alpha\)</span></td>
+<td style="text-align: right;">0.1110</td>
+<td style="text-align: right;">0.0103</td>
+<td style="text-align: right;">0.1109</td>
+<td style="text-align: right;">0.0103</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\beta\)</span></td>
+<td style="text-align: right;">0.8817</td>
+<td style="text-align: right;">0.0106</td>
+<td style="text-align: right;">0.8819</td>
+<td style="text-align: right;">0.0106</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Log-likelihood</td>
+<td style="text-align: right;">-6589.7137</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-6589.7168</td>
+<td style="text-align: right;">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#tbl-own-garch">Table&nbsp;6</a> compares the results from a Gaussian GARCH(1,1) model, with a constant mean, coded from first principals to the same model fitted with the built in function <code>rugarch</code>. All parameter estimates agree to 3 decimal places and there is a 0.003 difference in the log-likelihoods. The standard errors for both implementations agree to 4 decimal places.</p>
+</section>
+<section id="model-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="model-diagnostics">Model diagnostics</h2>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>diag_tab <span class="ot">=</span> <span class="fu">tibble</span>()</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> <span class="fu">names</span>(fits)) {</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Standardised residuals z_t = e_t / sigma_t:</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">residuals</span>(fits[[model]], <span class="at">standardize =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ljung-Box on z (any remaining autocorrelation in the mean?):</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  lb_z  <span class="ot">=</span> <span class="fu">Box.test</span>(z, <span class="at">lag =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>, <span class="at">fitdf =</span> <span class="fu">sum</span>(arima_order))</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ljung-Box on z^2 (any remaining volatility clustering?):</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  lb_z2 <span class="ot">=</span> <span class="fu">Box.test</span>(z<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>, <span class="at">fitdf =</span> <span class="dv">2</span>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Engle's ARCH LM test on z:</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  lm_z  <span class="ot">=</span> FinTS<span class="sc">::</span><span class="fu">ArchTest</span>(z, <span class="at">lags =</span> <span class="dv">10</span>)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Excess kurtosis of z (0 for a normal distribution):</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  kurt  <span class="ot">=</span> <span class="fu">mean</span>((z <span class="sc">-</span> <span class="fu">mean</span>(z))<span class="sc">^</span><span class="dv">4</span>) <span class="sc">/</span> <span class="fu">sd</span>(z)<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span> <span class="dv">3</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  diag_tab <span class="ot">=</span> <span class="fu">bind_rows</span>(diag_tab,</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">tibble</span>(<span class="at">Model                  =</span> model,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>                              <span class="st">`</span><span class="at">LB z (10)</span><span class="st">`</span>            <span class="ot">=</span> lb_z<span class="sc">$</span>p.value,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>                              <span class="st">`</span><span class="at">LB z² (10)</span><span class="st">`</span>           <span class="ot">=</span> lb_z2<span class="sc">$</span>p.value,</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>                              <span class="st">`</span><span class="at">ARCH LM (10)</span><span class="st">`</span>         <span class="ot">=</span> lm_z<span class="sc">$</span>p.value,</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>                              <span class="st">`</span><span class="at">Excess kurtosis of z</span><span class="st">`</span> <span class="ot">=</span> kurt))</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(diag_tab, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-diag" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;7: Diagnostics on the standardised residuals <span class="math inline">\(z_t\)</span> of each model (training sample): Ljung–Box p-values at lag 10 for <span class="math inline">\(z_t\)</span> and <span class="math inline">\(z_t^2\)</span>, Engle’s ARCH LM p-value at lag 10, and the excess kurtosis of <span class="math inline">\(z_t\)</span>. Large p-values mean no remaining dependence.</caption>
+<colgroup>
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 19%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">LB z (10)</th>
+<th style="text-align: right;">LB z² (10)</th>
+<th style="text-align: right;">ARCH LM (10)</th>
+<th style="text-align: right;">Excess kurtosis of z</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ARCH</td>
+<td style="text-align: right;">0.655</td>
+<td style="text-align: right;">0.505</td>
+<td style="text-align: right;">0.709</td>
+<td style="text-align: right;">1.901</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GARCH-N</td>
+<td style="text-align: right;">0.636</td>
+<td style="text-align: right;">0.008</td>
+<td style="text-align: right;">0.023</td>
+<td style="text-align: right;">1.605</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GARCH-t</td>
+<td style="text-align: right;">0.504</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">1.603</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GJR-GARCH-t</td>
+<td style="text-align: right;">0.568</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;">0.043</td>
+<td style="text-align: right;">1.361</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardised residuals of the best model:</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>z_best <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">residuals</span>(best_fit, <span class="at">standardize =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Standardised residuals over time:</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>z_df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">date =</span> alsi<span class="sc">$</span>date[alsi<span class="sc">$</span>sample <span class="sc">==</span> <span class="st">"Train"</span>], </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">z    =</span> z_best)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>plot_z <span class="ot">=</span> <span class="fu">ggplot</span>(<span class="at">data =</span> z_df,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> z)) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> col_main, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Standardised residuals."</span>,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(z[t])) <span class="sc">+</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. ACF of squared standardised residuals:</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>acf_z2 <span class="ot">=</span> <span class="fu">acf</span>(z_best<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag.max =</span> <span class="dv">40</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>acf_df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">lag =</span> <span class="fu">as.numeric</span>(acf_z2<span class="sc">$</span>lag)[<span class="sc">-</span><span class="dv">1</span>],     <span class="co"># drop lag 0</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">acf =</span> <span class="fu">as.numeric</span>(acf_z2<span class="sc">$</span>acf)[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>ci     <span class="ot">=</span> <span class="fl">1.96</span> <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(z_best))                  <span class="co"># 95% bounds</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>plot_acf <span class="ot">=</span> <span class="fu">ggplot</span>(<span class="at">data =</span> acf_df,</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> lag, <span class="at">y =</span> acf)) <span class="sc">+</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span>ci, ci), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> lag, <span class="at">yend =</span> <span class="dv">0</span>), <span class="at">col =</span> col_accent) <span class="sc">+</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"ACF of squared standardised residuals."</span>,</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Lag (trading days)"</span>,</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ACF"</span>) <span class="sc">+</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. QQ plot against the fitted Student-t distribution:</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>nu_hat  <span class="ot">=</span> <span class="fu">unname</span>(<span class="fu">coef</span>(best_fit)[<span class="st">"shape"</span>])                 <span class="co"># estimated degrees of freedom</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>theo_q  <span class="ot">=</span> <span class="fu">qdist</span>(<span class="at">distribution =</span> <span class="st">"std"</span>, </span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>                <span class="at">p =</span> <span class="fu">ppoints</span>(<span class="fu">length</span>(z_best)),</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>                <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_hat)        <span class="co"># theoretical quantiles</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>qq_df   <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">theoretical =</span> theo_q, </span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sample      =</span> <span class="fu">sort</span>(z_best))</span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>plot_qq <span class="ot">=</span> <span class="fu">ggplot</span>(<span class="at">data =</span> qq_df,</span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> theoretical, <span class="at">y =</span> sample)) <span class="sc">+</span></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> col_main, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> col_accent) <span class="sc">+</span></span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"QQ plot against fitted Student-t."</span>,</span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Theoretical quantiles"</span>,</span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Sample quantiles"</span>) <span class="sc">+</span></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>plot_z <span class="sc">/</span> (plot_acf <span class="sc">+</span> plot_qq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-diag" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-diag-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: Diagnostics for the selected GJR-GARCH-t model: standardised residuals over time (top), ACF of the squared standardised residuals (bottom left) and QQ plot against the fitted Student-t distribution (bottom right).</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The diagnostics of each model’s standardised residuals, <span class="math inline">\(z_t\)</span>, are displayed in <a href="#tbl-diag">Table&nbsp;7</a>. The p-values for the Ljung-Box test on <span class="math inline">\(z_t\)</span> are <span class="math inline">\(&gt; 0.05\)</span> for all models. We fail to reject the null hypothesis and conclude that no significant autocorrelation remains in the mean and that the AR(1) mean equation is acceptable. Prior to model fitting, Engle’s ARCH LM statistic at lag 10 was 710.1 (<strong>?@tbl-arch_effect</strong>), with a p-value <span class="math inline">\(&lt;&lt;0.001\)</span>. After fitting, the ARCH LM p-values of the three GARCH models increase to between <span class="math inline">\(0.010\)</span> and <span class="math inline">\(0.043\)</span>. This is still significant at the 5% level. With over 4000 observations, even small autocorrelations become statistically significant. <a href="#fig-diag">Figure&nbsp;5</a> illustrates the small remaining autocorrelations in comparison to those in <span class="citation" data-cites="fig">@fig</span> (reference EDA plot here), showing that most of the volatility clustering has been removed.</p>
+<p>ARCH(11) outperforms the other three models in terms of the diagnostics since the 11 lags absorb short-term dependency, however this model cannot capture the persistence of volatility as seen in <a href="#tbl-ic">Table&nbsp;4</a>. Out of the GARCH models, GJR-GARCH-<span class="math inline">\(t\)</span> has the lowest remaining dependence (Ljung-Box p-value = 0.017).</p>
+<p>The excess kurtosis of the standardised residuals drops from 6.1 for the raw returns, as seen in <a href="#tbl-summary">Table&nbsp;1</a>, to 1.4 for the GJR-GARCH-<span class="math inline">\(t\)</span> model. This shows that most of the heavy tails can be attributed to volatility clustering. The remaining excess kurtosis is close to that of a Student-<span class="math inline">\(t\)</span> distribution with <span class="math inline">\(\hat\nu \approx 10\)</span> degrees of freedom, <span class="math inline">\(6/(\nu - 4) \approx 1.0\)</span>, which supports the Student-<span class="math inline">\(t\)</span> innovations. This is confirmed by the QQ-plot in <a href="#fig-diag">Figure&nbsp;5</a> where the points like on the diagonal except for a few extreme negative returns.</p>
+</section>
+<section id="out-of-sample-model-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="out-of-sample-model-evaluation">Out-of-Sample Model evaluation</h2>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert returns to ts object: </span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>r_xts <span class="ot">=</span> xts<span class="sc">::</span><span class="fu">xts</span>(alsi<span class="sc">$</span>r, <span class="at">order.by =</span> alsi<span class="sc">$</span>date)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Directory to save rolling forecasts:</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>roll_dir <span class="ot">=</span> <span class="st">"_data/rolling"</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(roll_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>roll_list <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co"># For loop to loop through 4 models:</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> <span class="fu">names</span>(spec_list)) {</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  file_name <span class="ot">=</span> <span class="fu">file.path</span>(roll_dir, <span class="fu">paste0</span>(<span class="fu">gsub</span>(<span class="st">"[^A-Za-z0-9]"</span>, <span class="st">"_"</span>, model), <span class="st">".rds"</span>))</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Load saved forecasts:</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">file.exists</span>(file_name)) {</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    roll_list[[model]] <span class="ot">=</span> <span class="fu">readRDS</span>(file_name)</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># One-day-ahead forecasts for every test day, re-estimating every 50 days:</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    roll <span class="ot">=</span> <span class="fu">ugarchroll</span>(<span class="at">spec           =</span> spec_list[[model]],</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data           =</span> r_xts,</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">forecast.length =</span> n_test,</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">refit.every    =</span> refit_every,</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">refit.window   =</span> <span class="st">"recursive"</span>,     <span class="co"># expanding window</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>                      <span class="at">solver         =</span> <span class="st">"hybrid"</span>,</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">calculate.VaR  =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>                      <span class="at">VaR.alpha      =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>))</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">saveRDS</span>(roll, file_name)</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>    roll_list[[model]] <span class="ot">=</span> roll</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup:</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>test_idx   <span class="ot">=</span> <span class="fu">which</span>(alsi<span class="sc">$</span>sample <span class="sc">==</span> <span class="st">"Test"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>test_dates <span class="ot">=</span> alsi<span class="sc">$</span>date[test_idx]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>mu_tr      <span class="ot">=</span> <span class="fu">mean</span>(r_train)          <span class="co"># training-set mean return</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># GARCH: </span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>oos <span class="ot">=</span> <span class="fu">tibble</span>()</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> <span class="fu">names</span>(roll_list)) {</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  dens <span class="ot">=</span> <span class="fu">as.data.frame</span>(roll_list[[model]], <span class="at">which =</span> <span class="st">"density"</span>)   </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  var  <span class="ot">=</span> <span class="fu">as.data.frame</span>(roll_list[[model]], <span class="at">which =</span> <span class="st">"VaR"</span>)       </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  oos <span class="ot">=</span> <span class="fu">bind_rows</span>(oos,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">tibble</span>(<span class="at">date  =</span> test_dates,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Model =</span> model,</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">r     =</span> dens<span class="sc">$</span>Realized,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sigma =</span> dens<span class="sc">$</span>Sigma,</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">VaR1  =</span> var[, <span class="dv">1</span>],</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">VaR5  =</span> var[, <span class="dv">2</span>]))</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Constant-variance (benchmark): </span></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>constant <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">date  =</span> test_dates,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Model =</span> <span class="st">"Constant"</span>,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>                  <span class="at">r     =</span> r_all[test_idx],</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sigma =</span> <span class="fu">sd</span>(r_train))</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a><span class="co"># EWMA (benchmark): </span></span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>e_all   <span class="ot">=</span> r_all <span class="sc">-</span> mu_tr</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>s2_ewma <span class="ot">=</span> <span class="fu">numeric</span>(<span class="fu">length</span>(r_all))</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>s2_ewma[<span class="dv">1</span>] <span class="ot">=</span> <span class="fu">var</span>(r_train[<span class="dv">1</span><span class="sc">:</span><span class="dv">63</span>])</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(r_all)) {</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>  s2_ewma[t] <span class="ot">=</span> <span class="fl">0.94</span> <span class="sc">*</span> s2_ewma[t <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> <span class="fl">0.06</span> <span class="sc">*</span> e_all[t <span class="sc">-</span> <span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>ewma <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">date  =</span> test_dates,</span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>              <span class="at">Model =</span> <span class="st">"EWMA"</span>,</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">r     =</span> r_all[test_idx],</span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>              <span class="at">sigma =</span> <span class="fu">sqrt</span>(s2_ewma[test_idx]))</span>
+<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Normal VaR for benchmarks:</span></span>
+<span id="cb31-42"><a href="#cb31-42" aria-hidden="true" tabindex="-1"></a>benchmarks <span class="ot">=</span> <span class="fu">bind_rows</span>(constant, ewma)</span>
+<span id="cb31-43"><a href="#cb31-43" aria-hidden="true" tabindex="-1"></a>benchmarks<span class="sc">$</span>VaR1 <span class="ot">=</span> mu_tr<span class="sc">+</span>benchmarks<span class="sc">$</span>sigma<span class="sc">*</span><span class="fu">qnorm</span>(<span class="fl">0.01</span>)</span>
+<span id="cb31-44"><a href="#cb31-44" aria-hidden="true" tabindex="-1"></a>benchmarks<span class="sc">$</span>VaR5 <span class="ot">=</span> mu_tr<span class="sc">+</span>benchmarks<span class="sc">$</span>sigma<span class="sc">*</span><span class="fu">qnorm</span>(<span class="fl">0.05</span>)</span>
+<span id="cb31-45"><a href="#cb31-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-46"><a href="#cb31-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all models:</span></span>
+<span id="cb31-47"><a href="#cb31-47" aria-hidden="true" tabindex="-1"></a>oos <span class="ot">=</span> <span class="fu">bind_rows</span>(benchmarks, oos)</span>
+<span id="cb31-48"><a href="#cb31-48" aria-hidden="true" tabindex="-1"></a>oos<span class="sc">$</span>Model <span class="ot">=</span> <span class="fu">factor</span>(oos<span class="sc">$</span>Model, <span class="at">levels =</span> <span class="fu">names</span>(model_cols))</span>
+<span id="cb31-49"><a href="#cb31-49" aria-hidden="true" tabindex="-1"></a>oos<span class="sc">$</span>proxy <span class="ot">=</span> (oos<span class="sc">$</span>r <span class="sc">-</span> mu_tr)<span class="sc">^</span><span class="dv">2</span>       <span class="co"># squared return = proxy for true variance</span></span>
+<span id="cb31-50"><a href="#cb31-50" aria-hidden="true" tabindex="-1"></a>oos<span class="sc">$</span>h     <span class="ot">=</span> oos<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span>             <span class="co"># forecast variance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>loss_table <span class="ot">=</span> <span class="fu">tibble</span>()</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> <span class="fu">levels</span>(oos<span class="sc">$</span>Model)) {</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">=</span> oos[oos<span class="sc">$</span>Model <span class="sc">==</span> model, ]</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  loss_table <span class="ot">=</span> <span class="fu">bind_rows</span>(loss_table,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">tibble</span>(<span class="at">Model =</span> model,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">MSE   =</span> <span class="fu">mean</span>((d<span class="sc">$</span>proxy <span class="sc">-</span> d<span class="sc">$</span>h)<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                                <span class="at">QLIKE =</span> <span class="fu">mean</span>(<span class="fu">log</span>(d<span class="sc">$</span>h) <span class="sc">+</span> d<span class="sc">$</span>proxy <span class="sc">/</span> d<span class="sc">$</span>h)))</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>loss_table <span class="ot">=</span> <span class="fu">arrange</span>(loss_table, QLIKE)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>best_oos   <span class="ot">=</span> loss_table<span class="sc">$</span>Model[<span class="dv">1</span>]</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(loss_table, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-loss" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;8: Out-of-sample forecast loss over the test period (lower is better), sorted by QLIKE.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">MSE</th>
+<th style="text-align: right;">QLIKE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">GJR-GARCH-t</td>
+<td style="text-align: right;">2.617</td>
+<td style="text-align: right;">0.805</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GARCH-t</td>
+<td style="text-align: right;">2.647</td>
+<td style="text-align: right;">0.825</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GARCH-N</td>
+<td style="text-align: right;">2.653</td>
+<td style="text-align: right;">0.826</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCH</td>
+<td style="text-align: right;">2.716</td>
+<td style="text-align: right;">0.840</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EWMA</td>
+<td style="text-align: right;">2.646</td>
+<td style="text-align: right;">0.849</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Constant</td>
+<td style="text-align: right;">3.280</td>
+<td style="text-align: right;">1.063</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>plot_df <span class="ot">=</span> oos[oos<span class="sc">$</span>Model <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Constant"</span>, <span class="st">"EWMA"</span>, best_oos), ]</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_df, </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> date)) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">abs</span>(r <span class="sc">-</span> mu_tr) <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor)), <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor), <span class="at">col =</span> Model), <span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> model_cols) <span class="sc">+</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>)) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Volatility forecasts in the test period."</span>,</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Annualised volatility (%)"</span>,</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-oos" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-oos-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: Out-of-sample one-day-ahead volatility forecasts (annualised %) of the constant model, EWMA and the best GARCH model, with annualised absolute returns in grey.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Since true variance is unobservable, volatility forecasts have to be compared with a noisy proxy, the squared return. Following Patton (2011), forecasts are compared using QLIKE, <span class="math inline">\(\text{QLIKE} = \log h_t + \hat\varepsilon_t^2 / h_t\)</span>, a loss function designed for noisy variance proxies. This metric is less affected by extreme days making it more reliable than MSE.</p>
+<p><a href="#tbl-loss">Table&nbsp;8</a> reports the average MSE and QLIKE loss of each model’s one-day-ahead variance forecasts over the test set. The GJR-GARCH-<span class="math inline">\(t\)</span> model has the lowest score on both measures (QLIKE = 0.805, MSE = 2.617). This is in agreement with the model chosen by BIC on the training set. When comparing models based on QLIKE, the constant-variance model performs the worst (1.063), providing evidence that the volatility of ALSI returns is predictable. The pure ARCH model slightly outperforms EWMA with QLIKE scores of 0.840 and 0.849 respectively. EWMA is a restricted GARCH(1,1) with no constant and fixed parameters (<span class="math inline">\(\alpha = 0.06\)</span>, <span class="math inline">\(\beta = 0.94\)</span>), so it has no long-run variance to revert to. Both of these models perform worse than GARCH-N and GARCH-<span class="math inline">\(t\)</span> (0.826 and 0.825). The addition of asymmetry yields the greatest improvement (0.805).</p>
+<p>MSE ranks EWMA slightly above GARCH-N and GARCH-t (2.646 compared to 2.653 and 2.647). However, the differences are very small and MSE is more affected by extreme absolute returns, so the models are ranked according to QLIKE.</p>
+<p><a href="#fig-oos">Figure&nbsp;6</a> displays the one-day-ahead volatility forecasts of the constant-variance model, EWMA and GJR-GARCH-<span class="math inline">\(t\)</span> for the test set. The annualised absolute returns are shown in grey. The constant model is just a flat line, underpredictng when returns spike and over predicting when returns drop. Both EWMA and GJR-GARCH-<span class="math inline">\(t\)</span> rise sharply after large returns and decay slowly, this is indicative of the high persistence estimated earlier. In calm periods, EWMA drops lower than GJR-GARCH-<span class="math inline">\(t\)</span> since it has no long-run variance to revert to. GJR-GARCH-<span class="math inline">\(t\)</span> rises more after large drop then EWMA, due to the inclusion of the leverage effect.</p>
+</section>
+<section id="model-forecasting" class="level2">
+<h2 class="anchored" data-anchor-id="model-forecasting">Model forecasting</h2>
+<p>The preferred model (GJR-GARCH(1,1)-<span class="math inline">\(t\)</span>) is re-estimated on the full sample (1995–2017) and used to forecast volatility over the next 63 trading days.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit the best model on the full sample:</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>final_fit <span class="ot">=</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> spec_list[[best_name]], <span class="at">data =</span> r_xts, <span class="at">solver =</span> <span class="st">"hybrid"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># forecast 63 trading days ahead:</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>h_max <span class="ot">=</span> <span class="dv">63</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">=</span> <span class="fu">ugarchforecast</span>(final_fit, <span class="at">n.ahead =</span> h_max)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forecast dates (weekdays only, public holidays ignored):</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>all_days <span class="ot">=</span> <span class="fu">seq</span>(<span class="fu">max</span>(alsi<span class="sc">$</span>date) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="st">"day"</span>, <span class="at">length.out =</span> <span class="dv">2</span> <span class="sc">*</span> h_max)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>future_dates <span class="ot">=</span> all_days[<span class="fu">wday</span>(all_days, <span class="at">week_start =</span> <span class="dv">1</span>) <span class="sc">&lt;=</span> <span class="dv">5</span>][<span class="dv">1</span><span class="sc">:</span>h_max]</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># standardised t quantiles for the 95% interval:</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>nu_final <span class="ot">=</span> <span class="fu">coef</span>(final_fit)[<span class="st">"shape"</span>]</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>q_lo <span class="ot">=</span> <span class="fu">qdist</span>(<span class="st">"std"</span>, <span class="at">p =</span> <span class="fl">0.025</span>, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_final)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>q_hi <span class="ot">=</span> <span class="fu">qdist</span>(<span class="st">"std"</span>, <span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_final)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>fc_df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">date  =</span> future_dates,</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>               <span class="at">h     =</span> <span class="dv">1</span><span class="sc">:</span>h_max,</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">mu    =</span> <span class="fu">as.numeric</span>(<span class="fu">fitted</span>(fc)),</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>               <span class="at">sigma =</span> <span class="fu">as.numeric</span>(<span class="fu">sigma</span>(fc)))</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>fc_df<span class="sc">$</span>lo95 <span class="ot">=</span> fc_df<span class="sc">$</span>mu<span class="sc">+</span>q_lo<span class="sc">*</span>fc_df<span class="sc">$</span>sigma</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>fc_df<span class="sc">$</span>hi95 <span class="ot">=</span> fc_df<span class="sc">$</span>mu<span class="sc">+</span>q_hi<span class="sc">*</span>fc_df<span class="sc">$</span>sigma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fit_list <span class="ot">=</span> <span class="fu">list</span>(<span class="st">"Training sample"</span> <span class="ot">=</span> best_fit, <span class="st">"Full sample"</span> <span class="ot">=</span> final_fit)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">Quantity =</span> <span class="fu">c</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">omega$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">alpha$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">beta$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">gamma$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">nu$"</span>,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Persistence"</span>, <span class="st">"Half-life (days)"</span>, <span class="st">"Unconditional vol (% p.a.)"</span>))</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co"># loop over the two fits:</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> <span class="fu">names</span>(fit_list)) {</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  cf <span class="ot">=</span> <span class="fu">coef</span>(fit_list[[name]])</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># persistence, half-life and long-run volatility:</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  pers      <span class="ot">=</span> cf[<span class="st">"alpha1"</span>] <span class="sc">+</span> cf[<span class="st">"beta1"</span>] <span class="sc">+</span> cf[<span class="st">"gamma1"</span>] <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  half_life <span class="ot">=</span> <span class="fu">log</span>(<span class="fl">0.5</span>) <span class="sc">/</span> <span class="fu">log</span>(pers)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  unc_vol   <span class="ot">=</span> <span class="fu">sqrt</span>(cf[<span class="st">"omega"</span>] <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pers) <span class="sc">*</span> <span class="dv">252</span>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  final_table[[name]] <span class="ot">=</span> <span class="fu">c</span>(cf[<span class="st">"omega"</span>], cf[<span class="st">"alpha1"</span>], cf[<span class="st">"beta1"</span>], cf[<span class="st">"gamma1"</span>], cf[<span class="st">"shape"</span>],</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>                          pers, half_life, unc_vol)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="co"># kable(final_table, digits = 3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-final" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="GJR-GARCH(1,1)-$t$ estimated on the training sample and on the full sample.">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># persistence, half-life and long-run volatility of the full-sample fit:</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>cf_final <span class="ot">=</span> <span class="fu">coef</span>(final_fit)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>pers_final <span class="ot">=</span> cf_final[<span class="st">"alpha1"</span>] <span class="sc">+</span> cf_final[<span class="st">"beta1"</span>] <span class="sc">+</span> cf_final[<span class="st">"gamma1"</span>] <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>half_life_final <span class="ot">=</span> <span class="fu">log</span>(<span class="fl">0.5</span>) <span class="sc">/</span> <span class="fu">log</span>(pers_final)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>unc_vol_final <span class="ot">=</span> <span class="fu">sqrt</span>(cf_final[<span class="st">"omega"</span>] <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pers_final) <span class="sc">*</span> <span class="dv">252</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The estimates on the full sample are very close to those from the training sample. This indicates that the model is stable. Persistence is 0.986, the half-life is approximately 49 trading days and the unconditional volatility is 19% per year.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fitted volatility over the last 250 days:</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>hist_sigma <span class="ot">=</span> <span class="fu">tail</span>(<span class="fu">tibble</span>(<span class="at">date =</span> alsi<span class="sc">$</span>date, <span class="at">sigma =</span> <span class="fu">as.numeric</span>(<span class="fu">sigma</span>(final_fit))), <span class="dv">250</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># long-run volatility of the full-sample fit:</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>unc_vol_final <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">8</span>]</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>p_vol <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> hist_sigma, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)), <span class="at">colour =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)), <span class="at">colour =</span> <span class="st">"deeppink"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> unc_vol_final, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Volatility forecast"</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Annualised volatility (%)"</span>) <span class="sc">+</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>p_int <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">tail</span>(alsi, <span class="dv">250</span>), <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> r), <span class="at">colour =</span> <span class="st">"purple"</span>, <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">ymin =</span> lo95, <span class="at">ymax =</span> hi95), <span class="at">fill =</span> <span class="st">"deeppink"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> mu), <span class="at">colour =</span> <span class="st">"deeppink"</span>) <span class="sc">+</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Return forecast with 95% interval"</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Return (%)"</span>) <span class="sc">+</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>p_vol <span class="sc">+</span> p_int</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-forecast" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="project-03_files/figure-html/fig-forecast-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;7: Left: annualised conditional volatility over the last 250 trading days (purple) and the 63-day forecast (pink); the dashed line is the unconditional volatility. Right: last 250 returns with the forecast mean and 95% prediction interval.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-forecast">Figure&nbsp;7</a> illustrates the 63 day volatility forecast using the full sample. Duirng 2016, volatility peaked at about 31% at then end of June, this could be attributed to the Brexit vote, after which it decayed back down, below average. At the end of the sample volatility was approximately 13%, below the unconditional volatility indicated by the dashed line. Thus, the forecast rises gradually toward the long-run variance and reaches just under 17% after 63 trading days. This reflects the high persistence of the model as it has not yet reached the long-run level.</p>
+<p>The return forecast with 95% prediction intervals forecast a mean just above zero. This highlights how returns are not predictable. The 95% prediction intervals widen as the forecast horizon increases.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>horizons <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">22</span>, <span class="dv">63</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>forecast_table <span class="ot">=</span> <span class="fu">tibble</span>()</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># loop over the chosen horizons:</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (h <span class="cf">in</span> horizons) {</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  forecast_table <span class="ot">=</span> <span class="fu">bind_rows</span>(forecast_table,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">tibble</span>(<span class="at">h                =</span> h,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">Date             =</span> fc_df<span class="sc">$</span>date[h],</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">`</span><span class="at">Ann. vol (%)</span><span class="st">`</span>   <span class="ot">=</span> fc_df<span class="sc">$</span>sigma[h] <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)))</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(forecast_table, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-forecast" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;9: Volatility forecasts at selected horizons (daily and annualised).</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">h</th>
+<th style="text-align: left;">Date</th>
+<th style="text-align: right;">Ann. vol (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2017-02-06</td>
+<td style="text-align: right;">13.025</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">2017-02-10</td>
+<td style="text-align: right;">13.427</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2017-03-07</td>
+<td style="text-align: right;">14.810</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">63</td>
+<td style="text-align: left;">2017-05-03</td>
+<td style="text-align: right;">16.801</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#tbl-forecast">Table&nbsp;9</a> reports the forecasts at selected horizons. The forecast annualised volatility rises from 13.0% on the first day to 14.8% after one month (22 trading days) and 16.8% after three months (63 trading days). This is still below the unconditional volatility of 19.0%.</p>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<ul>
+<li>Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. <em>Journal of Econometrics</em>, 31(3), 307–327.</li>
+<li>Christoffersen, P. F. (1998). Evaluating interval forecasts. <em>International Economic Review</em>, 39(4), 841–862.</li>
+<li>Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. <em>Econometrica</em>, 50(4), 987–1007.</li>
+<li>Ghalanos, A. (2024). <em>rugarch: Univariate GARCH models</em>. R package version 1.5.6.</li>
+<li>Glosten, L. R., Jagannathan, R., &amp; Runkle, D. E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. <em>Journal of Finance</em>, 48(5), 1779–1801.</li>
+<li>J.P. Morgan/Reuters (1996). <em>RiskMetrics — Technical Document</em> (4th ed.).</li>
+<li>Kupiec, P. H. (1995). Techniques for verifying the accuracy of risk measurement models. <em>Journal of Derivatives</em>, 3(2), 73–84.</li>
+<li>Patton, A. J. (2011). Volatility forecast comparison using imperfect volatility proxies. <em>Journal of Econometrics</em>, 160(1), 246–256.</li>
+<li>Course notes: <em>ARCH and GARCH Models</em> guide.</li>
+<li>[Data source — XX]</li>
 </ul>
 
 

@@ -3,22 +3,1095 @@ format: html
 editor: visual
 ---
 
--   **Section & Topic:**\[cite: 1\]
--   **Project Type:** (Implementation / Shiny App / Exploration / Simulation)\[cite: 1\]
--   **Question / Aim:**\[cite: 1\]
--   **Data Used:** (Include source details if real-world data)\[cite: 1\]
--   **Methods Used:**\[cite: 1\]
+# Predicting the volatility of daily Johannesburg Stock Exchange All Share Index returns
+
+This project aims to predict the volatility of the JSE All Share Index (ALSI) returns by fitting both ARCH and GARCH models and determining which models yield the best out-of-sample volatility forecasts. These models are compared to the Exponentially Weighted Moving Average (EWMA) benchmark.
+
+**Section & Topic:** Conditional Variance Models
+
+**Project Type:** Model implementation and comparison on real-world data. This includes a GARCH(1,1) likelihood from first principles.
+
+**Aim:** To predict the volatility of JSE ALSI returns and to determine, from the above mentioned models, the optimal one for out-of-sample volatility and Value-at-Risk forecasts.
+
+**Data Used:**
+
+Gebbie, T. (2020) *Daily Sampled South African Market Index Data 1994-2017*, University of Cape Town, Dataset, https://doi.org/10.25375/uct.11302325.v1
+
+**Methods Used:** ARCH, GARCH and GARCH extensions models are fitted to the JSE ALSI returns.
+
+The aim of this project is to use conditional variance models to predict the volatility of the JSE ALSI returns. JSE return risk is not constant with periods of high volatility following periods of high volatility and periods of low volatility following periods of low volatility. Modelling returns with a constant-variance model results in the risk being understated when it is high and overstated when it is low.
+
+ARCH (Engle, 1982) and GARCH (Bollerslev, 1986) models let the current conditional variance depends on recent shocks as well as yesterday's variance. GJR-GARCH (Glosten et al., 1993) extends the GARCH model to let negative shocks have a larger effect on volatility than positive ones, this is known as the leverage effect.
 
 ## Key Findings
 
-<!-- Summary of findings -->
-
-\[cite: 1\]
-
 ## Reflections
-
--   **What I would do differently next time:**\[cite: 1\]
 
 ## Links
 
 -   [Detailed Analysis & Code Script](../appendix/code-and-data.qmd)\[cite: 1\]
+
+## Data
+
+The financial series used is the daily FTSE/JSE All Share Index total return index $P_t$ (ticker J203, dividends reinvested) over the period from 30 June 1995 to 3 February 2017. The time index used is "trading day" since weekends are excluded. The daily log returns (%) are modelled,
+
+$$
+r_t = 100[lnP_t - lnP_{t-}]. 
+$$ Log returns are modelled since asset prices wander and their variance grows without bound. The series consists of 5396 total daily returns. The models are estimated using the training set (July 1995 - December 2012) and evaluated on the test set (January 2013 - February 2017).
+
+## Exploratory Data Analysis
+
+```{r}
+#| echo: false
+#| warning: false 
+#| message: false
+#| label: setup
+
+# Load required libraries:
+library(readxl)
+library(tidyverse)
+library(lubridate)
+library(rugarch)    
+library(tseries)  
+library(patchwork)
+library(knitr)
+library(parallel)
+library(dplyr)
+library(tibble)
+library(forecast)
+library(FinTS)
+```
+
+```{r}
+# Specify project plotting theme:
+theme_proj = theme_minimal(base_size = 14) +
+  theme(plot.title    = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
+
+# Aesthetics: 
+col_main   = "purple"
+col_accent = "deeppink"
+model_cols = c("Constant"    = "grey50",
+               "EWMA"        = "darkorange",
+               "ARCH"        = "gold3",
+               "GARCH-N"     = "steelblue",
+               "GARCH-t"     = "navy",
+               "GJR-GARCH-t" = "deeppink")
+```
+
+```{r}
+#| echo: false
+#| warning: false 
+#| message: false
+#| label: helpers
+
+# Function to find a column in the vendor spreadsheet from its ticker code 
+# (row 1) and field (row 2):
+find_col = function(hdr, code, field) {
+  idx = which(unlist(hdr[1, ]) == code & unlist(hdr[2, ]) == field)
+  if (length(idx) != 1) stop(paste("Could not uniquely find", code, field))
+  idx
+}
+
+# Function to plot the ACF and PACF with 95% bounds: 
+acf_gg = function(x, title, lag.max = 40, type = "acf", col = col_main) {
+  x = na.omit(as.numeric(x))
+  a = if (type == "acf") {
+    acf(x, lag.max = lag.max, plot = FALSE)
+    } else {
+      pacf(x, lag.max = lag.max, plot = FALSE)
+    }
+  df = tibble(lag = as.numeric(a$lag), 
+              r = as.numeric(a$acf)) |> 
+    filter(lag > 0)
+  ci = qnorm(0.975)/sqrt(length(x))
+  ggplot(data = df, 
+         mapping = aes(x = lag, y = r)) +
+    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = c(-ci, ci), 
+               linetype = "dashed", 
+               colour = "blue") +
+    geom_segment(aes(xend = lag, yend = 0), 
+                 colour = col) +
+    labs(title = title, 
+         x = "Lag (trading days)", 
+         y = toupper(type)) +
+    theme_proj
+}
+
+# Function to perform ARCH LM test from first principles:
+# regress e_t^2 on q lags of itself; LM = n R^2 ~ chi^2_q
+arch_lm = function(x, lags) {
+  e2  = (as.numeric(x) - mean(x))^2
+  X   = embed(e2, lags + 1)
+  aux = lm(X[, 1] ~ X[, -1])
+  LM  = nrow(X) * summary(aux)$r.squared
+  tibble(Lag = lags, 
+         Statistic = LM, 
+         `p-value` = pchisq(LM, df = lags, lower.tail = FALSE))
+}
+
+# Ljung-Box p-value:
+lb_p = function(x, lag, fitdf = 0) {
+  Box.test(as.numeric(x), lag = lag, type = "Ljung-Box", fitdf = fitdf)$p.value
+}
+
+# Function to define rugarch specification:
+make_spec = function(model = "sGARCH", 
+                     garch_order = c(1, 1), 
+                     dist = "norm", 
+                     arma = c(0, 0)) {
+  ugarchspec(variance.model     = list(model = model, garchOrder = garch_order),
+             mean.model         = list(armaOrder = arma, include.mean = TRUE),
+             distribution.model = dist)
+}
+
+# Quantile of a fitted model's standardised innovation distribution:
+dist_q = function(fit, p) {
+  cf = coef(fit)
+  qdist(distribution = fit@model$modeldesc$distribution, 
+        p = p, 
+        mu = 0, 
+        sigma = 1,
+        shape = if ("shape" %in% names(cf)) unname(cf["shape"]) else 5)
+}
+```
+
+```{r}
+#| label: read-data
+
+# Set seed for reproducibility: 
+set.seed(2026)
+
+# Specify data paths: 
+data_path  = "_data/PT-DATA-ALBI-JIBAR-JSEIND-Daily-1994-2017.xlsx"
+pt_path    = "_data/balancedDataTable.xlsx"   # monthly data (STEFI,ALBI,ALSI)
+sheet_name = "JSE Various Indices"
+ticker     = "J203:XJSE:IND"
+field      = "TRI"    
+
+# Training and test sets: 
+train_end   = as.Date("2012-12-31")   
+pt_start    = as.Date("2004-11-30")   
+pt_end      = as.Date("2016-12-31")
+ann_factor  = 252 # trading days per year
+refit_every = 50  # rolling models are re-estimated every 50 trading days
+
+
+# Read header rows (rows 1-4):
+hdr = read_excel(data_path, 
+                 sheet        = sheet_name, 
+                 col_names    = FALSE, 
+                 n_max        = 4)
+tickers = as.character(unlist(hdr[1, ]))   # row 1: ticker codes
+fields  = as.character(unlist(hdr[2, ]))   # row 2: field names
+
+# Read in data (starts row 5):
+raw = read_excel(data_path, 
+                 sheet = sheet_name, 
+                 col_names = FALSE, 
+                 skip = 4, 
+                 na = c("#N/A", "", "NA"),
+                 guess_max = 10000)
+
+# Find the date column:
+date_col = which(sapply(raw, function(x) inherits(x, c("POSIXct", "Date"))))[1]
+
+# Find the ALSI column from header rows
+alsi_col = find_col(hdr, ticker, field)
+
+alsi = tibble(
+  date = as.Date(raw[[date_col]]),
+  tri  = as.numeric(raw[[alsi_col]])) |>
+  filter(!is.na(date), !is.na(tri)) |>
+  arrange(date) |>
+  distinct(date, .keep_all = TRUE) |>
+  mutate(r = 100 * (log(tri) - lag(log(tri)))) |>   
+  filter(!is.na(r)) |>
+  mutate(sample = if_else(date <= train_end, "Train", "Test"))
+
+n_train = sum(alsi$sample == "Train")
+n_test  = sum(alsi$sample == "Test")
+r_all   = alsi$r
+r_train = alsi$r[alsi$sample == "Train"]
+r_test  = alsi$r[alsi$sample == "Test"]
+
+# Save cleaned series
+saveRDS(alsi, "_data/project03_alsi_clean.rds")
+# alsi_clean= readRDS("_data/project03_alsi_clean.rds")
+```
+
+```{r}
+#| label: fig-series1
+#| fig-cap: "ALSI total log-return index. The dashed line indicates the end of the training period."
+#| fig-width: 10
+#| fig-height: 5
+
+p_level = ggplot(data = alsi, 
+                 mapping = aes(x = date, y = tri)) +
+  geom_line(colour = col_main) +
+  geom_vline(xintercept = train_end, linetype = "dashed") +
+  scale_y_log10() +
+  labs(title = "ALSI total return index.", 
+       x = "Date", 
+       y = "Index (log scale)") +
+  theme_proj
+
+p_level
+```
+
+```{r}
+#| label: fig-series2
+#| fig-cap: "Daily log returns. The dashed line indicates the end of the training period."
+#| fig-width: 10
+#| fig-height: 5
+
+p_ret = ggplot(alsi, aes(x = date, y = r)) +
+  geom_line(colour = col_main, linewidth = 0.3) +
+  geom_vline(xintercept = train_end, linetype = "dashed") +
+  labs(title = "Daily log returns.", 
+       x = "Date", 
+       y = "Return (%)") +
+  theme_proj
+
+p_ret
+```
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics of daily ALSI log returns (%)."
+
+# Function to calculate summary statistics:
+summary_fxn = function(x){
+  n            = length(x)               # no. observations
+  avg          = mean(x)                 # Average returns
+  sd           = sd(x)                   # Standard deviation
+  min_         = min(x)                  # Minimum
+  max_         = max(x)                  # Maximum
+  annualised_v = sd*sqrt(ann_factor)     # Annualised volatility
+  skewness     = mean((x-avg)^3)/sd^3    # Skewness
+  kurtosis     = mean((x-avg)^4)/sd^4 -3 # Kurtosis
+  return(list(n=n,
+              mean=avg,
+              sd=sd,
+              min=min_,
+              max=max_,
+              annualised_v=annualised_v,
+              skewness=skewness,
+              kurtosis=kurtosis))
+}
+
+full_summary  = summary_fxn(r_all)
+train_summary = summary_fxn(r_train)
+test_summary  = summary_fxn(r_test)
+
+summary_tbl = bind_rows(Full     = full_summary,
+                        Training = train_summary,
+                        Test     = test_summary,
+                        .id      = "Sample") |>
+  select(Sample,
+         N                   = n,
+         Mean                = mean,
+         `Std dev`           = sd,
+         `Annual volatility` = annualised_v,
+         Skewness            = skewness,
+         `Excess kurtosis`   = kurtosis,
+         Min                 = min,
+         Max                 = max)
+
+knitr::kable(
+  summary_tbl,
+  digits=3
+)
+
+```
+
+@fig-series1 shows an increasing index level trend from 1994 through to 2017, however @fig-series2 illustrates the returns fluctuating around a mean of approximately zero. This is indicative of volatility clustering. @fig-series2 shows the high volatility during the 1997-1998 and 2008-2009 financial crises. The summary statistics recorded in @tbl-summary suggest a negatively skewed distribution (skewness = -0.446) with heavy tails (excess kurtosis = 6.005).
+
+```{r}
+#| label: fig-acf
+#| fig-cap: "ACF of daily returns, squared residuals and absolute returns of the training set. The dashed lines indicate approximate 95% bounds."
+#| fig-width: 12
+#| fig-height: 4
+
+acf_returns = ggAcf(r_train, lag.max = 40) +
+  labs(title = "Returns.", 
+       x = "Lag (trading days)", 
+       y = "ACF") +
+  theme_proj
+
+acf_sq_returns = ggAcf(r_train^2, lag.max = 40) +
+  labs(title = "Squared returns.", 
+       x = "Lag (trading days)", 
+       y = "ACF") +
+  theme_proj
+
+acf_abs_returns = ggAcf(abs(r_train), lag.max = 40) +
+  labs(title = "Absolute returns.", 
+       x = "Lag (trading days)", 
+       y = "ACF") +
+  theme_proj 
+
+acf_returns | acf_sq_returns | acf_abs_returns
+```
+
+@fig-acf illustrates weak autocorrelation in the returns as most sample autocorrelations lie within the 95% bounds. Both the squared returns and absolute returns ACF plots show significant, slowly decaying autocorrelations. This is indicative of volatility clustering and motivates the use of conditional variance models such as ARCH and GARCH.
+
+```{r}
+# Ljung-Bx test:
+LB  = Box.test(r_train^2,lag=10,type="Ljung-Box")
+LB
+
+# Engle's ARCH LM test:
+ELM = FinTS::ArchTest(r_train, lags = 10)
+ELM
+
+arch_tests = tibble(
+  Test        = c("Ljung–Box on squared residuals", "Engle's LM"),
+  Statistic   = c(LB$statistic, ELM$statistic),
+  df          = c(LB$parameter, ELM$parameter),
+  `p-value`   = c(LB$p.value,   ELM$p.value)
+) |>
+  mutate(`p-value`=format.pval(`p-value`,digits=3,eps=0.001))
+
+knitr::kable(arch_tests, digits = 3)
+
+```
+
+In @tbl-arch_tests the small p-values provide evidence that the squared residuals are serially correlated and thus the series has time varying conditional variance.
+
+## Model specification
+
+Conditional variance models consist of both a mean and a variance equation:
+
+$$
+r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \overset{iid}{\sim} D(0,1), 
+$$
+
+where $\mu_t=\mu+\phi r_{t-1}$, $\sigma_t^2$ is the conditional variance and $D$ is the standard normal or a standardised Student-$t$ distribution with $\nu$ degrees of freedom.
+
+In the ARCH model, the conditional variance depends on past squared shocks. The GARCH model lets the conditional variance depend on its own past as well as on past squared shocks. The GJR-GARCH model is a threshold model that captures the asymmetric leverage effect, where negative shocks increase volatility more than positive shocks of the same magnitude.
+
+| Model            | Conditional variance $\sigma_t^2$                                                                                                                                                |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ARCH($q$)        | $\alpha_0 + \sum_{i=1}^{q}\alpha_i\varepsilon_{t-i}^2$                                                                                                                           |
+| GARCH($p,q$)     | $\alpha_0 + \sum^q_{i=1} \alpha_i \varepsilon_{t-i}^2 + \sum^p_{j=1} \beta_j \sigma_{t-j}^2$                                                                                     |
+| GJR-GARCH($p,q$) | $\alpha_0 + \sum^q_{i=1} (\alpha_i + \gamma_iI_{t-i})\varepsilon^2_{t-i} + \sum^p_{j=1}\beta_j \sigma_{t-j}^2$, where $I_{t-i} = 1$ if $\varepsilon_{t-i} < 0$ and $0$ otherwise |
+
+with $\alpha_0 > 0$ and $\alpha_i, \beta_i, \gamma_i \ge 0$. The GARCH and GJR-GARCH models are fitted with $p = q = 1$. The persistence is denoted as $\rho = \alpha + \beta$ for GARCH(1,1) and for a GJR-GARCH with a symmetric $D$: $\rho = \alpha + \beta + \gamma/2$. If $\rho < 1$ the variance process of the series is stationary. The unconditional variance is defined as $\alpha_0/(1-\rho)$, and the half-life of a volatility shock is $\log(0.5)/\log(\rho)$.
+
+The three models above are compared to a constant variance model, $\sigma_t^2 = s^2$, where $s$ denotes the sample variance as well as EWMA with $\sigma_t^2 = 0.94\,\sigma_{t-1}^2 + 0.06\,\varepsilon_{t-1}^2$, a GARCH(1,1) with $\omega = 0$, $\alpha + \beta = 1$ and no parameters estimated.
+
+All ARCH and GARCH models are estimated by maximum likelihood using the `rugarch` package.
+
+## Determing the optimal ARIMA model and testing for ARCH effects
+
+Conditional variance models consist of both a mean and variance equation. The conditional mean must be modelled before modelling the volatility. Returns are modelled using the best ARIMA model to capture any predictable structure in the mean. The residuals of the ARIMA model represent the shocks, $\varepsilon_t$. Any autocorrelation left unexplained by the mean model would distort the variance model fitted to the residuals. An ARIMA model assumes constant variance and Engle's (1982) LM test is used to test if this assumption holds. A small p-value rejects the null hypothesis of no ARCH effect, suggests volatility clustering and justifies an ARCH/GARCH model.
+
+```{r}
+#| label: tbl-arima
+#| tbl-cap: "Comparison of the log-likelihood, BIC and AIC for candidate mean models."
+
+# Parameter grid:
+arima_grid = expand_grid(p=0:2,q=0:2)  # Test different arma models
+
+# Function to fit multiple ARIMA models:
+arima_fxn = function(dat,p,q) {
+  fit = arima(dat,order=c(p,0,q),method="ML")
+  tibble(`ARIMA(p,d,q)`  = paste0("(",p,",0,",q,")"),
+         loglik =as.numeric(logLik(fit)),
+         AIC    = AIC(fit),
+         BIC    = BIC(fit))
+}
+  
+arima_res = arima_grid |>
+  pmap(\(p,q) arima_fxn(r_train,p,q)) |>
+  list_rbind() |>
+  arrange(BIC)
+
+arima_order = c(1,0) # best p and q
+
+knitr::kable(arima_res,digits=2)
+```
+
+@tbl-arima displays the log-likelihood, AIC and BIC values for all candidate ARIMA models. BIC selects ARIMA(1,0,0) while AIC selects ARIMA(2,0,2). The log-likelihood will always favour a more complicated model as additional parameters will always improve the log-likelihood, however, this leads to overfitting. The candidate models are compared using BIC as this penalises the inclusion of additional parameters more heavily than AIC and thus ARIMA(1,0,0) is selected.
+
+```{r}
+#| label: tbl-arch_effects
+#| tbl-cap: "Ljung–Box tests on the residuals and squared residuals of the ARIMA(1,0,0) and the Engle's ARCH LM test, at lags 5, 10 and 20."
+
+fit      = arima(r_train,order=c(arima_order[1],0,arima_order[2]),method="ML")
+fit_mean = as.numeric(residuals(fit))
+
+lags    = c(5,10,20)
+sqr_res = (fit_mean - mean(fit_mean))^2 # squared (demeaned) residuals
+
+arch_tbl = tibble(
+  Lag = lags,
+  `Engle's LM`     = sapply(lags, function(L) ArchTest(fit_mean, lags = L)$statistic),
+  `ELM p-value`   = sapply(lags, function(L) ArchTest(fit_mean, lags = L)$p.value),
+  `LB squared residuals`  = sapply(lags, function(L) Box.test(fit_mean^2, lag = L, type = "Ljung-Box")$statistic),
+  `LB p-value`= sapply(lags, function(L) Box.test(fit_mean^2, lag = L, type = "Ljung-Box")$p.value)
+) |>
+  mutate(across(c(`ELM p-value`, `LB p-value`), ~ format.pval(.x, eps = 0.001)))
+
+knitr::kable(arch_tbl,digits=3)
+```
+
+In @tbl-arch_effect, both the Ljung-Box test on squared residuals and Engle's ARCH LM test have p-values $<0.001$ at all tested lags, so the null hypothesis of no ARCH effects is rejected. The squared shocks are autocorrelated, indicating volatility clustering. This provides evidence that the constant-variance assumption does not hold and justifies the use of a conditional variance model.
+
+## Conditonal variance model selection and estimation
+
+### ARCH mode parameters
+
+```{r}
+#| label: arch-order
+#| cache: true
+
+# Fit ARCH(q) and store BIC:
+q_values     = 1:20
+arch_results = vector("list", length(q_values))
+
+for (q in seq_along(q_values)) {
+  # Specify ARCH(q) model
+  arch_spec = ugarchspec(variance.model = list(model = "sGARCH", 
+                                               garchOrder = c(q, 0)),
+                         mean.model = list(armaOrder = arima_order, 
+                                           include.mean = TRUE),
+                         distribution.model = "norm")
+  
+  # Fit model to training set:
+  arch_fit = tryCatch(ugarchfit(spec = arch_spec, 
+                                data = r_train, 
+                                solver = "hybrid"),
+                      error = function(e) NULL)
+  
+  # Extract BIC:
+  if (is.null(arch_fit) || convergence(arch_fit) != 0) {
+    bic = NA
+  } else {
+    ic = infocriteria(arch_fit)
+  }
+  arch_results[[q]] = tibble(Model  = paste0("ARCH(", q, ")"),
+                             q      = q,
+                             loglik = likelihood(arch_fit),
+                             AIC    = ic["Akaike", 1],
+                             BIC    = ic["Bayes", 1])
+}
+
+arch_results = list_rbind(arch_results)
+
+knitr::kable(arch_results,digits=4)
+
+# ARCH order with the lowest BIC:
+q_star = arch_results$q[which.min(arch_results$BIC)]
+
+# Fit GARCH(1,1) with the same mean and distribution for comparison:
+garch11_spec = ugarchspec(variance.model = list(model = "sGARCH", 
+                                                garchOrder = c(1, 1)),
+                          mean.model = list(armaOrder = arima_order, 
+                                            include.mean = TRUE),
+                          distribution.model = "norm")
+garch11_fit  = ugarchfit(spec = garch11_spec, data = r_train, solver = "hybrid")
+garch11_bic  = infocriteria(garch11_fit)[2]
+```
+
+```{r}
+#| label: fig-arch-order
+#| fig-cap: "BIC (per observation) of ARCH(q) candidate models with normal innovations. The pink dashed line indicates the BIC of GARCH(1,1) with the same mean and distribution."
+#| fig-width: 9
+#| fig-height: 4.5
+
+ggplot(data = arch_results,
+       mapping = aes(x = q, y = BIC)) +
+  geom_line(col = col_main) +
+  geom_point(col = col_main, size = 2) +
+  geom_point(data = arch_results[arch_results$q == q_star, ],   # highlight the best ARCH order
+             col = col_accent, size = 4) +
+  geom_hline(yintercept = garch11_bic,                          # GARCH(1,1) for comparison
+             linetype = "dashed", col = col_accent) +
+  scale_x_continuous(breaks = q_values) +
+  labs(title = "Choosing the ARCH order.",
+       x = "ARCH order (q)",
+       y = "BIC (per observation)") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+@fig-arch_order shows the BIC of ARCH($q$) models for $q = 1, \dots, 20$. The BIC decreases as $q$ increases and is lowest at $q=11$. Beyond $q=11$, BIC increases slightly as the additional parameters results in greater penalisation. This indicates that a pure ARCH model needs a large number of lags to capture the slow decay of the volatility. This is consistent with the slowly decaying autocorrelation of the squared residuals in the EDA. All cancidate ARCH models have larger BIC values than a GARCH(1,1) model. This motivates the use of GARCH models that will give geometrically declining weight to all past squared shocks.
+
+## Candidate models
+
+```{r}
+#| label: fit-candidates
+#| cache: true
+
+# Specify candidate models (all use the same AR(1) mean equation):
+arch_spec = ugarchspec(variance.model = list(model = "sGARCH", 
+                                             garchOrder = c(q_star, 0)),
+                       mean.model = list(armaOrder = arima_order, 
+                                         include.mean = TRUE),
+                       distribution.model = "norm")
+
+garchN_spec = ugarchspec(variance.model = list(model = "sGARCH", 
+                                               garchOrder = c(1, 1)),
+                         mean.model = list(armaOrder = arima_order, 
+                                           include.mean = TRUE),
+                         distribution.model = "norm")
+
+garchT_spec = ugarchspec(variance.model = list(model = "sGARCH", 
+                                               garchOrder = c(1, 1)),
+                         mean.model = list(armaOrder = arima_order, 
+                                           include.mean = TRUE),
+                         distribution.model = "std")      # Student-t errors
+
+gjrT_spec = ugarchspec(variance.model = list(model = "gjrGARCH", 
+                                             garchOrder = c(1, 1)),
+                       mean.model = list(armaOrder = arima_order, 
+                                         include.mean = TRUE),
+                       distribution.model = "std")        # GJR with Student-t errors
+
+spec_list = list("ARCH"        = arch_spec,
+                 "GARCH-N"     = garchN_spec,
+                 "GARCH-t"     = garchT_spec,
+                 "GJR-GARCH-t" = gjrT_spec)
+
+# Fit each model to the training set:
+fits = list()
+
+for (model in names(spec_list)) {
+  fits[[model]] = ugarchfit(spec = spec_list[[model]], 
+                            data = r_train, 
+                            solver = "hybrid")
+}
+```
+
+```{r}
+#| label: tbl-ic
+#| tbl-cap: "In-sample comparison of the candidate models (training sample). AIC/BIC are per observation (rugarch convention). Half-life in trading days; unconditional volatility annualised."
+
+# Compare models:
+ic_table = tibble()
+
+for (model in names(fits)) {
+  fit = fits[[model]]
+  ic  = infocriteria(fit)
+
+  ic_table = bind_rows(ic_table,
+                       tibble(Model       = model,
+                              Parameters  = length(coef(fit)),
+                              LogLik      = likelihood(fit),
+                              AIC         = ic["Akaike", 1],
+                              BIC         = ic["Bayes", 1],
+                              Persistence = persistence(fit),
+                              `Half-life` = halflife(fit),
+                              `Unconditional volatility (%)` = sqrt(uncvariance(fit)*ann_factor)))
+}
+
+ic_table = arrange(ic_table, BIC)
+kable(ic_table, digits = 3)
+
+# Best model (lowest BIC):
+best_name = ic_table$Model[1]
+best_fit  = fits[[best_name]]
+```
+
+@tbl-ic compares the candidate models that were fitted on the training set. GJR-GARCH-$t$ is selected as the best model as it has the lowest AIC (2.973) and BIC (2.983). Changing from normal to Student-$t$ innovations increases the log-likelihood by 64.4 for one additional parameter and lowers AIC and BIC values. By permitting asymmetry, GJR-GARCH-$t$ increases the log-likelihood by a further 19.6. The ARCH(11) model performs worst despite having the most parameters, which confirms that GARCH captures the persistence in volatility far more efficiently.
+
+All of the fitted models have persistence less than 1, thus volatility will revert to a long-run level. The GARCH models are highly persistent (0.987--0.993), with volatility shocks taking between 55 and 98 trading days to halve. In comparison, ARCH(11) has a half-life of just less than 5 days and thus cannot accurately capture the length of time that high volatility lasts. The unconditional volatility of GJR-GARCH-$t$ (20.1%/year) is close to the sample volatility of the training set (20.3%, @tbl-summary), whereas the symmetric GARCH models overestimate it (23.9% and 25.9%).
+
+```{r}
+#| label: tbl-params
+#| tbl-cap: "Parameter estimates of the selected GJR-GARCH(1,1) model with Student-t innovations (training sample), with robust standard errors."
+
+# Robust coefficient table of the best model: estimate, standard error, t value, p-value
+coefs = best_fit@fit$robust.matcoef
+
+param_table = tibble(
+  Parameter   = c("$\\mu$", "$\\phi$", "$\\omega$", "$\\alpha$", "$\\beta$", "$\\gamma$", "$\\nu$"),
+  Description = c("Mean daily return (%)",
+                  "AR(1) coefficient",
+                  "Variance intercept",
+                  "Reaction to last shock (ARCH)",
+                  "Carry-over of last variance (GARCH)",
+                  "Extra reaction to negative shocks (leverage)",
+                  "Student-t degrees of freedom"),
+  Estimate    = coefs[, 1],
+  `Robust SE` = coefs[, 2],
+  `p-value`   = coefs[, 4]
+)
+
+kable(param_table, digits = 4)
+```
+
+@tbl-params displays the estimated parameters of the chosen GJR-GARCH-$t$ model. All parameters have p-values $<0.01$ and are thus statistically significant at the 1% level. Considering the mean equation, the average daily return is $\hat\mu$ = 0.078% and the AR(1) coefficient is small, $\hat\phi$ = 0.075. This suggests that returns are only weakly predictable from the previous day's return.
+
+In the variance equation, $\hat\alpha$ = 0.049 measures the volatility reaction to a positive shock, while $\hat\alpha + \hat\gamma$ = 0.140 measures the volatility reaction to a negative shock. A negative shock increases the following day's variance by approximately 2.8 times more than a positive shock of the same magnitude. This provides evidence of a leverage effect. The large $\hat\beta$ value (0.893) indicates that almost 90% of today's variance is carried over to tomorrow. The persistence of the GJR-GARCH-$t$ model, $\hat\alpha + \hat\beta + \hat\gamma/2$ = 0.987, in @tbl-ic, indicates that the volatility shocks die out slowly. The estimated degrees of freedom, $\hat\nu$ = 9.9, indicate heavier tails than the normal distribution, even after volatility clustering is accounted for. This supports the use of Student-$t$ innovations.
+
+```{r}
+#| echo: false
+#| warnings: false
+#| message: false
+#| label: key-numbers
+cf_best = coef(best_fit)   
+```
+
+## GARCH(1,1) from first principles
+
+```{r}
+#| label: tbl-own-garch
+#| tbl-cap: "Gaussian GARCH(1,1) with a constant mean: own maximum likelihood implementation (optim) compared with rugarch (training sample)."
+
+# Function to calculate the negative log-likelihood of a Gaussian GARCH(1,1)
+# with a constant mean: 
+garch11_nll_fxn = function(par, r) {
+  mu    = par[1]
+  omega = par[2] # this is alpha0 in notes 
+  alpha = par[3]
+  beta  = par[4]
+  
+  # Check: return a very large value if the parameter constraints are broken:
+  if (omega <= 0 || alpha < 0 || beta < 0 || alpha + beta >= 1) {
+    return(1e10)
+  }
+  
+  # Calculate shocks:
+  e = r - mu
+  
+  # Initialise: 
+  n     = length(r)
+  s2    = numeric(n)
+  s2[1] = mean((r - mean(r))^2)
+  
+  # For loop to calculate the conditional variance: 
+  for (t in 2:n) {
+    s2[t] = omega+alpha*e[t-1]^2+beta*s2[t-1]
+  }
+  
+  # Calculate negative log-likelihood:
+  # optim minimises -> minimise -loglik:
+  nll = 0.5*sum(log(2*pi)+log(s2)+e^2/s2)
+  return(nll)
+}
+
+# Starting values: mean return, small omega, typical alpha and beta:
+start_val = c(mean(r_train),0.05*var(r_train),0.08,0.90)
+
+# Maximise the log-likelihood:
+own_fit = optim(par     = start_val,
+                fn      = garch11_nll_fxn,
+                r       = r_train,
+                method  = "L-BFGS-B",
+                lower   = c(-Inf, 1e-8, 0, 0),
+                upper   = c(Inf, Inf, 1, 1),
+                hessian = TRUE)
+
+own_est = own_fit$par
+own_se  = sqrt(diag(solve(own_fit$hessian)))# std err from inverse H
+
+# Fit GARCH(1,1) using built in package `rugarch`:
+pkg_spec = ugarchspec(variance.model = list(model = "sGARCH", 
+                                            garchOrder = c(1, 1)),
+                      mean.model = list(armaOrder = c(0, 0), 
+                                        include.mean = TRUE),
+                      distribution.model = "norm")
+pkg_fit  = ugarchfit(spec = pkg_spec, data = r_train, solver = "hybrid")
+
+pkg_est = coef(pkg_fit)
+pkg_se  = pkg_fit@fit$matcoef[, 2]
+
+# Compare:
+own_tbl = tibble(Parameter = c("$\\mu$", "$\\alpha_0$", "$\\alpha$", "$\\beta$", "Log-likelihood"),
+                   `First principles`    = c(own_est, -own_fit$value),
+                   `First principles SE` = c(own_se, NA),
+                   rugarch               = c(pkg_est, likelihood(pkg_fit)),
+                   `rugarch SE`          = c(pkg_se, NA))
+
+options(knitr.kable.NA = "-")
+kable(own_tbl, digits = 4)
+```
+
+@tbl-own-garch compares the results from a Gaussian GARCH(1,1) model, with a constant mean, coded from first principals to the same model fitted with the built in function `rugarch`. All parameter estimates agree to 3 decimal places and there is a 0.003 difference in the log-likelihoods. The standard errors for both implementations agree to 4 decimal places.
+
+## Model diagnostics
+
+```{r}
+#| label: tbl-diag
+#| tbl-cap: "Diagnostics on the standardised residuals $z_t$ of each model (training sample): Ljung–Box p-values at lag 10 for $z_t$ and $z_t^2$, Engle's ARCH LM p-value at lag 10, and the excess kurtosis of $z_t$. Large p-values mean no remaining dependence."
+
+diag_tab = tibble()
+
+for (model in names(fits)) {
+  # Standardised residuals z_t = e_t / sigma_t:
+  z = as.numeric(residuals(fits[[model]], standardize = TRUE))
+  
+  # Ljung-Box on z (any remaining autocorrelation in the mean?):
+  lb_z  = Box.test(z, lag = 10, type = "Ljung-Box", fitdf = sum(arima_order))
+  
+  # Ljung-Box on z^2 (any remaining volatility clustering?):
+  lb_z2 = Box.test(z^2, lag = 10, type = "Ljung-Box", fitdf = 2)
+  
+  # Engle's ARCH LM test on z:
+  lm_z  = FinTS::ArchTest(z, lags = 10)
+  
+  # Excess kurtosis of z (0 for a normal distribution):
+  kurt  = mean((z - mean(z))^4) / sd(z)^4 - 3
+  
+  diag_tab = bind_rows(diag_tab,
+                       tibble(Model                  = model,
+                              `LB z (10)`            = lb_z$p.value,
+                              `LB z² (10)`           = lb_z2$p.value,
+                              `ARCH LM (10)`         = lm_z$p.value,
+                              `Excess kurtosis of z` = kurt))
+}
+
+kable(diag_tab, digits = 3)
+```
+
+```{r}
+#| label: fig-diag
+#| fig-cap: "Diagnostics for the selected GJR-GARCH-t model: standardised residuals over time (top), ACF of the squared standardised residuals (bottom left) and QQ plot against the fitted Student-t distribution (bottom right)."
+#| fig-width: 12
+#| fig-height: 8
+
+# Standardised residuals of the best model:
+z_best = as.numeric(residuals(best_fit, standardize = TRUE))
+
+# 1. Standardised residuals over time:
+z_df = tibble(date = alsi$date[alsi$sample == "Train"], 
+              z    = z_best)
+
+plot_z = ggplot(data = z_df,
+                mapping = aes(x = date, y = z)) +
+  geom_line(col = col_main, linewidth = 0.3) +
+  labs(title = "Standardised residuals.",
+       x = "Date",
+       y = expression(z[t])) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# 2. ACF of squared standardised residuals:
+acf_z2 = acf(z_best^2, lag.max = 40, plot = FALSE)
+acf_df = tibble(lag = as.numeric(acf_z2$lag)[-1],     # drop lag 0
+                acf = as.numeric(acf_z2$acf)[-1])
+ci     = 1.96 / sqrt(length(z_best))                  # 95% bounds
+
+plot_acf = ggplot(data = acf_df,
+                  mapping = aes(x = lag, y = acf)) +
+  geom_hline(yintercept = 0) +
+  geom_hline(yintercept = c(-ci, ci), linetype = "dashed", col = "blue") +
+  geom_segment(aes(xend = lag, yend = 0), col = col_accent) +
+  labs(title = "ACF of squared standardised residuals.",
+       x = "Lag (trading days)",
+       y = "ACF") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# 3. QQ plot against the fitted Student-t distribution:
+nu_hat  = unname(coef(best_fit)["shape"])                 # estimated degrees of freedom
+theo_q  = qdist(distribution = "std", 
+                p = ppoints(length(z_best)),
+                mu = 0, sigma = 1, shape = nu_hat)        # theoretical quantiles
+qq_df   = tibble(theoretical = theo_q, 
+                 sample      = sort(z_best))
+
+plot_qq = ggplot(data = qq_df,
+                 mapping = aes(x = theoretical, y = sample)) +
+  geom_point(col = col_main, size = 0.8) +
+  geom_abline(col = col_accent) +
+  labs(title = "QQ plot against fitted Student-t.",
+       x = "Theoretical quantiles",
+       y = "Sample quantiles") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+plot_z / (plot_acf + plot_qq)
+```
+
+The diagnostics of each model's standardised residuals, $z_t$, are displayed in @tbl-diag. The p-values for the Ljung-Box test on $z_t$ are $> 0.05$ for all models. We fail to reject the null hypothesis and conclude that no significant autocorrelation remains in the mean and that the AR(1) mean equation is acceptable. Prior to model fitting, Engle's ARCH LM statistic at lag 10 was 710.1 (@tbl-arch_effect), with a p-value $<<0.001$. After fitting, the ARCH LM p-values of the three GARCH models increase to between $0.010$ and $0.043$. This is still significant at the 5% level. With over 4000 observations, even small autocorrelations become statistically significant. @fig-diag illustrates the small remaining autocorrelations in comparison to those in @fig (reference EDA plot here), showing that most of the volatility clustering has been removed.
+
+ARCH(11) outperforms the other three models in terms of the diagnostics since the 11 lags absorb short-term dependency, however this model cannot capture the persistence of volatility as seen in @tbl-ic. Out of the GARCH models, GJR-GARCH-$t$ has the lowest remaining dependence (Ljung-Box p-value = 0.017).
+
+The excess kurtosis of the standardised residuals drops from 6.1 for the raw returns, as seen in @tbl-summary, to 1.4 for the GJR-GARCH-$t$ model. This shows that most of the heavy tails can be attributed to volatility clustering. The remaining excess kurtosis is close to that of a Student-$t$ distribution with $\hat\nu \approx 10$ degrees of freedom, $6/(\nu - 4) \approx 1.0$, which supports the Student-$t$ innovations. This is confirmed by the QQ-plot in @fig-diag where the points like on the diagonal except for a few extreme negative returns.
+
+## Out-of-Sample Model evaluation
+
+```{r}
+#| label: rolling
+
+# Convert returns to ts object: 
+r_xts = xts::xts(alsi$r, order.by = alsi$date)
+
+# Directory to save rolling forecasts:
+roll_dir = "_data/rolling"
+dir.create(roll_dir, showWarnings = FALSE, recursive = TRUE)
+
+roll_list = list()
+
+# For loop to loop through 4 models:
+for (model in names(spec_list)) {
+  file_name = file.path(roll_dir, paste0(gsub("[^A-Za-z0-9]", "_", model), ".rds"))
+  
+  # Load saved forecasts:
+  if (file.exists(file_name)) {
+    roll_list[[model]] = readRDS(file_name)
+    
+  } else {
+    # One-day-ahead forecasts for every test day, re-estimating every 50 days:
+    roll = ugarchroll(spec           = spec_list[[model]],
+                      data           = r_xts,
+                      forecast.length = n_test,
+                      refit.every    = refit_every,
+                      refit.window   = "recursive",     # expanding window
+                      solver         = "hybrid",
+                      calculate.VaR  = TRUE,
+                      VaR.alpha      = c(0.01, 0.05))
+    saveRDS(roll, file_name)
+    roll_list[[model]] = roll
+  }
+}
+```
+
+```{r}
+#| label: oos-data
+
+# Setup:
+test_idx   = which(alsi$sample == "Test")
+test_dates = alsi$date[test_idx]
+mu_tr      = mean(r_train)          # training-set mean return
+
+# GARCH: 
+oos = tibble()
+
+for (model in names(roll_list)) {
+  dens = as.data.frame(roll_list[[model]], which = "density")   
+  var  = as.data.frame(roll_list[[model]], which = "VaR")       
+  
+  oos = bind_rows(oos,
+                  tibble(date  = test_dates,
+                         Model = model,
+                         r     = dens$Realized,
+                         sigma = dens$Sigma,
+                         VaR1  = var[, 1],
+                         VaR5  = var[, 2]))
+}
+
+# Constant-variance (benchmark): 
+constant = tibble(date  = test_dates,
+                  Model = "Constant",
+                  r     = r_all[test_idx],
+                  sigma = sd(r_train))
+
+# EWMA (benchmark): 
+e_all   = r_all - mu_tr
+s2_ewma = numeric(length(r_all))
+s2_ewma[1] = var(r_train[1:63])
+for (t in 2:length(r_all)) {
+  s2_ewma[t] = 0.94 * s2_ewma[t - 1] + 0.06 * e_all[t - 1]^2
+}
+
+ewma = tibble(date  = test_dates,
+              Model = "EWMA",
+              r     = r_all[test_idx],
+              sigma = sqrt(s2_ewma[test_idx]))
+
+# Normal VaR for benchmarks:
+benchmarks = bind_rows(constant, ewma)
+benchmarks$VaR1 = mu_tr+benchmarks$sigma*qnorm(0.01)
+benchmarks$VaR5 = mu_tr+benchmarks$sigma*qnorm(0.05)
+
+# Combine all models:
+oos = bind_rows(benchmarks, oos)
+oos$Model = factor(oos$Model, levels = names(model_cols))
+oos$proxy = (oos$r - mu_tr)^2       # squared return = proxy for true variance
+oos$h     = oos$sigma^2             # forecast variance
+```
+
+```{r}
+#| label: tbl-loss
+#| tbl-cap: "Out-of-sample forecast loss over the test period (lower is better), sorted by QLIKE."
+
+loss_table = tibble()
+
+for (model in levels(oos$Model)) {
+  d = oos[oos$Model == model, ]
+  loss_table = bind_rows(loss_table,
+                         tibble(Model = model,
+                                MSE   = mean((d$proxy - d$h)^2),
+                                QLIKE = mean(log(d$h) + d$proxy / d$h)))
+}
+
+loss_table = arrange(loss_table, QLIKE)
+best_oos   = loss_table$Model[1]
+
+kable(loss_table, digits = 3)
+```
+
+```{r}
+#| label: fig-oos
+#| fig-cap: "Out-of-sample one-day-ahead volatility forecasts (annualised %) of the constant model, EWMA and the best GARCH model, with annualised absolute returns in grey."
+#| fig-width: 10
+#| fig-height: 5
+
+plot_df = oos[oos$Model %in% c("Constant", "EWMA", best_oos), ]
+
+ggplot(data = plot_df, 
+       mapping = aes(x = date)) +
+  geom_line(aes(y = abs(r - mu_tr) * sqrt(ann_factor)), col = "grey85", linewidth = 0.3) +
+  geom_line(aes(y = sigma * sqrt(ann_factor), col = Model), linewidth = 0.7) +
+  scale_colour_manual(values = model_cols) +
+  coord_cartesian(ylim = c(0, 50)) +
+  labs(title = "Volatility forecasts in the test period.",
+       x = "Date",
+       y = "Annualised volatility (%)",
+       col = NULL) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom")
+```
+
+Since true variance is unobservable, volatility forecasts have to be compared with a noisy proxy, the squared return. Following Patton (2011), forecasts are compared using QLIKE, $\text{QLIKE} = \log h_t + \hat\varepsilon_t^2 / h_t$, a loss function designed for noisy variance proxies. This metric is less affected by extreme days making it more reliable than MSE.
+
+@tbl-loss reports the average MSE and QLIKE loss of each model's one-day-ahead variance forecasts over the test set. The GJR-GARCH-$t$ model has the lowest score on both measures (QLIKE = 0.805, MSE = 2.617). This is in agreement with the model chosen by BIC on the training set. When comparing models based on QLIKE, the constant-variance model performs the worst (1.063), providing evidence that the volatility of ALSI returns is predictable. The pure ARCH model slightly outperforms EWMA with QLIKE scores of 0.840 and 0.849 respectively. EWMA is a restricted GARCH(1,1) with no constant and fixed parameters ($\alpha = 0.06$, $\beta = 0.94$), so it has no long-run variance to revert to. Both of these models perform worse than GARCH-N and GARCH-$t$ (0.826 and 0.825). The addition of asymmetry yields the greatest improvement (0.805).
+
+MSE ranks EWMA slightly above GARCH-N and GARCH-t (2.646 compared to 2.653 and 2.647). However, the differences are very small and MSE is more affected by extreme absolute returns, so the models are ranked according to QLIKE.
+
+@fig-oos displays the one-day-ahead volatility forecasts of the constant-variance model, EWMA and GJR-GARCH-$t$ for the test set. The annualised absolute returns are shown in grey. The constant model is just a flat line, underpredictng when returns spike and over predicting when returns drop. Both EWMA and GJR-GARCH-$t$ rise sharply after large returns and decay slowly, this is indicative of the high persistence estimated earlier. In calm periods, EWMA drops lower than GJR-GARCH-$t$ since it has no long-run variance to revert to. GJR-GARCH-$t$ rises more after large drop then EWMA, due to the inclusion of the leverage effect.
+
+## Model forecasting
+
+The preferred model (GJR-GARCH(1,1)-$t$) is re-estimated on the full sample (1995--2017) and used to forecast volatility over the next 63 trading days.
+
+```{r}
+#| label: final-fit
+
+# Refit the best model on the full sample:
+final_fit = ugarchfit(spec = spec_list[[best_name]], data = r_xts, solver = "hybrid")
+
+# forecast 63 trading days ahead:
+h_max = 63
+fc = ugarchforecast(final_fit, n.ahead = h_max)
+
+# forecast dates (weekdays only, public holidays ignored):
+all_days = seq(max(alsi$date) + 1, by = "day", length.out = 2 * h_max)
+future_dates = all_days[wday(all_days, week_start = 1) <= 5][1:h_max]
+
+# standardised t quantiles for the 95% interval:
+nu_final = coef(final_fit)["shape"]
+q_lo = qdist("std", p = 0.025, mu = 0, sigma = 1, shape = nu_final)
+q_hi = qdist("std", p = 0.975, mu = 0, sigma = 1, shape = nu_final)
+
+fc_df = tibble(date  = future_dates,
+               h     = 1:h_max,
+               mu    = as.numeric(fitted(fc)),
+               sigma = as.numeric(sigma(fc)))
+
+fc_df$lo95 = fc_df$mu+q_lo*fc_df$sigma
+fc_df$hi95 = fc_df$mu+q_hi*fc_df$sigma
+```
+
+```{r}
+#| label: tbl-final
+#| tbl-cap: "GJR-GARCH(1,1)-$t$ estimated on the training sample and on the full sample."
+
+fit_list = list("Training sample" = best_fit, "Full sample" = final_fit)
+
+final_table = tibble(Quantity = c("$\\omega$", "$\\alpha$", "$\\beta$", "$\\gamma$", "$\\nu$",
+                                  "Persistence", "Half-life (days)", "Unconditional vol (% p.a.)"))
+
+# loop over the two fits:
+for (name in names(fit_list)) {
+  cf = coef(fit_list[[name]])
+
+  # persistence, half-life and long-run volatility:
+  pers      = cf["alpha1"] + cf["beta1"] + cf["gamma1"] / 2
+  half_life = log(0.5) / log(pers)
+  unc_vol   = sqrt(cf["omega"] / (1 - pers) * 252)
+
+  final_table[[name]] = c(cf["omega"], cf["alpha1"], cf["beta1"], cf["gamma1"], cf["shape"],
+                          pers, half_life, unc_vol)
+}
+
+# kable(final_table, digits = 3)
+```
+
+```{r}
+#| label: final-summary
+
+# persistence, half-life and long-run volatility of the full-sample fit:
+cf_final = coef(final_fit)
+pers_final = cf_final["alpha1"] + cf_final["beta1"] + cf_final["gamma1"] / 2
+half_life_final = log(0.5) / log(pers_final)
+unc_vol_final = sqrt(cf_final["omega"] / (1 - pers_final) * 252)
+```
+
+The estimates on the full sample are very close to those from the training sample. This indicates that the model is stable. Persistence is `r round(pers_final, 3)`, the half-life is approximately `r round(half_life_final)` trading days and the unconditional volatility is `r round(unc_vol_final, 1)`% per year.
+
+```{r}
+#| label: fig-forecast
+#| fig-cap: "Left: annualised conditional volatility over the last 250 trading days (purple) and the 63-day forecast (pink); the dashed line is the unconditional volatility. Right: last 250 returns with the forecast mean and 95% prediction interval."
+#| fig-width: 12
+#| fig-height: 5
+
+# fitted volatility over the last 250 days:
+hist_sigma = tail(tibble(date = alsi$date, sigma = as.numeric(sigma(final_fit))), 250)
+
+# long-run volatility of the full-sample fit:
+unc_vol_final = final_table[["Full sample"]][8]
+
+p_vol = ggplot() +
+  geom_line(data = hist_sigma, aes(x = date, y = sigma * sqrt(252)), colour = "purple") +
+  geom_line(data = fc_df, aes(x = date, y = sigma * sqrt(252)), colour = "deeppink", linewidth = 1) +
+  geom_hline(yintercept = unc_vol_final, linetype = "dashed") +
+  labs(title = "Volatility forecast", x = "Date", y = "Annualised volatility (%)") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+p_int = ggplot() +
+  geom_line(data = tail(alsi, 250), aes(x = date, y = r), colour = "purple", linewidth = 0.4) +
+  geom_ribbon(data = fc_df, aes(x = date, ymin = lo95, ymax = hi95), fill = "deeppink", alpha = 0.3) +
+  geom_line(data = fc_df, aes(x = date, y = mu), colour = "deeppink") +
+  labs(title = "Return forecast with 95% interval", x = "Date", y = "Return (%)") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+p_vol + p_int
+```
+
+@fig-forecast illustrates the 63 day volatility forecast using the full sample. Duirng 2016, volatility peaked at about 31% at then end of June, this could be attributed to the Brexit vote, after which it decayed back down, below average. At the end of the sample volatility was approximately 13%, below the unconditional volatility indicated by the dashed line. Thus, the forecast rises gradually toward the long-run variance and reaches just under 17% after 63 trading days. This reflects the high persistence of the model as it has not yet reached the long-run level.
+
+The return forecast with 95% prediction intervals forecast a mean just above zero. This highlights how returns are not predictable. The 95% prediction intervals widen as the forecast horizon increases.
+
+```{r}
+#| label: tbl-forecast
+#| tbl-cap: "Volatility forecasts at selected horizons (daily and annualised)."
+
+horizons = c(1, 5, 22, 63)
+
+forecast_table = tibble()
+
+# loop over the chosen horizons:
+for (h in horizons) {
+  forecast_table = bind_rows(forecast_table,
+                             tibble(h                = h,
+                                    Date             = fc_df$date[h],
+                                    `Ann. vol (%)`   = fc_df$sigma[h] * sqrt(252)))
+}
+
+kable(forecast_table, digits = 3)
+```
+
+@tbl-forecast reports the forecasts at selected horizons. The forecast annualised volatility rises from 13.0% on the first day to 14.8% after one month (22 trading days) and 16.8% after three months (63 trading days). This is still below the unconditional volatility of 19.0%.
+
+# References
+
+-   Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. *Journal of Econometrics*, 31(3), 307--327.
+-   Christoffersen, P. F. (1998). Evaluating interval forecasts. *International Economic Review*, 39(4), 841--862.
+-   Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. *Econometrica*, 50(4), 987--1007.
+-   Ghalanos, A. (2024). *rugarch: Univariate GARCH models*. R package version `r packageVersion("rugarch")`.
+-   Glosten, L. R., Jagannathan, R., & Runkle, D. E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. *Journal of Finance*, 48(5), 1779--1801.
+-   J.P. Morgan/Reuters (1996). *RiskMetrics --- Technical Document* (4th ed.).
+-   Kupiec, P. H. (1995). Techniques for verifying the accuracy of risk measurement models. *Journal of Derivatives*, 3(2), 73--84.
+-   Patton, A. J. (2011). Volatility forecast comparison using imperfect volatility proxies. *Journal of Econometrics*, 160(1), 246--256.
+-   Course notes: *ARCH and GARCH Models* guide.
+-   \[Data source --- XX\]
