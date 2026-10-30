@@ -70,7 +70,7 @@ editor: visual
 
 # Journal
 
-{{< include journal/index.qmd >}} {{< include journal/entries.qmd >}}
+{{< include journal/entries.qmd >}}
 
 # Appendix
 

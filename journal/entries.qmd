@@ -3,6 +3,12 @@ format: html
 editor: visual
 ---
 
+::: {.content-visible when-format="html"}
+# Learning Journal {.unlisted}
+:::
+
+This journal documents my learning progress throughout the course, one entry per lecture: what I did, what I learned, and the questions I still had. My use of AI tools is recorded separately in the [AI Use Log](../ai-use-log.qmd).
+
 ## Lecture 1
 
 **Date:** 27 July 2026

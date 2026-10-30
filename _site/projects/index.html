@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The Temporal Shift – index</title>
+<title>Lagged &amp; Loaded – index</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,7 +70,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">The Temporal Shift</span>
+    <span class="navbar-title">Lagged &amp; Loaded</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -133,21 +133,10 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-journal" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Journal</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-journal">    
-        <li>
-    <a class="dropdown-item" href="../journal/index.html" rel="" target="">
- <span class="dropdown-text">Journal Overview</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../journal/entries.html" rel="" target="">
+ <span class="menu-text">Journal</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../journal/entries.html" rel="" target="">
- <span class="dropdown-text">Journal Entries</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-appendix" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">Appendix</span>
@@ -160,7 +149,14 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/IsabellaLethbridge/Time_Series" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -171,63 +167,50 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<section id="projects" class="level1 unlisted">
+<h1 class="unlisted">Projects</h1>
 <p>This section contains four substantial projects, two from each section of the course. Between them they cover model comparison (all four), computational programming from first principles (Projects 1, 3 and 4) and real-world data (all four).</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>Project</th>
-<th>Section</th>
-<th>Topic</th>
-<th>Project type</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Project 1</td>
-<td>Section 2</td>
-<td>Exponential smoothing (Holt-Winters, ETS)</td>
-<td>Implementation and model comparison, real-world data</td>
-<td><a href="../projects/project-01.html">Summary</a></td>
-</tr>
-<tr class="even">
-<td>Project 2</td>
-<td>Section 1</td>
-<td>Seasonal ARIMA and dynamic regression</td>
-<td>Implementation and model comparison, real-world data</td>
-<td><a href="../projects/project-02.html">Summary</a></td>
-</tr>
-<tr class="odd">
-<td>Project 3</td>
-<td>Section 1</td>
-<td>ARCH and GARCH volatility models</td>
-<td>Implementation and model comparison, real-world data</td>
-<td><a href="../projects/project-03.html">Summary</a></td>
-</tr>
-<tr class="even">
-<td>Project 4</td>
-<td>Section 2</td>
-<td>Hidden Markov models</td>
-<td>Implementation, extended to model comparison on real data</td>
-<td><a href="../projects/project-04.html">Summary</a></td>
-</tr>
-</tbody>
-</table>
+<div class="grid project-cards">
+<div class="g-col-12 g-col-md-6">
+<div class="card h-100">
+<p><span class="card-kicker">Project 1 · Section 2 · Exponential smoothing</span></p>
+<p><a href="../projects/project-01.html" class="stretched-link card-link">Forecasting South African electricity demand</a></p>
+<p>Holt-Winters coded from first principles and compared with ETS models and naive benchmarks, forecasting daily Eskom demand 1 to 14 days ahead.</p>
+<p><span class="tag">First principles</span> <span class="tag">Model comparison</span> <span class="tag">Real-world data</span></p>
+</div>
+</div>
+<div class="g-col-12 g-col-md-6">
+<div class="card h-100">
+<p><span class="card-kicker">Project 2 · Section 1 · Seasonal ARIMA</span></p>
+<p><a href="../projects/project-02.html" class="stretched-link card-link">Predicting drought in the Western Cape</a></p>
+<p>Seasonal ARIMA and dynamic regression: does lagged Pacific sea surface temperature improve forecasts of Theewaterskloof Dam levels?</p>
+<p><span class="tag">Model comparison</span> <span class="tag">Real-world data</span></p>
+</div>
+</div>
+<div class="g-col-12 g-col-md-6">
+<div class="card h-100">
+<p><span class="card-kicker">Project 3 · Section 1 · ARCH and GARCH</span></p>
+<p><a href="../projects/project-03.html" class="stretched-link card-link">Predicting JSE volatility</a></p>
+<p>ARCH, GARCH and GJR-GARCH compared out of sample on daily All Share Index returns, with the GARCH(1,1) likelihood coded by hand.</p>
+<p><span class="tag">First principles</span> <span class="tag">Model comparison</span> <span class="tag">Real-world data</span></p>
+</div>
+</div>
+<div class="g-col-12 g-col-md-6">
+<div class="card h-100">
+<p><span class="card-kicker">Project 4 · Section 2 · Hidden Markov models</span></p>
+<p><a href="../projects/project-04.html" class="stretched-link card-link">Market regimes on the JSE</a></p>
+<p>HMM algorithms built from first principles, then used to find market regimes in All Share Index returns and compared with GJR-GARCH.</p>
+<p><span class="tag">First principles</span> <span class="tag">Model comparison</span> <span class="tag">Real-world data</span> <span class="tag">Shiny app</span></p>
+</div>
+</div>
+</div>
 
 
 </section>

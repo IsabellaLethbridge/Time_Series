@@ -1,8 +1,0 @@
----
-format: html
-editor: visual
----
-
-This journal documents my continuous learning progress throughout the course.
-
--   [View Chronological Entries](entries.qmd)

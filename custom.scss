@@ -6,13 +6,18 @@ $navbar-fg: #FFF5FB;   // pale pink background
 $navbar-hl: #A3144D;   // hover / active link: your Dracula pink
 
 // Change the primary accent colors for each block type
-$callout-color-note: #4A8AC9;        // Blue 
+$callout-color-note: #4A8AC9;        // Blue
 $callout-color-warning: #CB3A2A;     // Red
 $callout-color-important: deeppink;  // Pink
 $callout-color-tip: #075E0C;         // Green #075E0C
 $callout-color-caution: #bb0bde;     // Green #bb0bde
 
 $font-weight-bolder: 800;
+
+// Portfolio accent colours (used in the rules below)
+$accent: #A3144D;      // Dracula pink
+$ink: #1F1F1F;         // navbar near-black
+$blush: #FFF5FB;       // pale pink
 
 /*-- scss:rules --*/
 // CSS rules go here, so they load after Lux and actually win
@@ -23,4 +28,123 @@ $font-weight-bolder: 800;
 th {
   text-transform: none;
   letter-spacing: normal;
+}
+
+// Lux puts every heading in capitals; keep that for page titles (h1) only
+h2, h3, h4, h5 {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+// Keep navbar links on one line
+.navbar .nav-link {
+  white-space: nowrap;
+  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+}
+@media (min-width: 992px) {
+  .navbar-expand-lg .navbar-nav .nav-link {
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
+  }
+  .navbar-brand-container { flex-shrink: 0; }
+  .navbar-nav .nav-item { margin-right: 0.6rem !important; }
+}
+// Between laptop and tablet widths, let long link names wrap rather than overflow
+@media (min-width: 992px) and (max-width: 1250px) {
+  .navbar .nav-link { white-space: normal; }
+}
+
+// ---- Home page banner ------------------------------------------------------
+.hero {
+  background: $ink;
+  color: $blush;
+  border-left: 6px solid $accent;
+  border-radius: 6px;
+  padding: 2.75rem 2.5rem 2.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+
+  p { margin-bottom: 0.35rem; line-height: 1.4; }
+
+  .hero-title {
+    color: #fff;
+    font-size: 2.6rem;
+    letter-spacing: 0.12em;
+    margin: 0.2rem 0 0.4rem;
+    border: none;
+  }
+  .hero-kicker {
+    color: lighten($accent, 35%);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.8rem;
+  }
+  .hero-subtitle {
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
+    color: $blush;
+  }
+  .hero-meta {
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    color: rgba($blush, 0.7);
+  }
+}
+
+@media (max-width: 576px) {
+  .hero { padding: 1.75rem 1.25rem; }
+  .hero .hero-title { font-size: 1.8rem; }
+}
+
+// ---- Navigation cards (home page and projects page) --------------------------
+.home-cards, .project-cards {
+  margin-top: 1.5rem;
+
+  .card {
+    border: 1px solid #e6e1e4;
+    border-top: 4px solid $accent;
+    border-radius: 6px;
+    padding: 1.25rem 1.25rem 1rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+    p { margin-bottom: 0.5rem; }
+  }
+
+  .card-icon {
+    font-size: 1.6rem;
+    color: $accent;
+  }
+
+  .card-link {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $ink;
+    text-decoration: none;
+  }
+  .card:hover .card-link { color: $accent; }
+}
+
+// Projects page extras
+.project-cards {
+  .card-kicker {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #6c6c6c;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.55rem;
+    margin: 0.15rem 0.25rem 0 0;
+    border-radius: 999px;
+    background: $blush;
+    color: $accent;
+    border: 1px solid rgba($accent, 0.25);
+  }
 }

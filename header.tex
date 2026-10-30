@@ -1,6 +1,6 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{bm}
+% bm removed: clashes with xelatex/unicode-math (\boldsymbol comes from amsmath)
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{float}
@@ -53,6 +53,11 @@
 }
 
 \lstset{style=mystyle}
+% Quarto passes chunk options code-fold/code-summary to listings; ignore them in the PDF
+\makeatletter
+\define@key{lst}{code-fold}{}
+\define@key{lst}{code-summary}{}
+\makeatother
 
 % Append a page break directly to the \tableofcontents command
 \gappto\tableofcontents{\clearpage}

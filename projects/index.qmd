@@ -3,13 +3,71 @@ format: html
 editor: visual
 ---
 
-## Overview
+::: {.content-visible when-format="html"}
+# Projects {.unlisted}
+:::
 
 This section contains four substantial projects, two from each section of the course. Between them they cover model comparison (all four), computational programming from first principles (Projects 1, 3 and 4) and real-world data (all four).
 
-| Project   | Section   | Topic                                     | Project type                                               | Link                       |
-|-----------|-----------|-------------------------------------------|------------------------------------------------------------|----------------------------|
-| Project 1 | Section 2 | Exponential smoothing (Holt-Winters, ETS) | Implementation and model comparison, real-world data       | [Summary](project-01.qmd)  |
-| Project 2 | Section 1 | Seasonal ARIMA and dynamic regression     | Implementation and model comparison, real-world data       | [Summary](project-02.qmd)  |
-| Project 3 | Section 1 | ARCH and GARCH volatility models          | Implementation and model comparison, real-world data       | [Summary](project-03.qmd)  |
-| Project 4 | Section 2 | Hidden Markov models                      | Implementation, extended to model comparison on real data  | [Summary](project-04.qmd)  |
+::: {.content-visible when-format="html"}
+::: {.grid .project-cards}
+
+::: {.g-col-12 .g-col-md-6}
+::: {.card .h-100}
+[Project 1 · Section 2 · Exponential smoothing]{.card-kicker}
+
+[Forecasting South African electricity demand](project-01.qmd){.stretched-link .card-link}
+
+Holt-Winters coded from first principles and compared with ETS models and naive benchmarks, forecasting daily Eskom demand 1 to 14 days ahead.
+
+[First principles]{.tag} [Model comparison]{.tag} [Real-world data]{.tag}
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6}
+::: {.card .h-100}
+[Project 2 · Section 1 · Seasonal ARIMA]{.card-kicker}
+
+[Predicting drought in the Western Cape](project-02.qmd){.stretched-link .card-link}
+
+Seasonal ARIMA and dynamic regression: does lagged Pacific sea surface temperature improve forecasts of Theewaterskloof Dam levels?
+
+[Model comparison]{.tag} [Real-world data]{.tag}
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6}
+::: {.card .h-100}
+[Project 3 · Section 1 · ARCH and GARCH]{.card-kicker}
+
+[Predicting JSE volatility](project-03.qmd){.stretched-link .card-link}
+
+ARCH, GARCH and GJR-GARCH compared out of sample on daily All Share Index returns, with the GARCH(1,1) likelihood coded by hand.
+
+[First principles]{.tag} [Model comparison]{.tag} [Real-world data]{.tag}
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6}
+::: {.card .h-100}
+[Project 4 · Section 2 · Hidden Markov models]{.card-kicker}
+
+[Market regimes on the JSE](project-04.qmd){.stretched-link .card-link}
+
+HMM algorithms built from first principles, then used to find market regimes in All Share Index returns and compared with GJR-GARCH.
+
+[First principles]{.tag} [Model comparison]{.tag} [Real-world data]{.tag} [Shiny app]{.tag}
+:::
+:::
+
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+| Project   | Section   | Topic                                     | Project type                                              |
+|-----------|-----------|-------------------------------------------|-----------------------------------------------------------|
+| Project 1 | Section 2 | Exponential smoothing (Holt-Winters, ETS) | Implementation and model comparison, real-world data      |
+| Project 2 | Section 1 | Seasonal ARIMA and dynamic regression     | Implementation and model comparison, real-world data      |
+| Project 3 | Section 1 | ARCH and GARCH volatility models          | Implementation and model comparison, real-world data      |
+| Project 4 | Section 2 | Hidden Markov models                      | Implementation, extended to model comparison on real data |
+:::

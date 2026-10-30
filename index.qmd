@@ -3,26 +3,108 @@ format: html
 editor: visual
 ---
 
+<!-- Note: no title/subtitle/toc in the YAML above on purpose. This file is
+     included in portfolio.qmd, and Quarto merges an included file's YAML into
+     the parent, so a title or toc: false here would change the PDF too. -->
+
 ::: {.content-visible when-format="html"}
-# The Temporal Shift
-### Time Series Portfolio
+::: {.hero .column-page}
+[Time Series Analysis · Honours 2026]{.hero-kicker}
 
-**Author:** Isabella Lethbridge  
-**Student Number:** LTHISA001  
-**Date:** 25 August 2026
+# Lagged & Loaded {.unlisted .hero-title}
 
+[A Time Series Analysis Portfolio]{.hero-subtitle}
+
+[Isabella Lethbridge · LTHISA001 · 25 August 2026]{.hero-meta}
+:::
 :::
 
-## Overview
+This portfolio records my work in Time Series Analysis, from stationarity and autocorrelation to state space and hidden Markov models. Alongside my section notes and a learning journal, it contains four projects on real data: Eskom electricity demand, Western Cape dam levels and Pacific sea surface temperatures, and JSE All Share Index returns.
 
-Welcome to my portfolio for Time Series Analysis. This document showcases my learning progression, statistical understanding, computational applications, and reflections across the course.
+::: {.content-visible when-format="html"}
+::: {.grid .home-cards}
 
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-chat-quote .card-icon}
+
+[Reflective Commentary](reflective-commentary.qmd){.stretched-link .card-link}
+
+How my understanding developed across the course, and what I would do differently.
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-robot .card-icon}
+
+[AI Use Log](ai-use-log.qmd){.stretched-link .card-link}
+
+When and how I used AI tools, and what I checked or changed myself.
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-graph-up .card-icon}
+
+[Section 1](section-1/section-1.qmd){.stretched-link .card-link}
+
+Foundations, forecasting benchmarks, stationarity, ARIMA, conditional variance models and spectral analysis.
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-bezier2 .card-icon}
+
+[Section 2](section-2/section-2.qmd){.stretched-link .card-link}
+
+Exponential smoothing, time series regression, state space models, the Kalman filter and hidden Markov models.
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-kanban .card-icon}
+
+[Projects](projects/index.qmd){.stretched-link .card-link}
+
+Four projects: ETS, seasonal ARIMA, GARCH and hidden Markov models.
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-journal-text .card-icon}
+
+[Journal](journal/entries.qmd){.stretched-link .card-link}
+
+Lecture-by-lecture notes on what I did, learned and found difficult.
+:::
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-lg-4}
+::: {.card .h-100}
+[]{.bi .bi-code-slash .card-icon}
+
+[Appendix](appendix/code-and-data.qmd){.stretched-link .card-link}
+
+R scripts, data access instructions, detailed analyses and the GitHub repository.
+:::
+:::
+
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
 ## Portfolio Structure
 
--   [Reflective Commentary](reflective-commentary.qmd)
--   [AI Use Log](ai-use-log.qmd)
--   [Section 1](section-1/section-1.qmd)
--   [Section 2](section-2/section-2.qmd)
--   [Projects](projects/index.qmd)
--   [Journal](journal/index.qmd)
--   [Appendix](appendix/code-and-data.qmd)
+-   Reflective Commentary
+-   AI Use Log
+-   Section 1
+-   Section 2
+-   Projects
+-   Journal
+-   Appendix
+:::

@@ -4,19 +4,24 @@ project:
   render:
     - "*.qmd"
     - "!rough.qmd" # Excludes draft files from rendering
+    - "!projects/*_claude.qmd" # Excludes working copies
   resources: 
     - "section-1/S1_Chapters_1-6.html"
     - "section-1/S1_Conditional_Variance_Models.html"
     - "section-1/S1_Spectral_Analysis.html"
     - "section-2/S2_Exponential_Smoothing.html"
     - "section-2/S2_Hidden_Markov_Models.html"
-    - "section-2/S2-Regression.html"
+    - "section-2/S2_Regression.html"
     - "section-2/S2_State_Space_Models.html"
 
 website:
-  title: "The Temporal Shift"
+  title: "Lagged & Loaded"
   navbar:
     search: true
+    right:
+      - icon: github
+        href: https://github.com/IsabellaLethbridge/Time_Series
+        aria-label: GitHub repository
     left:
       - text: "Home"
         href: index.qmd
@@ -43,11 +48,7 @@ website:
           - text: "Project 4"
             href: projects/project-04.qmd
       - text: "Journal"
-        menu:
-          - text: "Journal Overview"
-            href: journal/index.qmd
-          - text: "Journal Entries"
-            href: journal/entries.qmd
+        href: journal/entries.qmd
       - text: "Appendix"
         menu:
           - text: "Code & Data"

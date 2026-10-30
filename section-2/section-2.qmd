@@ -2819,7 +2819,7 @@ state_cols = c("1" = "steelblue", "2" = "purple", "3" = "deeppink", "4" = "black
 
 ```{r}
 #| label: hmm-toolkit
-#| file: ../scripts/hmm-toolkit.R
+#| file: !expr if (file.exists("../scripts/hmm-toolkit.R")) "../scripts/hmm-toolkit.R" else "scripts/hmm-toolkit.R"
 #| code-fold: true
 #| code-summary: "HMM toolkit (scripts/hmm-toolkit.R)"
 ```

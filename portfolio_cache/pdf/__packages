@@ -19,3 +19,12 @@ lubridate
 tsibble
 readxl
 patchwork
+fpp2
+fma
+expsmooth
+dlm
+mvtnorm
+StanHeaders
+rstan
+dynlm
+nlme
