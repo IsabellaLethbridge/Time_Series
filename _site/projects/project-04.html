@@ -40,11 +40,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
+  "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
+  "panel-placement": "end",
+  "type": "overlay",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -59,178 +59,125 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../projects/index.html">Projects</a></li><li class="breadcrumb-item"><a href="../projects/project-04.html">Project 4</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">The Temporal Shift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reflective-commentary.html" rel="" target="">
+ <span class="menu-text">Reflective Commentary</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../ai-use-log.html" rel="" target="">
+ <span class="menu-text">AI Use Log</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sections" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Sections</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sections">    
+        <li>
+    <a class="dropdown-item" href="../section-1/section-1.html" rel="" target="">
+ <span class="dropdown-text">Section 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../section-2/section-2.html" rel="" target="">
+ <span class="dropdown-text">Section 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="../projects/index.html" rel="" target="">
+ <span class="dropdown-text">Projects Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-01.html" rel="" target="">
+ <span class="dropdown-text">Project 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-02.html" rel="" target="">
+ <span class="dropdown-text">Project 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-03.html" rel="" target="">
+ <span class="dropdown-text">Project 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-04.html" rel="" target="">
+ <span class="dropdown-text">Project 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-journal" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Journal</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-journal">    
+        <li>
+    <a class="dropdown-item" href="../journal/index.html" rel="" target="">
+ <span class="dropdown-text">Journal Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../journal/entries.html" rel="" target="">
+ <span class="dropdown-text">Journal Entries</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-appendix" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Appendix</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-appendix">    
+        <li>
+    <a class="dropdown-item" href="../appendix/code-and-data.html" rel="" target="">
+ <span class="dropdown-text">Code &amp; Data</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="../">The Temporal Shift</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Home</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reflective-commentary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Reflective Commentary</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ai-use-log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AI Use Log</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Sections</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../section-1/section-1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Section 1</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../section-2/section-2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Section 2</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">Projects</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Projects Overview</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 1</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 2</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 3</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-04.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Project 4</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Journal</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../journal/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Journal Overview</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../journal/entries.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Journal Entries</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Appendix</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../appendix/code-and-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Code &amp; Data</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-findings" id="toc-key-findings" class="nav-link active" data-scroll-target="#key-findings">Key Findings</a></li>
-  <li><a href="#reflections" id="toc-reflections" class="nav-link" data-scroll-target="#reflections">Reflections</a></li>
-  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
+  <li><a href="#hidden-markov-models-from-first-principles-to-market-regimes-on-the-jse" id="toc-hidden-markov-models-from-first-principles-to-market-regimes-on-the-jse" class="nav-link active" data-scroll-target="#hidden-markov-models-from-first-principles-to-market-regimes-on-the-jse">Hidden Markov models: from first principles to market regimes on the JSE</a></li>
   </ul>
 </nav>
     </div>
@@ -239,29 +186,35 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="hidden-markov-models-from-first-principles-to-market-regimes-on-the-jse" class="level1">
+<h1>Hidden Markov models: from first principles to market regimes on the JSE</h1>
+<p><strong>Section and topic:</strong> Section 2 - Hidden Markov models (likelihood, forward and backward probabilities, local and global decoding, forecasting).</p>
+<p><strong>Type of project:</strong> Implementation (all core HMM algorithms coded from first principles and checked against <code>depmixS4</code>), extended to model comparison on real-world data, with an interactive Shiny app.</p>
+<p><strong>Aim:</strong> To implement the HMM algorithms from first principles, validate them on the tutorial’s earthquake data. Use the HMM algorithms to determine whether daily JSE All Share Index returns can be described by a small number of market regimes, when these regimes occurred, and whether a Gaussian HMM forecasts the distribution of returns as well as the GJR-GARCH model from Project 3.</p>
+<p><strong>Data used:</strong></p>
 <ul>
-<li><strong>Section &amp; Topic:</strong>[cite: 1]</li>
-<li><strong>Project Type:</strong> (Implementation / Shiny App / Exploration / Simulation)[cite: 1]</li>
-<li><strong>Question / Aim:</strong>[cite: 1]</li>
-<li><strong>Data Used:</strong> (Include source details if real-world data)[cite: 1]</li>
-<li><strong>Methods Used:</strong>[cite: 1]</li>
+<li>Annual counts of major earthquakes (magnitude 7 and above), 1900–2006. Source: Zucchini, MacDonald and Langrock (2016), as in the course notes and tutorial.</li>
+<li>Daily FTSE/JSE All Share total return index (J203), 30 June 1995 to 3 February 2017. Source: Gebbie, T. (2020), <em>Daily Sampled South African Market Index Data 1994–2017</em>, University of Cape Town, <a href="https://doi.org/10.25375/uct.11302325.v1" class="uri">https://doi.org/10.25375/uct.11302325.v1</a>.</li>
 </ul>
-<section id="key-findings" class="level2">
-<h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
-<!-- Summary of findings -->
-<p>[cite: 1]</p>
-</section>
-<section id="reflections" class="level2">
-<h2 class="anchored" data-anchor-id="reflections">Reflections</h2>
+<p>Daily log returns (%) were modelled, with July 1995 to December 2012 as the training set and January 2013 to February 2017 as the test set (as in Project 3). Download instructions are in the detailed analysis and the <a href="../appendix/code-and-data.html">code and data appendix</a>.</p>
+<p><strong>Methods used:</strong> I implemented the main HMM algorithms from first principles: the scaled forward and backward algorithms, local decoding, the Viterbi algorithm, the stationary distribution and forecast distributions. Parameters were estimated by numerically maximising the likelihood with <code>nlm()</code> and <code>optim()</code> on unconstrained working parameters. The implementation was validated against <code>depmixS4</code> using Poisson HMMs for the earthquake counts; the remaining tutorial questions are in the <a href="../section-2/section-2.html#hidden-markov-models">Hidden Markov Models section of Section 2</a>.</p>
+<p>For the JSE returns, Gaussian HMMs with one to four states were fitted from several sets of starting values and compared using AIC and BIC. The selected model was assessed with normal pseudo-residuals, decoded with the Viterbi algorithm and local decoding, and given approximate standard errors using the Hessian and the delta method. It was then compared with GJR-GARCH(1,1)-<span class="math inline">\(t\)</span> using filtered volatility and one-step-ahead log scores on the test set, with a Newey-West test of equal predictive ability. A Shiny app presents the fitted regimes interactively.</p>
+<p><strong>Key findings:</strong></p>
 <ul>
-<li><strong>What I would do differently next time:</strong>[cite: 1]</li>
+<li>My likelihood code reproduced the <code>depmixS4</code> log-likelihoods for the earthquake data exactly (−341.88 and −328.53), but only once the initial distribution was estimated freely, as <code>depmixS4</code> does. A three-state Poisson HMM (about 13, 20 and 30 earthquakes per year) is selected by both AIC and BIC.</li>
+<li>For JSE returns, BIC selects four regimes, although three regimes already remove the heavy tails and the volatility clustering from the pseudo-residuals. The regimes range from a calm market (annualised volatility of about 8%) to a crisis regime (about 45%) with a negative mean return, which lasts about 20 trading days on average and is entered gradually through the intermediate regimes.</li>
+<li>The crisis regime picks out the 1998 emerging market crisis andmthe 2008–2009 global financial crisis. The HMM’s real-time (filtered) volatility is strongly correlated with the GJR-GARCH volatility.</li>
+<li>With its default starting values, <code>depmixS4</code> stopped at a one-state solution for the JSE data, so I refitted it with starting values for a calm and a turbulent state. This showed how easily an optimiser can stop at the wrong point.</li>
+<li>Out of sample, GJR-GARCH-<span class="math inline">\(t\)</span> forecasts the next day’s return distribution significantly better than every HMM (log score −1.317 compared with −1.326 for the best HMM). HMMs are useful for <em>describing</em> market regimes, while GARCH remains better for <em>forecasting</em> risk.</li>
 </ul>
-</section>
-<section id="links" class="level2">
-<h2 class="anchored" data-anchor-id="links">Links</h2>
+<p><strong>What I would do differently next time:</strong></p>
 <ul>
-<li><a href="../appendix/code-and-data.html">Detailed Analysis &amp; Code Script</a>[cite: 1]</li>
+<li>Use a parametric bootstrap instead of the delta method for confidence intervals, especially for the expected durations of the regimes.</li>
+<li>Use Student-<span class="math inline">\(t\)</span> state distributions with an AR(1) mean in each regime, or a Markov-switching GARCH model, to combine the interpretability of regimes with the responsiveness of GARCH.</li>
+<li>Apply the same regime-switching approach to El Niño, La Niña and neutral phases in the Project 2 sea surface temperature data.</li>
 </ul>
+<p><strong>Link to the detailed analysis:</strong> <a href="../projects/project-04-analysis.html">Detailed analysis and code</a></p>
+<p><strong>Interactive app:</strong> <a href="https://isabellalethbridge.shinyapps.io/shiny-app/">JSE regime explorer</a> (opens on shinyapps.io; it can take a few seconds to wake up). Code: <code>scripts/shiny-app/</code> (see the <a href="../appendix/code-and-data.html">code and data appendix</a>).</p>
 
 
 </section>

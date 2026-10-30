@@ -6,7 +6,11 @@ editor: visual
 ## R Code & Scripts
 
 -   `scripts/simulation-study.R`
--   `scripts/shiny-app/app.R`
+-   `scripts/hmm-toolkit.R`: my hidden Markov model functions (forward and backward algorithms, decoding, Viterbi), used by Project 4 and the Hidden Markov Models section of Section 2.
+-   `scripts/shiny-app/`: the JSE regime explorer for Project 4.
+    -   `precompute.R` fits the Gaussian HMMs and GJR-GARCH model and saves `app_data.rds` (run first).
+    -   `app.R` is the Shiny app. Run it locally with `shiny::runApp("scripts/shiny-app")`.
+    -   The app is online at <https://isabellalethbridge.shinyapps.io/shiny-app/>.
 
 ## Data Access & Repositories
 

@@ -40,11 +40,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
+  "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
+  "panel-placement": "end",
+  "type": "overlay",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -59,200 +59,245 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ai-use-log.html">AI Use Log</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">The Temporal Shift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./reflective-commentary.html" rel="" target="">
+ <span class="menu-text">Reflective Commentary</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./ai-use-log.html" rel="" target="" aria-current="page">
+ <span class="menu-text">AI Use Log</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sections" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Sections</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sections">    
+        <li>
+    <a class="dropdown-item" href="./section-1/section-1.html" rel="" target="">
+ <span class="dropdown-text">Section 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./section-2/section-2.html" rel="" target="">
+ <span class="dropdown-text">Section 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="./projects/index.html" rel="" target="">
+ <span class="dropdown-text">Projects Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-01.html" rel="" target="">
+ <span class="dropdown-text">Project 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-02.html" rel="" target="">
+ <span class="dropdown-text">Project 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-03.html" rel="" target="">
+ <span class="dropdown-text">Project 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-04.html" rel="" target="">
+ <span class="dropdown-text">Project 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-journal" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Journal</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-journal">    
+        <li>
+    <a class="dropdown-item" href="./journal/index.html" rel="" target="">
+ <span class="dropdown-text">Journal Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./journal/entries.html" rel="" target="">
+ <span class="dropdown-text">Journal Entries</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-appendix" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Appendix</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-appendix">    
+        <li>
+    <a class="dropdown-item" href="./appendix/code-and-data.html" rel="" target="">
+ <span class="dropdown-text">Code &amp; Data</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="./">The Temporal Shift</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Home</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./reflective-commentary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Reflective Commentary</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./ai-use-log.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">AI Use Log</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Sections</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./section-1/section-1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Section 1</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./section-2/section-2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Section 2</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">Projects</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./projects/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Projects Overview</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./projects/project-01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 1</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./projects/project-02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 2</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./projects/project-03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 3</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./projects/project-04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 4</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Journal</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./journal/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Journal Overview</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./journal/entries.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Journal Entries</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Appendix</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./appendix/code-and-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Code &amp; Data</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ai-use-log" id="toc-ai-use-log" class="nav-link active" data-scroll-target="#ai-use-log">AI Use Log</a>
+  <ul class="collapse">
+  <li><a href="#project-2-predicting-drought-in-the-western-cape" id="toc-project-2-predicting-drought-in-the-western-cape" class="nav-link" data-scroll-target="#project-2-predicting-drought-in-the-western-cape">Project 2: Predicting drought in the Western Cape</a></li>
+  <li><a href="#project-3-predicting-the-volatility-of-jse-all-share-index-returns" id="toc-project-3-predicting-the-volatility-of-jse-all-share-index-returns" class="nav-link" data-scroll-target="#project-3-predicting-the-volatility-of-jse-all-share-index-returns">Project 3: Predicting the volatility of JSE All Share Index returns</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
 
+<section id="ai-use-log" class="level1">
+<h1>AI Use Log</h1>
+<p>This log records substantive uses of AI that influenced my portfolio, as required by the portfolio guidelines. Minor interactions (for example, single syntax questions) are not logged. I remain responsible for checking and understanding all AI-assisted material, and all analysis results were produced by running the code myself in R.</p>
+<section id="project-2-predicting-drought-in-the-western-cape" class="level2">
+<h2 class="anchored" data-anchor-id="project-2-predicting-drought-in-the-western-cape">Project 2: Predicting drought in the Western Cape</h2>
 <table class="table">
 <thead>
 <tr class="header">
 <th>Date</th>
-<th>Tool Used</th>
-<th>Prompt / Task Description</th>
-<th>Link to Conversation</th>
-<th>Verification &amp; Changes Made</th>
+<th>Tool used</th>
+<th>What I asked it to help with</th>
+<th>Link</th>
+<th>What I checked or changed myself</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>YYYY-MM-DD</td>
-<td>ChatGPT / Claude</td>
-<td>Debugging R code for model fit</td>
-<td><a href="#">Link</a></td>
-<td>Checked output against manual calculations[cite: 1]</td>
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Reviewing Project 2 against the portfolio guidelines and rubric, using my rendered HTML output. It identified text that contradicted the tables, unfinished placeholder text, a model chosen using the test set, a cross-correlation driven by seasonality, a missing seasonal MA candidate for SST, and a bias from averaging whichever buoys reported each day.</td>
+<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
+<td>I checked each issue against my rendered tables and figures before accepting it.</td>
+</tr>
+<tr class="even">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Revising the analysis code: a justified set of seven candidate models, rolling-origin cross-validation for model selection, an ETS(A,N,A) comparison, a composition-adjusted daily SST mean, Ljung-Box tests, and saving key results so the summary page updates automatically.</td>
+<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
+<td>Claude could not run R, so I rendered the code myself, reported errors back (a YAML caption error) and checked every table and figure. I replaced Claude’s hand-coded prewhitening filter with <code>TSA::prewhiten()</code>, since prewhitening was not covered in lectures and a package function with an explanation was more appropriate.</td>
+</tr>
+<tr class="odd">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Explaining concepts I had not used before: CRPS, the Ljung-Box <span class="math inline">\(Q\)</span> statistic, prewhitening, rolling-origin cross-validation and the buoy composition adjustment (including writing it as an equation).</td>
+<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
+<td>I checked the explanations against Hyndman &amp; Athanasopoulos (2021) and Cryer &amp; Chan (2008), and asked for simpler explanations until I could explain each one in my own words.</td>
+</tr>
+<tr class="even">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Rewording draft paragraphs and replacing conditional inline R text with sentences based on my final rendered results.</td>
+<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
+<td>I edited the wording and corrected the interpretation where I disagreed. I pointed out that the SST trend was not more stable than the dam trend (it tracks El Niño and La Niña events), that the positive lag-6 correlation contradicts the hypothesised negative relationship, and that the unit root tests choose the differencing while the ACF and PACF choose the AR and MA orders.</td>
+</tr>
+<tr class="odd">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Suggesting references for the methods and software used (Hyndman &amp; Athanasopoulos; Cryer &amp; Chan; the <code>fable</code>, <code>feasts</code> and <code>TSA</code> packages).</td>
+<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
+<td>Claude said that some reference details were from memory and that its first prewhitening citation was wrong. I checked the package references with <code>citation()</code> in R and the textbook chapter numbers against the books.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="project-3-predicting-the-volatility-of-jse-all-share-index-returns" class="level2">
+<h2 class="anchored" data-anchor-id="project-3-predicting-the-volatility-of-jse-all-share-index-returns">Project 3: Predicting the volatility of JSE All Share Index returns</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Tool used</th>
+<th>What I asked it to help with</th>
+<th>Link</th>
+<th>What I checked or changed myself</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2026-10-08</td>
+<td>Claude (Cowork)</td>
+<td>Reviewing my first version of Project 3 against the course ARCH and GARCH guide. It found that the sector extension had failed fits (degrees of freedom at the lower bound and identical half-lives for every sector), that EGARCH was difficult to interpret, and that some template text contradicted my diagnostic results. It suggested a simplified structure following the guide’s ten-step workflow.</td>
+<td><a href="ADD LINK">Conversation</a></td>
+<td>[Add what you checked or changed yourself.]</td>
+</tr>
+<tr class="even">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Reviewing Project 3 against the portfolio guidelines and rubric, using my rendered HTML output. It identified broken inline R code, typos, a broken table reference, an incorrect long-run volatility in the summary, a methods paragraph that did not match the analysis, and that the test period was much calmer than the training period.</td>
+<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
+<td>I checked each issue against my rendered tables and figures before accepting it.</td>
+</tr>
+<tr class="odd">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Checking whether the Diebold–Mariano test was covered in the course notes, and adding Diebold–Mariano tests and Value-at-Risk backtests (Kupiec and Christoffersen) to the analysis.</td>
+<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
+<td>Claude confirmed that these tests are not in the course notes, slides or ARCH and GARCH guide. I asked for them to be implemented with <code>forecast::dm.test()</code> and <code>rugarch::VaRTest()</code> instead of from first principles, and asked for the code to be simplified so that it did not generate the interpretation text. Claude could not run R, so I rendered the code myself and wrote the interpretations from my rendered tables.</td>
+</tr>
+<tr class="even">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Rewording and condensing draft paragraphs (mean model selection, diagnostics, Diebold–Mariano and VaR results), and explaining why the models are evaluated on a test set.</td>
+<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
+<td>I edited the wording and wrote the results into the interpretations myself. Claude then checked the summary page against my results and corrected contradictions, for example the limitations paragraph that said the GARCH ranking was uncertain after the Diebold–Mariano tests showed significant differences.</td>
+</tr>
+<tr class="odd">
+<td>2026-10-29</td>
+<td>Claude (Cowork)</td>
+<td>Suggesting references for the methods and software used (Patton, 2011; Diebold &amp; Mariano, 1995; Kupiec, 1995; Christoffersen, 1998; Hyndman &amp; Khandakar, 2008).</td>
+<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
+<td>[Add how you checked the references, e.g.&nbsp;against the DOIs and <code>citation()</code> in R.]</td>
 </tr>
 </tbody>
 </table>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

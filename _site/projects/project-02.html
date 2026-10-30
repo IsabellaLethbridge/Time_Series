@@ -40,11 +40,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
+  "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
+  "panel-placement": "end",
+  "type": "overlay",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -64,197 +64,120 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../projects/index.html">Projects</a></li><li class="breadcrumb-item"><a href="../projects/project-02.html">Project 2</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">The Temporal Shift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reflective-commentary.html" rel="" target="">
+ <span class="menu-text">Reflective Commentary</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../ai-use-log.html" rel="" target="">
+ <span class="menu-text">AI Use Log</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sections" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Sections</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sections">    
+        <li>
+    <a class="dropdown-item" href="../section-1/section-1.html" rel="" target="">
+ <span class="dropdown-text">Section 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../section-2/section-2.html" rel="" target="">
+ <span class="dropdown-text">Section 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="../projects/index.html" rel="" target="">
+ <span class="dropdown-text">Projects Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-01.html" rel="" target="">
+ <span class="dropdown-text">Project 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-02.html" rel="" target="">
+ <span class="dropdown-text">Project 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-03.html" rel="" target="">
+ <span class="dropdown-text">Project 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-04.html" rel="" target="">
+ <span class="dropdown-text">Project 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-journal" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Journal</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-journal">    
+        <li>
+    <a class="dropdown-item" href="../journal/index.html" rel="" target="">
+ <span class="dropdown-text">Journal Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../journal/entries.html" rel="" target="">
+ <span class="dropdown-text">Journal Entries</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-appendix" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Appendix</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-appendix">    
+        <li>
+    <a class="dropdown-item" href="../appendix/code-and-data.html" rel="" target="">
+ <span class="dropdown-text">Code &amp; Data</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="../">The Temporal Shift</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Home</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reflective-commentary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Reflective Commentary</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ai-use-log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AI Use Log</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Sections</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../section-1/section-1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Section 1</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../section-2/section-2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Section 2</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">Projects</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Projects Overview</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 1</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-02.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Project 2</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 3</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../projects/project-04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project 4</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Journal</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../journal/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Journal Overview</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../journal/entries.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Journal Entries</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Appendix</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../appendix/code-and-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Code &amp; Data</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#predicting-drought-in-the-western-cape" id="toc-predicting-drought-in-the-western-cape" class="nav-link active" data-scroll-target="#predicting-drought-in-the-western-cape">Predicting drought in the Western Cape</a>
-  <ul class="collapse">
-  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">Key Findings</a></li>
-  <li><a href="#reflections" id="toc-reflections" class="nav-link" data-scroll-target="#reflections">Reflections</a></li>
-  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
-  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
-  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">Model fitting</a>
-  <ul class="collapse">
-  <li><a href="#theewaterskloof-dam-capacity" id="toc-theewaterskloof-dam-capacity" class="nav-link" data-scroll-target="#theewaterskloof-dam-capacity">Theewaterskloof dam capacity</a></li>
-  <li><a href="#eastern-pacific-sea-surface-temperature" id="toc-eastern-pacific-sea-surface-temperature" class="nav-link" data-scroll-target="#eastern-pacific-sea-surface-temperature">Eastern Pacific sea surface temperature</a></li>
-  <li><a href="#predicting-drought-using-sea-surface-temperature-as-a-covariate" id="toc-predicting-drought-using-sea-surface-temperature-as-a-covariate" class="nav-link" data-scroll-target="#predicting-drought-using-sea-surface-temperature-as-a-covariate">Predicting drought using sea surface temperature as a covariate</a></li>
-  </ul></li>
-  <li><a href="#forecasting" id="toc-forecasting" class="nav-link" data-scroll-target="#forecasting">Forecasting</a>
-  <ul class="collapse">
-  <li><a href="#theewaterskloof-dam-capacity-1" id="toc-theewaterskloof-dam-capacity-1" class="nav-link" data-scroll-target="#theewaterskloof-dam-capacity-1">Theewaterskloof dam capacity</a></li>
-  <li><a href="#eastern-pacific-sea-surface-temperature-1" id="toc-eastern-pacific-sea-surface-temperature-1" class="nav-link" data-scroll-target="#eastern-pacific-sea-surface-temperature-1">Eastern Pacific sea surface temperature</a></li>
-  </ul></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
-  <ul class="collapse">
-  <li><a href="#model-recommendations" id="toc-model-recommendations" class="nav-link" data-scroll-target="#model-recommendations">Model recommendations</a></li>
-  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
-  <li><a href="#improvements" id="toc-improvements" class="nav-link" data-scroll-target="#improvements">Improvements</a></li>
-  </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul></li>
+  <li><a href="#predicting-drought-in-the-western-cape" id="toc-predicting-drought-in-the-western-cape" class="nav-link active" data-scroll-target="#predicting-drought-in-the-western-cape">Predicting drought in the Western Cape</a></li>
   </ul>
 </nav>
     </div>
@@ -265,593 +188,38 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="predicting-drought-in-the-western-cape" class="level1">
 <h1>Predicting drought in the Western Cape</h1>
-<p>This project fits and compares autoregressive models (AR, MA, ARMA, SARIMA) to the Theewaterskloof dam level and eastern Pacific sea surface temperature (SST) individually. SST is then included as a covariate in a SARIMAX model to determine if it can be used to improve dam level forecasts.</p>
-<p><strong>Section &amp; Topic:</strong> Autoregressive Models</p>
-<p><strong>Project Type:</strong> Model implementation</p>
-<p><strong>Aim:</strong> Are the sea surface temperature in the eastern Pacific Ocean and the Theewaterskloof dam levels predictable?</p>
-<p><strong>Data Used:</strong></p>
-<pre><code>[https://www.pmel.noaa.gov/tao/drupal/disdel/] [https://odp-cctegis.opendata.arcgis.com/]</code></pre>
-<p><strong>Methods Used:</strong> AR, MA, ARMA, SARIMA, SARIMAX (dynamic regression with sea surface temperature as a predictor), compared against Mean, Naive, Seasonal naive and Drift benchmarks.</p>
-<p>The aim of this project is to use autoregressive models to forecast Theewaterskloof Dam levels and eastern Pacific sea surface temperature (along 95W), individually, as well as using SST as a lagged predictor to try and improve dam-level forecasts. This project will be used to test the hypothesis that eastern Pacific SST can be used as a leading indicator of drought risk in the Western Cape.</p>
-<p>The El Niño phase of the El Niño Southern Oscillation (ENSO) is characterised by anomalous warming of sea surface temperatures in the eastern and central Pacific Ocean. This phenomenon typically starts between March and June, reaching its peak around the following December/January (Mason, 2001). An El Niño event typically causes warm and dry conditions over Southern Africa, with effects emerging within the year following the El Niño onset in the Pacific (Thomson et al., 2003). Over the 2015-2016 season, Southern Africa experienced severe drought with the 2015/2016 El Niño being identified as a contributing factor. This saw a drop in dam levels and severe water restrictions being implemented.</p>
-<p>The South African Weather Service (SAWS) is warning against a super El Niño event in 2026-2027, as current sea surface temperatures rise beyond the threshold used to define a very strong El Niño (Mail &amp; Guardian, 2026).</p>
-<p>This project focuses on Theewaterskloof Dam, the single largest reservoir in the Western Cape Water Supply System.</p>
-<section id="key-findings" class="level2">
-<h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
-</section>
-<section id="reflections" class="level2">
-<h2 class="anchored" data-anchor-id="reflections">Reflections</h2>
-</section>
-<section id="links" class="level2">
-<h2 class="anchored" data-anchor-id="links">Links</h2>
+<p><strong>Section and topic:</strong> Section 1 - Linear models for the conditional mean (seasonal ARIMA and dynamic regression).</p>
+<p><strong>Type of project:</strong> Implementation and model comparison on real-world data. Includes a prewhitened cross-correlation analysis and a composition adjustment for incomplete buoy data.</p>
+<p><strong>Aim:</strong> To determine whether Theewaterskloof Dam capacity and eastern Pacific sea surface temperature (SST) can be forecast with seasonal ARIMA models, and whether lagged SST, as a leading indicator of El Niño, improves dam capacity forecasts.</p>
+<p><strong>Data used:</strong></p>
 <ul>
-<li><a href="../appendix/code-and-data.html">Detailed Analysis &amp; Code Script</a>[cite: 1]</li>
+<li>Daily Theewaterskloof Dam levels (% of capacity), January 2000 to January 2026. Source: City of Cape Town Open Data Portal, <em>Dam levels from 2000</em>, <a href="https://odp-cctegis.opendata.arcgis.com/" class="uri">https://odp-cctegis.opendata.arcgis.com/</a>.</li>
+<li>Daily SST (°C) from the seven TAO/TRITON buoys along 95°W, January 2000 to April 2026 (models fitted to January 2000 to October 2021 because of long gaps in the record). Source: NOAA Pacific Marine Environmental Laboratory, <a href="https://www.pmel.noaa.gov/tao/drupal/disdel/" class="uri">https://www.pmel.noaa.gov/tao/drupal/disdel/</a>.</li>
 </ul>
-</section>
-<section id="exploratory-data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
-<p>The duplicate observation in the <code>Dam_Levels_from_2000</code> dataset was removed by retaining only the first occurrence of each date. The dam level series contained only 1 missing value that was left as <code>NA</code>.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-daily_damlvl" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-daily_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Theewaterskloof dam capacity from January 2000 to January 2026.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-daily_sst" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-daily_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Average eastern Pacific sea surface temperature from January 2000 to April 2026.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Both <a href="#fig-daily_damlvl">Figure&nbsp;1</a> and <a href="#fig-daily_sst">Figure&nbsp;2</a> show that these series are noisy. The dam levels data has multiple year drops and slow recoveries whereas the SST oscillates more uniformly around its mean. The daily data is aggregated to monthly averages to obtain a clearer visualisation of the seasonality present in the data and to smooth out high frequency noise.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-monthly_damlvl" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-monthly_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Theewaterskloof dam capacity from January 2000 to January 2026.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-monthly_sst" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-monthly_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: Average eastern Pacific sea surface temperature from January 2000 to April 2026.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>As seen in <a href="#fig-monthly_damlvl">Figure&nbsp;3</a> and <a href="#fig-monthly_sst">Figure&nbsp;4</a>, both datasets display strong 12-month seasonal patterns. The dam level data also has an irregular drought/recovery cycle that appears to follow the hydrological cycle.</p>
-<p>Both the <code>Dam_Levels_from_2000</code> dataset and the <code>sst</code> dataset have observations from 2000 to 2026. The SST series has two periods of missing observations, November 2021 to March 2023 and October 2024 to March 2025, due to the buoy array not recording. These gaps cannot be reliable smoothed over and have been left as missing observations.</p>
-<p>Southern Africa experienced a severe drought between 2015 and 2018. In the figures below, dam capacity across this period is compared with lagged SST, approximately 3 months earlier.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-1519" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-1519-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;5: Theewaterskloof dam capacity from 2015 to 2019 with sea surface temperature from 3 months earlier.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>In <a href="#fig-1519">Figure&nbsp;5</a>, dam capacity declines to reach a minimum around 2018 and then recovers through 2019. The SST series has missing values for March and April 2017 but still shows a slightly elevated double peak in both 2015 and 2016. This is consistent with the El Niñothat occurred during that period. Both series maintain their strong seasonal patterns, however it is difficult to determine the lagged relationship.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-lag_deseason" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-lag_deseason-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;6: Deseasonalised dam capacity from 2015 to 2019 with sea surface temperature from 3 months earlier.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-lag_deseason">Figure&nbsp;6</a> re-illustrates the cycle identified in <a href="#fig-1519">Figure&nbsp;5</a>. With the seasonality of the series removed, dam capacity decreases smoothly to a minimum around 2018 and recovers steadily through 2019. Rising SST in the deseasonalised plot precedes the decreased dam capacity during the 2015 to 2016 period, however during the 2018 to 2019 recovery phase, SST is rising. This suggests that the relationship between dam capacity and SST is not a stable relationship across the whole period and that other drivers are likely contributing to the dam level recovery.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-subseries" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-subseries-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;7: Monthly trends in Theewaterskloof dam capacity and average Pacific sea surface temperature from 2000 to 2026. The blue line in each panel indicates the mean for that month.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-subseries">Figure&nbsp;7</a> illustrates the strong seasonal pattern already identified in <a href="#fig-monthly_damlvl">Figure&nbsp;3</a> and <a href="#fig-monthly_sst">Figure&nbsp;4</a>. Dam levels reach a minimum around May and peak in September. The variation in dam levels within the months is approximately the same across all months. SST peaks in April and is lowest in September. Unlike the dam levels, the months with lower temperatures experience greater variability in the recorded temperatures compared to months where the temperature is higher. Dam capacity (%) and SST (°C) are measured on different scales. This means that the two series’ overall variability cannot be directly compared. It is worth noting that the structural gaps present in the sea surface temperature series result in some months having more observations than others.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-acf_pacf_dam" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-acf_pacf_dam-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;8: ACF and PACF plots for Theewaterskloof dam capacity.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-acf_pacf_sst" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-acf_pacf_sst-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;9: ACF and PACF plots for eastern Pacific sea surface temperature.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Both <a href="#fig-acf_pacf_dam">Figure&nbsp;8</a> and <a href="#fig-acf_pacf_sst">Figure&nbsp;9</a> indicate that these time series are non-stationary. The ACF of the sea surface temperature illustrates a regular seasonal pattern with sharp peaks occurring at regular intervals compared to the ACF of dam levels which has a less stable seasonal pattern seen by the less regularly-spaced peaks. This suggests that the dam level pattern is influenced by a long-term irregular hydrological cycle as opposed to the seasonal rainfall pattern alone. Both PACF plots have a large spike at lag 1. This is typical of a non-stationary process. The dam level PACF plot has a large negative spike at lag 2, indicative of an AR(2) process. This is followed by a few significant positive spikes that indicate a further short-run structure. The SST PACF plot has the same pattern as the dam levels PACF plot, with a large positive spike at lag 1 followed by a large negative spike at lag 2. There is also a second series of significant positive spikes from lag 7 to 10. The order selection for the AR and SARIMA models is based on the ACF and PACF plots of the seasonally differenced series.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-decomp_damlvl" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-decomp_damlvl-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;10: Decomposition of Theewaterskloof dam capacity series from 2000 to 2026.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-decomp_sst" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-decomp_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;11: Decomposition of eastern Pacific sea surface temperature series from 2000 to 2026.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-decomp_sst">Figure&nbsp;11</a> plots the decomposition of the sea surface temperature series. There are missing observations from November 2021 to March 2023 and October 2024 to March 2025. These observations have been interpolated, not observed, for completeness of the decomposition across the entire series and should not be interpreted as true measurements.</p>
-<p>As seen in <a href="#fig-decomp_damlvl">Figure&nbsp;10</a> and <a href="#fig-decomp_sst">Figure&nbsp;11</a>, both the dam level and sea surface temperature series show strong seasonal trends with <a href="#fig-decomp_damlvl">Figure&nbsp;10</a> showing multi-year drought and recovery cycles. There are noticeable dips in 2005 and, more severely, 2018, as opposed to a stable long-run trend. The SST trend is more stable than the dam trend for majority of the observed period. This can be attributed to SST being driven by the annual warming and cooling due to heating angles whereas dam levels are driven not only by seasonal patterns but also by the long-term irregular hydrological cycle. Towards the end of the SST series there is a sharp drop followed by a steep increase, this is consistent with the predicted 2026/2027 El Niñoeven but should be interpreted carefully.</p>
-</section>
-<section id="model-fitting" class="level2">
-<h2 class="anchored" data-anchor-id="model-fitting">Model fitting</h2>
-<p>This project fits and compares AR,MA,ARMA and SARIMA against the benchmark models: Mean, Naive, Seasonal naive and Drift, for both the <code>Dam_Levels_from_2000</code> and <code>sst</code> datasets. A time series regression model is then fit on <code>Dam_Levels_from_2000</code> using the sea surface temperature as a predictor to determine if sea surface temperature in the eastern Pacific can improve the prediction of Theewaterskloof dam levels to aid in drought prediction.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-acf_pacf_differenced" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-acf_pacf_differenced-1.png" class="img-fluid figure-img" width="1152"></p>
-<figcaption class="figure-caption">Figure&nbsp;12: ACF and PACF plots for both dam levels and sea surface temperature for the seasonally differenced data.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-acf_pacf_differenced">Figure&nbsp;12</a> shows the ACF and PACF of both the dam level and SST series after seasonal differencing. The dam level ACF decays monotonically from lag 1. The PACF has significant spikes at lags 1 and 2, this is consistent with the AR(2) structure identified in the EDA. There are some significant spikes at lags 12-14 which is more indicative of a seasonal MA term than a seasonal AR term. The SST PACF is noisier than the dam level one, with a few additional significant spikes. This irregular autocorrelation structure provides evidence that SST does not reduce to a low-order SARIMA model.</p>
-<section id="theewaterskloof-dam-capacity" class="level3">
-<h3 class="anchored" data-anchor-id="theewaterskloof-dam-capacity">Theewaterskloof dam capacity</h3>
-<p>Dam level data are available from 2000 to 2026. The most recent 2 years are held out as a test set and the remainder is used as the training set. SST uses the clean pre-2021 dataset with the last two years, 2020-2021 as the test set and the previous years as the training set.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="tbl-dam_accuracy" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;1: Out-of-sample error metrics for the benchmark and ARIMA-family models on the Theewaterskloof dam capacity series.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-<th style="text-align: right;">MAE</th>
-<th style="text-align: right;">MAPE (%)</th>
-<th style="text-align: right;">CRPS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">AR</td>
-<td style="text-align: right;">29.244</td>
-<td style="text-align: right;">24.587</td>
-<td style="text-align: right;">33.246</td>
-<td style="text-align: right;">16.921</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">ARMA</td>
-<td style="text-align: right;">24.536</td>
-<td style="text-align: right;">20.176</td>
-<td style="text-align: right;">27.346</td>
-<td style="text-align: right;">13.399</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Drift</td>
-<td style="text-align: right;">19.590</td>
-<td style="text-align: right;">16.836</td>
-<td style="text-align: right;">24.383</td>
-<td style="text-align: right;">11.978</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">MA</td>
-<td style="text-align: right;">14.809</td>
-<td style="text-align: right;">12.188</td>
-<td style="text-align: right;">16.576</td>
-<td style="text-align: right;">8.359</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Mean</td>
-<td style="text-align: right;">16.144</td>
-<td style="text-align: right;">13.067</td>
-<td style="text-align: right;">15.544</td>
-<td style="text-align: right;">9.499</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Naive</td>
-<td style="text-align: right;">18.977</td>
-<td style="text-align: right;">16.266</td>
-<td style="text-align: right;">23.542</td>
-<td style="text-align: right;">11.641</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SARIMA</td>
-<td style="text-align: right;">14.855</td>
-<td style="text-align: right;">11.578</td>
-<td style="text-align: right;">15.990</td>
-<td style="text-align: right;">7.840</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Seasonal naive</td>
-<td style="text-align: right;">15.560</td>
-<td style="text-align: right;">12.768</td>
-<td style="text-align: right;">17.006</td>
-<td style="text-align: right;">9.164</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<p>From the error metrics displayed in <a href="#tbl-dam_accuracy">Table&nbsp;1</a>, RMSE classifies MA as the optimal model (14.809), MAPE(%) classified Mean as the optimal model (15.544) while both MAE and CRPS show SARIMA having the lowest errors (11.578 and 7.840 respectively). This suggests that the optimal model for the dam levels series is the SARIMA model. Both AR and ARMA perform poorly across all metrics, indicating that a large amount of the series predictability comes from the seasonal component as opposed to just short-run autocorrelation.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="tbl-dam_fit2_accuracy" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;2: Out-of-sample error metrics for the two SARIMA models on the Theewaterskloof dam capacity series.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-<th style="text-align: right;">MAE</th>
-<th style="text-align: right;">MAPE (%)</th>
-<th style="text-align: right;">CRPS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">SARIMA (p=1)</td>
-<td style="text-align: right;">14.855</td>
-<td style="text-align: right;">11.578</td>
-<td style="text-align: right;">15.990</td>
-<td style="text-align: right;">7.840</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SARIMA (p=2)</td>
-<td style="text-align: right;">7.484</td>
-<td style="text-align: right;">6.091</td>
-<td style="text-align: right;">7.988</td>
-<td style="text-align: right;">4.946</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<p><a href="#tbl-dam_fit2_accuracy">Table&nbsp;2</a> shows the error metrics for a SARIMA(1,0,0)(1,1,0)[12] model compared to a SARIMA(2,0,0)(0,1,1)[12]. The second model outperforms the first, roughly halving every error metric, and is thus the final model selected for the dam level series.</p>
-</section>
-<section id="eastern-pacific-sea-surface-temperature" class="level3">
-<h3 class="anchored" data-anchor-id="eastern-pacific-sea-surface-temperature">Eastern Pacific sea surface temperature</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="tbl-sst_accuracy" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;3: Out-of-sample error metrics for the benchmark and ARIMA-family models on the sea surface temperature series.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-<th style="text-align: right;">MAE</th>
-<th style="text-align: right;">MAPE (%)</th>
-<th style="text-align: right;">CRPS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">AR</td>
-<td style="text-align: right;">1.785</td>
-<td style="text-align: right;">1.420</td>
-<td style="text-align: right;">5.898</td>
-<td style="text-align: right;">1.035</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">ARMA</td>
-<td style="text-align: right;">1.990</td>
-<td style="text-align: right;">1.642</td>
-<td style="text-align: right;">6.833</td>
-<td style="text-align: right;">1.184</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Drift</td>
-<td style="text-align: right;">1.773</td>
-<td style="text-align: right;">1.545</td>
-<td style="text-align: right;">6.531</td>
-<td style="text-align: right;">1.104</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">MA</td>
-<td style="text-align: right;">2.376</td>
-<td style="text-align: right;">2.073</td>
-<td style="text-align: right;">8.551</td>
-<td style="text-align: right;">1.590</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Mean</td>
-<td style="text-align: right;">2.289</td>
-<td style="text-align: right;">1.918</td>
-<td style="text-align: right;">8.333</td>
-<td style="text-align: right;">1.392</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Naive</td>
-<td style="text-align: right;">1.775</td>
-<td style="text-align: right;">1.547</td>
-<td style="text-align: right;">6.540</td>
-<td style="text-align: right;">1.096</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SARIMA</td>
-<td style="text-align: right;">2.025</td>
-<td style="text-align: right;">1.818</td>
-<td style="text-align: right;">7.615</td>
-<td style="text-align: right;">1.361</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Seasonal naive</td>
-<td style="text-align: right;">2.440</td>
-<td style="text-align: right;">2.158</td>
-<td style="text-align: right;">8.898</td>
-<td style="text-align: right;">1.596</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<p><a href="#tbl-sst_accuracy">Table&nbsp;3</a> provides the error metrics for all the fitted models, with the model ranking remaining fairly similar across all metrics. The seasonal naive and SARIMA models perform poorly in comparison to the ARMA model, suggesting that the seasonal component in this series does not provide the same level of predictability as it did in the dam levels data. This agrees with <a href="#fig-acf_pacf_differenced">Figure&nbsp;12</a> which illustrated noisier post-seasonal differencing in the PACF plot. AR is the optimal model overall, outperforming Drift and Naive on MAE, MAPE and CRPS, although Drift and Naive have slightly lower RMSE values. This suggests that the short-run autocorrelation aids in prediction as opposed to the seasonality present in the series.</p>
-</section>
-<section id="predicting-drought-using-sea-surface-temperature-as-a-covariate" class="level3">
-<h3 class="anchored" data-anchor-id="predicting-drought-using-sea-surface-temperature-as-a-covariate">Predicting drought using sea surface temperature as a covariate</h3>
-<p>The above fitted models model the dam level and SST independently. Next, a dynamic regression (SARIMAX) model is fitted using lagged SST as a predictor of dam levels. This is done to try and achieve the projects aim of predicting drought in the Western cape using eastern Pacific sea surface temperature.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-ccf_dam_sst" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-ccf_dam_sst-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;13: Cross-correlation between dam capacity and sea surface temperature.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>The CCF in <a href="#fig-ccf_dam_sst">Figure&nbsp;13</a> oscillates with approximately a 12 month period. This is seen by the troughs at -24,-12,0,12 and 24 and peaks at -18,-6,6 and 18. This illustrates the seasonal pattern already observed in <a href="#fig-monthly_damlvl">Figure&nbsp;3</a> and <a href="#fig-monthly_sst">Figure&nbsp;4</a> and does not necessarily indicate a clean lead-lag relationship. Considering the lags for where SST precedes dam levels, the strongest correlation is at lag 6. This is used as the optimal lag in the SARIMAX model.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Series: current_mean 
-Model: TSLM 
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--55.847 -15.098   4.431  17.767  34.469 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -107.311     26.094  -4.112 5.53e-05 ***
-sst_lag        6.866      1.017   6.754 1.27e-10 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 22.14 on 220 degrees of freedom
-Multiple R-squared: 0.1717, Adjusted R-squared: 0.168
-F-statistic: 45.62 on 1 and 220 DF, p-value: 1.2658e-10</code></pre>
-</div>
-</div>
-<p>The Time Series Linear Model baseline suggests that dam level is significantly related to lagged SST (6 months prior). This baseline model has a small adjusted R<span class="math inline">\(^2\)</span> value (0.168) indicating that SST alone is a weak predictor of dam levels. What is interesting to note is that the positive sign of the coefficient (6.866) suggests that warmer SST is associated with higher dam levels, this is opposite to what was expected.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-tslm_resid" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-tslm_resid-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;14: Residual diagnostics for the Time Series Linear Model baseline: dam capacity ~ lagged SST.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-tslm_resid">Figure&nbsp;14</a> shows strongly correlated residuals in benchmark linear model with the ACF decaying gradually from approximately 1 at lag 1. It is also clear that the residuals are not white noise which violates the assumption of independent residuals that Time Series Linear Models make. This motivates modelling the errors using a SARIMA model.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="tbl-dynreg_coef" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;4: Dynamic regression (SARIMAX) coefficient estimates for dam capacity.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Term</th>
-<th style="text-align: right;">Estimate</th>
-<th style="text-align: right;">Std. Error</th>
-<th style="text-align: right;">t value</th>
-<th style="text-align: right;">p value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">ar1</td>
-<td style="text-align: right;">1.397</td>
-<td style="text-align: right;">0.064</td>
-<td style="text-align: right;">21.872</td>
-<td style="text-align: right;">0.000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">ar2</td>
-<td style="text-align: right;">-0.421</td>
-<td style="text-align: right;">0.064</td>
-<td style="text-align: right;">-6.602</td>
-<td style="text-align: right;">0.000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">sma1</td>
-<td style="text-align: right;">-0.767</td>
-<td style="text-align: right;">0.049</td>
-<td style="text-align: right;">-15.751</td>
-<td style="text-align: right;">0.000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">sst_lag</td>
-<td style="text-align: right;">-0.018</td>
-<td style="text-align: right;">0.606</td>
-<td style="text-align: right;">-0.029</td>
-<td style="text-align: right;">0.977</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<p><a href="#tbl-dynreg_coef">Table&nbsp;4</a> indicates that if the errors are modelled using SARIMA(2,0,0)(0,1,1)[12], the same model specified when modelling dam levels individually, SST is insignificant (<span class="math inline">\(p = 0.977\)</span>). All non-SST terms are statistically significant (<span class="math inline">\(p &lt; 0.001\)</span>). This confirms that the dam level series is explained by its own history as opposed to SST in the eastern Pacific. The significant relationship found in the baseline linear model can be attributed to shared persistence and seasonality as opposed to genuine predictions from SST.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-dynreg_resid" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-dynreg_resid-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;15: Residual diagnostics for the SARIMAX model.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>In comparison to <a href="#fig-tslm_resid">Figure&nbsp;14</a>, <a href="#fig-dynreg_resid">Figure&nbsp;15</a> confirms that modelling the errors using a SARIMA model fixes the autocorrelation issue present in the baseline linear model aside from one marginal spike at the seasonal lag. Thus, the SARIMA(2,0,0)(0,1,1)[12] structure is appropriate for the dam level series autocorrelation.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="tbl-reg_accuracy" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5: Out-of-sample error metrics of the regression models and univariate benchmarks on the same test window.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-<th style="text-align: right;">MAE</th>
-<th style="text-align: right;">MAPE</th>
-<th style="text-align: right;">CRPS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Time series linear model</td>
-<td style="text-align: right;">24.439</td>
-<td style="text-align: right;">21.562</td>
-<td style="text-align: right;">31.210</td>
-<td style="text-align: right;">14.365</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Naive</td>
-<td style="text-align: right;">27.803</td>
-<td style="text-align: right;">22.852</td>
-<td style="text-align: right;">29.182</td>
-<td style="text-align: right;">15.004</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Dynamic regression</td>
-<td style="text-align: right;">28.376</td>
-<td style="text-align: right;">24.016</td>
-<td style="text-align: right;">30.727</td>
-<td style="text-align: right;">15.990</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SARIMA</td>
-<td style="text-align: right;">28.395</td>
-<td style="text-align: right;">24.029</td>
-<td style="text-align: right;">30.741</td>
-<td style="text-align: right;">16.011</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Drift</td>
-<td style="text-align: right;">28.843</td>
-<td style="text-align: right;">23.716</td>
-<td style="text-align: right;">30.172</td>
-<td style="text-align: right;">15.494</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Seasonal naive</td>
-<td style="text-align: right;">43.739</td>
-<td style="text-align: right;">40.221</td>
-<td style="text-align: right;">57.533</td>
-<td style="text-align: right;">28.092</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<p><a href="#tbl-reg_accuracy">Table&nbsp;5</a> shows that the dynamic linear regression model is approximately equivalent to the SARIMA model when compared on the same test set. This is expected since the lagged SST added no improved prediction accuracy in the linear regression model when the errors were modelled with SARIMA. Although the error values for the benchmark linear model are on average the lowest out of all models, this is misleading. <a href="#fig-tslm_resid">Figure&nbsp;14</a> showed clear autocorrelated residuals and thus the model is not correctly modelling a genuine predictive relationship but rather a short-run overlap due to both dam levels and SST sharing an upward trend from 2018 to 2019 (<a href="#fig-lag_deseason">Figure&nbsp;6</a>). This provides no evidence that eastern Pacific sea surface temperatures improve dam level forecasts more than what the series history does.</p>
-</section>
-</section>
-<section id="forecasting" class="level2">
-<h2 class="anchored" data-anchor-id="forecasting">Forecasting</h2>
-<section id="theewaterskloof-dam-capacity-1" class="level3">
-<h3 class="anchored" data-anchor-id="theewaterskloof-dam-capacity-1">Theewaterskloof dam capacity</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-forecast_damlvl_final" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-forecast_damlvl_final-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;16: 2-year forecasts of Theewaterskloof dam capacity using a SARIMA(2,0,0)(0,1,1)[12] model.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-forecast_damlvl_final">Figure&nbsp;16</a> shows the forecast using SARIMA(2,0,0)(0,1,1)[12] on the dam levels series through 2026 and 2027. The strong seasonal cycle is maintained although the forecasted peaks are slightly lower than the previous few years. The model is reverting back towards more typical levels as opposed to just extrapolating the most recent observations. The uncertainty associated with these forecasts grows substantially with the forecast horizon. Since this model is built on its own history with no covariate added it cannot predict the onset of an El Niñoevent nor drought in the Western Cape.</p>
-</section>
-<section id="eastern-pacific-sea-surface-temperature-1" class="level3">
-<h3 class="anchored" data-anchor-id="eastern-pacific-sea-surface-temperature-1">Eastern Pacific sea surface temperature</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-forecast_sst_final" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="project-02_files/figure-html/fig-forecast_sst_final-1.png" class="img-fluid figure-img" width="960"></p>
-<figcaption class="figure-caption">Figure&nbsp;17: 2-year forecasts of eastern Pacific sea surface temperature using an AR(1,0,0)(0,1,0)[12] model.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p><a href="#fig-forecast_sst_final">Figure&nbsp;17</a> shows the forecast using AR(1,0,0)(0,1,0)[12] on the sea surface temperature series through 2022 and 2023. The series maintains its strong seasonal pattern with temperatures peaking around 26°C and dropping to approximately 22°C. This is similar to the historical pattern. Uncertainty in the prediction intervals grows with the forecast horizon but not as much as for the dam level series. The prediction only extends into 2023 since the model was built on pre-2021 data due to large portions of missing observations after 2021. A simple AR process is unable to predict unprecedented events as the model forecasts revert towards typical seasonal values. Even if the model was forecasting into 2027 it would be unable to pick up the anticipated 2026/2027 El Niñoevent.</p>
-</section>
-</section>
-<section id="discussion" class="level2">
-<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
-<section id="model-recommendations" class="level3">
-<h3 class="anchored" data-anchor-id="model-recommendations">Model recommendations</h3>
-<p>The optimal model for the Theewaterskloof dam capacity series is the SARIMA(2,0,0)(0,1,1)[12] model. This model was selected based on the PACF plot in <a href="#fig-acf_pacf_differenced">Figure&nbsp;12</a> as well as a comparison of its error metrics with the initial SARIMA model specification. For sea surface temperature, <a href="#fig-acf_pacf_differenced">Figure&nbsp;12</a>’s PACF plot suggested that SST prediction would not be improved by a more complex seasonal model. This was confirmed when the AR(1,0,0)(0,1,0)[12] model, on average, outperformed all other candidate models, when their error metrics were compared. Using SST as a lagged predictor for dam capacity was statistically insignificant as it did not improve predictive accuracy beyond what the series history already did.</p>
-</section>
-<section id="limitations" class="level3">
-<h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
-<p>There were several limitations when working with these datasets. The structural gaps present in the SST series (November 2021 - March 2023, October 2024 - March 2025) meant that the regression analysis could only use pre-2021 data. This loss of information decreased the size of the training set and meant that the model could not predict into 2027, when the super El Niñois anticipated.</p>
-<p>The CCF-derived 6 month lag is consistent with the typical literature-motivated 3-6 month window for El Nino, however, the CCF is dominated by the common 12-month seasonality of both the series rather than a clean lead-lag signal. Thus, it cannot be accurately determined if a 6 month lag is the true lag.</p>
-</section>
-<section id="improvements" class="level3">
-<h3 class="anchored" data-anchor-id="improvements">Improvements</h3>
-<p>To predict drought in the Western Cape, it would be more useful to use rainfall data as this has a direct impact on dam levels. Monitoring water usage across the country may also provide improved predictive information that eastern Pacific sea surface temperature.</p>
-<p>The structural gaps in the SST data could be worked around by using a more comprehensive set of buoy observations that span a wider longitudinal range than the single 95W array used here. By replacing the buoy array with an array that averages over a larger region of the Pacific, there would be fewer missing observations and the series would not need to be truncated to avoid large structural gaps. The El Niño Southern Oscillation (ENSO) moves through El Nino, La Niña and neutral periods. It may be useful to use a regime-switching model that would capture this variability as opposed to a model with fixed coefficients.</p>
-</section>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ol type="1">
-<li><p>Mason, S. J. (2001). El Niño, climate change, and Southern African climate. Environmetrics, 12(4), 327-345. https://doi.org/10.1002/env.476</p></li>
-<li><p>Thomson, M. C., Abayomi, K., Barnston, A. G., Levy, M., &amp; Dilley, M. (2003). El Niño and drought in southern Africa. The Lancet, 361(9358), 626-627. https://doi.org/10.1016/S0140-6736(03)12421-X</p></li>
-<li><p>Mail &amp; Guardian. (2026, September 1). The SAWS warns exceptionally strong 2026/2027 El Niño could bring severe heatwaves to SA. https://mg.co.za/the-green-guardian/2026-09-01-the-saws-warns-exceptionally-strong-2026-2027-el-nino-could-bring-severe-heatwaves-to-sa/</p></li>
-</ol>
+<p>Both series were aggregated to monthly means. Neither dataset contains personal information. Download instructions are in the detailed analysis and the <a href="../appendix/code-and-data.html">code and data appendix</a>.</p>
+<p><strong>Methods used:</strong> STL decomposition, ACF/PACF and unit root tests to choose the differencing and candidate orders. Seven seasonal ARIMA candidates selected by rolling-origin cross-validation (with AICc as a check) on the training data only, then evaluated once on a held-out test set against Mean, Naive, Seasonal naive, Drift and ETS(A,N,A). A prewhitened cross-correlation to choose the SST lag, a time series linear model, and a dynamic regression (SARIMAX). Accuracy measured with RMSE, MAE, MAPE and CRPS; residuals checked with Ljung-Box tests.</p>
+<p><strong>Key findings:</strong></p>
+<ul>
+<li>The selected dam capacity model is ARIMA(1,0,0)(0,1,1)[12] (test CRPS = 4.828, ranked 1 of 6 models, against 9.164 for Seasonal naive). Most of the predictability comes from the dam’s own persistence and seasonality.</li>
+<li>The selected SST model is ARIMA(2,0,0)(0,1,1)[12] (test CRPS = 0.585, ranked 2 of 6). It performed very similarly to the Seasonal naive model on the short SST test set, with a slightly higher CRPS but lower RMSE, MAE and MAPE.</li>
+<li>The two-year dam capacity forecast keeps the seasonal cycle (monthly means between 43.1% and 77.6%), but the 95% prediction interval widens to about 66 percentage points by the end of the horizon and exceeds 100% capacity. The dam model’s residuals are not fully white noise (Ljung-Box <span class="math inline">\(p\)</span> = 0.001), so these intervals are probably too narrow.</li>
+<li>The raw cross-correlation between dam levels and SST is dominated by their five-to-six-month seasonal offset, not by El Niño. After prewhitening, the strongest lead is at 10 months (CCF = -0.091), with 0 of 12 lead lags outside the 95% bounds.</li>
+<li>A time series linear model finds a significant negative relationship between lagged SST and dam levels (<span class="math inline">\(\hat\beta\)</span> = -2.779, <span class="math inline">\(p\)</span> = 0.012), as hypothesised, but its residuals are strongly autocorrelated. With ARIMA errors, the SST coefficient is -0.341 (<span class="math inline">\(p\)</span> = 0.663), and the dynamic regression’s forecasts (CRPS = 18.852) are no better than the univariate model’s (18.700).</li>
+<li>There is no statistically significant evidence that SST at 95°W is a useful monthly leading indicator of Theewaterskloof Dam levels.</li>
+<li>Forecast rankings depend on the test window: the Naive model beat the ARIMA model during the 2019–2021 post-drought recovery. This is why selection used cross-validation rather than a single test set.</li>
+<li>Gaps in the buoy record from November 2021 meant that no model could forecast into the 2026/2027 El Niño period.</li>
+<li>Model logit-transformed capacity so that prediction intervals stay within 0-100%.</li>
+</ul>
+<p><strong>What I would do differently next time:</strong></p>
+<ul>
+<li>Use catchment rainfall and water-use data as predictors, since they drive dam inflow and outflow directly.</li>
+<li>Use a gap-free ENSO index, such as the Oceanic Niño Index, instead of a single buoy line, so that forecasts could reach 2027.</li>
+<li>Fit a regime-switching model that allows the SST–dam relationship to differ between El Niño, La Niña and neutral phases.</li>
+<li>Model logit-transformed capacity so that prediction intervals stay within 0–100%.</li>
+</ul>
+<p><strong>Link to the detailed analysis:</strong> <a href="../projects/project-02-analysis.html">Detailed analysis and code</a></p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

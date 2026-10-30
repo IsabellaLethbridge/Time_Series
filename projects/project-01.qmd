@@ -3,115 +3,52 @@ format: html
 editor: visual
 ---
 
-This is just basic EDA so far. I might only use this dataset to fit a hidden markov model once we've covered that topic in class.
-
--   **Section & Topic:**\[cite: 1\]
--   **Project Type:** (Implementation / Shiny App / Exploration / Simulation)\[cite: 1\]
--   **Question / Aim:**\[cite: 1\]
--   **Data Used:** (Include source details if real-world data)\[cite: 1\]
--   **Methods Used:**\[cite: 1\]
-
-## Key Findings
-
-<!-- Summary of findings -->
-
-\[cite: 1\]
-
-## Reflections
-
--   **What I would do differently next time:**\[cite: 1\]
-
-## Links
-
--   [Detailed Analysis & Code Script](../appendix/code-and-data.qmd)\[cite: 1\]
-
 ```{r}
-#|echo: false
-#|warning: false
-# Load required libraries: 
-library(readr)
-library(tidyverse)
-library(tsibble)
-library(lubridate)
-library(dplyr)
+#| include: false
+
+# Read in key results from project-01-analysis.qmd (render that file first):
+# Note: path works here and when included in portfolio.qmd
+res_path = c("_data/project01_results.rds", "projects/_data/project01_results.rds")
+p01 = readRDS(res_path[file.exists(res_path)][1])
+mw   = function(x) format(round(x), big.mark = ",")
+mw100 = function(x) format(round(x, -2), big.mark = ",")
+dt   = function(x) trimws(format(x, "%e %B %Y"))
+pval = function(x) format.pval(x, eps = 0.001, digits = 2)
+june = function(yr) mw100(p01$june$demand[p01$june$year == yr])
 ```
 
-```{r}
-# Read in dataset: 
-dat = read_csv('_data/ESK6816.csv')
-# View(dat)
-```
+# Forecasting South African daily electricity demand with exponential smoothing
 
-```{r}
-# Convert data to time series object:
-demand_ts = ts(
-  dat$`RSA Contracted Demand`,
-  start = c(2019, 2161), # Hour 2161 of 2019 (April 1st)
-  frequency = 8766       # Hourly frequency per year
-)
+**Section and topic:** Section 2 - Exponential smoothing (Holt-Winters and ETS state-space models).
 
-# Convert time series object to dataframe (for plotting):
-demand_df = data.frame(
-  hour    = as.numeric(time(demand_ts)),
-  count   = as.numeric(demand_ts)
-)
+**Type of project:** Implementation and model comparison on real-world data. Additive Holt-Winters (ETS(A,N,A)) coded from first principles, including its prediction intervals.
 
-# Plot:
-ggplot(data = demand_df,
-       mapping = aes(x = hour,
-                     y = count)) +  
-  geom_line(col = 'deeppink')  +
-  theme_minimal(base_size=14) +
-  labs(title = 'South Africa hourly electricity demand.', 
-       x = 'Time (hours)',
-       y = 'Hourly peak demand')
-```
+**Aim:** To forecast daily South African electricity demand 1 to 14 days ahead with exponential smoothing. To determine which exponential smoothing model forecasts best compared to the naive and seasonal naive benchmarks, whether its prediction intervals are reliable, and whether removing the annual cycle improves the forecasts.
 
-As seen in the above plot, we cannot get a clear idea of the seasonality. We need to aggregate the data.
+**Data used:**
 
-To handle the leap years present in the data we will use tsibble.
+-   Hourly RSA contracted demand (MW), 1 April 2019 to 13 September 2023. Source: Eskom (2024), *Eskom Data Portal*, <https://www.eskom.co.za/dataportal/>. The data are aggregated system totals with no personal information.
 
-```{r}
-# Create a tsibble dataframe:
-df_ts = tibble(datetime=seq(from=as.POSIXct('2019-04-01 00:00:00'),
-                              length.out=length(demand_ts),
-                              by='hour'),
-               demand=as.numeric(demand_ts)
-               ) |>
-  as_tsibble(index=datetime)
+The hourly data were averaged to daily mean demand. The models use `r dt(p01$start_model)` to `r dt(p01$test_end)`, which leaves out the 2020 lockdown period. The training set ends on `r dt(p01$train_end)` (`r p01$n_train` days). Its last 8 weeks are a validation window for modelling choices. The last 8 weeks of the data (`r dt(p01$test_start)` to `r dt(p01$test_end)`) are the test set. Download instructions are in the [detailed analysis](project-01-analysis.qmd#data).
 
-# Aggregate to daily values:
-demand_daily_ts = df_ts |>
-  index_by(date=~as.Date(.))|>
-  summarise(demand_mean=mean(demand,na.rm=TRUE))
+**Methods used:** A Bai-Perron structural break test (with a sensitivity check on the minimum segment length) to choose the start date. Time plots, day-of-week boxplots, the ACF and an MSTL decomposition into weekly and annual components. SES, additive Holt-Winters with and without a damped trend and multiplicative Holt-Winters were fitted as ETS state-space models with `forecast::ets()` and compared by AICc. ETS(A,N,A) was also implemented from first principles: the error-correction filter, estimation by minimising the SSE with `optim()`, and the analytic forecast variance. Residual diagnostics included the Ljung-Box test and an analysis of the largest residuals against public holidays. The forecasts were evaluated against the naive and seasonal naive benchmarks with a rolling forecast origin (horizons 1 to 14 days, RMSE, MAE, MAPE and the Diebold-Mariano test). The coverage of the model-based prediction intervals was compared with empirical intervals built from in-sample multi-step errors. As an extension, a deterministic annual cycle (Fourier terms) was removed before smoothing, and this choice was made on the validation window rather than the test set.
 
-# Plot:
-ggplot(data = demand_daily_ts,
-       mapping = aes(x = date,
-                     y = demand_mean)) +  
-  geom_line(col = 'deeppink')  +
-  theme_minimal(base_size=14) +
-  labs(title = 'South Africa daily electricity demand.', 
-       x = 'Time (days)',
-       y = 'Daily peak demand')
-```
+**Key findings:**
 
-Again, there is still a lot of unnecessary noise in the data so we're going to aggregate to months.
+-   The end of the lockdown disruption falls between `r dt(p01$bp_first)` and `r dt(p01$bp_last)` depending on the minimum segment length, so the modelling period starts on 1 March 2021, the move to alert level 1.
+-   Daily demand has a strong and stable weekly pattern (Sunday demand is about `r mw100(abs(p01$eff_sun))` MW below the level and Tuesday to Thursday about `r mw100(p01$eff_tue_thu[1])` to `r mw100(p01$eff_tue_thu[2])` MW above it), a winter peak and no long-term trend. ETS(A,N,A) had the lowest AICc, which agrees with automatic selection (`r p01$auto_method`).
+-   The estimates are $\hat{\alpha} \approx$ `r round(p01$alpha_ets, 2)` and $\hat{\gamma} \approx 0$: the weekly pattern is fixed while the level moves almost like a random walk. My filter reproduces the `ets()` residuals exactly (maximum difference `r signif(p01$max_resid_diff, 2)` MW). Estimated independently, my optimiser reached the boundary ($\hat{\alpha} \approx$ `r round(p01$alpha_own, 3)`) with a marginally lower SSE, which shows how flat the likelihood is in $\alpha$.
+-   Out of sample, ETS(A,N,A) had an RMSE of `r mw(p01$rmse_ana)` MW (MAPE `r round(p01$mape_ana, 1)`%), compared with `r mw(p01$rmse_snaive)` MW for the seasonal naive and `r mw(p01$rmse_naive)` MW for the naive benchmark. My own code gave `r mw(p01$rmse_own)` MW. One day ahead it roughly halved the seasonal naive error (`r mw(p01$rmse_h1_ana)` vs `r mw(p01$rmse_h1_snaive)` MW, Diebold-Mariano p-value `r pval(p01$dm_p[1])`), but at 7 and 14 days ahead the two were equally accurate (p-values `r pval(p01$dm_p[2])` and `r pval(p01$dm_p[3])`).
+-   `r p01$n_big_holiday` of the 10 largest residuals fall on a public holiday or the day after one. The residuals are autocorrelated and heavy-tailed (excess kurtosis `r round(p01$excess_kurt, 1)`).
+-   The model-based prediction intervals were too wide (the 80% intervals covered `r round(p01$cov80_model)`% of the test values), because $\hat{\alpha} \approx 1$ implies that uncertainty grows like a random walk and holidays inflate $\hat{\sigma}$. Empirical intervals gave `r round(p01$cov80_emp)`% coverage at the 80% level.
+-   Removing the annual cycle gave opposite results in the two periods: worse on the validation window (RMSE `r mw(p01$val_rmse_ana)` to `r mw(p01$val_rmse_adj)` MW) and better on the test set (`r mw(p01$test_rmse_ana)` to `r mw(p01$test_rmse_adj)` MW). The 2023 winter peak was much lower than in earlier years (mean June demand `r june(2022)` MW in 2022 and `r june(2023)` MW in 2023), so a fixed annual cycle is not reliable. It was left out of the final model.
+-   The final forecast carries the high demand at the end of the series (`r mw(p01$last_obs)` MW, against `r mw(p01$same_day_lastwk)` MW on the same day a week earlier) into every forecast for the next two weeks. This is the main practical weakness of a level with $\hat{\alpha}$ close to 1.
 
-```{r}
-# Aggregate to monthly values:
-demand_monthly_ts = df_ts |>
-  index_by(year_month=~yearmonth(.))|>
-  summarise(demand_mean=mean(demand,na.rm=TRUE))
+**What I would do differently next time:**
 
-# Plot:
-ggplot(data = demand_monthly_ts,
-       mapping = aes(x = year_month,
-                     y = demand_mean)) +  
-  geom_line(col = 'deeppink')  +
-  theme_minimal(base_size=14) +
-  labs(title = 'South Africa monthly electricity demand.', 
-       x = 'Time (months)',
-       y = 'Monthly peak demand')
+-   Make modelling choices on a validation window from the start. I first judged the annual adjustment on the test set, where it looked like a clear improvement. On the validation window it made the forecasts worse.
+-   Model public holidays explicitly, for example with holiday indicators in a regression with ETS errors, since they cause the largest errors and inflate the prediction intervals.
+-   Use a method designed for multiple seasonal patterns (TBATS or double seasonal Holt-Winters), with temperature and load shedding as predictors, instead of a fixed annual adjustment.
+-   Evaluate over several rolling windows covering a full year, including the Christmas period, and model unconstrained demand (adding back the load that was shed) rather than the demand that was actually supplied.
 
-```
+**Link to the detailed analysis:** [Detailed analysis and code](project-01-analysis.qmd)

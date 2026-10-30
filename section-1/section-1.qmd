@@ -5,7 +5,7 @@ editor: visual
 
 ```{r}
 #| echo: false
-#| warning: false 
+#| warning: false
 
 library(ggplot2)
 ```
@@ -16,25 +16,57 @@ library(ggplot2)
 
 1.  Explain what a time series is and how it differs from cross-sectional data, and say why temporal dependence calls for its own methods.
 
+A time series is an ordered sequence of observations on one process. The same observation is recorded at successive time points. Cross-sectional data record many units at a single time point. Thus, their order does not carry information. In a time series, observations are sequentially correlated, so their order carries information. Standard methods assume independent errors whereas a time series needs this dependence to be modelled explicitly.
+
 2.  Treat an observed series as one realisation of a stochastic process.
+
+An observed series is treated as one realisation of a stochastic process. Each $y_t$ is a random variable (before being observed), after being observed it becomes a realised value A stochastic process defines a series of these random variables. Thus, the observed data is one sample path out of all the possible paths the same mechanism could have produced. Although different realisations differ, they have the same statistical character. How far different realisations appear from each other is dependent on the underlying statistical process. In a white noise process, different realisations will lie around a fixed level. In a random walk, the different realisations will drift apart, since shocks accumulate.
 
 3.  Explain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.
 
+Forecasting is when we use available information to estimate an unobserved quantity. A forecast consists of both a point estimate and a prediction interval since the future value is a random variable (and has some uncertainty associated with it). The predictability of a series is dependent on how well its driver are understood, if sufficient relevant data exists, if the series is stable and if publishing the forecasts will change the outcome. A series can only be predictable if the horizon and sampling interval is stated. Forecasting describes what is likely to happen in the future based on past observations, goal setting describes what we want to happen in the future and planning describes the actions implemented to achieve our goal based on our forecasts.
+
 4.  Match a forecast horizon to the decision it supports, and read a forecast as a random variable rather than a single number.
+
+The decision determines the forecast horizon (short-term, medium-term, long-term). The horizon then narrows down the choice of model. Uncertainty increases as the forecast horizon increases.
 
 5.  Identify trend, seasonality, cycle and irregular variation in a plot, and describe the shapes each of them takes in practice.
 
+Trend describes the long-run direction of movement of a series. Seasonality is the repeated pattern, that has a fixed length whereas the cycle refers to longer oscillations in the data often driver by the underlying process. Irregular variation is what remains after removing the trend, seasonality and cycle. Ideally this would just be the innovations but in practice this often still contains short-term dependence. Trend can be linear, exponential, polynomial. Seasonality can be additive, multiplicative or have a single spike.
+
 6.  Produce the four benchmark forecasts, and evaluate any competing model against them on data it has not seen.
+
+The Mean forecasts averages all past observations and carries that value into the future. The Naive carries the last observational value into the future. The Seasonal naive model is where every future cycle repeats the last observed cycle. The Drift model carries the slope of the line between the first and last observation into the future.
 
 7.  Use the lag and lead operators, and the algebra built on them, to write models compactly.
 
+The lag operator $L$ shifts a series back by a period, $L^k y_t = t_{t-k}$ and the lead operator $F = L^{-1}$ shifts the series forward, $F y_t = y_{t+1}$. Both of the operators are linear and we can use this to write models compactly. AR(2) $y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \varepsilon_t$ can be written as $(1 - \phi_1 L - \phi_2 L^2)y_t = \varepsilon_t$.
+
 8.  Define weak stationarity, say which of its conditions a given series violates, and choose a transformation that restores it.
+
+A process is weakly stationary if its mean is constant, its variance is constant and finite and the autocorrelation depends only on $h$ on on $t$. The `Airpassengers` dataset is an example of a non-stationary process. To restore stationarity you can transform the data (log/Box-Cox transformation) and difference the series.
 
 9.  Define white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.
 
+White noise $\varepsilon_t \sim WN(0,\sigma^2)$ has $E(\varepsilon_t)=0$, $\text{Var}(\varepsilon_t)=\sigma^2$ and $\gamma(h)=0$ for $h\neq0$, so its ACF and PACF show no significant spikes.
+
+MA($q$), $y_t=\mu+\sum_{j=0}^{q}\theta_j\varepsilon_{t-j}$ with $\theta_0=1$ is always stationary and $E(y_t)=\mu$. The $\varepsilon$ terms are uncorrelated, thus $\gamma(0)=\sigma^2\sum_{j=0}^{q}\theta_j^2$. When the lag is $h \le q$, $y_t$ and $y_{t-h}$ have some common shocks ($\varepsilon_{t-h},\dots,\varepsilon_{t-q}$). Only the shared shocks contribute to the covariance, so $\gamma(h)=\sigma^2\sum_{j=0}^{q-h}\theta_j\theta_{j+h}$ and $\rho(h)=\gamma(h)/\gamma(0)$. When the lag is $h>q$, there are no shocks in common, so $\gamma(h)=0$. Thus, the ACF of an MA($q$) cuts off after lag $q$.
+
+AR(1), $y_t=c+\phi y_{t-1}+\varepsilon_t$ is stationary when $|\phi|<1$. Since the mean is constant, $\mu=c+\phi\mu$, thus $E(y_t)=c/(1-\phi)$. $\varepsilon_t$ is uncorrelated with $y_{t-1}$, thus $\gamma(0)=\phi^2\gamma(0)+\sigma^2$, so $\gamma(0)=\sigma^2/(1-\phi^2)$, which is only finite when $|\phi|<1$. Multiplying the mean-adjusted equation by $y_{t-h}-\mu$ and taking expectations gives $\gamma(h)=\phi\gamma(h-1)$, so $\rho(h)=\phi^h$. Thus, the ACF of an AR($p$) tails off. Once $y_{t-1},\dots,y_{t-p}$ are included, further lags add no new information, so the PACF cuts off after lag $p$.
+
+ARMA(1,1), $y_t=c+\phi y_{t-1}+\varepsilon_t+\theta\varepsilon_{t-1}$ is stationary when $|\phi|<1$ and $E(y_t)=c/(1-\phi)$. The MA term only affects the covariance at lag 1. When the lag is $h\ge2$, $\gamma(h)=\phi\gamma(h-1)$, thus the ACF decays like an AR(1) after lag 1. The process can be written as both an MA($\infty$) and an AR($\infty$) (when $|\theta|<1$), so neither the ACF nor the PACF cuts off. Thus, both the ACF and PACF of an ARMA($p,q$) tail off.
+
+ARIMA(0,1,0), $y_t=y_{t-1}+\varepsilon_t$ is the simplest ARIMA (a random walk). Substituting back gives $y_t=y_0+\sum_{i=1}^t\varepsilon_i$. The $\varepsilon$ terms are uncorrelated, thus $\text{Var}(y_t)=t\sigma^2$, which grows with $t$, so the process is non-stationary. $\text{Corr}(y_t,y_{t-h})=\sqrt{(t-h)/t}\approx1$, thus the ACF decays very slowly. Differencing gives $(1-L)y_t=\varepsilon_t$, which is white noise. Thus, an ARIMA($p,d,q$) is differenced $d$ times and the ARMA($p,q$) is then identified from the differenced series.
+
+SARIMA$(p,d,q)(P,D,Q)_s$ applies the same results at the seasonal lags $s, 2s, \dots$. For example, the seasonal MA(1), $y_t=\varepsilon_t+\Theta\varepsilon_{t-12}$, only shares a shock with $y_{t-12}$, thus $\gamma(12)=\Theta\sigma^2$ and $\gamma(h)=0$ at every other lag $h\neq0$. Thus, the ACF of a seasonal MA has spikes at multiples of $s$ that cut off after lag $Qs$, and the PACF of a seasonal AR has spikes at multiples of $s$ that cut off after lag $Ps$. A slow decay at lags $s, 2s, \dots$ means a seasonal difference is needed.
+
 10. Fit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.
 
-11. Explain volatility clustering and fit ARCH and GARCH models to it
+The Box--Jenkins workflow has four steps: identification, estimation, diagnostic checking and forecasting. I applied this to the `AirPassengers` series in [Section 1](../section-1/section-1.qmd#sec-arima). I also followed the full workflow on real data in [Project 2](../project-02/project-02-analysis.qmd), where I fitted and compared AR, MA, ARMA and SARIMA models for Theewaterskloof Dam capacity and sea surface temperature.
+
+11. Explain volatility clustering and fit ARCH and GARCH models to it.
+
+Volatility clustering describes how large movements tend to follow large movements and small movements tend to follow small movements. I tested for ARCH effects and fitted ARCH, GARCH and GJR-GARCH models to daily JSE All Share Index returns in [Project 3](../project-03/project-03-analysis.qmd).
 
 ### What is a time series?
 
@@ -87,9 +119,9 @@ AirPassengers_df = data.frame(
 
 ggplot(data = AirPassengers_df,
        mapping = aes(x = month,
-                     y = count)) + 
-  geom_point(col = 'deeppink') + 
-  geom_line(col = 'deeppink') + 
+                     y = count)) +
+  geom_point(col = 'deeppink') +
+  geom_line(col = 'deeppink') +
   labs(
     title = "Monthly airline passenger numbers (1949–1960).",
     x = "Month",
@@ -104,10 +136,10 @@ ggplot(data = AirPassengers_df,
 Example: Discrete series
 
 ```{r}
-#| echo: false 
-#| warning: false 
+#| echo: false
+#| warning: false
 
-# Read in data: 
+# Read in data:
 library(readr)
 seals = read_csv("_data/seals.csv")
 seals_ts = ts(seals,start=1957,end=1999,frequency=1)[,-1]
@@ -116,7 +148,7 @@ seals_ts = ts(seals,start=1957,end=1999,frequency=1)[,-1]
 
 ```{r}
 #| label: fig-discrete_ts
-#| fig-cap: "Time series plot of the number of seals from 1975 to 1999."
+#| fig-cap: "Time series plot of the number of seals from 1957 to 1999."
 #| fig-width: 7
 #| fig-height: 5
 #| echo: false
@@ -129,10 +161,10 @@ seals_df = data.frame(
 )
 
 ggplot(data = seals_df,
-       mapping = aes(x = year, y = count)) + 
-  geom_col(fill = "lightblue", 
-           color = "black", 
-           width = 1) +  
+       mapping = aes(x = year, y = count)) +
+  geom_col(fill = "#4A8AC9",
+           color = "black",
+           width = 1) +
   scale_x_continuous(breaks = seq(1957, 1999, by = 5)) +
   scale_y_continuous(labels = scales::comma) +
   labs(
@@ -143,11 +175,11 @@ ggplot(data = seals_df,
   theme_minimal()
 ```
 
-@fig-discrete_ts plots the changing number of observed seals over a period of 25 years.
+@fig-discrete_ts plots the changing number of observed seals over a period of 43 years.
 
 **What to do when you have missing observations in a time series?**
 
-In discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation $y_t$, skip the update step in the kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.
+In discrete time series to deal with missing observations you can express the model in state-space form (ARIMA or Structural Time Series). For a missing observation $y_t$, skip the update step in the Kalman filter and only run the prediction step. The likelihood is evaluated only over the observed time points.
 
 ::: callout-tip
 ## Kalman filtering
@@ -174,14 +206,14 @@ Forecasting is a prediction about what will happen in the future based on eviden
 ::: callout-note
 ## Note
 
-A series can only be called predictable if the interval and horizon are stated.
+A series can only be called predictable if the interval and horizon are stated as this helps determine the model.
 :::
 
 Forecast $\rightarrow$ Goal $\rightarrow$ Plan $\rightarrow$ Implementation $\rightarrow$ Outcome $\rightarrow$ Forecast ...
 
 A forecast horizon is how far into the future you try and predict values. When looking at time series data we are looking for stable, informative patterns (not just a lot of data).
 
-A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks dies out, forcing the forecast back to the process mean.
+A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks die out, forcing the forecast back to the process mean.
 
 Stationary AR(1) process, $h$ step forecast error variance:
 
@@ -230,36 +262,38 @@ Plotting a series against its own first lag is the simplest possible diagnostic 
 #| warning: false
 
 # Create the lag (k = -1 aligns Y_{t-1} with Y_t in R's stats::lag)
-lag1 <- stats::lag(AirPassengers, k = -1)
+lag1 = stats::lag(AirPassengers, k = -1)
 
 # Intersect to align dates and create a two-column matrix
-aligned_data <- ts.intersect(Y_t = AirPassengers, Y_lag1 = lag1)
+aligned_data = ts.intersect(Y_t = AirPassengers, Y_lag1 = lag1)
 
 # Scatter plot: x = Lagged Series, y = Original Series
-plot(as.numeric(aligned_data[, "Y_lag1"]), 
+plot(as.numeric(aligned_data[, "Y_lag1"]),
      as.numeric(aligned_data[, "Y_t"]),
-     xlab = "AirPassengers (t-1)", 
+     xlab = "AirPassengers (t-1)",
      ylab = "AirPassengers (t)",
      main = "Lag 1 autocorrelation.",
      col = "deeppink")
 
 ```
 
-2.  Frequency domain - this looks at previous trends
+2.  Frequency domain - this looks at cycles in the series
 
-You would use frequency domain when identifying hidden cycles/patterns or when analysing long-memory dynamics.
+You would use frequency domain when identifying hidden cycles/patterns or when analysing long-memory dynamics. This is covered in [Spectral Analysis](#spectral-analysis).
 
 ### The components of a series
 
-Trend is the long run direction of movement. Seasonality is th pattern that repeats at a fixed and known interval. Cycles are long oscillations with no fixed length. Irregular variation (noise) is random variation unexplained by the former.
+Trend is the long run direction of movement. Seasonality is th pattern that repeats at a fixed and known interval. Cycles are long oscillations with no fixed length. Irregular variation (noise) is random variation unexplained by the trend, seasonality and cycles.
 
 # Time Series Analysis in R
 
 ## `AirPassengers` dataset
 
 ```{r}
+#| eval: false
+
 # Run once — install anything missing
-pkgs <- c("tidyverse", "tsibble", "feasts", "fable", "timetk",
+pkgs = c("tidyverse", "tsibble", "feasts", "fable", "timetk",
           "modeltime", "kableExtra", "here")
 install.packages(pkgs[!pkgs %in% installed.packages()[, "Package"]])
 ```
@@ -278,10 +312,10 @@ print(AirPassengers)
 
 ```{r}
 # Sum by year:
-annual_sum <- aggregate(AirPassengers, FUN = sum)
+annual_sum = aggregate(AirPassengers, FUN = sum)
 
 # Mean by year:
-annual_mean <- aggregate(AirPassengers, FUN = mean)
+annual_mean = aggregate(AirPassengers, FUN = mean)
 
 print(annual_sum)
 print(annual_mean)
@@ -290,11 +324,11 @@ print(annual_mean)
 ### Helper conversions
 
 ```{r}
-t <- time(AirPassengers)
+t = time(AirPassengers)
 
-# Extract Year and Month
-years <- floor(t)
-months <- round(12 * (t - years)) + 1
+# Extract Year and Month:
+years  = floor(t)
+months = round(12 * (t - years)) + 1
 
 head(data.frame(Decimal = as.numeric(t), Year = years, Month = months))
 ```
@@ -302,22 +336,22 @@ head(data.frame(Decimal = as.numeric(t), Year = years, Month = months))
 ### Subsetting with `window()`
 
 ```{r}
-# Extract only the second half of 2023
-sub_ts <- window(AirPassengers, start = c(1950, 7), end = c(1955, 10))
+# Extract July 1950 to October 1955
+sub_ts = window(AirPassengers, start = c(1950, 7), end = c(1955, 10))
 print(sub_ts)
 ```
 
-### Lags and Differences
+### Lags and differences
 
 ```{r}
-# Shift the time index forward by 1 period (does not move the values)
-lagged_ts <- stats::lag(AirPassengers, k = -1)
+# Shift the time index forward by 1 period (does not move the values):
+lagged_ts = stats::lag(AirPassengers, k = -1)
 
-# First-order differencing (removes linear trend)
-diff_ts <- diff(AirPassengers, differences = 1)
+# First-order differencing (removes linear trend):
+diff_ts = diff(AirPassengers, differences = 1)
 
-# Seasonal differencing (removes a 12-month seasonal pattern)
-seasonal_diff_ts <- diff(AirPassengers, lag = 12)
+# Seasonal differencing (removes a 12-month seasonal pattern):
+seasonal_diff_ts = diff(AirPassengers, lag = 12)
 
 diff_ts
 ```
@@ -327,14 +361,14 @@ diff_ts
 ### Combing series
 
 ```{r}
-ts_a <- window(AirPassengers, start = c(1950, 1), end = c(1955, 12))
-ts_b <- window(AirPassengers, start = c(1955, 1), end = c(1956, 12))
+ts_a = window(AirPassengers, start = c(1950, 1), end = c(1955, 12))
+ts_b = window(AirPassengers, start = c(1955, 1), end = c(1956, 12))
 
-# Union: keeps full range, fills gaps with NA
-combined_union <- ts.union(ts_a, ts_b)
+# Union: keeps full range, fills gaps with NA:
+combined_union = ts.union(ts_a, ts_b)
 
 # Intersect: keeps only the overlapping months
-combined_intersect <- ts.intersect(ts_a, ts_b)
+combined_intersect = ts.intersect(ts_a, ts_b)
 
 combined_intersect
 ```
@@ -342,19 +376,19 @@ combined_intersect
 ### Missing data
 
 ```{r}
-has_na <- anyNA(AirPassengers)
+has_na = anyNA(AirPassengers)
 cat("Contains missing values:", has_na, "\n")
 ```
 
 ```{r}
-# Simple linear interpolation for isolated gaps (base R, no extra packages)
-ts_with_gap <- AirPassengers
-ts_with_gap[5] <- NA
-ts_filled <- ts(approx(time(ts_with_gap), 
-                       ts_with_gap, 
-                       xout = time(ts_with_gap))$y, 
-                start = start(ts_with_gap), 
-                frequency = frequency(ts_with_gap))
+# Simple linear interpolation for isolated gaps (base R, no extra packages):
+ts_with_gap    = AirPassengers
+ts_with_gap[5] = NA
+ts_filled      = ts(approx(time(ts_with_gap), 
+                           ts_with_gap, 
+                           xout = time(ts_with_gap))$y, 
+                    start = start(ts_with_gap), 
+                    frequency = frequency(ts_with_gap))
 ts_filled
 ```
 
@@ -379,7 +413,7 @@ plot(AirPassengers,
 ### Check attributes of time series
 
 ```{r}
-# Check the attributes
+# Check the attributes:
 cat("Start:", start(AirPassengers), "\n")
 ```
 
@@ -391,7 +425,7 @@ cat("Frequency:", frequency(AirPassengers), "\n")
 #| warning: false
 library(ggfortify)
 # A first look at structure: naive decomposition (covered in depth in Part B)
-decomp <- decompose(AirPassengers)
+decomp = decompose(AirPassengers)
 autoplot(decomp,
      ts.colour='deeppink')+
   theme_minimal(base_size = 14)
@@ -419,7 +453,7 @@ $$
 \hat{y}_{T+h \mid T} = y_{T+h-m(k+1)}
 $$
 
-Drift - The trend of the previsou observations is carried into the future.
+Drift - The trend of the previous observations is carried into the future.
 
 $$
 \hat{y}_{T+h \mid T} = y_T + \frac{h(y_T-y_1)}{T-1}
@@ -461,6 +495,8 @@ The training window has a fixed length. The number of training observations stay
 
 **What is the difference between interpolation and forecasting?**
 
+Interpolation estimates a value *inside* the observed period, so observations on both sides of the gap can be used. Forecasting estimates a value *after* the forecast origin, so only past observations can be used and the uncertainty grows with the horizon.
+
 ::: callout-note
 ## Note
 
@@ -469,10 +505,11 @@ Don't ignore structural breaks when choosing a validation strategy.
 
 ### Manual cross-validation
 
-Cross-validation is performed using an expanding window approach.
+Cross-validation is performed using an expanding window approach with a 12-month horizon.
 
 ```{r}
 #| warning: false
+#| message: false
 
 # Load data: 
 data(AirPassengers) 
@@ -481,9 +518,9 @@ dat = AirPassengers
 # Load libraries:
 library(forecast)
 
-n = length(dat) # no. observations
-train_n = 60    # no. training data points 
-h = 12          # forecast horizon 
+n       = length(dat) # no. observations
+train_n = 60          # no. training data points 
+h       = 12          # forecast horizon 
 
 # Initialise error matrix:
 names  = c('Mean','Naive','Seasonal naive', 'Drift')
@@ -523,6 +560,8 @@ for (i in train_n:(n-h)) {
 colMeans(res)
 ```
 
+With a 12-month forecast horizon, the Seasonal naive benchmark has the lowest average RMSE. This is because it is the only benchmark model that includes the seasonal pattern in its forecasts. The mean benchmark performs the worst, since the series as an upward trend.
+
 ### Cross-validation using `tsCV()`
 
 ```{r}
@@ -535,7 +574,7 @@ n_err  = sqrt(mean(tsCV_n^2, na.rm = TRUE))
 tsCV_sn = tsCV(AirPassengers,snaive,h=1,window=60)
 sn_err  = sqrt(mean(tsCV_sn^2, na.rm = TRUE))
 
-tsCV_d = tsCV(AirPassengers,rwf,h=1,window=60)
+tsCV_d = tsCV(AirPassengers,rwf,drift=TRUE,h=1,window=60)
 d_err  = sqrt(mean(tsCV_d^2, na.rm = TRUE))
 
 err_df = cbind(m_err,n_err,sn_err,d_err)
@@ -543,13 +582,32 @@ colnames(err_df) = c('Mean','Naive','Seasonal naive','Drift')
 err_df
 ```
 
-When comparing the expanding window vs the sliding window, the sliding window gives lower errors for all models except the seasonal naive model. This is because the `AirPassengers` dataset does not have constant variance, as seen in @fig-continuous_ts.
+```{r}
+fc_funs = list(Mean             = function(x, h) meanf(x, h = h),
+               Naive            = function(x, h) naive(x, h = h),
+               `Seasonal naive` = function(x, h) snaive(x, h = h),
+               Drift            = function(x, h) rwf(x, h = h, drift = TRUE))
+
+cv_rmse = sapply(fc_funs, function(f) {
+  e_expand = tsCV(AirPassengers, f, h = 1)               # expanding window
+  e_slide  = tsCV(AirPassengers, f, h = 1, window = 60)  # sliding window
+  ok = !is.na(e_slide) & !is.na(e_expand)                # same forecast origins
+  c(Expanding = sqrt(mean(e_expand[ok]^2)),
+    Sliding   = sqrt(mean(e_slide[ok]^2)))
+})
+
+round(cv_rmse, 2)
+```
+
+The Naive and Seasonal naive models give the same errors under both the expanding and sliding windows. The Naive model uses only the most recent observation and the Seasonal naive model uses the last observed seasonal cycle, so the length of the training window makes no difference. The Mean benchmark improves when using a sliding window (RMSE = 102.08 vs 153.25). This can be explained by the upward trend in the data. The expanding window uses the entire series history, whereas the sliding window uses only the 60 most recent observations. Thus the mean is closer to the current level resulting in smaller errors. The Drift model is slightly worse under the sliding window (RMSE = 41.98 vs 41.63), since the slope estimated from 60 observations is more variable.
+
+These errors are smaller than in the manual cross-validation since forecasting one month ahead is easier than forecasting 12 months ahead. At one step ahead the Naive, Seasonal naive and Drift models perform similarly but at 12 steps ahead only the Seasonal naive model stays accurate, since it is the only benchmark that captures the seasonality.
 
 ### Exercises
 
 1.  Why is ordinary random k-fold cross-validation inappropriate for forecasting?
 
-If you exclude an observation at time t-1 but use observation t, you are technically predicting the past based on future observations. Future observations must never be used when estimating a forecasting model as this violates a fundamental principal of forecasting -
+If you exclude an observation at time t-1 but use observation t, you are technically predicting the past based on future observations. Future observations must never be used when estimating a forecasting model as this violates a fundamental principal of forecasting - a forecast can only use information that was available at the forecast origin.
 
 2.  Define temporal leakage.
 
@@ -575,7 +633,7 @@ Otherwise the model knows things it could not have known at forecasting time. Th
 
 ### Lag and lead operators
 
-Lag operator $L_{y_{t}} = y_{t-1}$ at time $t$ uses the observation recorded at time $t-1$.
+Lag operator $L y_t = y_{t-1}$: at time $t$ it uses the observation recorded at time $t-1$.
 
 ::: callout-note
 ## Note
@@ -583,15 +641,15 @@ Lag operator $L_{y_{t}} = y_{t-1}$ at time $t$ uses the observation recorded at 
 The subscript records where a value came from, not where it is displayed.
 :::
 
-Lead operator $F_{y_{t}} = y_{t+1}$ at time $t$ uses the observation recorded at time $t+1$, $F = L^{-1}$.
+Lead operator $F y_t = y_{t+1}$: at time $t$ it uses the observation recorded at time $t+1$, $F = L^{-1}$.
 
 ### Lag and lead in R
 
 ```{r}
-y <- c(3, 7, 4, 8, 5)
+y = c(3, 7, 4, 8, 5)
 c(NA, y[1:(length(y)-1)]) # lag by hand
-dplyr::lag(y, n = 1) # same shift
-dplyr::lead(y, n = 1) # lead
+dplyr::lag(y, n = 1)      # same shift
+dplyr::lead(y, n = 1)     # lead
 ```
 
 ```{r}
@@ -608,26 +666,34 @@ Don't get confused between `stats::lag()` and `dplyr::lag()`. They do different 
 
 ### Differencing
 
-First difference: 
-$$
+First difference: $$
 \Delta{y_{t}} = y_t -y_{t-1} = (1-L)y_t,
-$$ 
-
-Seasonal difference (at lag 12): 
 $$
+
+Seasonal difference (at lag 12): $$
 \Delta_{12}y_{t} = y_t -y_{t-12} = (1-L^{12})y_t,
 $$
 
 ```{r}
-# First differences, by hand and with diff().
-y2 <- c(10, 6, 9, 12, 7)
+# First differences, by hand and with diff():
+y2 = c(10, 6, 9, 12, 7)
 y2 - dplyr::lag(y2, 1)
 diff(y2) # Note: no NA added 
 ```
 
 ### Weak and strict stationarity
 
-When we have a multiplicative model, with expanding variance, we can log-transform it to obtain an additive model. This removes the variance of seasonality but as seen below the series still has a trend.
+A series is **weakly stationary** under the following conditions:
+
+1.  Its mean is constant, $E(y_t) = \mu$ for all $t$.
+2.  Its variance is finite and constant, $\text{Var}(y_t) = \sigma^2$ for all $t$.
+3.  Its autocovariance only depends on the lag, $\text{Cov}(y_t, y_{t-k}) = \gamma_k$ for all $t$.
+
+A series is **strictly stationary** if the joint distribution of $(y_{t_1}, \dots, y_{t_k})$ is the same as that of $(y_{t_1+s}, \dots, y_{t_k+s})$ for every shift $s$.
+
+`AirPassengers` violates the first two conditions. The trend and the seasonal pattern mean that $E(y_t)$ changes over time and the seasonalilty increases with the level, so $\text{Var}(y_t)$ is not constant (@fig-continuous_ts).
+
+When we have a multiplicative model, with expanding variance, we can log-transform it to obtain an additive model. This stabilises the variance but, as seen in @fig-additive, the series still has a trend.
 
 ```{r}
 #| label: fig-additive
@@ -657,7 +723,7 @@ ggplot(data = logAP_df,
   theme_minimal()
 ```
 
-Taking differences between observations removes the linear trend and taking seasonal differences removes the seasonal trend.
+Taking differences between observations removes the linear trend and taking seasonal differences removes the seasonal pattern.
 
 ::: callout-important
 ## Assumption
@@ -668,14 +734,14 @@ No trends present in data.
 We can remove both the linear and seasonal trend in the data:
 
 ```{r}
-# Check what sasonal and what regular differences are required: 
+# Check what seasonal and what regular differences are required: 
 nsdiffs(log_AP)
 ndiffs(log_AP)
 ```
 
 ```{r}
 #| label: fig-stationary
-#| fig-cap: "Time series plot of the number of monthly airline passengers from 1949 to 1960 in a stationary distribution."
+#| fig-cap: "Time series plot of the number of monthly airline passengers from 1949 to 1960. The series has been log-transformed, first differenced and seasonally differenced."
 #| fig-width: 7
 #| fig-height: 5
 #| echo: false
@@ -697,16 +763,18 @@ ggplot(data = stationaryAP_df,
   labs(
     title = "Monthly airline passenger numbers (1949–1960).",
     x = "Month",
-    y = "Count"
+    y = "Change in log(count)"
   ) +
   theme_minimal()
 ```
+
+After the log transformation, one seasonal difference and one first difference, the series in @fig-stationary fluctuates around zero with a roughly constant variance.
 
 ### White noise
 
 Weak white noise only requires uncorrelated observations. Strict white noise requires *iid* observations.
 
-White noise means unpredictible variance, whatever the variance.
+White noise cannot be predicted from its own past, whatever its variance.
 
 ::: callout-note
 ## Note
@@ -723,7 +791,7 @@ Filtering is the process of building a new series as a weighted combination of t
 ### The MA($q$) model
 
 $$
-y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q), \quad \varepsilon_t \sim WN(0,\sigma^2)}. 
+y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}, \quad \varepsilon_t \sim WN(0,\sigma^2). 
 $$
 
 The moving average model is driven by lagged shocks not lagged observations. A MA($q$) process is stationary for any values of the coefficients, since it is a finite weighted sum of white noise terms with fixed weights. The coefficients must satisfy invertibility.
@@ -731,26 +799,31 @@ The moving average model is driven by lagged shocks not lagged observations. A M
 ### The AR($p$) model
 
 $$
-y_t = c + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + \varepsilon_t, \quad \varepsilon_t \sim WN(0,\sigma^2). 
+y_t = c + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + \varepsilon_t, \quad \varepsilon_t \sim WN(0,\sigma^2).
 $$
 
 For the autoregressive model there is a set of correlation in the structure. The current value of a variable depends linearly on its own past. An AR($p$) process models memory.
 
 ```{r}
 #| label: fig-ACF
-#| fig-cap: "Three processes."
+#| fig-cap: "ACFs of three simulated processes, white noise, AR(1) and MA(1)."
 #| fig-width: 12
 #| fig-height: 5
 #| echo: false
 #| message: false
 #| warning: false
 
-par(mfrow=c(1,3))
-acf(rnorm(300), main="White noise")
-acf(arima.sim(list(ar=.7),300), main="AR(1)")
-acf(arima.sim(list(ma=.7),300), main="MA(1)")
+library(patchwork)
+set.seed(2026)
 
+p1 = ggAcf(rnorm(300)) + labs(title = "White noise") + theme_minimal()
+p2 = ggAcf(arima.sim(list(ar = 0.7), 300)) + labs(title = "AR(1)") + theme_minimal()
+p3 = ggAcf(arima.sim(list(ma = 0.7), 300)) + labs(title = "MA(1)") + theme_minimal()
+
+p1 | p2 | p3
 ```
+
+@fig-ACF compares the ACFs of the three processe. White noise has no significant autocorrelations, the AR(1) ACF decays geometrically and the MA(1) ACF has no significant spikes after lag 1.
 
 ```{r}
 #| label: fig-ap_process
@@ -761,19 +834,20 @@ acf(arima.sim(list(ma=.7),300), main="MA(1)")
 #| message: false
 #| warning: false
 
-par(mfrow=c(1,2))
-acf(stationary_AP,main='ACF',lag.max=50)
-pacf(stationary_AP,main='PACF',lag.max=50)
+p1 = ggAcf(stationary_AP, lag.max = 50) + labs(title = "ACF") + theme_minimal()
+p2 = ggPacf(stationary_AP, lag.max = 50) + labs(title = "PACF") + theme_minimal()
+
+p1 | p2
 ```
 
 If you are observing spikes outside of the first few this indicates seasonality in the series. @fig-ap_process suggests that there is still seasonality present in the transformed and differenced `AirPassengers` dataset, however this could also just be because differencing reduced the number of observations resulting in a more noisy dataset.
 
-### The ARMA($q,q$) model
+### The ARMA($p,q$) model
 
 The ARMA model allows for process that show persistence and short lived shocks simultaneously. The series must be stationary.
 
 $$
-y_t = c + \sum^p_{i=1} \phi_i y_{t-i} + \varepsilon_t + \sum^q_{j=1} \theta_j \varepsilon_{t-j}, \quad \varepsilon_t \sim WN(0,\sigma^2). 
+y_t = c + \sum^p_{i=1} \phi_i y_{t-i} + \varepsilon_t + \sum^q_{j=1} \theta_j \varepsilon_{t-j}, \quad \varepsilon_t \sim WN(0,\sigma^2).
 $$
 
 this is equivalent to: $\phi (L)y_t = c + \theta (L) \varepsilon_t.$
@@ -786,10 +860,10 @@ ARMA models are fitted by maximum likelihood due to the moving average part (not
 
 ### The ARIMA($p,d,q$) model
 
-The ARIMA model applies $d$ difference to $y_t$ and then fits an ARMA($p,q$) to the result.
+The ARIMA model applies $d$ differences to $y_t$ and then fits an ARMA($p,q$) to the result.
 
 $$
-\phi(L)(1-L)^dy_y = c+ \theta(L)\varepsilon_t
+\phi(L)(1-L)^dy_t = c+ \theta(L)\varepsilon_t
 $$
 
 ```{r}
@@ -800,7 +874,7 @@ $$
 
 library(knitr)
 
-arima_table <- data.frame(
+arima_table = data.frame(
   Specification = c(
     "ARIMA(1,0,0)",
     "ARIMA(0,0,1)",
@@ -825,7 +899,6 @@ kable(arima_table, align = "ll")
 
 Although @tbl-arima_equivalents illustrates the special cases of ARIMA, sometimes there is a constant included that must be taken into account.
 
-
 ```{r}
 #| label: fig-ap_arima
 #| fig-cap: "An ARIMA(1,1,1) model fitted to `AirPassengers` series with forecasts and prediction intervals for 24 months."
@@ -836,7 +909,7 @@ Although @tbl-arima_equivalents illustrates the special cases of ARIMA, sometime
 #| warning: false
 
 fit = Arima(AirPassengers,order=c(1,1,1))
-fc = forecast(fit,h=24) # This forecasts for 24 months 
+fc = forecast(fit,h=24) # This forecasts for 24 months
 autoplot(fc)+
   theme_minimal()+
   labs(
@@ -848,7 +921,7 @@ autoplot(fc)+
 
 ```{r}
 #| label: fig-ap_res
-#| fig-cap: "Residual diagnostics for the fitted ARIMA(1,1,1) model: the residual series, its ACF and a histogram against a normal density."
+#| fig-cap: "Residual diagnostics for the fitted ARIMA(1,1,1) model. The residual series, its ACF and a histogram against a normal density."
 #| fig-width: 7
 #| fig-height: 5
 #| echo: false
@@ -859,7 +932,7 @@ checkresiduals(fit) +
   theme_minimal()
 ```
 
-In @fig-ap_res we can see that the residuals do not look like white noise, this is because the seasonality hasn't been removed from the data with an ARIMA(1,1,1) model.
+The forecasts in @fig-ap_arima do not repeat the seasonal pattern. After a few months they flatten out and the intervals become very wide. In @fig-ap_res we can see that the residuals do not look like white noise. This is due to the ARIMA(1,1,1) model not accounting for the seasonality present in the data.
 
 ### The SARIMA($p,d,q$)($P,D,Q\text{)}_m$ model
 
@@ -878,13 +951,15 @@ When we check an ACF plot of the `AirPassengers` series, we can see clear season
 #| message: false
 #| warning: false
 
-acf(AirPassengers,main='ACF',lag.max=50)
+ggAcf(AirPassengers, lag.max = 50) +
+  labs(title = "ACF") +
+  theme_minimal()
 ```
 
 @fig-ap_acf_season and @fig-ap_res suggest that we need to model the `AirPassengers` series with a seasonality component as well.
 
 ```{r}
-# Which SARIMA model is the best fit: 
+# Which SARIMA model is the best fit:
 best_fit = auto.arima(AirPassengers,
                       lambda=0,
                       stepwise=FALSE,
@@ -894,37 +969,407 @@ summary(best_fit)
 
 ```{r}
 #| label: fig-ap_sarima
-#| fig-cap: "A SARIMA(1,1,1)(0,1,1) model fitted to AirPassengers series with a stochastic level and an evolving seasonal pattern, forecast three years ahead."
+#| fig-cap: "A SARIMA(0,1,1)(0,1,1)[12] model fitted to log(AirPassengers) series with a stochastic level and an evolving seasonal pattern, forecast three years ahead and backtransformed to passenger counts."
 #| fig-width: 7
 #| fig-height: 5
 #| echo: false
 #| message: false
 #| warning: false
 
-fit <- Arima(AirPassengers, order=c(0,1,1),seasonal=c(0,1,1))
+fit = Arima(AirPassengers, order=c(0,1,1),seasonal=c(0,1,1),lambda=0)
 autoplot(forecast(fit, h = 36)) +
   theme_minimal()+
   labs(
-    title='Forecasts from SARIMA(0,1,1)(0,1,1)[12]',
+    title='Forecasts from SARIMA(0,1,1)(0,1,1)[12].',
     x = 'Month',
     y = 'Count'
   )
 
 ```
 
-@fig-ap_sarima carries the seasonal shape forward while the intervals widen. This is the behaviour a seasonal model is fitted for.
+@fig-ap_sarima carries the seasonal shape forward while the intervals widen. The model is fitted on the log scale, so the back-transformed intervals are asymmetric and the seasonal swings grow with the level. This is the behaviour a seasonal model is fitted for.
 
-# Conditional Variance Models
+# Time Series Analysis Exercises
+
+## Question 4
 
 ```{r}
+# Read in data:
+knives = ts(c(19,15,39,102,90,29,90,46,30,66,80,89,82,17,26,29),
+            start = c(1991,1), 
+            frequency = 12)
+```
+
+### a
+
+A $k$-month moving average forecasts the next month using the average of the last $k$ months:
+
+$$
+\hat{y}_{T+1 \mid T} = \frac{1}{k}\sum_{j=0}^{k-1} y_{T-j}.
+$$
+
+```{r}
+k_val = c(3,5,7,9,11)
+
+# Forecast: 
+ma_fc = numeric(length(k_val)) 
+
+# For loop to calculate forecasts:
+for (i in seq_along(k_val)){
+  ma_fc[i] = mean(tail(knives, k_val[i]))
+}
+
+
+knitr::kable(
+  data.frame(k = k_val, 
+             `Forecast for May 1992` = ma_fc, 
+             check.names = FALSE),
+      digits = 2)
+```
+
+The forecasts range from 24 (3-month MA) to about 56 (7-month MA). The 3-month MA only uses February to April 1992, which were all very low months, so it gives a much lower forecast than the longer averages.
+
+### b) Which $k$ minimises the errors?
+
+To choose $k$, each moving average is used to make one-step-ahead forecasts within the data (as if we were standing at each month and forecasting the next). The errors are compared over the same months (December 1991 to April 1992), since the 11-month MA can only start forecasting in December 1991. Comparing over the same period is fairer than letting each $k$ use all the months it can.
+
+```{r}
+# Load data:
+y = as.numeric(knives)
+n = length(y) # no. observations
+
+# Initialise error matrix:
+names = paste0('MA(',k_val,')')
+
+err = matrix(NA,
+             nrow=n,
+             ncol=length(k_val),
+             dimnames=list(NULL,names))
+
+for (j in seq_along(k_val)) {
+  k = k_val[j]
+  for (t in (k+1):n) {
+    # One-step-ahead MA forecast:
+    fc = mean(y[(t-k):(t-1)])
+    
+    # Store forecast error:
+    err[t,j] = y[t]-fc
+  }
+}
+
+# Common forecast origins (December 1991 to April 1992):
+common = 12:16
+
+# Calculate error metrics:
+ma_acc = data.frame(
+  k   = k_val,
+  MSE = colMeans(err[common,]^2)
+)
+
+kable(ma_acc,digits=1,row.names=FALSE)
+```
+
+The MSE of each moving average is calculated over the same 5 forecast origins (December 1991 to April 1992), so that each value of $k$ is compared on the same months. MA(9) has the lowest MSE (1048.8), followed by MA(7) (1130.8). Thus, assuming the past pattern continues, management should select $k = 9$ to minimise the forecast errors. However, the MSE is only calculated over 5 forecasts, so the difference between $k = 7$ and $k = 9$ is not very reliable.
+
+## Question 5
+
+```{r}
+# Read in data:
+souvenir = ts(c(
+  1664.81, 2397.53, 2840.71, 3547.29, 3752.96, 3714.74, 4349.61, 3566.34, 5021.82, 6423.48, 7600.6, 19756.21,
+  2499.81, 5198.24, 7225.14, 4806.03, 5900.88, 4951.34, 6179.12, 4752.15, 5496.43, 5835.1, 12600.08, 28541.72,
+  4717.02, 5702.63, 9957.58, 5304.78, 6492.43, 6630.8, 7349.62, 8176.62, 8573.17, 9690.5, 15151.84, 34061.01,
+  5921.1, 5814.58, 12421.25, 6369.77, 7609.12, 7224.75, 8121.22, 7979.25, 8093.06, 8476.7, 17914.66, 30114.41,
+  4826.64, 6470.23, 9638.77, 8821.17, 8722.37, 10209.48, 11276.55, 12552.22, 11637.39, 13606.89, 21822.11, 45060.69,
+  7615.03, 9849.69, 14558.4, 11587.33, 9332.56, 13082.09, 16732.78, 19888.61, 23933.38, 25391.35, 36024.8, 80721.71,
+  10243.24, 11266.88, 21826.84, 17357.33, 15997.79, 18601.53, 26155.15, 28586.52, 30505.41, 30821.33, 46634.38, 104660.67), 
+  start = c(1987, 1), 
+  frequency = 12)
+```
+
+### a)
+
+```{r}
+#| label: fig-souvenir
+#| fig-cap: "Monthly sales of the souvenir shop from January 1987 to December 1993 on the original scale (top) and the log scale (bottom). The dashed lines mark December and the dotted lines mark March."
+#| fig-width: 10
+#| fig-height: 7
 #| echo: false
-#| warning: false 
-data(Tbrate,package='Ecdat')
-library(tseries)
-library(fGarch)
+#| message: false
+#| warning: false
+
+souvenir_df = data.frame(
+  month = as.numeric(time(souvenir)),
+  sales = as.numeric(souvenir),
+  log_sales = log(as.numeric(souvenir))
+)
+
+dec_lines = 1987:1993 + 11/12
+mar_lines = 1987:1993 + 2/12
+
+p_raw = ggplot(data = souvenir_df, mapping = aes(x = month, y = sales)) +
+  geom_vline(xintercept = dec_lines, linetype = 2, col = "grey70") +
+  geom_vline(xintercept = mar_lines, linetype = 3, col = "grey70") +
+  geom_line(col = "deeppink") +
+  geom_point(col = "deeppink", size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Souvenir shop sales.", x = "Month", y = "Sales") +
+  theme_minimal()
+
+p_log = ggplot(data = souvenir_df, mapping = aes(x = month, y = log_sales)) +
+  geom_vline(xintercept = dec_lines, linetype = 2, col = "grey70") +
+  geom_vline(xintercept = mar_lines, linetype = 3, col = "grey70") +
+  geom_line(col = "purple") +
+  geom_point(col = "purple", size = 1) +
+  labs(title = "Log souvenir shop sales.", x = "Month", y = "log(Sales)") +
+  theme_minimal()
+
+library(patchwork)
+p_raw / p_log
+```
+
+@fig-souvenir shows a clear upward trend in sales from 1987 to 1993. This can be explained by the shop expanding its premises, products and staff. There is strong seasonality, with a large peak every December due to the Christmas influx of tourists. A smaller peak occurs every March from 1988 onwards, due to the surfing festival. The size of the seasonal fluctuations increases as the level of sales increases. This suggests a multiplicative pattern. Sale levels dropped slightly in December 1990 and in 1991 before rapidly increasing in 1992 and 1993. The log(sales) are plotted for question (b).
+
+### b)
+
+The variance of the series increases with the as sales increase over time. Thus, the variance is not constant and grows with the level of sales. Taking logarithms stabilises the variance and converts the multiplicative pattern into an additive one (@fig-souvenir). The log series can be modelled with a linear model, which assumes constant variance.
+
+### c)
+
+```{r}
+# Total sales per year and logs:
+annual_tot = aggregate(souvenir, FUN = sum)
+
+annual_df = data.frame(
+  year      = as.numeric(time(annual_tot)),
+  total     = as.numeric(annual_tot),
+  log_total = log(as.numeric(annual_tot))
+)
+kable(annual_df, digits = 4, col.names = c("Year", "Total sales", "log(Total sales)"))
+
+# Fit linear regression:
+fit_log = lm(log_total ~ year, data = annual_df)
+summary(fit_log)
 ```
 
 ```{r}
+#| label: fig-souvenir_annual
+#| fig-cap: "Log of total annual souvenir sales with the fitted regression line."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+ggplot(data = annual_df, 
+       mapping = aes(x = year, y = log_total)) +
+  geom_smooth(method = "lm", 
+              se = FALSE, 
+              col = "purple", 
+              formula = y ~ x) +
+  geom_point(col = "deeppink", size = 3) +
+  scale_x_continuous(breaks = 1987:1993) +
+  labs(title = "Log of total annual sales.", 
+       x = "Year", 
+       y = "log(Total sales)") +
+  theme_minimal()
+```
+
+The fitted model is $\widehat{\log(\text{Sales})} = -526.57 + 0.2706 \times \text{Year}$. Year is statistically significant ($p < 0.001$) and the model explains 96.4% of the variation in log total sales ($R^2 = 0.964$). The gradient of the fitted line means that the total annual sales grow by approximately $e^{0.2706} - 1 = 31\%$ per year. @fig-souvenir_annual shows that 1990 and 1991 lie below the fitted line. This is consistent with the levelling off in sales seen in @fig-souvenir.
+
+### d)
+
+```{r}
+#| label: tbl-pred_log
+#| tbl-cap: "Predicted log total annual sales for 1994 to 1996 with 95% prediction intervals."
+new_years = data.frame(year = 1994:1996)
+
+pred_log = predict(fit_log, 
+                   newdata = new_years, 
+                   interval = "prediction", 
+                   level = 0.95)
+
+kable(
+  data.frame(Year = 1994:1996, pred_log), 
+  digits = 4,
+      col.names = c("Year", "Predicted log(total)", "Lower 95%", "Upper 95%"))
+```
+
+@tbl-pred_log displays the predicted log total annual sales, which increase by 0.2706 each year. The 95% prediction intervals widen as the forecast horizon increase, since the uncertainty in the estimated trend grows as we move further from the observed data. The intervals assume the linear trend continues and that the residuals are normally distributed with constant variance. This assumption is difficult to check with only 7 observations.
+
+### e)
+
+```{r}
+#| label: tbl-pred_raw
+#| tbl-cap: "Predicted total annual sales for 1994 to 1996 with 95% prediction intervals, back-transformed to the original scale."
+
+pred_raw = exp(pred_log)
+
+kable(data.frame(Year = as.character(1994:1996), pred_raw), 
+      digits = 0,
+      col.names = c("Year", "Predicted total sales", "Lower 95%", "Upper 95%"))
+```
+
+The predictions and intervals in @tbl-pred_raw are obtained by taking the exponential of the log predictions and intervals in @tbl-pred_log. Total sales are predicted to grow from $434\,443$ in 1994 to $746\,383$ in 1996. The intervals are not symmetric around the predictions, since the exponential transformation stretches the upper bound more than the lower bound. The back-transformed prediction of the total sales is the median as opposed to the mean. Thus, it slightly underestimates the expected sales.
+
+## Question 7
+
+```{r}
+# Read in data:
+strikes = ts(c(4737, 5117, 5091, 3468, 4320, 3825, 3673, 3694, 3708, 3333,
+               3367, 3614, 3362, 3655, 3963, 4405, 4595, 5045, 5700, 5716,
+               5138, 5010, 5353, 6074, 5031, 5648, 5506, 4230, 4827, 3885),
+             start = 1951)
+```
+
+### a)
+
+```{r}
+#| label: fig-strikes
+#| fig-cap: "Number of strikes in the USA (1951–1980) and the first differences, with their ACFs and PACFs."
+#| fig-width: 10
+#| fig-height: 8
+#| echo: false
+#| message: false
+#| warning: false
+
+p1 = autoplot(strikes, col = "deeppink") + 
+  geom_point(col = "deeppink") +
+  labs(title = "Number of strikes.", 
+       x = "Year", 
+       y = "Strikes") + 
+  theme_minimal()
+p2 = autoplot(diff(strikes), col = "purple") + 
+  geom_point(col = "purple") +
+  geom_hline(yintercept = 0, linetype = 2) +
+  labs(title = "First differences", 
+       x = "Year", 
+       y = "Change") + 
+  theme_minimal()
+p3 = ggAcf(strikes) + 
+  labs(title = "ACF of strikes") + 
+  theme_minimal()
+p4 = ggAcf(diff(strikes)) + 
+  labs(title = "ACF of differences") + 
+  theme_minimal()
+p5 = ggPacf(strikes) + 
+  labs(title = "PACF of strikes") + 
+  theme_minimal()
+p6 = ggPacf(diff(strikes)) + 
+  labs(title = "PACF of differences") + 
+  theme_minimal()
+
+(p1 | p2) / (p3 | p4) / (p5 | p6)
+```
+
+@fig-strikes shows that the number of strikes wanders without a fixed mean. The series decreases until 1961 then increases until about 1974 and then decreases again. The ACF of the strikes decays slowly (0.73 at lag 1, 0.66 at lag 2, 0.56 at lag 3). This is indicative of a non-stationary series. Thus, first differencing is needed ($d = 1$). The first differences fluctuate around zero with no apparent trend. Thus, the differenced series appears stationary. The ACF of the differenced series has one negative spike at lag 1 ($-0.34$, close to the significance bound) and cuts off after lag 1, while the PACF tapers off. This pattern is indicative of an MA(1). Thus, an ARIMA(0,1,1) model seems appropriate.
+
+### b)
+
+$$
+(1-L)y_t = (1+\theta_1 L)\varepsilon_t.
+$$
+
+This expands to $y_t = y_{t-1} + \varepsilon_t + \theta_1\varepsilon_{t-1}$.
+
+### c)
+
+```{r}
+fit_strikes = Arima(strikes, order = c(0, 1, 1))
+summary(fit_strikes)
+```
+
+```{r}
+#| label: fig-strikes_res
+#| fig-cap: "Residual diagnostics for the ARIMA(0,1,1) model fitted to the strikes series."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+checkresiduals(fit_strikes)
+```
+
+The fitted model is $(1-B)Y_t = (1 - 0.3094B)e_t$, with $\hat\theta_1 = -0.3094$ (s.e. = 0.1515) and $\hat\sigma^2 = 330{,}817$. In @fig-strikes_res the residuals fluctuate around zero with no pattern and none of the autocorrelations are significant. The Ljung--Box test fails to reject the null hypothesis ($p = 0.780$). Thus, the residuals appear like white noise and the ARIMA(0,1,1) model is satisfactory.
+
+### d)
+
+From the model, $Y_{T+1} = Y_T + e_{T+1} + \theta_1 e_T$. Future errors have expected value zero, and $e_T$ is estimated by the last residual, so
+
+$$
+\hat{Y}_{T+1 \mid T} = Y_T + \hat{\theta}_1 \hat{e}_T, \qquad \hat{Y}_{T+1 \mid T} = \hat{Y}_{T+2 \mid T} = \hat{Y}_{T+3 \mid T},
+$$
+
+since for $h \geq 2$ both $e_{T+h}$ and $e_{T+h-1}$ are future errors. The forecasts are therefore flat. The forecast variance is $\sigma^2[1 + (h-1)(1+\theta_1)^2]$, which grows linearly with $h$.
+
+```{r}
+# Extract model values:
+theta = coef(fit_strikes)['ma1']
+y_T = tail(strikes,1)            # strikes in 1980
+e_T = tail(residuals(fit_strikes),1)
+
+# Forecast by hand:
+fc_hand = rep(as.numeric(y_T+theta*e_T),3)
+
+# Forecast with R:
+fc_strikes = forecast(fit_strikes,h=3)
+
+# Compare:
+fc_df = data.frame(
+  Year      = 1981:1983,
+  `By hand` = fc_hand,
+  R         = as.numeric(fc_strikes$mean),
+  check.names = FALSE
+)
+
+kable(fc_df,digits=1)
+```
+
+### e)
+
+```{r}
+#| label: fig-strikes_fc
+#| fig-cap: "Strikes in the USA with forecasts for 1981–1983 and 80% and 95% prediction intervals from the ARIMA(0,1,1) model."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+autoplot(forecast(fit_strikes, h = 3)) +
+  labs(title = "Forecasts from ARIMA(0,1,1).", x = "Year", y = "Number of strikes") +
+  theme_minimal()
+```
+
+In @fig-strikes_fc the forecasts for 1981 to 1983 are constant, since the ARIMA(0,1,1) model has no drift. The forecast is slightly above the 1980 value (3,885), since the MA term corrects for the large negative residual in 1980. The 80% and 95% prediction intervals widen as the forecast horizon increases (and uncertainty increases).
+
+# Conditional Variance Models
+
+All of the above models model the conditional mean and assume a constant variance. For many series, especially financial returns, the variance is not constant. Large changes tend to follow large changes and small changes tend to follow small changes (volatility clustering). Thus, a conditional variance model have a mean equation and a variance equation:
+
+$$
+y_t = \mu_t + a_t, \qquad a_t = \sigma_t\varepsilon_t, \qquad \varepsilon_t \overset{iid}{\sim} D(0,1),
+$$
+
+$$
+\text{ARCH}(q): \ \sigma_t^2 = \alpha_0 + \sum_{i=1}^{q}\alpha_i a_{t-i}^2, \qquad \text{GARCH}(p,q): \ \sigma_t^2 = \alpha_0 + \sum_{i=1}^{q}\alpha_i a_{t-i}^2 + \sum_{j=1}^{p}\beta_j \sigma_{t-j}^2,
+$$
+
+with $\alpha_0 > 0$ and $\alpha_i, \beta_j \geq 0$ so that the variance is always positive. In a GARCH(1,1), $\alpha_1 + \beta_1$ is the persistence. If $\alpha_1 + \beta_1 < 1$, the volatility reverts to the long-run variance $\alpha_0/(1 - \alpha_1 - \beta_1)$. I applied these models to JSE returns in [Project 3](../projects/project-03.qmd).
+
+```{r}
+#| echo: false
+#| warning: false
+data(Tbrate,package='Ecdat')
+library(tseries)
+library(fGarch)
+library(FinTS)
+```
+
+```{r}
+# Tbrate columns: r = 91-day T-bill rate, y = log real GDP, pi = inflation rate
+# Extract T-bill rate and first differences:
 Tbill = Tbrate[,1]
 Del.Tbill = diff(Tbill)
 ```
@@ -932,12 +1377,750 @@ Del.Tbill = diff(Tbill)
 ## Problem 1
 
 ```{r}
-library(FinTS)
-library(rugarch)
+#| label: fig-tbill
+#| fig-cap: "The quarterly 91-day T-bill rate (left) and its first differences (right), with their ACFs."
+#| fig-width: 10
+#| fig-height: 7
+#| echo: false
+#| message: false
+#| warning: false
 
-plot(Tbrate[,2],type='l',main='Raw data')
-plot(Tbrate[,1],type='l',main='Returns')
-plot(Del.Tbill)
+library(patchwork)
+
+p1 = autoplot(Tbill, col = "deeppink") +
+  labs(title = "T-bill rate.", x = "Year", y = "Rate (%)") +
+  theme_minimal()
+
+p2 = autoplot(Del.Tbill, col = "purple") +
+  geom_hline(yintercept = 0, linetype = 2) +
+  labs(title = "Change in the T-bill rate.", x = "Year", y = "Change") +
+  theme_minimal()
+
+p3 = ggAcf(Tbill) +
+  labs(title = "ACF of the T-bill rate.") +
+  theme_minimal()
+
+p4 = ggAcf(Del.Tbill) +
+  labs(title = "ACF of the changes.") +
+  theme_minimal()
+
+(p1 | p2) / (p3 | p4)
 ```
 
-# Spectral Analysis
+```{r}
+#| warning: false
+#| label: tbl-unit_root
+#| tbl-cap: "ADF and KPSS unit root tests for the T-bill rate and its first differences."
+
+# Unit root tests (ADF H0: unit root, KPSS H0: stationary):
+adf_tbill  = adf.test(Tbill)
+adf_del    = adf.test(Del.Tbill)
+kpss_tbill = kpss.test(Tbill)
+kpss_del   = kpss.test(Del.Tbill)
+
+unit_tbl = data.frame(
+  Series       = c("Tbill", "Del.Tbill"),
+  `ADF statistic`  = c(adf_tbill$statistic, adf_del$statistic),
+  `ADF p-value`    = c(adf_tbill$p.value, adf_del$p.value),
+  `KPSS statistic` = c(kpss_tbill$statistic, kpss_del$statistic),
+  `KPSS p-value`   = c(kpss_tbill$p.value, kpss_del$p.value),
+  check.names = FALSE
+)
+kable(unit_tbl, digits = 3)
+```
+
+In @fig-tbill the T-bill rate wanders with no fixed mean and its ACF decays slowly. This suggests that the series is non-stationary. The changes in the T-bill rate fluctuate around zero and its ACF dies out quickly but the size of the changes is not constant. There are periods of large changes and periods of small changes, which is indicative of volatility clustering. The variance of the changes also depends on the level of the rate, since the changes are largest when the T-bill rate is high (around 1980) and smaller when the rate is low. @tbl-unit_root displays the results from the ADF and KPSS tests. For the T-bill rate, the ADF test does not reject a unit root ($p = 0.608$) and the KPSS test rejects stationarity ($p < 0.01$), so the series is non-stationary. For the changes in T-bill rate, the ADF test rejects a unit root ($p < 0.01$) and the KPSS test does not reject stationarity ($p > 0.10$), so the changes are stationary. Thus, the first differences are modelled.
+
+## Problem 2
+
+Since `Tbill` is not stationary, the model is fitted to `Del.Tbill`.
+
+```{r}
+garch.model.Tbill = garchFit(formula = ~arma(1,0) + garch(1,0), 
+                             data = Del.Tbill, 
+                             trace = FALSE)
+summary(garch.model.Tbill)
+garch.model.Tbill@fit$matcoef
+```
+
+An AR(1)/ARCH(1) model is fitted to the changes in the T-bill rate ($y_t$ = `Del.Tbill`):
+
+$$
+y_t = \mu + \text{ar1}\,y_{t-1} + a_t, \qquad a_t = \sigma_t\varepsilon_t, \qquad \varepsilon_t \overset{iid}{\sim} N(0,1),
+$$
+
+$$
+\sigma_t^2 = \omega + \alpha_1 a_{t-1}^2.
+$$
+
+```{r}
+#| label: tbl-tbill_coef
+#| tbl-cap: "Parameter estimates of the AR(1)/ARCH(1) model fitted to the changes in the T-bill rate."
+
+coef_tbl = garch.model.Tbill@fit$matcoef
+rownames(coef_tbl) = c("$\\mu$", "AR(1)", "$\\omega$", "$\\alpha_1$")
+
+kable(coef_tbl, digits = 4)
+```
+
+@tbl-tbill_coef shows the parameter estimates of the AR(1)/ARCH(1) model:
+
+$$
+y_t = 0.0835 + 0.2416\,y_{t-1} + a_t, \qquad \sigma_t^2 = 0.3382 + 0.8348\,a_{t-1}^2.
+$$
+
+The intercept $\mu$ is not significant ($p = 0.121$), so the average change in the T-bill rate is approximately zero. The AR(1) coefficient is significant ($p < 0.001$), so there is some positive dependence between consecutive quarterly changes. $\omega$ and $\alpha_1$ are both significant ($p < 0.001$). $\alpha_1 = 0.835$ is large, so a large shock in one quarter strongly increases the variance in the next quarter. This confirms the volatility clustering seen in @fig-tbill.
+
+```{r}
+#| label: fig-tbill_res
+#| fig-cap: "Residuals (top) and standardised residuals (bottom) from the AR(1)/ARCH(1) model, with the ACFs of the residuals and of the squared residuals."
+#| fig-width: 12
+#| fig-height: 8
+#| echo: false
+#| message: false
+#| warning: false
+
+res = residuals(garch.model.Tbill)
+res_std = res / garch.model.Tbill@sigma.t
+
+res_ts = ts(res, start = start(Del.Tbill), frequency = frequency(Del.Tbill))
+res_std_ts = ts(res_std, start = start(Del.Tbill), frequency = frequency(Del.Tbill))
+
+p1 = autoplot(res_ts, col = "deeppink") + labs(title = "Residuals.", x = "Year", y = "Residual") + theme_minimal()
+p2 = ggAcf(res) + labs(title = "ACF of residuals.") + theme_minimal()
+p3 = ggAcf(res^2) + labs(title = "ACF of squared residuals.") + theme_minimal()
+p4 = autoplot(res_std_ts, col = "purple") + labs(title = "Standardised residuals.", x = "Year", y = "Std. residual") + theme_minimal()
+p5 = ggAcf(res_std) + labs(title = "ACF of std. residuals.") + theme_minimal()
+p6 = ggAcf(res_std^2) + labs(title = "ACF of squared std. residuals.") + theme_minimal()
+
+(p1 | p2 | p3) / (p4 | p5 | p6)
+```
+
+## Problem 3
+
+### a
+
+The "ACF of residuals" panel in @fig-tbill_res plots the autocorrelations of the raw residuals $\hat a_t = y_t - \hat\mu_t$ from the mean equation. Almost all autocorrelations lie within the significance bounds, with only small spikes at lags 7 and 16. Thus, the AR(1) term captures most of the dependence in the mean.
+
+### b
+
+The "ACF of squared residuals" panel plots the autocorrelations of the squared raw residuals, which measure dependence in the variance. There are large significant spikes at lags 1, 4 and 8. Thus, the squared residuals are autocorrelated. This suggests that a constant variance model is not suitable, since there are ARCH effects present in the series.
+
+### c
+
+The "ACF of squared std. residuals" panel plots the autocorrelations of $(\hat a_t/\hat\sigma_t)^2$. These should be uncorrelated if the variance equation is sufficient. Almost all autocorrelations lie within the bounds, with only lag 4 on the boundary. Thus, the ARCH(1) term captures most of the volatility clustering present in the series. This agrees with the Ljung--Box tests on $R^2$ ($p > 0.27$). The spike at lag 4 suggests there may be some yearly pattern in the volatility that the ARCH(1) term does not capture.
+
+### d
+
+`garch.model.Tbill@sigma.t` contains the fitted conditional standard deviations $\hat\sigma_t$ from the variance equation, one for each quarter. Dividing the residuals by $\hat\sigma_t$ gives the standardised residuals.
+
+### e
+
+The "Standardised residuals" panel shows the standardised residuals are more evenly spread than the raw residuals, since the large changes around 1980 have been scaled down. However, the variance is still not constant. The standardised residuals are small in the 1950s and larger after about 1970, which suggests the variance also depends on the level of the T-bill rate and this is not captured by the ARCH(1) model. Thus, a heavier-tailed distribution (the $t$ distribution) may be more appropriate.
+
+## Problem 4
+
+```{r}
+del.log.tbill = diff(log(Tbill))
+```
+
+```{r}
+#| label: fig-tbill_log
+#| fig-cap: "Changes in the T-bill rate (left) and changes in the log T-bill rate (right)."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+p1 = autoplot(Del.Tbill, col = "purple") +
+  geom_hline(yintercept = 0, linetype = 2) +
+  labs(title = "diff(Tbill).", x = "Year", y = "") +
+  theme_minimal()
+
+p2 = autoplot(del.log.tbill, col = "deeppink") +
+  geom_hline(yintercept = 0, linetype = 2) +
+  labs(title = "diff(log(Tbill)).", x = "Year", y = "") +
+  theme_minimal()
+
+p1 | p2
+```
+
+```{r}
+#| label: tbl-tbill_log_ic
+#| tbl-cap: "AIC and BIC of the candidate ARMA/GARCH models for the changes in the log T-bill rate."
+# Fit candidate ARMA/GARCH models to log changes:
+fit_arch_n  = garchFit(~arma(1,0) + garch(1,0), data = del.log.tbill, trace = FALSE)
+fit_garch_n = garchFit(~arma(1,0) + garch(1,1), data = del.log.tbill, trace = FALSE)
+fit_garch_t = garchFit(~arma(1,0) + garch(1,1), data = del.log.tbill,
+                       cond.dist = "std", trace = FALSE)
+
+log_fits = list("AR(1)/ARCH(1), normal"   = fit_arch_n,
+                "AR(1)/GARCH(1,1), normal" = fit_garch_n,
+                "AR(1)/GARCH(1,1), t"      = fit_garch_t)
+
+# Information criteria (fGarch divides by sample size):
+ic_log = t(sapply(log_fits, function(f) f@fit$ics[c("AIC", "BIC")]))
+kable(ic_log, digits = 4)
+
+best_log_name = rownames(ic_log)[which.min(ic_log[, "BIC"])]
+best_log = log_fits[[best_log_name]]
+```
+
+```{r}
+#| label: tbl-tbill_log_coef
+#| tbl-cap: "Parameter estimates of the AR(1)/GARCH(1,1) model with t-distributed errors fitted to the changes in the log T-bill rate."
+
+coef_log = best_log@fit$matcoef
+rownames(coef_log) = c("$\\mu$", "AR(1)", "$\\omega$", "$\\alpha_1$", "$\\beta_1$", "$\\nu$")
+
+kable(coef_log, digits = 4)
+```
+
+BIC selects the AR(1)/GARCH(1,1) model with $t$-distributed errors (@tbl-tbill_log_ic). In @tbl-tbill_log_coef, AR(1) and $\beta_1$ are significant, and the persistence $\alpha_1 + \beta_1 = 0.973$ is close to 1, so volatility shocks die out slowly. The shape parameter $\nu = 3.21$ is small, so the errors have heavier tails than a normal distribution.
+
+The log difference is approximately the percentage change in the rate. Thus, the size of the changes no longer depends on the level of the rate (@fig-tbill_log) and forecasts of the T-bill rate stay positive.
+
+```{r}
+#| label: fig-tbill_log_res
+#| fig-cap: "Standardised residuals of the model for diff(log(Tbill)) with the lowest BIC, and the ACFs of the standardised residuals and of their squares."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+z_log = residuals(best_log, standardize = TRUE)
+z_log_ts = ts(z_log, start = start(del.log.tbill), frequency = frequency(del.log.tbill))
+
+p1 = autoplot(z_log_ts, col = "deeppink") + labs(title = "Standardised residuals.", x = "Year", y = "") + theme_minimal()
+p2 = ggAcf(z_log) + labs(title = "ACF of std. residuals.") + theme_minimal()
+p3 = ggAcf(z_log^2) + labs(title = "ACF of squared std. residuals.") + theme_minimal()
+
+p1 | p2 | p3
+```
+
+In @fig-tbill_log_res the standardised residuals have a roughly constant spread across the whole period, unlike the model for `Del.Tbill`. None of the autocorrelations of the standardised residuals or of their squares lie outside the significance bounds. Thus, the AR(1)/GARCH(1,1) model with $t$-distributed errors captures the dependence in both the mean and the variance. The log difference is approximately the percentage change in the rate, so the size of the changes no longer depends on the level of the `T-bill` rate. The standardised residuals in @fig-tbill_log_res have no remaining level-dependent variance.
+
+# Spectral Analysis {#spectral-analysis}
+
+This is my work-through of *Spectral Analysis in R*. The tutorial's helper functions are used throughout. The questions are answered in my own words, and I added the code for the figures that were not shown in the tutorial.
+
+## Setup and toolkit
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(patchwork)
+
+col_obs = "deeppink"   # observed series
+col_ref = "purple"     # true/reference line
+col_bar = "grey50"     # periodogram ordinates
+
+# Note: element k + 1 of fft(y) is frequency k/n
+# Function to calculate raw periodogram at Fourier frequencies j/n:
+pgram = function(y, demean = TRUE) {
+  n = length(y)
+  if (demean) y = y - mean(y)
+  I = Mod(fft(y))^2 / n
+  j = 1:floor(n / 2)
+  tibble(freq = j / n, period = n / j, I = I[j + 1])
+}
+
+# Function to calculate theoretical ARMA spectral density (unit innovation variance):
+arma_spec = function(f, ar = numeric(0), ma = numeric(0), sigma2 = 1) {
+  vapply(f, function(ff) {
+    num = if (length(ma))
+      Mod(1 + sum(ma * exp(-2i * pi * ff * seq_along(ma))))^2 else 1
+    den = if (length(ar))
+      Mod(1 - sum(ar * exp(-2i * pi * ff * seq_along(ar))))^2 else 1
+    sigma2 * num / den
+  }, numeric(1))
+}
+
+# g = max ordinate / sum of ordinates
+# P(G > g) = sum_{k=1}^{floor(1/g)} (-1)^{k-1} choose(q, k) (1 - k g)^{q-1}
+# Function for Fisher's g test (H0: white noise):
+fisher_g_test = function(y) {
+  y = y - mean(y)
+  n = length(y)
+  I = Mod(fft(y))^2 / n
+  m = floor((n - 1) / 2)          # ordinates exponential under H0
+  I = I[2:(m + 1)]
+  q = length(I)
+  g = max(I) / sum(I)
+  K = floor(1 / g)
+  k = 1:K
+  terms = (-1)^(k - 1) * exp(lchoose(q, k) + (q - 1) * log1p(-k * g))
+  p = min(max(sum(terms), 0), 1)
+  jmax = which.max(I)
+  list(g = g, p.value = p, freq = jmax / n, period = n / jmax)
+}
+```
+
+## The question spectral analysis asks
+
+The time domain asks how the past influences the present. The frequency domain asks which oscillations are present in the series and how much of the variance each of them explains. Both describe the same process but some features are much easier to see in the frequency domain.
+
+::: callout-tip
+## Q: A monthly series has a strong annual pattern. What period and frequency represent this cycle?
+
+A: The period is $s = 12$ months, so the frequency is $\omega = \frac{1}{12} \approx 0.083$ cycles per month.
+:::
+
+## Period, frequency and the `ts()` collision
+
+A sinusoid with period $m$ has frequency $f = \frac{1}{m}$ cycles per observation and angular frequency $\omega = 2\pi f = 2\pi/m$ radians per observation.
+
+::: callout-warning
+## `frequency` in `ts()` is a period
+
+In `ts(y, frequency = 12)` the `frequency` argument is the number of observations per cycle, which is the *period* $m$, not the frequency $f$. Passing `frequency = \frac{1}{12}` would tell R that the series is annual.
+:::
+
+```{r}
+monthly   = ts(rnorm(60), frequency = 12)
+quarterly = ts(rnorm(40), frequency = 4)
+
+frequency(monthly)     # 12 = period m
+frequency(quarterly)   # 4
+```
+
+::: callout-tip
+## Q: Complete the table
+
+A:
+
+```{r}
+#| echo: false
+freq_tbl = data.frame(
+  Data       = c("Monthly", "Quarterly", "Hourly", "Daily"),
+  Cycle      = c("Annual", "Annual", "Daily", "Weekly"),
+  Period     = c(12, 4, 24, 7),
+  Frequency  = 1 / c(12, 4, 24, 7)
+)
+
+kable(freq_tbl, digits = 4,
+      col.names = c("Data", "Cycle", "Period $m$", "Frequency $f = 1/m$"))
+
+```
+:::
+
+## The Nyquist frequency and aliasing
+
+You need at least two observations per cycle (one near the peak and one near the trough). Thus, the fastest oscillation a sampled series can show has a period of 2 observations. This is the Nyquist frequency, $f_N = \frac{1}{2}$ cycle per observation. Faster oscillations do not disappear. They are folded back into $[0, \frac{1}{2}]$ and appear at a lower frequency, which is known as aliasing.
+
+```{r}
+#| label: fig-aliasing
+#| fig-cap: "Two sinusoids with periods of 1.5 and 3 observations. Sampled at the integer time points (dots) they give identical values."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+t_fine = seq(0, 12, by = 0.01)
+waves = tibble(t = rep(t_fine, 2),
+               y = c(cos(2 * pi * t_fine / 1.5), cos(2 * pi * t_fine / 3)),
+               wave = rep(c("Period 1.5", "Period 3"), each = length(t_fine)))
+samples = tibble(t = 0:12, y = cos(2 * pi * (0:12) / 3))
+
+ggplot() +
+  geom_line(data = waves, aes(x = t, y = y, colour = wave)) +
+  geom_point(data = samples, aes(x = t, y = y), size = 2.5) +
+  scale_colour_manual(values = c("Period 1.5" = col_obs, "Period 3" = col_ref)) +
+  labs(title = "Aliasing.", x = "Time", y = "y", colour = "") +
+  theme_minimal()
+```
+
+A period of 1.5 is a frequency of $\frac{2}{3}$, which is above the Nyquist frequency. It is folded to $|\frac{2}{3} - 1| = \frac{1}{3}$, the frequency of the period-3 wave, which is why the two waves agree at every sampled point in @fig-aliasing.
+
+::: callout-tip
+## Q: A process oscillates at a true frequency of $\frac{2}{3}$ cycles per observation. Can a series sampled once per observation resolve it, and can any later analysis recover it?
+
+A: No. The true frequency is above the Nyquist frequency $f_N = \frac{1}{2}$, so there are fewer than two observations per cycle. At the observed times, the true oscillation gives exactly the same values as a slower oscillation at the alias frequency $|f - k|$. Since the sampled values are identical, no later analysis can recover the true frequency. The periodogram will show a peak at the alias instead. The only fix is to sample more often.
+:::
+
+## A series as a sum of waves
+
+A sinusoid with amplitude $A$, frequency $f$ and phase $\varphi$ can be written as
+
+$$
+A\cos(2\pi f t + \varphi) = a\cos(2\pi f t) + b\sin(2\pi f t), \qquad A = \sqrt{a^2 + b^2}.
+$$
+
+The right-hand side is linear in $a$ and $b$, so for a known frequency it is just a regression with two columns. At the Fourier frequencies $f_j = \frac{j}{n}$ the sine and cosine columns are orthogonal. Thus, the total sum of squares splits exactly across the frequencies, and the periodogram is an analysis of variance by frequency. The regression is fitted below at the frequency of a known cycle and compared with the periodogram ordinate.
+
+## The periodogram
+
+The periodogram $I(f)$ measures how much of the variation in a series comes from an oscillation at frequency $f$. Its population version is the spectral density $S(f)$, which spreads the variance of a stationary process over the frequencies. For example, a tall ordinate at $f = \frac{1}{12}$ in monthly data means that a 12-month cycle explains a large share of the variance.
+
+In R, spec.pgram() is used to estimate the periodogram. By default it removes a linear trend, tapers the ends of the series, pads the series and rescales by frequency(x). Thus, its values only match pgram() when these options are switched off.
+
+::: callout-tip
+## Q: Monthly data show a large ordinate at $f = 0.0833$. What do you report?
+
+A: The period, with units: $\frac{1}{0.0833} \approx 12$, which is an annual cycle.
+:::
+
+## Worked example: a known cycle
+
+```{r}
+#| label: fig-cyc24
+#| fig-cap: "A cycle with period 24 buried in noise."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+
+set.seed(100)
+y_cyc  = 2 * sin(2 * pi * (1:240) / 24) + rnorm(240, 0, 0.4)
+ts_cyc = ts(y_cyc, frequency = 24)
+
+plot(ts_cyc, main = "A period-24 cycle buried in noise.",
+     ylab = expression(y[t]), xlab = "Time", col = col_obs)
+```
+
+@fig-cyc24 shows an obvious oscillation, but it is not easy to read off its exact length.
+
+::: callout-tip
+## Q: Which frequency should dominate the periodogram?
+
+A: $f = \frac{1}{24}$, a 24-month period.
+:::
+
+```{r}
+#| label: tbl-pg_cyc
+#| tbl-cap: "The five largest periodogram ordinates of the simulated cyclical series."
+
+pg_cyc = pgram(y_cyc)
+
+pg_cyc |>
+  slice_max(I, n = 5) |>
+  mutate(period = 1 / freq) |>
+  kable(digits = 4)
+```
+
+```{r}
+#| label: fig-pg_cyc
+#| fig-cap: "Periodogram of the period-24 series. The dashed line marks f = 1/24."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+ggplot(pg_cyc, aes(freq, I)) +
+  geom_segment(aes(xend = freq, yend = 0), colour = col_bar, linewidth = 0.7) +
+  geom_vline(xintercept = 1 / 24, linetype = "dashed", colour = col_ref) +
+  labs(x = "Frequency (cycles per observation)", y = expression(I(f)),
+       title = "Periodogram.") +
+  theme_minimal()
+```
+
+::: callout-tip
+## Q: What is the dominant frequency and period, and does it match the construction?
+
+A: The largest ordinate is at $f = 10/240 = 0.0417$, a period of 24 observations. This is exactly how the series was built. Since $240/24 = 10$, the cycle lies exactly on a Fourier frequency, so all its power is in one ordinate. The other ordinates are tiny in comparison (@fig-pg_cyc). The time plot showed an oscillation, but the periodogram tells us its length immediately.
+:::
+
+### The same analysis with `spec.pgram()`
+
+```{r}
+sp_cyc = spec.pgram(y_cyc, taper = 0, detrend = FALSE, fast = FALSE, plot = FALSE)
+
+jmax = which.max(sp_cyc$spec)
+c(peak_frequency = sp_cyc$freq[jmax],
+  peak_period    = 1 / sp_cyc$freq[jmax])
+```
+
+With its defaults switched off, `spec.pgram()` finds the same peak. From here on I use `spec.pgram()`, because detrending, tapering and smoothing are exactly the steps a real analysis needs.
+
+## Reading a periodogram: five steps
+
+### Step 1: convert the peak to a period
+
+Find the largest ordinate, invert its frequency and attach the units of the data.
+
+### Step 2: check for harmonics
+
+A seasonal pattern that is not a pure sinusoid needs harmonics at $2/m, 3/m, \dots$ to build its shape. The sharper the pattern, the more harmonics it needs.
+
+::: callout-tip
+## Q: A monthly series has large peaks at 1/12, 2/12 and 3/12. Are these three cycles of 12, 6 and 4 months?the dominant frequency and period, and does it match the construction?
+
+A: No, they are the fundamental (12 months) and the harmonics of one annual pattern that is not shaped like a sine wave. I would report a single twelve-month cycle and note that the 6- and 4-month peaks are its harmonics.
+:::
+
+### Step 3: do not trust a single tall ordinate
+
+The raw periodogram is unbiased but not consistent. This means that each ordinate estimates $S(f)$ correctly on average but its standard deviation is roughly as large as its mean and does not shrink as $n$ grows.
+
+::: callout-tip
+## Q: A raw periodogram has one very tall peak. Does that prove a real cycle?
+
+A: No. There are many ordinates and each one is very noisy, so some will always look large by chance. To separate real cycles from noise you need to smooth the spectrum and test the largest peak.
+:::
+
+### Step 4: smooth, and keep what survives
+
+Neighbouring ordinates estimate almost the same value of a smooth spectrum. Thus, averaging them reduces the noise. In `spec.pgram()` the `spans` argument sets how many neighbours are averaged.
+
+```{r}
+#| label: fig-ar2_smooth
+#| fig-cap: "Periodogram of one simulated AR(2) series with no smoothing and with three increasing spans, against the true spectral density (purple), on a log scale."
+#| fig-width: 10
+#| fig-height: 6
+#| echo: false
+#| message: false
+#| warning: false
+
+set.seed(11)
+ar2_phi = c(1.5, -0.75)
+y_ar2 = arima.sim(list(ar = ar2_phi), n = 512)
+
+spans_list = list("No smoothing" = NULL, "spans = 5" = 5, "spans = 11" = 11, "spans = 31" = 31)
+ar2_sm = bind_rows(lapply(names(spans_list), function(nm) {
+  sp = spec.pgram(y_ar2, spans = spans_list[[nm]], taper = 0.1, plot = FALSE)
+  tibble(freq = sp$freq, spec = sp$spec, smoothing = nm)
+}))
+ar2_sm$smoothing = factor(ar2_sm$smoothing, levels = names(spans_list))
+ar2_true = tibble(freq = seq(0.001, 0.5, length.out = 500)) |>
+  mutate(spec = arma_spec(freq, ar = ar2_phi))
+
+ggplot(ar2_sm, aes(freq, spec)) +
+  geom_line(colour = col_bar) +
+  geom_line(data = ar2_true, colour = col_ref, linewidth = 0.8) +
+  scale_y_log10() +
+  facet_wrap(~smoothing, ncol = 2) +
+  labs(x = "Frequency", y = "Spectral density (log scale)", title = "Smoothing the periodogram.") +
+  theme_minimal()
+```
+
+::: callout-tip
+## Q: What goes wrong if the smoothing span is (1) too small, or (2) too large?
+
+A: If the span is too small the spectrum will remain noisy but if it is too large true peaks are averaged out.
+:::
+
+### Step 5: test the largest peak
+
+Fisher's test compares the largest ordinate with the sum of all of them, $g = \max_j I(f_j)/\sum_j I(f_j)$ and its null distribution accounts for having picked the maximum.
+
+```{r}
+set.seed(2026)
+fisher_g_test(rnorm(240))  
+fisher_g_test(y_cyc)      
+```
+
+::: callout-tip
+## Q: What is the null hypothesis, and what does rejecting it mean?
+
+A: Null hypothesis is that the series is white noise. Rejecting the null hypothesis is because there is insignificant evidence that the series is white noise.
+:::
+
+## Preparing a series
+
+The three routine steps are all `spec.pgram()` defaults. Remove the mean (and usually the trend), taper the ends and cosmetically pad the series.
+
+## Spectral signatures of familiar models
+
+```{r}
+#| label: fig-signatures
+#| fig-cap: "Theoretical spectral densities (unit innovation variance) of five processes."
+#| fig-width: 10
+#| fig-height: 6
+#| echo: false
+#| message: false
+#| warning: false
+
+f_grid = seq(0.001, 0.5, length.out = 500)
+sig_df = bind_rows(
+  tibble(freq = f_grid, S = arma_spec(f_grid), process = "White noise"),
+  tibble(freq = f_grid, S = arma_spec(f_grid, ma = 0.7), process = "MA(1), theta = 0.7"),
+  tibble(freq = f_grid, S = arma_spec(f_grid, ar = 0.7), process = "AR(1), phi = 0.7"),
+  tibble(freq = f_grid, S = arma_spec(f_grid, ar = -0.7), process = "AR(1), phi = -0.7"),
+  tibble(freq = f_grid, S = arma_spec(f_grid, ar = c(1.5, -0.75)), process = "AR(2), complex roots")
+)
+sig_df$process = factor(sig_df$process, levels = unique(sig_df$process))
+
+ggplot(sig_df, aes(freq, S)) +
+  geom_line(colour = col_obs, linewidth = 0.8) +
+  facet_wrap(~process, scales = "free_y", ncol = 3) +
+  labs(x = "Frequency", y = "S(f)", title = "Spectral signatures.") +
+  theme_minimal()
+```
+
+```{r}
+#| label: tbl-signatures
+#| tbl-cap: "Spectral signatures of familiar processes."
+#| echo: false
+
+sig_tbl = data.frame(
+  Process = c("White noise", "MA(1)", "AR(1), $\\phi > 0$", "AR(1), $\\phi < 0$",
+              "AR(2), complex roots", "Seasonal"),
+  Shape   = c("Flat at every frequency",
+              "Monotone, sloping up or down",
+              "Power concentrated at low frequencies (\"red\")",
+              "Power concentrated at high frequencies (\"blue\")",
+              "A peak at an interior frequency",
+              "A narrow spike at $1/m$ and its harmonics")
+)
+
+kable(sig_tbl, col.names = c("Process", "Shape of $S(f)$"))
+```
+
+### A cycle that is not seasonal
+
+The AR(2) $y_t = 1.5y_{t-1} - 0.75y_{t-2} + \varepsilon_t$ has complex roots and a spectral peak at about $f \approx 0.08$, a period of about 12.4 observations:
+
+```{r}
+f_peak = f_grid[which.max(arma_spec(f_grid, ar = c(1.5, -0.75)))]
+c(peak_frequency = f_peak, peak_period = 1 / f_peak)
+```
+
+::: callout-tip
+## Q: Would a periodogram peak near twelve months prove deterministic annual seasonality?
+
+A: No. An AR(2) with complex roots can also give a peak near 12 months, but its cycles vary in length and are not tied to the calendar. The difference is the width of the peak. A stochastic cycle gives a broad peak, whereas deterministic seasonality gives a narrow spike at $1/m$ and its harmonics.
+:::
+
+## What differencing does to a spectrum
+
+Filtering a series multiplies its spectrum by a fixed curve. For the first difference $(1-L)$ the curve is $|1 - e^{-2\pi i f}|^2 = 4\sin^2(\pi f)$, and for the seasonal difference $(1 - L^{12})$ it is $4\sin^2(12\pi f)$.
+
+```{r}
+#| label: fig-diff_gain
+#| fig-cap: "Multipliers applied to the spectrum by the first difference (left) and the seasonal difference at lag 12 (right)."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+gain_df = bind_rows(
+  tibble(freq = f_grid, gain = 4 * sin(pi * f_grid)^2, filter = "First difference (1 - L)"),
+  tibble(freq = f_grid, gain = 4 * sin(12 * pi * f_grid)^2, filter = "Seasonal difference (1 - L^12)")
+)
+
+ggplot(gain_df, aes(freq, gain)) +
+  geom_line(colour = col_obs, linewidth = 0.8) +
+  geom_hline(yintercept = 1, linetype = "dashed", colour = "grey50") +
+  facet_wrap(~filter, ncol = 2) +
+  labs(x = "Frequency", y = "Multiplier", title = "Differencing as a filter.") +
+  theme_minimal()
+```
+
+The first difference multiplies the power at $f = 0$ by zero (it removes the level and strongly damps a trend) but it multiplies the power at $f = 1/2$ by four. The seasonal difference has zeros at $f = 0, 1/12, 2/12, \dots, 6/12$, so it removes the level and every seasonal harmonic (@fig-diff_gain).
+
+::: callout-tip
+## Q: Why is unnecessary differencing harmful rather than merely unhelpful?
+
+A: Differencing removes low-frequency variation and amplifies high-frequency variation. If there is no trend, it removes a component that was not there and amplifies the fastest, least informative variation. Differencing white noise doubles the variance and creates a lag 1 autocorrelation of $-0.5$, which is not invertible.
+:::
+
+## The frequency domain versus the ACF
+
+```{r}
+#| label: tbl-domains
+#| tbl-cap: "When to use the time domain and when to use the frequency domain."
+#| echo: false
+
+domain_tbl = data.frame(
+  Question  = c("Is there dependence?", "How long is the cycle?", "Is the cycle regular?",
+                "Several cycles at once?", "Which model should I fit?",
+                "Forecast the next value", "Non-stationary series"),
+  Time      = c("ACF and PACF", "Awkward, from ACF peaks", "Hard to judge", "Very hard",
+                "ACF/PACF identification", "Directly, via a model",
+                "Differencing, transformations"),
+  Frequency = c("The spectrum is not flat", "Directly, from a spectral peak",
+                "The width of the peak", "Immediate", "Not directly", "Not directly",
+                "Requires stationarity")
+)
+
+kable(domain_tbl, col.names = c("Question", "Time domain", "Frequency domain"))
+```
+
+The time and frequency domains contain the same information, since the spectral density is the Fourier transform of the autocovariance function. However, @tbl-domains shows that each domain makes different questions easy to answer. The frequency domain describes the series but does not forecast it, which is why ARIMA models are used for forecasting.
+
+::: callout-tip
+## Q: A series appears to contain cycles of roughly 7, 30 and 365 observations. Which representation makes these simultaneous periodicities easier to see?
+
+A: The frequency domain. The three cycles appear as three separate peaks at $1/7$, $1/30$ and $1/365$. The overlapping patterns in an ACF would be difficult to distinguish.
+:::
+
+## Exercise
+
+```{r}
+#| label: fig-exercise_series
+#| fig-cap: "The exercise series."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+
+set.seed(314)
+n = 360
+y = 1.5 * sin(2 * pi * (1:n) / 30) + rnorm(n, 0, 0.8)
+
+plot(ts(y), main = "Exercise series.", ylab = expression(y[t]), xlab = "Time", col = col_obs)
+```
+
+### Task 1: predict, then read the periodogram.
+
+```{r}
+pg = pgram(y)
+pg |> slice_max(I, n = 5)
+```
+
+```{r}
+#| label: fig-exercise_pg
+#| fig-cap: "Raw periodogram of the exercise series."
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+
+ggplot(pg, aes(freq, I)) +
+  geom_segment(aes(xend = freq, yend = 0), colour = col_bar, linewidth = 0.4) +
+  labs(x = "Frequency", y = expression(I(f)), title = "Raw periodogram.") +
+  theme_minimal()
+```
+
+The largest ordinate is at $f = 12/360 = 0.0333$, a period of 30 observations (@fig-exercise_pg). Since $360/30 = 12$, the cycle again lies exactly on a Fourier frequency. The next largest ordinates are about 60 times smaller. In the time plot (@fig-exercise_series) a cycle is visible but its exact length is not.
+
+### Task 2: smooth at two spans.
+
+```{r}
+#| label: fig-exercise_smooth
+#| fig-cap: "Smoothed spectra of the exercise series with spans = 9 (top) and spans = 15 (bottom). The dashed line marks f = 1/30."
+#| fig-width: 8
+#| fig-height: 7
+#| warning: false
+#| message: false
+
+sp9  = spec.pgram(y, spans = 9,  taper = 0.1, detrend = TRUE, fast = FALSE, plot = FALSE)
+sp15 = spec.pgram(y, spans = 15, taper = 0.1, detrend = TRUE, fast = FALSE, plot = FALSE)
+
+par(mfrow = c(2, 1))
+plot(sp9$freq,  sp9$spec,  type = "l", log = "y", col = col_obs,
+     main = "Smoothed (spans = 9)",  xlab = "Frequency", ylab = "Spectral density")
+abline(v = 1 / 30, lty = 2, col = col_ref)
+plot(sp15$freq, sp15$spec, type = "l", log = "y", col = col_obs,
+     main = "More smoothing (spans = 15)", xlab = "Frequency", ylab = "Spectral density")
+abline(v = 1 / 30, lty = 2, col = col_ref)
+par(mfrow = c(1, 1))
+```
+
+In @fig-exercise_smooth the peak near $1/30$ is still there after heavier smoothing. It becomes wider and slightly lower, but it is still well above the rest of the spectrum, which is roughly flat. This is why two spans are compared: a real cycle remains when the smoothing is increased, whereas a peak caused by noise tends to disappear.
+
+### Task 3: formal test.
+
+```{r}
+fisher_g_test(y)
+```
+
+Fisher's test rejects white noise ($g = 0.669$, $p < 0.001$), and the largest ordinate is at a period of 30. Thus, the largest ordinate is too large to be a chance maximum under white noise. The smoothed spectrum adds information about where the cycle is and how broad it is.
+
+### Final interpretation.
+
+The spectrum has one dominant peak at a frequency of about 0.033 cycles per observation, which is a cycle of about 30 observations. The peak remains after smoothing, so it is not just a single noisy ordinate, and Fisher's test gives strong evidence against white noise ($p < 0.001$). The rest of the spectrum is roughly flat, so the noise around the cycle looks like white noise. Thus, the series does not need to be prewhitened before testing.

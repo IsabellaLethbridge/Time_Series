@@ -7,24 +7,23 @@ project:
 
 website:
   title: "The Temporal Shift"
-  sidebar:
-    style: "docked"
+  navbar:
     search: true
-    contents:
+    left:
       - text: "Home"
         href: index.qmd
       - text: "Reflective Commentary"
         href: reflective-commentary.qmd
       - text: "AI Use Log"
         href: ai-use-log.qmd
-      - section: "Sections"
-        contents:
+      - text: "Sections"
+        menu:
           - text: "Section 1"
             href: section-1/section-1.qmd
           - text: "Section 2"
             href: section-2/section-2.qmd
-      - section: "Projects"
-        contents:
+      - text: "Projects"
+        menu:
           - text: "Projects Overview"
             href: projects/index.qmd
           - text: "Project 1"
@@ -35,14 +34,14 @@ website:
             href: projects/project-03.qmd
           - text: "Project 4"
             href: projects/project-04.qmd
-      - section: "Journal"
-        contents:
+      - text: "Journal"
+        menu:
           - text: "Journal Overview"
             href: journal/index.qmd
           - text: "Journal Entries"
             href: journal/entries.qmd
-      - section: "Appendix"
-        contents:
+      - text: "Appendix"
+        menu:
           - text: "Code & Data"
             href: appendix/code-and-data.qmd
 
@@ -52,3 +51,10 @@ format:
     toc: true
     toc-depth: 3
     code-fold: show
+    highlight-style: dracula-light.theme # light version of Dracula theme
+    code-block-bg: "#FFF5FB"            # Dracula light (Alucard) background
+    code-block-border-left: "#A3144D"   # Dracula pink
+    code-copy: true                     # copy button on every code block
+
+execute:
+  freeze: auto   # re-run a page's code only when that page changes

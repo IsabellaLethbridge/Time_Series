@@ -3,6 +3,6 @@ format: html
 editor: visual
 ---
 
-This journal documents my continuous learning progress throughout the course\[cite: 1\].
+This journal documents my continuous learning progress throughout the course.
 
--   [View Chronological Entries](entries.qmd)\[cite: 1\]
+-   [View Chronological Entries](entries.qmd)

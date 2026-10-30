@@ -1,8 +1,26 @@
 /*-- scss:defaults --*/
+// Variables only go here
+// Navbar colours
+$navbar-bg: #1F1F1F;   // dark text (Lux's near-black)
+$navbar-fg: #FFF5FB;   // pale pink background
+$navbar-hl: #A3144D;   // hover / active link: your Dracula pink
 
 // Change the primary accent colors for each block type
-$callout-color-note: #0b78de;        // Blue
-$callout-color-warning: #de0b0b;  // Red
+$callout-color-note: #4A8AC9;        // Blue 
+$callout-color-warning: #CB3A2A;     // Red
 $callout-color-important: deeppink;  // Pink
-$callout-color-tip: #bb0bde;         // Purple
-$callout-color-caution: #f7e91e;     // Yellow
+$callout-color-tip: #075E0C;         // Green #075E0C
+$callout-color-caution: #bb0bde;     // Green #bb0bde
+
+$font-weight-bolder: 800;
+
+/*-- scss:rules --*/
+// CSS rules go here, so they load after Lux and actually win
+
+// Stop Lux from upper-casing table headers
+.table thead th,
+.table th,
+th {
+  text-transform: none;
+  letter-spacing: normal;
+}

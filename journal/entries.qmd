@@ -486,3 +486,119 @@ $$ The Kalman filter only keeps track of the mean and variance. When we have a n
 Hidden Markov Models
 
 **Links:** [AI Log](../ai-use-log.qmd)
+
+## Lecture 11
+
+**Date:** 12 October 2026
+
+**Topic covered:** Hidden Markov Models 1
+
+**What I Did:**
+
+Worked through Questions 1, 3, 4 and 7 of the HMM tutorial and wrote the forward algorithm from first principles: [Section 2](../section-2/section-2.qmd)
+
+**What I Learned:**
+
+A hidden Markov model (HMM) has two parts: an unobserved state process, $C_t$, that follows a Markov chain and an observed process, $X_t$, whose distribution depends only on the current state. Each state has its own state-dependent distribution, $p_i(x) = P(X_t = x \mid C_t = i)$, which can be Poisson, Gaussian, categorical, etc.
+
+::: callout-important
+## Assumption
+
+Markov property: the next state only depends on the current state, $P(C_{t+1} \mid C_t, \dots, C_1) = P(C_{t+1} \mid C_t)$.
+:::
+
+::: callout-important
+## Assumption
+
+Conditional independence: given the current state, $X_t$ is independent of all other observations and states.
+:::
+
+The Markov chain is described by the transition probability matrix $\Gamma$, where $\gamma_{ij} = P(C_{t+1} = j \mid C_t = i)$ and each row sums to 1, and the initial distribution $\boldsymbol{\delta}$. If the chain starts in its stationary distribution, $\boldsymbol{\delta}\Gamma = \boldsymbol{\delta}$, the HMM is stationary. The time spent in state $i$ is geometric with mean $1/(1-\gamma_{ii})$, so a large diagonal means persistent states.
+
+::: callout-tip
+## Independent mixture vs HMM
+
+An independent mixture model draws a new state at every time point, independently of the last one. An HMM lets the state depend on the previous state. The independent mixture is the special case of an HMM where every row of $\Gamma$ equals $\boldsymbol{\delta}$. This dependence between states is what creates serial correlation in the observations and makes an HMM useful for over-dispersed, autocorrelated data.
+:::
+
+The likelihood can be written as a matrix product,
+
+$$
+L_T = \boldsymbol{\delta}\mathbf{P}(x_1)\Gamma\mathbf{P}(x_2)\Gamma\cdots\Gamma\mathbf{P}(x_T)\mathbf{1}',
+$$ where $\mathbf{P}(x) = \text{diag}(p_1(x), \dots, p_m(x))$. Summing over every state sequence directly would take $m^T$ terms, but the forward algorithm, $\boldsymbol{\alpha}_t = \boldsymbol{\alpha}_{t-1}\Gamma\mathbf{P}(x_t)$, evaluates the same sum in about $Tm^2$ operations. Here $\alpha_t(i) = P(X_{1:t} = x_{1:t}, C_t = i)$.
+
+::: callout-warning
+## Numerical underflow
+
+The forward probabilities get very small very quickly, so in practice they are scaled at every step and the log-likelihood is accumulated as a sum of logs.
+:::
+
+The parameters are estimated by numerically maximising the likelihood. Since `optim()` works on unconstrained parameters, the parameters have to be transformed to working parameters, e.g. $\log\lambda_i$ for Poisson means and a multinomial logit for the off-diagonal elements of $\Gamma$, and then transformed back.
+
+**Questions:**
+
+Q: Why does an HMM produce autocorrelated observations if the observations are conditionally independent given the states?
+
+A: The observations are only independent once we know the states. Since we never observe the states, a large observation makes a high-mean state more likely, and because the states are persistent, the next observation is also likely to come from that state. The dependence between observations comes entirely from the dependence in the Markov chain. In [Section 2](../section-2/section-2.qmd) (Question 7), the likelihood of three 1's ($29/48 \approx 0.604$) was larger than if the observations were independent ($(5/6)^3 \approx 0.579$) for this reason.
+
+**What to Do Next:**
+
+Hidden Markov Models 2
+
+**Links:** [AI Log](../ai-use-log.qmd)
+
+## Lecture 12
+
+**Date:** 19 October 2026
+
+**Topic covered:** Hidden Markov Models 2
+
+**What I Did:**
+
+Worked through Questions 2, 5 and 6 of the HMM tutorial, wrote the backward algorithm, local decoding and the Viterbi algorithm from first principles, and fitted Poisson HMMs to the earthquake counts: [Section 2](../section-2/section-2.qmd), [Project 4](../projects/project-04-analysis.qmd)
+
+**What I Learned:**
+
+Once an HMM has been fitted we usually want to know which state the process was in. This is called decoding.
+
+The backward probabilities, $\beta_t(i) = P(X_{t+1:T} = x_{t+1:T} \mid C_t = i)$, are computed recursively from the end of the series, $\boldsymbol{\beta}_t' = \Gamma\mathbf{P}(x_{t+1})\boldsymbol{\beta}_{t+1}'$ with $\boldsymbol{\beta}_T = \mathbf{1}$. Combining these with the forward probabilities gives the probability of each state given all the observations.
+
+::: callout-tip
+## Local vs global decoding
+
+Local decoding finds the most likely state at each time point separately, $P(C_t = i \mid \mathbf{x}) = \alpha_t(i)\beta_t(i)/L_T$. Global decoding finds the most likely sequence of states, $\text{argmax}_{\mathbf{c}} P(\mathbf{C} = \mathbf{c} \mid \mathbf{x})$, using the Viterbi algorithm. The two can disagree, since the sequence of individually most likely states is not necessarily the most likely sequence (it may even contain impossible transitions).
+:::
+
+The Viterbi algorithm is a dynamic programming algorithm that keeps track of the probability of the most likely path that ends in each state at time $t$,
+
+$$
+\xi_{1i} = \delta_i p_i(x_1), \qquad \xi_{tj} = \max_i\left(\xi_{t-1,i}\gamma_{ij}\right) p_j(x_t),
+$$ and then traces the path back from the most likely final state. Like the forward algorithm, it is run on the log scale to avoid underflow.
+
+The forward and backward probabilities can also be used for state prediction, $P(C_{T+h} = i \mid \mathbf{x}) = \boldsymbol{\alpha}_T\Gamma^h\mathbf{1}'/L_T$ (normalised), and for forecasting future observations, which are mixtures of the state-dependent distributions. As $h$ increases the state predictions converge to the stationary distribution.
+
+As an alternative to direct numerical maximisation, the parameters can be estimated with the EM (Baum-Welch) algorithm, which treats the states as missing data and uses the forward and backward probabilities in the E-step.
+
+::: callout-note
+## Note
+
+The number of states is chosen with AIC or BIC. BIC penalises the number of parameters more heavily, which matters since the number of parameters grows with $m^2$. Pseudo-residuals are used to check the fit of the model.
+:::
+
+::: callout-warning
+## Local maxima
+
+The likelihood of an HMM often has several local maxima, so the model should be fitted from several different starting values.
+:::
+
+**Questions:**
+
+Q: Why can't short visits to a state be recovered by decoding?
+
+A: Decoding depends on both the state-dependent distributions and the transition probabilities. If a state is only visited for one time point, the decoded path would need two unlikely transitions to get there and back, and if the state-dependent distributions overlap, the observation is often also likely under the surrounding state. In the Viterbi exercise in [Section 2](../section-2/section-2.qmd) (Question 2), the single visit to state C at time 2 was decoded as A, and in the dishonest casino (Question 6) short spells with the loaded die were missed and switches were detected a few rolls late.
+
+**What to Do Next:**
+
+Project 4
+
+**Links:** [AI Log](../ai-use-log.qmd)

@@ -3,26 +3,3280 @@ format: html
 editor: visual
 ---
 
-## Data Statement
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
 
-<!-- Include source, consent, anonymisation, and POPIA compliance if applicable -->
+library(ggplot2)
+library(fpp2) 
+library(dlm)
+library(knitr)
+library(mvtnorm)
+library(rstan)
+library(patchwork)
+```
 
-\[cite: 1\]
+# Exponential Smoothing
 
-## Teaching Session Summaries
+## Learning outcomes
 
-<!-- Fit models, interpret results, compute predictions and prediction intervals -->
+1.  Choose an appropriate exponential smoothing approach.
 
-\[cite: 1\]
+2.  Use R for exponential smoothing and interpret the output, including the parameter estimates.
 
-## Worked Tutorials & Software Implementations
+3.  Describe and define the exponential smoothing approach.
 
-<!-- Worked tutorials with progress reflections and first-principles R code -->
+4.  Estimate the parameters and construct forecasts using my own programs.
 
-\[cite: 1\]
+5.  Estimate the uncertainty in forecasts.
 
-## Topic Exploration
+## Data statement
 
-<!-- Exploration of an idea or method not directly covered in lectures/notes -->
+All data in this section are public data sets that come with R packages (`marathon`, `oil`, `books` and `uschange` from `fpp2`, and `Nile` and `co2` from base R) or are simulated. None of them contain personal information, so no consent, anonymisation or POPIA steps were needed.
 
-\[cite: 1\]
+### Overview of the methods
+
+Exponential smoothing forecasts are weighted averages of past observations, with weights that decrease exponentially the further back we go. Each method in @tbl-es-methods adds a component, and each component has its own smoothing parameter.
+
+| Method                      | Components                                           | Forecast $\hat{y}_{T+h \mid T}$       | Use when                                  |
+|-----------------------------|------------------------------------------------------|---------------------------------------|-------------------------------------------|
+| Simple (SES)                | level $\ell_t$ ($\alpha$)                            | $\ell_T$                              | no trend, no seasonality                  |
+| Holt's linear               | level, trend $b_t$ ($\alpha, \beta$)                 | $\ell_T + hb_T$                       | a linear trend                            |
+| Damped trend                | level, damped trend ($\alpha, \beta, \phi$)          | $\ell_T + (\phi + \dots + \phi^h)b_T$ | a trend that is expected to flatten out   |
+| Holt-Winters additive       | level, trend, season $s_t$ ($\alpha, \beta, \gamma$) | $\ell_T + hb_T + s_{T+h-m(k+1)}$      | seasonal swings of constant size          |
+| Holt-Winters multiplicative | level, trend, season ($\alpha, \beta, \gamma$)       | $(\ell_T + hb_T)s_{T+h-m(k+1)}$       | seasonal swings proportional to the level |
+
+: Exponential smoothing methods. $m$ is the seasonal period and $k = \lfloor (h-1)/m \rfloor$. {#tbl-es-methods}
+
+Written in error-correction form, each method becomes a state-space model with a single source of error (the ETS models). This gives a likelihood (so parameters can be estimated by maximum likelihood and models compared by AICc) and prediction intervals. `ets()` chooses between the error, trend and seasonal types automatically. In [Project 1](../projects/project-01.qmd) I implemented additive Holt-Winters with a damped trend from first principles on Eskom electricity demand.
+
+### Simple exponential smoothing
+
+Simple exponential smoothing (SES) forecasts the next observation with a weighted average of past observations, where the weights decrease exponentially:
+
+$$
+\hat{y}_{t+1 \mid t} = \alpha y_t + \alpha(1-\alpha) y_{t-1} + \alpha(1-\alpha)^2 y_{t-2} + \cdots, \quad 0 < \alpha < 1.
+$$
+
+The same forecast can be written as two updating equations:
+
+$$
+\begin{aligned}
+\text{Forecast:} \quad \hat{y}_{t+h \mid t} &= \ell_t \\
+\text{Smoothing:} \quad \ell_t &= \alpha y_t + (1-\alpha)\ell_{t-1}
+\end{aligned}
+$$
+
+::: callout-note
+## Note
+
+The level $\ell_t$ is a local mean. Forecasts from SES are flat: there is no new information after time $T$, so every forecast is $\ell_T$.
+:::
+
+To start the recursion we need $\ell_0$, and in most cases we also need to estimate $\alpha$. Both are found by minimising the sum of squared one-step-ahead errors:
+
+$$
+\text{SSE} = \sum_{t=1}^{T}(y_t - \hat{y}_{t \mid t-1})^2.
+$$
+
+## Question 1: Boston marathon
+
+The `marathon` data are the winning times (in minutes) of the Boston marathon from 1897 to 2016.
+
+```{r}
+# Read in data:
+data(marathon)
+# View(marathon)
+
+cat("Start:", start(marathon), " End:", end(marathon), " Frequency:", frequency(marathon), "\n")
+```
+
+### Writing SES from first principles
+
+```{r}
+y = marathon
+
+# Function to implement simple exponential smoothing:
+# y:      time series 
+# alpha:  smoothing parameter 
+# level0: initial level 
+ses_fxn = function(y, alpha, level0) {
+  n = length(y) 
+  y_hat = numeric(n) # store estimates
+  level = numeric(n) # store levels
+  l = level0
+  
+  for (t in 1:n) {
+    y_hat[t] = l 
+    l        = alpha*y[t] + (1-alpha)*l
+    level[t] = l
+  }
+  
+  res = y - y_hat
+  sse = sum(res^2)
+  list(
+    yhat      = y_hat,
+    level     = level,
+    residuals = res,
+    sse       = sse,
+    forecast  = l
+  )
+}
+
+# Function to return the one-step-ahead forecast: 
+ses_forecast_fxn = function(y, alpha, level0) {
+  ses_fxn(y ,alpha, level0)$forecast
+}
+
+# Function to optimise:
+my_sse = function(par, y) {
+  ses_fxn(y, alpha = par[1], level0 = par[2])$sse
+}
+
+# Optimise:
+opt = optim(par = c(0.5,y[1]), 
+            fn = my_sse, 
+            y = y, 
+            method = 'L-BFGS-B',
+            lower = c(0.0001,-Inf), 
+            upper = c(0.9999, Inf))
+
+alpha_hat = opt$par[1]
+l0_hat    = opt$par[2]
+
+my_fit = ses_fxn(y,alpha=alpha_hat,level0=l0_hat)
+# my_fit$forecast
+
+# Compare with ses():
+fit = ses(y,h=1)
+# fit$model$par
+# fit$mean
+
+rbind(
+  mine = c(alpha = alpha_hat, l0 = l0_hat,
+           sse = opt$value, forecast = my_fit$forecast),
+  ses  = c(fit$model$par["alpha"], fit$model$par["l"],
+           sum(residuals(fit)^2), fit$mean[1])
+)
+```
+
+```{r}
+# Plug ses()'s parameters into my function:
+check = ses_fxn(y, alpha  = fit$model$par["alpha"],
+                   level0 = fit$model$par["l"])
+round(unname(check$forecast) - fit$mean[1], 10)
+```
+
+Using the `ses()` parameter estimates in my own function yields the same forecast. My estimates are very close to the `ses()` estimates ($\hat{\alpha} =$ `r round(alpha_hat, 4)` vs `r round(fit$model$par["alpha"], 4)`). The small difference is due to how each optimisation works. `ses()` maximises a likelihood rather than minimising the SSE directly.
+
+### Point forecast and prediction interval for 2017
+
+```{r}
+n      = length(y)
+z      = qnorm(0.975)
+s      = sqrt(check$sse/(n-2)) 
+fit95  = ses(y, h = 1, level = 95)
+
+round(rbind(
+  mine = c(forecast = unname(check$forecast),
+           lower = unname(check$forecast) - z*s,
+           upper = unname(check$forecast) + z*s),
+  ses  = c(fit95$mean[1], fit95$lower[1], fit95$upper[1])
+), 4)
+```
+
+Both give the same point forecast and 95% interval: $\hat{y}_{T+1|T} \pm 1.96\,\hat{\sigma}$, with $\hat{\sigma} = \sqrt{SSE/(n-2)}$.
+
+### Plot with fitted values
+
+```{r}
+#| label: fig-marathon
+#| fig-cap: "Boston marathon winning times (grey) with the SES fitted values (one-step-ahead forecasts, pink)."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+mar_plot_df = data.frame(
+  year = as.numeric(time(marathon)),
+  observed = as.numeric(marathon),
+  fitted = as.numeric(fitted(fit))
+)
+
+ggplot(data = mar_plot_df, mapping = aes(x = year)) +
+  geom_line(aes(y = observed, colour = "Observed")) +
+  geom_line(aes(y = fitted, colour = "Fitted")) +
+  scale_colour_manual(values = c("Observed" = "grey40", "Fitted" = "deeppink")) +
+  labs(
+    title = "Boston marathon winning times (1897–2016).",
+    x = "Year",
+    y = "Winning time (minutes)",
+    colour = ""
+  ) +
+  theme_minimal()
+```
+
+@fig-marathon shows that the fitted values follow the observations but lag one step behind them. SES has no trend term, so during the long downward trend (until about 1980) the fitted values almost always predicted a longer winning time than what is actually observed.
+
+### Estimate of $\sigma$
+
+```{r}
+c(mine = sqrt(check$sse / (n - 2)), ses = sqrt(fit$model$sigma2))
+```
+
+A typical one-step-ahead forecast is off by about $\hat{\sigma} \approx$ `r round(sqrt(fit$model$sigma2), 2)` minutes. `ses()` divides the SSE by $T-2$ to correct for the two estimated parameters.
+
+## Question 2: Saudi Arabian oil production
+
+```{r}
+# Read in data:
+data(oil)
+# View(oil)
+
+# Fit SES and forecast four years ahead:
+oil_fit = ses(oil, h = 4)
+oil_fit$model$par
+```
+
+```{r}
+#| label: fig-oil
+#| fig-cap: "Annual oil production in Saudi Arabia with SES fitted values and four-year forecasts (80% and 95% prediction intervals)."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+autoplot(oil_fit) +
+  autolayer(fitted(oil_fit), series = "Fitted") +
+  scale_colour_manual(values = c("Fitted" = "deeppink")) +
+  labs(
+    title = "Saudi Arabian oil production with SES forecasts.",
+    x = "Year",
+    y = "Oil (millions of tonnes)",
+    colour = ""
+  ) +
+  theme_minimal()
+```
+
+An $\hat{\alpha} \approx$ `r round(oil_fit$model$par["alpha"], 3)` value means the forecast relies mostly on the last observation. The four forecasts are all equal to `r round(oil_fit$mean[1], 1)`. In @fig-oil the prediction intervals widen with the horizon.
+
+### Prediction interval with $\hat{y} \pm 1.96s$
+
+```{r}
+# Standard deviation of the residuals:
+sd_oil = sd(residuals(oil_fit))
+
+# Manual 95% prediction interval for first forecast:
+PI_oil_upper = oil_fit$mean[1] + 1.96*sd_oil
+PI_oil_lower = oil_fit$mean[1] - 1.96*sd_oil
+
+# 95% prediction interval by R:
+PI_oil_R = c(oil_fit$lower[1, "95%"], oil_fit$upper[1, "95%"])
+
+kable(data.frame(
+  Method = c("$\\hat{y} \\pm 1.96\\,s$", "ses()"),
+  Lower  = c(PI_oil_lower, PI_oil_R[1]),
+  Upper  = c(PI_oil_upper, PI_oil_R[2]),
+  SD = c(paste0("$s$ = ", round(sd_oil, 2)),
+         paste0("$\\hat{\\sigma}$ = ", round(sqrt(oil_fit$model$sigma2), 2)))
+), digits = 2, row.names = FALSE,
+col.names = c("Method", "Lower", "Upper", "SD used"))
+```
+
+The two intervals are similar but not identical. This is because they use different estimates of the standard deviation. `sd()` divides by $T-1$ (1 degree of freedom for the estimated mean) and subtracts the mean of the residuals. R uses $\hat{\sigma}^2 = \sum e_t^2/(T-2)$, which does not subtract the mean and divides by $T-2$ (2 degrees of freedom for the for the estimated $\alpha$ and $\ell_0$).
+
+For $h > 1$ we cannot just use $s$, since the forecast variance grows with the horizon. For SES (the ETS(A,N,N) model) the $h$-step forecast variance is $\sigma^2[1 + \alpha^2(h-1)]$.
+
+```{r}
+h = 1:4
+alpha_oil = oil_fit$model$par["alpha"]
+
+# Forecast variance for h = 1, ..., 4:
+var_h = oil_fit$model$sigma2 * (1 + alpha_oil^2 * (h - 1))
+upper_manual = oil_fit$mean + qnorm(0.975) * sqrt(var_h)
+
+kable(data.frame(h = h,
+                 Upper_manual = as.numeric(upper_manual),
+                 Upper_R = as.numeric(oil_fit$upper[, "95%"])),
+      digits = 3,
+      col.names = c("h","Upper manual", "Upper R"))
+```
+
+The formula gives exactly the same upper limits as R. In the state-space form, $\ell_t = \ell_{t-1} + \alpha e_t$, so each future innovation enters the level with weight $\alpha$ and persists in all later levels. Writing $y_{T+h} = \ell_T + \alpha \sum_{j=1}^{h-1} e_{T+j} + e_{T+h}$, with independent errors $e_t \sim N(0, \sigma^2)$, gives $\text{Var}(y_{T+h} \mid y_{1:T}) = \sigma^2[1 + \alpha^2(h-1)]$, which increases linearly in $h$.
+
+## Question 3: optim() on oil 1996--2013
+
+```{r}
+oil_sub = window(oil, start = 1996, end = 2013)
+opt_oil = optim(c(0.5, oil_sub[1]), 
+                my_sse, 
+                y = oil_sub, 
+                method = "L-BFGS-B",
+                lower = c(1e-4, -Inf), 
+                upper = c(0.9999, Inf))
+
+round(rbind(
+  optim = setNames(opt_oil$par, c("alpha", "l")),
+  ses   = ses(oil_sub)$model$par[c("alpha", "l")]
+), 4)
+```
+
+## Question 4: Paperback and hardcover book sales
+
+### a) SES
+
+```{r}
+#| label: fig-books
+#| fig-cap: "Daily sales of paperback and hardcover books over 30 days."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+# Read in data:
+data(books)
+# View(books)
+
+books_df = data.frame(
+  day = rep(1:30, times = 2),
+  sales = c(books[, "Paperback"], books[, "Hardcover"]),
+  type = rep(c("Paperback", "Hardcover"), each = 30)
+)
+
+ggplot(data = books_df, mapping = aes(x = day, y = sales)) +
+  geom_line(col = "deeppink") +
+  geom_point(col = "deeppink") +
+  facet_wrap(~type, ncol = 1) +
+  labs(
+    title = "Daily book sales.",
+    x = "Day",
+    y = "Sales"
+  ) +
+  theme_minimal()
+```
+
+@fig-books shows that both series are very noisy from day to day and both have an upwards trend over the month. There is no clear seasonal pattern and 30 days of data is insufficient to estimate one reliably. The upwards trend suggests that a flat forecast (SES) will be inadequate.
+
+```{r}
+# SES:
+ses_pb = ses(books[, "Paperback"], h = 4)
+ses_hc = ses(books[, "Hardcover"], h = 4)
+
+# Holt's linear method:
+holt_pb = holt(books[, "Paperback"], h = 4)
+holt_hc = holt(books[, "Hardcover"], h = 4)
+
+# Training RMSE:
+rmse = function(fc) {
+  accuracy(fc)["Training set", "RMSE"]
+} 
+
+rmse_df = data.frame(
+  Series = c("Paperback", "Hardcover"),
+  SES = c(rmse(ses_pb), rmse(ses_hc)),
+  Holt = c(rmse(holt_pb), rmse(holt_hc))
+)
+kable(rmse_df, digits = 2, row.names = FALSE)
+```
+
+```{r}
+#| label: fig-books-fc
+#| fig-cap: "Four-day forecasts for book sales from SES and Holt's method."
+#| fig-subcap:
+#|   - "Paperback"
+#|   - "Hardcover"
+#| layout-ncol: 2
+#| fig-width: 5
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+autoplot(books[, "Paperback"]) +
+  autolayer(ses_pb, series = "SES", PI = FALSE) +
+  autolayer(holt_pb, series = "Holt", PI = FALSE) +
+  scale_colour_manual(values = c("SES" = "deeppink", "Holt" = "steelblue")) +
+  labs(title = "Paperback.", x = "Day", y = "Sales", colour = "") +
+  theme_minimal()
+
+autoplot(books[, "Hardcover"]) +
+  autolayer(ses_hc, series = "SES", PI = FALSE) +
+  autolayer(holt_hc, series = "Holt", PI = FALSE) +
+  scale_colour_manual(values = c("SES" = "deeppink", "Holt" = "steelblue")) +
+  labs(title = "Hardcover.", x = "Day", y = "Sales", colour = "") +
+  theme_minimal()
+```
+
+### b) Holt's linear method
+
+$$
+\begin{aligned}
+\hat{y}_{t+h \mid t} &= \ell_t + h b_t \\
+\ell_t &= \alpha y_t + (1-\alpha)(\ell_{t-1} + b_{t-1}) \\
+b_t &= \beta^*(\ell_t - \ell_{t-1}) + (1-\beta^*) b_{t-1}
+\end{aligned}
+$$
+
+Holt's method has a lower training RMSE than SES for both paperback and hardcover sales (paperback: `r round(rmse(holt_pb), 2)` vs `r round(rmse(ses_pb), 2)`; hardcover: `r round(rmse(holt_hc), 2)` vs `r round(rmse(ses_hc), 2)`). However, Holt's linear method estimates two more parameters than SES, so it should always fit the training data at least as well. Training RMSE does not tell us how well a model will perform out-of-sample. Although SES is just an updating rule, `ses()` and `holt()` fit the corresponding state-space models (ETS(A,N,N) and ETS(A,A,N)) with normal errors, so both have a likelihood. This means the models can be compared using AICc, which penalises the additional parameters and is more informative about which model to choose.
+
+```{r}
+# AICc:
+kable(data.frame(
+  Series = c("Paperback", "Hardcover"),
+  AIC_SES = c(ses_pb$model$aicc, ses_hc$model$aicc),
+  AIC_Holt = c(holt_pb$model$aicc, holt_hc$model$aicc)
+), digits = 1, 
+row.names = FALSE, 
+col.names = c("Series", "SES", "Holt"))
+```
+
+### c) Which forecasts are best?
+
+Both series have an upward trend, but the AICc gives different answers for the two. For hardcover sales, Holt's method has a clearly lower AICc than SES (`r round(holt_hc$model$aicc, 1)` vs `r round(ses_hc$model$aicc, 1)`), even after the penalty for its two extra parameters. The trend is strong enough that SES's fitted values lag behind it, so its one-step-ahead errors are larger. For paperback sales, SES has a slightly lower AICc (`r round(ses_pb$model$aicc, 1)` vs `r round(holt_pb$model$aicc, 1)`). The paperback series is noisier, so the small improvement in fit from accounting for the trend in the data is not worth the two extra parameters. However, since the difference in AICc is less than 1, there is no real evidence that one method is better than the other for paperback sales. Overall, Holt's method is preferred for the hardcover series and SES for paperback sales but with only 30 days of data it is not reliable for long-term forecasting.
+
+### d) Prediction intervals from the RMSE
+
+```{r}
+# Training RMSE for each fit:
+rmse_ses_pb  = rmse(ses_pb)
+rmse_holt_pb = rmse(holt_pb)
+rmse_ses_hc  = rmse(ses_hc)
+rmse_holt_hc = rmse(holt_hc)
+
+# 95% interval using RMSE:
+lower_rmse = c(ses_pb$mean[1]-1.96*rmse_ses_pb,
+               holt_pb$mean[1]-1.96*rmse_holt_pb,
+               ses_hc$mean[1]-1.96*rmse_ses_hc,
+               holt_hc$mean[1]-1.96*rmse_holt_hc)
+
+upper_rmse = c(ses_pb$mean[1]+1.96*rmse_ses_pb,
+               holt_pb$mean[1]+1.96*rmse_holt_pb,
+               ses_hc$mean[1]+1.96*rmse_ses_hc,
+               holt_hc$mean[1]+1.96*rmse_holt_hc)
+
+# 95% interval by R:
+lower_R = c(ses_pb$lower[1, "95%"], holt_pb$lower[1, "95%"],
+            ses_hc$lower[1, "95%"], holt_hc$lower[1, "95%"])
+
+upper_R = c(ses_pb$upper[1, "95%"], holt_pb$upper[1, "95%"],
+            ses_hc$upper[1, "95%"], holt_hc$upper[1, "95%"])
+
+kable(data.frame(
+  Model = c("Paperback SES", "Paperback Holt", "Hardcover SES", "Hardcover Holt"),
+  Lower_RMSE = lower_rmse,
+  Upper_RMSE = upper_rmse,
+  Lower_R = lower_R,
+  Upper_R = upper_R
+), digits = 1, row.names = FALSE,
+col.names = c("Model", "Lower (RMSE)", "Upper (RMSE)", "Lower (R)", "Upper (R)"))
+```
+
+The intervals based on the RMSE are slightly narrower than the R intervals. RMSE divides the SSE by $T$, whereas R divides by the degrees of freedom, $T-k$, where $k = 2$ for SES ($\alpha, \ell_0$) and $k = 4$ for Holt ($\alpha, \beta, \ell_0, b_0$). Since the series has only 30 observations, this difference is noticeable, especially for Holt's method. Neither interval accounts for the uncertainty in the parameter estimates, so both are likely too narrow.
+
+## Question 5: Simulating using the state-space model formulation
+
+In error-correction form, SES and Holt's method are state-space models with a single source of error:
+
+$$
+\begin{aligned}
+y_t &= \ell_{t-1} + b_{t-1} + e_t, \qquad e_t \sim N(0, \sigma^2) \\
+\ell_t &= \ell_{t-1} + b_{t-1} + \alpha e_t \\
+b_t &= b_{t-1} + \alpha\beta^* e_t
+\end{aligned}
+$$
+
+For SES, $b_t = 0$ and $\beta^* = 0$.
+
+```{r}
+# Function to simulate from SES or Holt's method:
+# n:   no. observations 
+# par: parameters 
+sim_fxn = function(n, par) {
+  l     = par$l0
+  b     = par$b0
+  y     = numeric(n)
+  level = numeric(n)
+  
+  for (t in 1:n) {
+    e        = rnorm(1, 0, par$sigma)
+    y[t]     = l + b + e                        # observation equation
+    l        = l + b + par$alpha * e            # level
+    b        = b + par$alpha * par$beta * e     # trend
+    level[t] = l
+  }
+  list(y = ts(y), level = level)
+}
+```
+
+### SES
+
+```{r}
+set.seed(2026)
+
+# True parameters:
+p_ses = list(alpha = 0.4, beta = 0, l0 = 3, b0 = 0, sigma = 0.5)
+
+# Simulate:
+sim_ses = sim_fxn(n = 100, par = p_ses)
+y_ses = sim_ses$y
+
+# Estimate with optim() and ses():
+fit_sim = optim(par = c(0.5, y_ses[1]), 
+                fn = my_sse, 
+                y = y_ses,
+                method = "L-BFGS-B", 
+                lower = c(0.0001, -Inf), 
+                upper = c(0.9999, Inf))
+ses_sim = ses(y_ses)
+
+kable(data.frame(
+  Method = c("True value", "optim()", "ses()"),
+  alpha = c(p_ses$alpha, fit_sim$par[1], ses_sim$model$par["alpha"]),
+  l0 = c(p_ses$l0, fit_sim$par[2], ses_sim$model$par["l"]),
+  sigma = c(p_ses$sigma, sqrt(fit_sim$value / (100 - 2)), sqrt(ses_sim$model$sigma2))
+), digits = 3, row.names = FALSE)
+```
+
+The estimates from `optim()` and `ses()` are identical to 3 decimal places and both are close to the true parameter values. They do not match the true values exactly because they are based on a single simulated series, so some sampling variation is expected.
+
+### Holt
+
+```{r}
+set.seed(2026)
+
+# True parameters:
+p_holt = list(alpha = 0.5, beta = 0.2, l0 = 10, b0 = 0.5, sigma = 1)
+y_holt = sim_fxn(n = 100, par = p_holt)$y
+
+holt_sim = holt(y_holt)
+
+kable(data.frame(
+  Method = c("True value", "holt()"),
+  alpha = c(p_holt$alpha, holt_sim$model$par["alpha"]),
+  beta = c(p_holt$alpha * p_holt$beta, holt_sim$model$par["beta"]),
+  l0 = c(p_holt$l0, holt_sim$model$par["l"]),
+  b0 = c(p_holt$b0, holt_sim$model$par["b"])
+), digits = 3, row.names = FALSE)
+```
+
+`holt()` reports $\beta$ on the error-correction scale, $\beta = \alpha\beta^*$, so the true value is $0.5 \times 0.2 = 0.1$. The estimates of $\alpha$ and $\beta$ are reasonably close to the true values. The initial states are poorly estimated because only the first few observations carry information about them, and a higher starting level combined with a lower starting trend fits those observations almost equally well. This has little effect on the forecasts, which depend on the final level and trend rather than the starting values.
+
+## Problem 1
+
+**Question:** *How do different prediction intervals differ and what are their sources of uncertainty?*
+
+I used the simulated SES series from Question 5, fitting each method to the first 80 observations and forecasting 10 steps ahead.
+
+### A Bayesian SES sampler
+
+Under the ETS(A,N,N) model, $y_t = \ell_{t-1} + e_t$ with $e_t \sim N(0, \sigma^2)$ independent. Given $\alpha$, $\ell_0$ and $y_{1:t-1}$, the level $\ell_{t-1}$ is known, so $y_t \mid y_{1:t-1} \sim N(\ell_{t-1}, \sigma^2)$. Writing the joint density as a product of these conditional densities gives the likelihood
+
+$$
+L(\alpha, \ell_0, \sigma; \boldsymbol{y}) = \prod_{t=1}^{T} \frac{1}{\sigma}\,\phi\!\left(\frac{e_t}{\sigma}\right), \qquad e_t = y_t - \ell_{t-1},
+$$
+
+where $\phi$ is the standard normal density and $e_t$ depends on $(\alpha, \ell_0)$ through the SES recursion. The priors are $\alpha \sim \text{Uniform}(0, 1)$ and flat priors on $\ell_0$ and $\log\sigma$.
+
+A random walk Metropolis-Hastings algorithm is used to sample from the posterior. The random walk steps are drawn from a multivariate normal distribution, which has support over the entire real line, whereas $\alpha \in (0, 1)$ and $\sigma > 0$. Therefore, the parameters are mapped to the real line using
+
+$$
+\phi_1 = \text{logit}(\alpha), \qquad \phi_2 = \ell_0, \qquad \phi_3 = \log\sigma,
+$$
+
+and the random walk is performed over $\boldsymbol{\phi} = (\phi_1, \phi_2, \phi_3)$, with proposals $\boldsymbol{\phi}^* = \boldsymbol{\phi} + \boldsymbol{e}$. Since we sample $\boldsymbol{\phi}$ rather than $\boldsymbol{\theta} = (\alpha, \ell_0, \sigma)$, the Jacobian of the transformation must be included in the log posterior. The flat prior on $\log\sigma$ is already defined on the transformed scale, so only $\alpha$ needs a Jacobian:
+
+$$
+\log p(\boldsymbol{\phi}) = \log L(\alpha, \ell_0, \sigma; \boldsymbol{y}) + \log\{\alpha(1-\alpha)\} + \text{const}.
+$$
+
+Since the proposal is symmetric, $\boldsymbol{\phi}^*$ is accepted with probability $\min\{1, \exp[\log p(\boldsymbol{\phi}^*) - \log p(\boldsymbol{\phi})]\}$. The steps are initially drawn from $\boldsymbol{e} \sim N(\boldsymbol{0}, 0.5^2\,\mathbf{I}_3)$. The first 3 000 iterations are a burn-in, and the covariance matrix $\Sigma$ of the transformed parameters is estimated from the last 1 500 of these. The retained draws then use $\boldsymbol{e} \sim N\left(\boldsymbol{0}, \frac{2.38^2}{3}\Sigma\right)$ (Roberts et al., 1997). The chain starts at the `ses()` estimates.
+
+Each retained draw $(\alpha^{(j)}, \ell_0^{(j)}, \sigma^{(j)})$ is then used to compute $\ell_T^{(j)}$ and simulate one future path from the state-space model. This gives draws from the posterior predictive distribution of $y_{T+1}, \ldots, y_{T+h}$.
+
+```{r}
+# 1. SES log-likelihood: 
+SES_Log_Likelihood = function(y, alpha, l0, sigma) {
+  e   = ses_fxn(y, alpha, l0)$residuals
+  out = sum(dnorm(e, 0, sigma, log = TRUE))
+  if (!is.finite(out)) -Inf else out
+}
+
+# 2. Parameter transforms: 
+to_real = function(theta) {
+  c(qlogis(theta[1]), theta[2], log(theta[3]))
+}
+
+from_real = function(phi) {
+  c(plogis(phi[1]), phi[2], exp(phi[3]))
+}
+
+# 3. Log posterior on the transformed scale (priors + Jacobian):
+log_target = function(phi, y) {
+  theta = from_real(phi)
+  ll    = SES_Log_Likelihood(y, theta[1], theta[2], theta[3])
+  if (!is.finite(ll)) return(-Inf)
+
+  # Note: flat priors on l0 and log(sigma) only add a constant
+  # Uniform(0, 1) prior on alpha x logit Jacobian:
+  lp_alpha = plogis(phi[1], log.p = TRUE) + plogis(-phi[1], log.p = TRUE)
+
+  ll + lp_alpha
+}
+
+# 4. Metropolis-Hastings loop:
+mh_run = function(phi, jitters, y) {
+  n         = nrow(jitters)
+  cur       = log_target(phi, y)
+  phi_draws = matrix(NA, n, 3)
+  accepted  = logical(n)
+
+  for (i in seq_len(n)) {
+    prop      = phi + jitters[i, ]
+    prop_val  = log_target(prop, y)
+    log_alpha = if (is.finite(prop_val)) min(0, prop_val - cur) else -Inf
+
+    if (log(runif(1)) < log_alpha) {
+      phi         = prop
+      cur         = prop_val
+      accepted[i] = TRUE
+    }
+    phi_draws[i, ] = phi
+  }
+  list(phi_draws = phi_draws, last = phi, accept_rate = mean(accepted))
+}
+
+# 5. Two-phase sampler: 
+# Phase 1: burn-in with isotropic jitter, Sigma = covariance of later burn-in draws
+# Phase 2: retained iterations with proposals ~ N(0, scale * Sigma)
+MH_SES = function(y, init, iterations = 20000, burn = 3000, burn_sd = 0.5,
+                  cov_frac = 0.5, scale = 2.38^2/3) {
+  phi0 = to_real(init)
+
+  # Phase 1:
+  burn_jit = rmvnorm(burn, mean = rep(0, 3), sigma = burn_sd^2 * diag(3))
+  b        = mh_run(phi0, burn_jit, y)
+  keep     = seq.int(floor(burn * (1 - cov_frac)) + 1, burn)
+  Sigma    = cov(b$phi_draws[keep, , drop = FALSE])
+
+  # Phase 2:
+  main_jit = rmvnorm(iterations, mean = rep(0, 3), sigma = scale * Sigma)
+  m        = mh_run(b$last, main_jit, y)
+
+  draws = t(apply(m$phi_draws, 1, from_real))
+  colnames(draws) = c("alpha", "l0", "sigma")
+  
+  list(
+    draws = draws, 
+    burn_accept = b$accept_rate, 
+    accept_rate = m$accept_rate)
+}
+```
+
+As a check on my sample, I also fitted the same model in Stan (Carpenter et al., 2017) to sample from the posterior. Stan uses the No-U-Turn Sampler (NUTS), an adaptive form of Hamiltonian Monte Carlo that uses the gradient of the log posterior to propose new points. The `parameters` block restricts $\alpha$ to $(0, 1)$ and $\sigma$ to $(0, \infty)$, and Stan maps them to the real line and includes the Jacobian automatically. The `model` block runs the SES recursion, with $y_t \sim N(\ell_{t-1}, \sigma^2)$ at each step. The `generated quantities` block computes $\ell_T$ for each posterior draw and simulates one future path from the state-space model, which gives draws from the posterior predictive distribution of $y_{T+1}, \ldots, y_{T+h}$.
+
+```{r}
+# SES model written in Stan:
+modelString = "
+  data {
+    int<lower=1> N;                   // number of observations
+    vector[N] y;                      // time series
+    int<lower=1> N_new;               // forecast horizon
+  }
+
+  parameters {
+    real<lower=0, upper=1> alpha;     // smoothing parameter
+    real l0;                          // initial level
+    real<lower=0> sigma;              // error standard deviation
+  }
+
+  model {
+    real level = l0;
+
+    // Priors (flat priors on l0 and sigma):
+    alpha ~ uniform(0, 1);
+    target += -log(sigma);            // flat prior on log(sigma)
+
+    // Likelihood: one-step-ahead errors are iid N(0, sigma^2)
+    for (t in 1:N) {
+      y[t] ~ normal(level, sigma);
+      level = level + alpha * (y[t] - level);
+    }
+  }
+
+  generated quantities {
+    real level_T;
+    vector[N_new] y_new;
+
+    // Final level for this draw:
+    {
+      real level = l0;
+      for (t in 1:N) level = level + alpha * (y[t] - level);
+      level_T = level;
+    }
+
+    // One future path from the state-space model:
+    {
+      real lev = level_T;
+      for (h in 1:N_new) {
+        real e = normal_rng(0, sigma);
+        y_new[h] = lev + e;
+        lev = lev + alpha * e;
+      }
+    }
+  }
+"
+```
+
+### Comparing prediction intervals
+
+```{r}
+#| cache: true
+#| message: false
+#| warning: false
+
+n_tr    = 80
+h_max   = 10
+y_train = window(y_ses, end = n_tr)
+y_test  = window(y_ses, start = n_tr + 1, end = n_tr + h_max)
+
+# 1. Normal intervals from ses():
+fc_norm = ses(y_train, h = h_max, level = 95)
+
+# 2. Manual normal intervals: 
+a_hat        = fc_norm$model$par["alpha"]
+res          = as.numeric(residuals(fc_norm))
+sig2_hat     = sum(res^2)/(n_tr-2)
+sd_h         = sqrt(sig2_hat*(1+a_hat^2*(1:h_max-1)))
+manual_lower = fc_norm$mean-qnorm(0.975)*sd_h
+manual_upper = fc_norm$mean+qnorm(0.975)*sd_h
+
+# 3. Bootstrapped residuals: 
+set.seed(2026)
+B      = 5000
+lev    = rep(fc_norm$mean[1], B)         
+y_boot = matrix(NA, B, h_max)
+
+for (k in 1:h_max) {
+  e           = sample(res, size = B, replace = TRUE)
+  y_boot[, k] = lev + e
+  lev         = lev + a_hat * e
+}
+boot_pi = apply(y_boot, 2, quantile, probs = c(0.025, 0.975))
+
+# 4. forecast():
+fc_fboot = forecast(fc_norm$model, h = h_max, level = 95,
+                    bootstrap = TRUE, simulate = TRUE, npaths = 5000)
+
+# 5. Bayesian posterior predictive:
+set.seed(2026)
+init   = c(fc_norm$model$par["alpha"], fc_norm$model$par["l"], sqrt(fc_norm$model$sigma2))
+fit_mh = MH_SES(y_train, init = init)
+
+alpha_d = fit_mh$draws[, "alpha"]
+l0_d    = fit_mh$draws[, "l0"]
+sigma_d = fit_mh$draws[, "sigma"]
+
+# One future path per posterior draw:
+n_d = nrow(fit_mh$draws)
+y_bayes = matrix(NA, n_d, h_max)
+level_T = numeric(n_d)
+
+for (j in 1:n_d) {
+  lev_j      = ses_fxn(y_train, alpha_d[j], l0_d[j])$forecast  
+  level_T[j] = lev_j
+  
+  for (k in 1:h_max) {
+    e             = rnorm(1, 0, sigma_d[j])
+    y_bayes[j, k] = lev_j + e
+    lev_j         = lev_j + alpha_d[j] * e
+  }
+}
+bayes_pi = apply(y_bayes, 2, quantile, probs = c(0.025, 0.975))
+
+# 6. Bayesian posterior predictive (Stan):
+rstan_options(auto_write = TRUE)
+
+stan_mod  = stan_model(model_code = modelString)
+stan_data = list(N = n_tr, y = as.numeric(y_train), N_new = h_max)
+
+stanFit = sampling(stan_mod,
+                   data    = stan_data,
+                   chains  = 3,
+                   iter    = 6000,
+                   warmup  = 1000,
+                   seed    = 2026,
+                   refresh = 0)
+
+post_stan     = rstan::extract(stanFit)
+bayes_pi_stan = apply(post_stan$y_new, 2, quantile, probs = c(0.025, 0.975))
+
+# True values (from simulation):
+lev_true = sim_ses$level[n_tr]
+sd_true  = p_ses$sigma * sqrt(1 + p_ses$alpha^2 * (1:h_max - 1))
+```
+
+```{r}
+pi_all = rbind(
+  data.frame(method = "Normal: ses()", h = 1:h_max,
+             lower  = as.numeric(fc_norm$lower), 
+             upper  = as.numeric(fc_norm$upper)),
+  data.frame(method = "Normal: by hand", h = 1:h_max,
+             lower  = as.numeric(manual_lower), 
+             upper  = as.numeric(manual_upper)),
+  data.frame(method = "Bootstrap: own code", h = 1:h_max,
+             lower  = boot_pi[1, ], 
+             upper  = boot_pi[2, ]),
+  data.frame(method = "Bootstrap: forecast()", h = 1:h_max,
+             lower  = as.numeric(fc_fboot$lower), 
+             upper  = as.numeric(fc_fboot$upper)),
+  data.frame(method = "Bayesian: MH first principles", h = 1:h_max,
+             lower  = bayes_pi[1, ], 
+             upper  = bayes_pi[2, ]),
+  data.frame(method = "Bayesian: Stan", h = 1:h_max,
+             lower  = bayes_pi_stan[1, ],
+             upper  = bayes_pi_stan[2, ]),
+  data.frame(method = "True parameters", h = 1:h_max,
+             lower  = lev_true - qnorm(0.975) * sd_true,
+             upper  = lev_true + qnorm(0.975) * sd_true)
+)
+pi_all$width = pi_all$upper-pi_all$lower
+
+# Interval widths at h = 1, 5 and 10:
+width_tab = reshape(pi_all[pi_all$h %in% c(1, 5, 10), c("method", "h", "width")],
+                    idvar = "method", timevar = "h", direction = "wide")
+names(width_tab) = c("Method", "Width h=1", "Width h=5", "Width h=10")
+kable(width_tab, digits = 3, row.names = FALSE)
+```
+
+```{r}
+#| label: fig-pi-compare
+#| fig-cap: "95% prediction intervals for the simulated SES series from six approaches (pink), with the interval based on the true parameters (blue, dashed). Points are the test observations (not used for fitting)."
+#| fig-width: 9
+#| fig-height: 6
+#| echo: false
+#| message: false
+#| warning: false
+
+test_df = data.frame(h = 1:h_max, y = as.numeric(y_test))
+
+# Interval with the true parameters (shown in every panel):
+true_df = pi_all[pi_all$method == "True parameters", c("h", "lower", "upper")]
+
+ggplot(data = pi_all[pi_all$method != "True parameters", ], mapping = aes(x = h)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), 
+              fill = "deeppink", alpha = 0.2) +
+  geom_line(data = true_df, aes(y = lower), 
+            col = "steelblue", linetype = 2) +
+  geom_line(data = true_df, aes(y = upper), 
+            col = "steelblue", linetype = 2) +
+  geom_point(data = test_df, 
+             aes(y = y), 
+             col = "deeppink") +
+  facet_wrap(~method, ncol = 3) +
+  labs(
+    title = "Comparison of 95% prediction intervals.",
+    x = "Forecast horizon (h)",
+    y = "y"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Posterior summaries (own sampler vs Stan):
+stan_sum = summary(stanFit, pars = c("alpha", "l0", "sigma"),
+                   probs = c(0.025, 0.975))$summary
+mh_sum   = t(apply(fit_mh$draws, 2, function(x) c(mean(x), quantile(x, c(0.025, 0.975)))))
+
+kable(data.frame(
+  Parameter  = c("alpha", "l0", "sigma"),
+  True       = c(p_ses$alpha, p_ses$l0, p_ses$sigma),
+  MH_mean    = mh_sum[, 1],
+  MH_lower   = mh_sum[, 2],
+  MH_upper   = mh_sum[, 3],
+  Stan_mean  = stan_sum[, "mean"],
+  Stan_lower = stan_sum[, "2.5%"],
+  Stan_upper = stan_sum[, "97.5%"]
+), digits = 3, row.names = FALSE,
+col.names = c("Parameter", "True", "MH mean", "MH 2.5%", "MH 97.5%",
+              "Stan mean", "Stan 2.5%", "Stan 97.5%"))
+
+cat("MH acceptance rate (burn-in):", round(fit_mh$burn_accept, 2),
+    " MH acceptance rate (retained):", round(fit_mh$accept_rate, 2),
+    " Stan max Rhat:", round(max(stan_sum[, "Rhat"]), 3), "\n")
+```
+
+My Metropolis-Hastings sampler and Stan give almost identical posterior means and 95% credible intervals for all three parameters, which confirms that my sampler is correct. All three true values lie inside the credible intervals. The posterior for $\alpha$ is wide (roughly 0.34 to 0.65), so even with 80 observations there is considerable uncertainty about the smoothing parameter. This is the uncertainty that the plug-in intervals ignore. The initial level $\ell_0$ has the widest interval relative to its value, because only the first few observations carry information about it (as in Question 5).
+
+**Error variance estimates.** Each method estimates $\sigma^2$ slightly differently:
+
+```{r}
+kable(data.frame(
+  Estimate = c("$\\text{SSE}/(n-2)$ (`ses()`, normal intervals)",
+               "$\\text{SSE}/n$ (implied by bootstrapping the residuals)",
+               "$\\widehat{\\text{Var}}(e_t)$ (`var()`: divides by $n-1$, centres at $\\bar{e}$)",
+               "$E(\\sigma^2 \\mid \\boldsymbol{y})$ (my MH sampler)",
+               "$E(\\sigma^2 \\mid \\boldsymbol{y})$ (Stan)",
+               "True $\\sigma^2$"),
+  sigma2 = c(sig2_hat, sum(res^2) / n_tr, var(res),
+             mean(sigma_d^2), mean(post_stan$sigma^2), p_ses$sigma^2)
+), digits = 4, row.names = FALSE, escape = FALSE,
+col.names = c("Estimate", "$\\hat{\\sigma}^2$"))
+```
+
+**What I found:**
+
+-   The normal interval by hand reproduces `ses()` exactly, so `ses()` uses $\hat{\sigma}^2 = \text{SSE}/(n-2)$ and $\text{Var}(y_{T+h}) = \sigma^2[1+\alpha^2(h-1)]$.
+-   The two bootstrap intervals differ at $h = 1$ (widths `r round(width_tab[3, 2], 2)` and `r round(width_tab[4, 2], 2)`) but are close to the normal interval at $h = 10$. At $h = 1$ a bootstrap interval is just the 2.5% and 97.5% quantiles of the 80 residuals, so it depends on the few most extreme residuals and is very noisy. At longer horizons several resampled errors are added together, so this effect averages out. Bootstrapping only assumes *independent* errors, so it is safer when residuals are skewed or heavy-tailed, but it needs more data than the normal approach.
+-   Both Bayesian intervals are wider than the normal interval at every horizon, and the difference grows with $h$ (from about 0.03 at $h=1$ to about 0.17 at $h=10$), because every future path uses a different draw of $(\alpha, \ell_0, \sigma)$. They are the only methods that include **parameter uncertainty**. My Metropolis-Hastings sampler and Stan give almost identical widths, which confirms that my sampler is correct.
+-   Compared with the interval using the true parameters, the `ses()` interval is too narrow at $h=1$ but too wide at $h=10$. In this realisation $\hat{\sigma}$ is slightly too small and $\hat{\alpha}$ slightly too large, which shows that the plug-in interval depends on how good the parameter estimates happen to be.
+-   None of the approaches includes uncertainty about the **choice of model** or whether the process will **keep behaving the same way**. This is why prediction intervals in practice are usually too narrow.
+
+### Credible interval vs prediction interval
+
+A **credible interval** describes uncertainty about an unknown quantity, here the current level $\ell_T$. A **prediction interval** describes uncertainty about a future *observation* $y_{T+h}$, so it also includes the future error $e_{T+h}$.
+
+```{r}
+ci_level = quantile(level_T, c(0.025, 0.975)) 
+pi_y1    = bayes_pi[, 1]                      
+
+kable(data.frame(
+  Interval = c("Credible interval for l_T", "Prediction interval for y_{T+1}"),
+  Lower = as.numeric(c(ci_level[1], pi_y1[1])),
+  Upper = as.numeric(c(ci_level[2], pi_y1[2]))
+), digits = 3, row.names = FALSE)
+```
+
+The interval for the level is much narrower than the prediction interval, because most of the uncertainty about a single future observation comes from the noise $e_{T+1}$, not from estimating the level.
+
+### Coverage of the normal intervals
+
+A 95% prediction interval should contain the future value 95% of the time. I simulated 300 series ($n = 30$), fitted `ses()` and checked how often the 95% interval contained the true $y_{T+1}$ and $y_{T+10}$.
+
+```{r}
+set.seed(4)
+cover = t(replicate(300, {
+  sim    = sim_fxn(n = 40, par = p_ses)$y
+  tr     = window(sim, end = 30)
+  fc     = ses(tr, h = 10, level = 95)
+  future = as.numeric(window(sim, start = 31))
+  c(h1   = future[1] >= fc$lower[1] & future[1] <= fc$upper[1],
+    h10  = future[10] >= fc$lower[10] & future[10] <= fc$upper[10])
+}))
+colMeans(cover)
+```
+
+The coverage is `r round(100 * mean(cover[, 1]), 1)`% at $h=1$ and `r round(100 * mean(cover[, 2]), 1)`% at $h=10$. With 300 replicates the Monte Carlo standard error is about 1.3%, so both are consistent with the nominal 95%. Even though the plug-in intervals ignore the uncertainty in $\hat{\alpha}$ and $\hat{\sigma}$, this has little effect on coverage here. One reason is that dividing the SSE by $n-2$ rather than $n$ already widens the intervals slightly. Another is that the errors really are normal and the model is correct, which is the best case for these intervals. With real data, where the model is only an approximation, the coverage would usually be lower.
+
+# Time Series Regression
+
+Time series regression models a response $y_t$ as a function of explanatory variables $\mathbf{x}_t$, combining the regression framework with the dependence structure of a time series. This lets us estimate and interpret the effect of $\mathbf{x}_t$ on $y_t$, and can improve forecasts beyond what the series' own past provides. Errors are usually serially correlated, which violates the independence assumption underlying ordinary least squares inference.
+
+### Overview of the models
+
+::: callout-warning
+## Why ordinary regression is a problem
+
+With autocorrelated errors, OLS estimates are still unbiased (if $x$ is exogenous) but no longer minimum variance, and the usual standard errors are wrong. Under positive autocorrelation they are typically too small, so OLS is overconfident: intervals are too narrow and variables can appear significant when they are not (spurious regression).
+:::
+
+The models differ in where the time dependence enters: through lags of the response, lags of the explanatory variables, or the errors (@tbl-tsr-models).
+
+| Model                       | Equation                                                                                                     | Dependence through            | Use when                                                    |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------|-------------------------------------------------------------|
+| ARMAX                       | $y_t = \beta_0 + \beta_1 x_t + \phi_1 y_{t-1} + \dots + e_t + \theta_1 e_{t-1} + \dots$                      | lagged response               | $y$ depends on its own past (e.g. a stock that accumulates) |
+| Regression with ARMA errors | $y_t = \beta_0 + \beta_1 x_t + \eta_t, \quad \phi(L)\eta_t = \theta(L)e_t$                                   | the errors                    | the effect of $x$ on the mean of $y$ is of interest         |
+| Distributed lag             | $y_t = \beta_0 + \beta_1 x_t + \beta_2 x_{t-1} + \dots + e_t$                                                | lagged explanatory variables  | the effect of $x$ takes time to work through                |
+| VAR($p$)                    | $\mathbf{y}_t = \mathbf{c} + A_1\mathbf{y}_{t-1} + \dots + A_p\mathbf{y}_{t-p} + \boldsymbol{\varepsilon}_t$ | lags of all variables         | the variables influence each other (feedback)               |
+| GARMA                       | see below                                                                                                    | the errors, on the link scale | non-normal responses (counts, proportions)                  |
+
+: Time series regression models. $e_t$ is white noise, $\phi(L)$ and $\theta(L)$ are the AR and MA polynomials in the lag operator $L$, and $\boldsymbol{\varepsilon}_t \sim N(\mathbf{0}, \Sigma)$. {#tbl-tsr-models}
+
+In the ARMAX model $\beta_1$ is only the immediate effect of $x$, because $y_{t-1}$ carries part of its past effect. With ARMA errors, $\beta_1$ keeps its usual meaning as the effect of $x$ on the mean of $y$. This model is fitted with `arima(..., xreg = )` (maximum likelihood via the state-space form) or `gls()`. Each VAR equation can be fitted by OLS, and the model is used for Granger causality and impulse responses. GARMA extends ARMA errors to non-normal responses in the same way that GLMs extend linear regression:
+
+$$
+g(\mu_t) = \mathbf{x}_t'\boldsymbol{\beta} + \sum_{j=1}^{p} \phi_j\left[g(y_{t-j}) - \mathbf{x}_{t-j}'\boldsymbol{\beta}\right] + \sum_{j=1}^{q} \theta_j\left[g(y_{t-j}) - g(\mu_{t-j})\right].
+$$
+
+In [Project 2](../projects/project-02.qmd) I used regression with SARIMA errors for dam levels with lagged sea surface temperature as a predictor. Lagged SST looked significant under OLS, but not once the errors were modelled.
+
+## Example 4.1: Regression with autocorrelated errors
+
+I reproduced the example in Section 4.1 of the regression chapter. The data are simulated from
+
+$$
+y_t = 1 - 4x_t + \eta_t, \qquad \eta_t = \phi\eta_{t-1} + e_t, \qquad e_t \sim N(0, 1), \quad \phi = 0.95,
+$$
+
+so the true slope is $-4$ and the errors are a very persistent AR(1).
+
+```{r}
+#| message: false
+#| warning: false
+
+library(dynlm)   # ARMAX models with L()
+library(nlme)    # gls()
+
+set.seed(12)
+eta = numeric(100)
+
+eta[1] = 10
+x      = rnorm(100, 5, 1)
+phi    = 0.95
+
+# Auto-correlated errors:
+for (i in 2:100) {
+  eta[i] = phi*eta[i-1]+rnorm(1,0,1)
+}
+
+# Response, linear relationship + auto-correlated errors:
+y = 1-4*x+eta
+```
+
+```{r}
+#| label: fig-ex41-data
+#| fig-cap: "Simulated data from Example 4.1: the response (left) and the AR(1) errors (right)."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+ex41_long = data.frame(
+  t = rep(1:100, 2),
+  value = c(y, eta),
+  series = factor(rep(c("Response", "AR(1) errors"), each = 100),
+                  levels = c("Response", "AR(1) errors"))
+)
+
+ggplot(ex41_long, aes(x = t, y = value, col = series)) +
+  geom_line() +
+  geom_hline(data = data.frame(series = factor("AR(1) errors", levels = levels(ex41_long$series)),
+                               yint = 0),
+             aes(yintercept = yint), linetype = "dashed", col = "grey40") +
+  facet_wrap(~ series, scales = "free_y") +
+  scale_colour_manual(values = c("Response" = "deeppink", "AR(1) errors" = "purple")) +
+  labs(x = "Time", y = NULL) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+The errors start at $\eta_1 = 10$ and drift slowly back towards zero (@fig-ex41-data). With $\phi = 0.95$ they behave almost like a random walk, so the response wanders, even though it is a linear function of $x$ plus noise.
+
+### Ordinary least squares
+
+```{r}
+a1 = lm(y ~ x)
+summary(a1)
+confint(a1)
+```
+
+```{r}
+#| label: fig-ex41-acf
+#| fig-cap: "ACF and PACF of the residuals from the OLS regression."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+p1 = ggAcf(resid(a1)) + labs(title = "ACF of OLS residuals") + theme_minimal()
+p2 = ggPacf(resid(a1)) + labs(title = "PACF of OLS residuals") + theme_minimal()
+
+p1 | p2
+```
+
+OLS gives a slope of `r round(coef(a1)[2], 3)` instead of $-4$, and the 95% confidence interval (`r round(confint(a1)[2, 1], 2)` to `r round(confint(a1)[2, 2], 2)`) misses the true value completely. OLS is unbiased on average but with errors this persistent one sample can land far from the truth. The standard error is calculated as if the errors were independent, so it is too small and OLS is overconfident. The residual ACF decays slowly and the PACF has a single large spike at lag 1 (@fig-ex41-acf). This is indicative of AR(1) errors.
+
+### ARMAX: adding the lagged response
+
+$$
+y_t = \beta_0 + \beta_1 x_t + \phi y_{t-1} + e_t.
+$$
+
+```{r}
+y_ts = ts(y)
+x_ts = ts(x)
+
+arx1 = dynlm(y_ts ~ x_ts + L(y_ts, 1))
+summary(arx1)
+
+# Lagged response: 
+y_lag = c(NA, y[-length(y)])
+```
+
+```{r}
+#| label: fig-ex41-arx-acf
+#| fig-cap: "ACF and PACF of the residuals from the ARMAX model."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+p1 = ggAcf(resid(arx1)) + labs(title = "ACF of ARMAX residuals") + theme_minimal()
+p2 = ggPacf(resid(arx1)) + labs(title = "PACF of ARMAX residuals") + theme_minimal()
+
+p1 | p2
+```
+
+The residual autocorrelation is much smaller but still present (@fig-ex41-arx-acf). The coefficient of $x$ (`r round(coef(arx1)[2], 3)`) is closer to $-4$, but it only measures the immediate effect of $x$, since $y_{t-1}$ carries part of the past effect of $x$. If $x$ increased by one unit permanently, the long-run effect would be $\hat{\beta}_1/(1-\hat{\phi}) =$ `r round(coef(arx1)[2] / (1 - coef(arx1)[3]), 2)`, which is far from the true $-4$. Thus, the ARMAX model is misspecified. The data were generated with AR(1) errors, which (Equation 1 in the notes) also require the term $-\phi\beta_1 x_{t-1}$.
+
+```{r}
+# Autoregressive distributed lag model (x_{t-1} included):
+x_lag = c(NA, x[-length(x)])
+adl   = lm(y ~ y_lag + x + x_lag)
+coef(adl)
+
+c(coef_x_lag = unname(coef(adl)["x_lag"]),
+  minus_phi_times_beta = unname(-coef(adl)["y_lag"] * coef(adl)["x"]))
+```
+
+The inclusion of $x_{t-1}$ results in the autoregressive distributed lag model. Its coefficients approximately satisfy the "common factor" restriction $\gamma = -\phi\beta_1$, where $\gamma$ is the coefficient of $x_{t-1}$. This is what the regression with AR(1) errors implies. Thus, the regression model with AR(1) errors is an ARMAX model that includes $x_{t-1}$ with its coefficient restricted to $-\phi \beta_1$.
+
+### Regression with AR(1) errors
+
+```{r}
+a2 = arima(y, order = c(1, 0, 0), xreg = x)
+a2
+```
+
+When we model the errors as an AR(1) process we obtain a slope of `r round(coef(a2)[3], 3)` with a standard error of `r round(sqrt(diag(a2$var.coef))[3], 3)`. This is very close to the true value of $-4$, and the standard error is much smaller when compared to OLS (0.495). The intercept is poorly estimated (`r round(coef(a2)["intercept"], 2)` instead of 1). Since $\hat{\phi}$ is close to 1 the errors behave almost as a random walk. Therefore, the intercept and the level of the error process are difficult to separate. In this simulation the errors did not start at their mean of 0 but at $\eta_1 = 10$. `arima()` estimates the model by maximum likelihood using the state-space form and the Kalman filter.
+
+### Transforming the variables
+
+Equation 1 in the notes motivates a transformation that removes the serial correlation. Defining $y_t^* = y_t - \phi y_{t-1}$ and $x_t^* = x_t - \phi x_{t-1}$ gives
+
+$$
+y_t^* = \beta_0(1-\phi) + \beta_1 x_t^* + e_t,
+$$
+
+where $e_t$ is white noise, so the OLS assumptions hold for the transformed model. Since $\phi$ is unknown, it is replaced by $\hat{\phi}$, the lag 1 autocorrelation of the OLS residuals, which makes this a feasible two-step estimator.
+
+```{r}
+phi_hat = acf(resid(a1), plot = FALSE)$acf[2]
+phi_hat
+
+y_star = y-phi_hat*y_lag
+x_star = x-phi_hat*x_lag
+
+a_star = lm(y_star ~ x_star)
+summary(a_star)$coefficients
+```
+
+The estimated slope (`r round(coef(a_star)[2], 3)`) is close to the true value of $-4$, even though $\hat{\phi} =$ `r round(phi_hat, 2)` underestimates $\phi = 0.95$. However, the response is now $y_t^*$ as opposed to $y_t$, so $\beta_1$ describes how $y$ responds to $x$ after removing the carried-over error. When $\phi$ is close to 1 this is approximately the change in $y$ for a change in $x$. The intercept estimates $\beta_0(1-\phi)$, not $\beta_0$. Since the response differs, the AIC of this model cannot be compared with those of the other models.
+
+### Generalised least squares
+
+```{r}
+m_gls = gls(y ~ x, correlation = corAR1(), method = "ML")
+summary(m_gls)$tTable
+coef(m_gls$modelStruct$corStruct, unconstrained = FALSE)  # estimated phi
+```
+
+`gls()` estimates the regression coefficients and the AR(1) parameter jointly by maximum likelihood. For a given $\phi$, the coefficients are the GLS estimator from the notes,
+
+$$
+\hat{\boldsymbol{\beta}} = (Z'V^{-1}Z)^{-1}Z'V^{-1}\mathbf{y}, \qquad V_{ij} \propto \phi^{|i-j|},
+$$
+
+where $Z$ is the design matrix and $V$ is the correlation structure implied by AR(1) errors. Iterating between estimating $\phi$ from the residuals and refitting with the updated $V$ (feasible GLS) gives very similar estimates. The estimates match those from `arima()` because both fit the same model by maximum likelihood.
+
+### Minimising the independent SSE from first principles
+
+For a regression with AR(1) errors, the independent errors are $e_t = (y_t - \beta_0 - \beta_1 x_t) - \phi(y_{t-1} - \beta_0 - \beta_1 x_{t-1})$, so the parameters can be estimated by minimising $\sum_{t=2}^{n} e_t^2$ (Section 4.3 of the notes).
+
+```{r}
+# Sum of squared errors:
+sse_ar1_err = function(par, y, x) {
+  b0  = par[1]
+  b1  = par[2]
+  phi = par[3]
+  eta = y-b0-b1*x                         # regression errors
+  e   = eta[-1]-phi*eta[-length(eta)]         # independent errors
+  sum(e^2)
+}
+
+fit_sse = optim(par = c(coef(a1), 0.5), fn = sse_ar1_err, y = y, x = x,
+                method = "BFGS", control = list(maxit = 1000))
+
+# Fitting arima() for comparison:
+a2_css = arima(y, order = c(1, 0, 0), xreg = x, method = "CSS")
+
+kable(data.frame(
+  Method = c("My SSE + optim()", "arima(), CSS", "arima(), ML", "gls(), ML", "True value"),
+  Intercept = c(fit_sse$par[1], coef(a2_css)["intercept"], coef(a2)["intercept"],
+                coef(m_gls)[1], 1),
+  Slope = c(fit_sse$par[2], coef(a2_css)[3], coef(a2)[3], coef(m_gls)[2], -4),
+  phi = c(fit_sse$par[3], coef(a2_css)["ar1"], coef(a2)["ar1"],
+          coef(m_gls$modelStruct$corStruct, unconstrained = FALSE), 0.95)
+), digits = 3, row.names = FALSE)
+```
+
+Minimising the sum of squared independent errors with `optim()` reproduces `arima(method = "CSS")` exactly, since both use the same conditional sum of squares criterion. All four methods agree closely on the slope and $\phi$, but differ on the intercept. CSS conditions on the first observation, so the starting value $\eta_1 = 10$ has no influence, and the intercept (1.134) is close to the true value of 1. Maximum likelihood (`arima()` and `gls()`) treats $\eta_1$ as a draw from the stationary distribution with mean 0, so the intercept is pushed up to 4.790 to account for the high starting value.
+
+### Model comparison
+
+```{r}
+kable(data.frame(
+  Model = c("a1: OLS", "arx1: ARMAX", "a2: AR(1) errors"),
+  df = c(3, 4, 4),
+  AIC = c(AIC(a1), AIC(arx1), AIC(a2))
+), digits = 1, row.names = FALSE)
+```
+
+The regression with AR(1) errors has the lowest AIC (296.9, compared with 466.5 for the ARMAX model and 577.7 for OLS). This is expected, since it matches the data-generating process. The differences in AIC are large so the rankings hold even though the comparison is only approximate. The ARMAX model is fitted to 99 observations, whereas OLS and the exact maximum likelihood fit from `arima()` use all 100. In addition, `arima()` evaluates the likelihood through the state-space representation, which is not identical to the Gaussian likelihood `lm()` computes for independent errors.
+
+### Forecasting with a regression with AR(1) errors
+
+Forecasting $y_{T+h}$ requires values of $x_{T+h}$, which are not observed. Here $x$ is assumed to remain at its sample mean for the next 10 periods. The $h$-step forecast is then
+
+$$
+\hat{y}_{T+h} = \hat{\beta}_0 + \hat{\beta}_1 x_{T+h} + \hat{\phi}^h \hat{\eta}_T,
+$$
+
+so the error component decays geometrically from its last estimated value $\hat{\eta}_T$ towards zero, and the forecasts converge to the regression line $\hat{\beta}_0 + \hat{\beta}_1 \bar{x}$.
+
+```{r}
+x_future = rep(mean(x), 10)
+fc_a2 = predict(a2, n.ahead = 10, newxreg = x_future)
+
+fc_ex41 = data.frame(
+  t = 101:110,
+  fc = as.numeric(fc_a2$pred),
+  lower = as.numeric(fc_a2$pred - 1.96 * fc_a2$se),
+  upper = as.numeric(fc_a2$pred + 1.96 * fc_a2$se)
+)
+kable(fc_ex41, digits = 2)
+```
+
+```{r}
+#| label: fig-ex41-fc
+#| fig-cap: "Forecasts for the next 10 periods from the regression with AR(1) errors (x held at its mean), with 95% prediction intervals."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+ggplot() +
+  geom_line(data = data.frame(t = 1:100, y = y), aes(x = t, y = y), col = "grey40") +
+  geom_ribbon(data = fc_ex41, aes(x = t, ymin = lower, ymax = upper), fill = "lightpink", alpha = 0.7) +
+  geom_line(data = fc_ex41, aes(x = t, y = fc), col = "deeppink") +
+  labs(title = "Forecasts with AR(1) errors.", x = "Time", y = "y") +
+  theme_minimal()
+```
+
+The prediction intervals widen quickly with the horizon (@fig-ex41-fc). This is due to $\hat{\phi}$ being close to 1, so the error process has long memory. The forecast variance $\sigma^2(1 + \phi^2 + \dots + \phi^{2(h-1)})$ keeps growing. These intervals are conditional on the future values of $x$ (assumed known). If $x$ was forecast as well, they would underestimate the uncertainty.
+
+# State-Space Models
+
+A state-space model has two equations: an observation equation that links what we observe to an unobserved state, and a state equation that describes how the state changes over time.
+
+$$
+\begin{aligned}
+\text{Observation:} \quad y_t &= F_t\theta_t + v_t, \qquad v_t \sim N(0, V) \\
+\text{State:} \quad \theta_t &= G_t\theta_{t-1} + w_t, \qquad w_t \sim N(0, W) \\
+\text{Prior:} \quad \theta_0 &\sim N(m_0, C_0)
+\end{aligned}
+$$
+
+### Writing other models in state-space form
+
+| Model                                | State $\theta_t$     | $F_t$      | $G_t$                                                    | Noise                                                                   |
+|--------------------------------------|----------------------|------------|----------------------------------------------------------|-------------------------------------------------------------------------|
+| Local level (random walk plus noise) | $\mu_t$              | $1$        | $1$                                                      | $V$, $W$                                                                |
+| Local linear trend                   | $(\mu_t, \beta_t)'$  | $(1, 0)$   | $\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$           | $V$, $W = \text{diag}(\sigma^2_\mu, \sigma^2_\beta)$                    |
+| AR(2)                                | $(y_t, y_{t-1})'$    | $(1, 0)$   | $\begin{pmatrix} \phi_1 & \phi_2 \\ 1 & 0 \end{pmatrix}$ | $V = 0$, $W = \text{diag}(\sigma^2, 0)$                                 |
+| ARMA(1,1)                            | $(y_t, \theta e_t)'$ | $(1, 0)$   | $\begin{pmatrix} \phi & 1 \\ 0 & 0 \end{pmatrix}$        | $V = 0$, $w_t = (e_t, \theta e_t)'$                                     |
+| SES / ETS(A,N,N)                     | $\ell_t$             | $1$        | $1$                                                      | one error: $y_t = \ell_{t-1} + e_t$, $\ell_t = \ell_{t-1} + \alpha e_t$ |
+| Time-varying regression              | $(a_t, b_t)'$        | $(1, z_t)$ | $I_2$                                                    | $V$, $W = \text{diag}(\sigma^2_a, \sigma^2_b)$                          |
+
+: Common models written as state-space models. {#tbl-ss-forms}
+
+@tbl-ss-forms shows that very different models fit into the same two equations. An ARMA model is a state-space model with no observation noise ($V = 0$), where the state stores the recent values that the model needs to remember, while the structural models have noise in both equations.
+
+Exponential smoothing models (ETS) are state-space models with a *single* source of error (the same $e_t$ drives the observation and the state), while the structural models in `dlm` have *two independent* sources of error ($v_t$ and $w_t$). In the [Kalman filter section](#topic-exploration-exponential-smoothing-is-a-kalman-filter) I show that the two lead to the same forecasts in the long run.
+
+::: callout-note
+## State-space models vs ARIMA models
+
+-   **Stationarity.** ARIMA models need a stationary series (after differencing). State-space models do not: trend and seasonality are modelled directly as states that are allowed to change (random walks), so no differencing is needed.
+-   **Modelling approach.** ARIMA models describe how $y_t$ depends on its own past and past shocks (a "black box" for the autocorrelation). Structural state-space models describe the components we believe generate the series (level, slope, season, regression effects), and each component can be estimated and plotted.
+-   **Equivalence.** Every ARIMA model can be written in state-space form (this is how `arima()` computes the likelihood), and every linear structural model implies an ARIMA model for its differences. For example, the local level model implies $\Delta y_t = w_t + v_t - v_{t-1}$, an MA(1), so it is an ARIMA(0,1,1). The linear growth model gives an ARIMA(0,2,2) (Question 3 of the tutorial).
+-   **Practical advantages.** Missing observations, time-varying coefficients and filtered/smoothed estimates of the components all come out of the Kalman filter naturally.
+:::
+
+## Dynamic linear models with `dlm`
+
+A dynamic linear model (DLM) is a linear, Gaussian state-space model. "Dynamic" means that the state $\theta_t$ (level, slope, seasonal effects, regression coefficients) is allowed to change over time.
+
+### Random walk plus noise
+
+The local level model has $F = G = 1$: the level follows a random walk and we observe it with noise.
+
+```{r}
+# Simulate from a random walk plus noise model:
+rwpn = function(V = 0.8, W = 0.2, m0 = 0, C0 = 100, n = 100) {
+  y = numeric(n)
+  mu = numeric(n)
+  for (i in 1:n) {
+    if (i == 1) {
+      mu[i] = rnorm(1, m0, sqrt(C0))        # initial state from the prior
+    } else {
+      mu[i] = rnorm(1, mu[i - 1], sqrt(W))  # state equation
+    }
+    y[i] = rnorm(1, mu[i], sqrt(V))         # observation equation
+  }
+  return(list(y = y, mu = mu))
+}
+
+set.seed(10)
+sim_rw = rwpn()
+y_rw = sim_rw$y
+```
+
+::: callout-warning
+## `rnorm()` takes a standard deviation
+
+In the original prac code `rnorm(1, m0, C0)` uses $C_0 = 100$ as a *standard deviation*, while the model treats $V$, $W$ and $C_0$ as *variances*. This is why the original simulated series started around $-11$. I used `sqrt()` so that the simulation matches the model that is fitted below.
+:::
+
+#### Defining the model
+
+```{r}
+# Define the model through its matrices:
+mod_rwpn = dlm(FF = 1, V = 0.8, GG = 1, W = 0.2, m0 = 0, C0 = 100)
+mod_rwpn
+
+# Equivalent shortcut (dV and dW are the diagonal elements of V and W):
+dlmModPoly(order = 1, dV = 0.8, dW = 0.2, C0 = 100)
+```
+
+`order = 1` gives a random walk for the state (local level model) and `order = 2` gives a random walk plus drift for the level (local linear trend). Individual matrices can be changed with the replacement functions:
+
+```{r}
+mod_copy = mod_rwpn
+C0(mod_copy) = 80
+C0(mod_copy)
+```
+
+#### Kalman filter and smoother
+
+```{r}
+filt_rw = dlmFilter(y_rw, mod_rwpn)
+names(filt_rw)
+
+# Note: m has one more element than y (first element is m0)
+length(filt_rw$m)
+
+# Filtered variances C_t (from SVD stored by dlm):
+C_rw = unlist(dlmSvd2var(filt_rw$U.C, filt_rw$D.C))
+
+# Kalman smoother:
+smooth_rw = dlmSmooth(filt_rw)
+S_rw = unlist(dlmSvd2var(smooth_rw$U.S, smooth_rw$D.S))
+```
+
+`dlmFilter()` returns the filtered states `m` ($\theta_t \mid y_{1:t} \sim N(m_t, C_t)$), the one-step-ahead state predictions `a` ($\theta_t \mid y_{1:t-1} \sim N(a_t, R_t)$), the one-step-ahead forecasts of the observations `f`, and the variances in SVD form (`U.C`, `D.C`, `U.R`, `D.R`). `dlmSvd2var()` turns these back into variance matrices.
+
+```{r}
+#| label: fig-rwpn-filter
+#| fig-cap: "Simulated random walk plus noise data (grey points), true level (black), filtered level with 95% interval (pink) and smoothed level (blue)."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+rw_df = data.frame(
+  t = 1:100,
+  y = y_rw,
+  mu = sim_rw$mu,
+  filtered = filt_rw$m[-1],
+  lower = filt_rw$m[-1] - 1.96 * sqrt(C_rw[-1]),
+  upper = filt_rw$m[-1] + 1.96 * sqrt(C_rw[-1]),
+  smoothed = smooth_rw$s[-1]
+)
+
+ggplot(data = rw_df, mapping = aes(x = t)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "lightpink", alpha = 0.6) +
+  geom_point(aes(y = y), col = "grey60", size = 1) +
+  geom_line(aes(y = mu), col = "black") +
+  geom_line(aes(y = filtered), col = "deeppink") +
+  geom_line(aes(y = smoothed), col = "steelblue") +
+  labs(
+    title = "Filtered and smoothed level for a random walk plus noise.",
+    x = "Time",
+    y = "y"
+  ) +
+  theme_minimal()
+```
+
+The filtered level (pink) only uses observations up to time $t$, so it reacts to changes with a delay. The smoothed level (blue) also uses later observations, so it is smoother and closer to the true level (black) (@fig-rwpn-filter). The smoothed variances are smaller than the filtered ones (average `r round(mean(S_rw[-1]), 3)` vs `r round(mean(C_rw[-1]), 3)`), except at the end of the series where they are the same: at $t = T$ there is no future information to add.
+
+#### Maximum likelihood
+
+If $V$ and $W$ are unknown, the Kalman filter gives the likelihood through the one-step-ahead prediction errors, and `dlmMLE()` passes it to `optim()`. The variances are estimated on the log scale so they stay positive.
+
+```{r}
+# Function to build model from log parameters:
+build_rw = function(par) {
+  dlmModPoly(order = 1, dV = exp(par[1]), dW = exp(par[2]))
+}
+
+# Maximise the likelihood:
+fit_rw = dlmMLE(y_rw, parm = c(0, 0), build = build_rw, hessian = TRUE)
+fit_rw$convergence  # 0 = converged
+
+# Estimates with 95% CIs (log scale, then back-transformed):
+se_log = sqrt(diag(solve(fit_rw$hessian)))
+kable(data.frame(
+  Parameter = c("V", "W"),
+  True = c(0.8, 0.2),
+  Estimate = exp(fit_rw$par),
+  Lower = exp(fit_rw$par - 1.96 * se_log),
+  Upper = exp(fit_rw$par + 1.96 * se_log)
+), digits = 3, row.names = FALSE)
+```
+
+<!-- CHECK: whether the true values fall inside the intervals. -->
+
+The confidence intervals are wide, especially for $W$. With 100 observations it is hard to separate "the level moved" from "the observation was noisy", because both create variation in $y_t$. The signal-to-noise ratio $W/V$ is what matters for the filter.
+
+#### Forecasting
+
+For a random walk plus noise model, the forecast is flat at the last filtered level (just like SES), and the uncertainty grows linearly with the horizon.
+
+```{r}
+mod_rw_fit = build_rw(fit_rw$par)
+filt_rw_fit = dlmFilter(y_rw, mod_rw_fit)
+fc_rw = dlmForecast(filt_rw_fit, nAhead = 10)
+
+str(fc_rw, max.level = 1)
+```
+
+`dlmForecast()` returns forecasts of the state (`a`, with variances `R`) and of the observations (`f`, with variances `Q`). Note that $Q_t = R_t + V$.
+
+```{r}
+#| label: fig-rwpn-forecast
+#| fig-cap: "Ten-step forecasts for the random walk plus noise model: 95% interval for the level (dark pink, uses R) and 95% prediction interval for new observations (light pink, uses Q)."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+fc_df = data.frame(
+  t = 101:110,
+  f = as.numeric(fc_rw$f),
+  lev_lo = as.numeric(fc_rw$a) - 1.96 * sqrt(unlist(fc_rw$R)),
+  lev_hi = as.numeric(fc_rw$a) + 1.96 * sqrt(unlist(fc_rw$R)),
+  y_lo = as.numeric(fc_rw$f) - 1.96 * sqrt(unlist(fc_rw$Q)),
+  y_hi = as.numeric(fc_rw$f) + 1.96 * sqrt(unlist(fc_rw$Q))
+)
+obs_df = data.frame(t = 61:100, y = y_rw[61:100], m = filt_rw_fit$m[62:101])
+
+ggplot() +
+  geom_ribbon(data = fc_df, aes(x = t, ymin = y_lo, ymax = y_hi), fill = "lightpink", alpha = 0.5) +
+  geom_ribbon(data = fc_df, aes(x = t, ymin = lev_lo, ymax = lev_hi), fill = "deeppink", alpha = 0.4) +
+  geom_line(data = fc_df, aes(x = t, y = f), col = "deeppink") +
+  geom_point(data = obs_df, aes(x = t, y = y), col = "grey50", size = 1) +
+  geom_line(data = obs_df, aes(x = t, y = m), col = "deeppink") +
+  labs(
+    title = "Forecasts from the random walk plus noise model.",
+    x = "Time",
+    y = "y"
+  ) +
+  theme_minimal()
+```
+
+::: callout-important
+## State interval vs prediction interval
+
+The original prac plotted $a_t \pm 1.96\sqrt{R_t}$. That is an interval for the future *level*, not for future *observations*. A prediction interval for $y_{T+h}$ must use $Q_t = R_t + V$, which also includes the observation noise. In @fig-rwpn-forecast the prediction interval is much wider.
+:::
+
+### Nile data: local level model
+
+```{r}
+# Read in data:
+data(Nile)
+# View(Nile)
+
+# Local level model with unknown variances:
+build_nile = function(par) {
+  dlmModPoly(order = 1, dV = exp(par[1]), dW = exp(par[2]))
+}
+fit_nile = dlmMLE(Nile, parm = c(log(10000), log(1000)), build = build_nile)
+var_nile = exp(fit_nile$par)
+names(var_nile) = c("V", "W")
+var_nile
+
+mod_nile = build_nile(fit_nile$par)
+filt_nile = dlmFilter(Nile, mod_nile)
+smooth_nile = dlmSmooth(filt_nile)
+fc_nile = dlmForecast(filt_nile, nAhead = 10)
+```
+
+```{r}
+#| label: fig-nile
+#| fig-cap: "Annual flow of the Nile at Aswan (grey), filtered level (pink), smoothed level with 95% interval (blue) and 10-year forecasts with 95% prediction intervals. The dashed line marks 1898, when construction of the Aswan dam started."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+S_nile = unlist(dlmSvd2var(smooth_nile$U.S, smooth_nile$D.S))
+nile_df = data.frame(
+  year = as.numeric(time(Nile)),
+  flow = as.numeric(Nile),
+  filtered = as.numeric(dropFirst(filt_nile$m)),
+  smoothed = as.numeric(dropFirst(smooth_nile$s)),
+  s_lo = as.numeric(dropFirst(smooth_nile$s)) - 1.96 * sqrt(S_nile[-1]),
+  s_hi = as.numeric(dropFirst(smooth_nile$s)) + 1.96 * sqrt(S_nile[-1])
+)
+nile_fc_df = data.frame(
+  year = 1971:1980,
+  f = as.numeric(fc_nile$f),
+  lo = as.numeric(fc_nile$f) - 1.96 * sqrt(unlist(fc_nile$Q)),
+  hi = as.numeric(fc_nile$f) + 1.96 * sqrt(unlist(fc_nile$Q))
+)
+
+ggplot() +
+  geom_ribbon(data = nile_df, aes(x = year, ymin = s_lo, ymax = s_hi), fill = "lightblue", alpha = 0.6) +
+  geom_line(data = nile_df, aes(x = year, y = flow), col = "grey50") +
+  geom_line(data = nile_df, aes(x = year, y = filtered), col = "deeppink") +
+  geom_line(data = nile_df, aes(x = year, y = smoothed), col = "steelblue") +
+  geom_ribbon(data = nile_fc_df, aes(x = year, ymin = lo, ymax = hi), fill = "lightpink", alpha = 0.6) +
+  geom_line(data = nile_fc_df, aes(x = year, y = f), col = "deeppink") +
+  geom_vline(xintercept = 1898, linetype = 2) +
+  labs(
+    title = "Local level model for the Nile.",
+    x = "Year",
+    y = "Flow (100 million cubic metres)"
+  ) +
+  theme_minimal()
+```
+
+The estimated observation variance ($\hat{V} =$ `r round(var_nile["V"])`) is about `r round(var_nile["V"] / var_nile["W"])` times larger than the level variance ($\hat{W} =$ `r round(var_nile["W"])`), so the filter changes the level slowly and treats most year-to-year variation as noise. The smoothed level (@fig-nile) shows the drop in flow around 1898 very clearly. Because the smoother uses future observations, it starts dropping *before* 1898, while the filtered level only reacts afterwards.
+
+```{r}
+#| label: fig-nile-res
+#| fig-cap: "Standardised one-step-ahead prediction errors for the local level model of the Nile: ACF and normal Q-Q plot."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+res_nile = residuals(filt_nile, sd = FALSE)  # standardised innovations
+
+par(mfrow = c(1, 2))
+acf(res_nile, main = "ACF")
+qqnorm(res_nile, col = "deeppink", main = "Normal Q-Q plot")
+qqline(res_nile)
+```
+
+```{r}
+Box.test(res_nile, lag = 10, type = "Ljung-Box", fitdf = 2)
+```
+
+<!-- CHECK: Ljung-Box p-value. -->
+
+The standardised prediction errors are the model's residuals. If the model is adequate they should look like independent $N(0,1)$ values. Here the ACF and the Ljung-Box test (p = `r round(Box.test(res_nile, lag = 10, type = "Ljung-Box", fitdf = 2)$p.value, 3)`) are used to check for leftover autocorrelation (@fig-nile-res).
+
+### Nile data: local linear trend model
+
+`dlmModPoly()` with its default `order = 2` gives the local linear trend (linear growth) model, which adds a slope that can also change over time.
+
+```{r}
+#| warning: false
+
+build_llt = function(par) {
+  dlmModPoly(order = 2, dV = exp(par[1]), dW = exp(par[2:3]))
+}
+fit_llt = dlmMLE(Nile, parm = c(log(15000), log(1000), log(10)), build = build_llt)
+var_llt = exp(fit_llt$par)
+names(var_llt) = c("V", "W_level", "W_slope")
+var_llt
+
+# Compare with local level model (dlmMLE returns -logL):
+kable(data.frame(
+  Model = c("Local level", "Local linear trend"),
+  Parameters = c(2, 3),
+  neg_loglik = c(fit_nile$value, fit_llt$value),
+  AIC = c(2 * fit_nile$value + 2 * 2, 2 * fit_llt$value + 2 * 3)
+), digits = 2, row.names = FALSE)
+```
+
+<!-- CHECK: the slope variance (I expect it to be close to 0) and which model has the lower AIC. -->
+
+The estimated slope variance is very small, so the slope hardly changes, and adding it does not improve the fit enough to justify the extra parameter. This makes sense: the Nile has a level shift, not a trend. (The comparison is only approximate, because the two models have a different number of diffuse initial states, which affects the first few likelihood terms.)
+
+### Missing observations
+
+```{r}
+# Remove 1910-1915:
+nile_na = Nile
+nile_na[40:45] = NA
+
+fit_na = dlmMLE(nile_na, parm = c(log(10000), log(1000)), build = build_nile)
+filt_na = dlmFilter(nile_na, build_nile(fit_na$par))
+C_na = unlist(dlmSvd2var(filt_na$U.C, filt_na$D.C))
+C_full = unlist(dlmSvd2var(filt_nile$U.C, filt_nile$D.C))
+```
+
+```{r}
+#| label: fig-nile-missing
+#| fig-cap: "Filtered level with 95% intervals for the full Nile series (blue) and with 1910–1915 removed (pink)."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+na_df = data.frame(
+  year = rep(1871:1970, 2),
+  series = rep(c("Full series", "1910-1915 missing"), each = 100),
+  m = c(as.numeric(dropFirst(filt_nile$m)), as.numeric(dropFirst(filt_na$m))),
+  se = c(sqrt(C_full[-1]), sqrt(C_na[-1]))
+)
+na_df = na_df[na_df$year >= 1895 & na_df$year <= 1935, ]
+
+ggplot(data = na_df, mapping = aes(x = year, y = m, colour = series, fill = series)) +
+  geom_ribbon(aes(ymin = m - 1.96 * se, ymax = m + 1.96 * se), alpha = 0.25, colour = NA) +
+  geom_line() +
+  geom_point(data = data.frame(year = 1895:1935, flow = as.numeric(window(Nile, 1895, 1935))),
+             aes(x = year, y = flow), inherit.aes = FALSE, col = "grey50", size = 1) +
+  scale_colour_manual(values = c("Full series" = "steelblue", "1910-1915 missing" = "deeppink")) +
+  scale_fill_manual(values = c("Full series" = "steelblue", "1910-1915 missing" = "deeppink")) +
+  labs(
+    title = "Filtering with missing observations.",
+    x = "Year",
+    y = "Flow",
+    colour = "",
+    fill = ""
+  ) +
+  theme_minimal()
+```
+
+When an observation is missing there is nothing to update with: the Kalman gain is zero, so $m_t = a_t$ and $C_t = R_t = C_{t-1} + W$. The filtered level stays flat through the gap and the interval widens by $W$ every year (@fig-nile-missing). As soon as observations return, the interval shrinks back. Nothing special has to be done: `dlmFilter()` handles the `NA`s automatically.
+
+### Seasonality: basic structural model for CO$_2$
+
+The basic structural model adds 11 seasonal states (12 monthly effects that sum to zero) to the local linear trend:
+
+$$
+\begin{aligned}
+y_t &= \mu_t + s_t + v_t, & v_t \sim N(0, V) \\
+\mu_t &= \mu_{t-1} + \beta_{t-1} + w_t, & w_t \sim N(0, \sigma^2_w) \\
+\beta_t &= \beta_{t-1} + \gamma_t, & \gamma_t \sim N(0, \sigma^2_\gamma) \\
+s_t &= -\sum_{j=1}^{S-1} s_{t-j} + \delta_t, & \delta_t \sim N(0, \sigma^2_\delta)
+\end{aligned}
+$$
+
+```{r}
+#| label: fig-co2
+#| fig-cap: "Monthly atmospheric CO2 concentration at Mauna Loa, 1959–1997."
+#| fig-width: 7
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+# Read in data:
+data(co2)
+
+co2_df = data.frame(month = as.numeric(time(co2)), ppm = as.numeric(co2))
+
+ggplot(data = co2_df, mapping = aes(x = month, y = ppm)) +
+  geom_line(col = "deeppink") +
+  labs(
+    title = "Monthly CO2 concentration (1959–1997).",
+    x = "Month",
+    y = "CO2 (ppm)"
+  ) +
+  theme_minimal()
+```
+
+@fig-co2 shows a steady upward trend and a regular yearly cycle with a constant amplitude (additive seasonality).
+
+```{r}
+# Structure: 2 trend states + 11 seasonal states = 13 states:
+m_s1 = dlmModPoly() + dlmModSeas(12)
+dim(m_s1$GG)
+diag(W(m_s1))  # default: level var 0, slope var 1, one seasonal var 1
+```
+
+Only the diagonal of $W$ is printed: printing the full $13 \times 13$ matrices adds a lot of output without much information. Only three states get noise: the level, the slope and the current seasonal effect. The other seasonal states are just the previous effects shifted along.
+
+```{r}
+#| cache: true
+
+# Function to build model from log variances:
+lik_s1 = function(p) {
+  mod = dlmModPoly() + dlmModSeas(12)
+  Wm = W(mod)
+  diag(Wm)[1:3] = exp(p[1:3])  # level, slope and seasonal variances
+  W(mod) = Wm
+  V(mod) = exp(p[4])           # observation variance
+  return(mod)
+}
+
+mle_s1 = dlmMLE(co2, parm = c(0, 0, 0, 0), build = lik_s1)
+```
+
+```{r}
+mle_s1$convergence
+
+var_s1 = exp(mle_s1$par)
+names(var_s1) = c("level", "slope", "seasonal", "observation")
+signif(var_s1, 3)
+
+fit_s1 = lik_s1(mle_s1$par)
+filt_s1 = dlmFilter(co2, fit_s1)
+```
+
+<!-- CHECK: relative sizes of the variances (the prac got 4.7e-02, 3.9e-06, 2.2e-05, 2.1e-02). -->
+
+The slope and seasonal variances are tiny compared to the level and observation variances. The trend and the seasonal pattern change very slowly, while the level absorbs the short-term movements.
+
+```{r}
+#| label: fig-co2-filter
+#| fig-cap: "CO2 data (grey) with the filtered level (blue), the filtered level plus seasonal effect (orange) and the one-step-ahead fitted values (pink). Right: the first three years."
+#| fig-subcap:
+#|   - "Full series"
+#|   - "1959–1961"
+#| layout-ncol: 2
+#| fig-width: 5
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+co2_filt_df = data.frame(
+  month = as.numeric(time(co2)),
+  co2 = as.numeric(co2),
+  level = as.numeric(dropFirst(filt_s1$m[, 1])),
+  level_season = as.numeric(dropFirst(filt_s1$m[, 1])) + as.numeric(dropFirst(filt_s1$m[, 3])),
+  fitted = as.numeric(filt_s1$f)
+)
+
+co2_plot = function(df) {
+  ggplot(data = df, mapping = aes(x = month)) +
+    geom_line(aes(y = co2, colour = "Observed")) +
+    geom_line(aes(y = level, colour = "Level")) +
+    geom_line(aes(y = level_season, colour = "Level + season")) +
+    geom_line(aes(y = fitted, colour = "Fitted (one-step)"), linetype = 2) +
+    scale_colour_manual(values = c("Observed" = "grey50", "Level" = "steelblue",
+                                   "Level + season" = "orange", "Fitted (one-step)" = "deeppink")) +
+    labs(x = "Month", y = "CO2 (ppm)", colour = "") +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+}
+
+co2_plot(co2_filt_df) + coord_cartesian(ylim = c(310, 370))
+co2_plot(co2_filt_df[1:36, ])
+```
+
+**The strange lines at the beginning.** The prior is very vague ($m_0 = 0$, $C_0 = 10^7 I$ for all 13 states). After the first observation the filter knows that level + season ≈ 315, but it cannot tell how much of that is level and how much is the January effect. Until it has seen roughly a year of data, the seasonal effects are not identified, so the filtered level and seasonal states jump around wildly (right panel of @fig-co2-filter). After about a year the filter has learned the seasonal pattern and the level settles down.
+
+**Fitted values.** The one-step-ahead forecasts `filt_s1$f` are the fitted values. After the first year they lie almost on top of the observations.
+
+#### Forecasts for the next five years
+
+```{r}
+fc_s1 = dlmForecast(filt_s1, nAhead = 60)
+
+co2_fc_df = data.frame(
+  month = as.numeric(tail(time(co2), 1)) + (1:60) / 12,
+  f = as.numeric(fc_s1$f),
+  lo = as.numeric(fc_s1$f) - 1.96 * sqrt(unlist(fc_s1$Q)),
+  hi = as.numeric(fc_s1$f) + 1.96 * sqrt(unlist(fc_s1$Q))
+)
+```
+
+```{r}
+#| label: fig-co2-fc
+#| fig-cap: "Five-year forecasts of CO2 from the basic structural model with 95% prediction intervals (data from 1988 onwards shown)."
+#| fig-width: 7
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+ggplot() +
+  geom_line(data = co2_df[co2_df$month >= 1988, ], aes(x = month, y = ppm), col = "grey40") +
+  geom_ribbon(data = co2_fc_df, aes(x = month, ymin = lo, ymax = hi), fill = "lightpink", alpha = 0.7) +
+  geom_line(data = co2_fc_df, aes(x = month, y = f), col = "deeppink") +
+  labs(
+    title = "CO2 forecasts for 1998–2002.",
+    x = "Month",
+    y = "CO2 (ppm)"
+  ) +
+  theme_minimal()
+```
+
+The forecasts in @fig-co2-fc continue the upward trend and repeat the seasonal pattern, with intervals that widen over the five years, mainly because uncertainty about the level and slope accumulates.
+
+### Seasonality with trigonometric terms
+
+Instead of 11 seasonal states, the seasonal pattern can be built from sine and cosine waves (harmonics). The $j$th harmonic has frequency $\omega_j = 2\pi j / s$ and needs two states. With $q$ harmonics there are $2q$ seasonal states, so $q = 1$ gives a pure sine-shaped season with only 2 states. This links directly to the harmonics in [Spectral Analysis](../section-1/section-1.qmd#spectral-analysis) in Section 1.
+
+```{r}
+# Check the structure for q = 1:
+m_trig = dlmModPoly() + dlmModTrig(s = 12, q = 1)
+m_trig$GG
+```
+
+The $2 \times 2$ block in `GG` rotates the harmonic by $\omega_1 = 2\pi/12$ each month ($\cos(\pi/6) = 0.866$, $\sin(\pi/6) = 0.5$).
+
+```{r}
+#| cache: true
+
+# Function to build model with q harmonics (seasonal states share one variance):
+build_trig = function(q) {
+  function(p) {
+    mod = dlmModPoly() + dlmModTrig(s = 12, q = q)
+    k = nrow(mod$GG)
+    Wm = W(mod)
+    diag(Wm) = c(exp(p[1]), exp(p[2]), rep(exp(p[3]), k - 2))
+    W(mod) = Wm
+    V(mod) = exp(p[4])
+    return(mod)
+  }
+}
+
+# Fit q = 1, 2, 3:
+fits_trig = lapply(1:3, function(q) dlmMLE(co2, parm = c(0, 0, 0, 0), build = build_trig(q)))
+```
+
+```{r}
+trig_tab = data.frame(
+  Model = c("dlmModSeas (11 seasonal states)", paste0("Trigonometric, q = ", 1:3)),
+  Seasonal_states = c(11, 2 * (1:3)),
+  neg_loglik = c(mle_s1$value, sapply(fits_trig, function(f) f$value))
+)
+trig_tab$AIC = 2 * trig_tab$neg_loglik + 2 * 4  # 4 variance parameters in each model
+kable(trig_tab, digits = 1, row.names = FALSE)
+```
+
+```{r}
+#| label: fig-co2-seasonal
+#| fig-cap: "Filtered seasonal effect for 1990–1997 from the dummy seasonal model and from trigonometric models with one and two harmonics."
+#| fig-width: 7
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+# Function to extract seasonal component (F without trend states x filtered seasonal states):
+seas_comp = function(filt, mod) {
+  as.numeric(dropFirst(filt$m)[, -(1:2)] %*% mod$FF[1, -(1:2)])
+}
+
+mod_q1 = build_trig(1)(fits_trig[[1]]$par)
+mod_q2 = build_trig(2)(fits_trig[[2]]$par)
+
+seas_df = data.frame(
+  month = rep(as.numeric(time(co2)), 3),
+  model = rep(c("Dummy seasonal", "Trig, q = 1", "Trig, q = 2"), each = length(co2)),
+  effect = c(seas_comp(filt_s1, fit_s1),
+             seas_comp(dlmFilter(co2, mod_q1), mod_q1),
+             seas_comp(dlmFilter(co2, mod_q2), mod_q2))
+)
+seas_df = seas_df[seas_df$month >= 1990, ]
+
+ggplot(data = seas_df, mapping = aes(x = month, y = effect, colour = model)) +
+  geom_line() +
+  scale_colour_manual(values = c("Dummy seasonal" = "grey40", "Trig, q = 1" = "steelblue",
+                                 "Trig, q = 2" = "deeppink")) +
+  labs(
+    title = "Estimated seasonal effect.",
+    x = "Month",
+    y = "Seasonal effect (ppm)",
+    colour = ""
+  ) +
+  theme_minimal()
+```
+
+<!-- CHECK: which q has the lowest AIC; I expect q = 2 to clearly beat q = 1. -->
+
+**Do we need more than one harmonic?** The CO$_2$ seasonal cycle is not a perfect sine wave: concentrations rise slowly over the northern winter and fall quickly during the growing season. One harmonic forces a symmetric shape, while the second harmonic lets the peak and trough be asymmetric (@fig-co2-seasonal). The table shows by how much the likelihood improves when harmonics are added. Every model has the same four variance parameters, so the AIC comparison here is effectively a likelihood comparison (with the same caveat about diffuse initial states as before).
+
+#### Constant seasonal effect, and the link to harmonic regression
+
+Setting the seasonal variance to zero makes the seasonal pattern constant over time (the harmonics still rotate, but their amplitudes no longer change).
+
+```{r}
+#| cache: true
+
+build_trig_const = function(q) {
+  function(p) {
+    mod = dlmModPoly() + dlmModTrig(s = 12, q = q)
+    k = nrow(mod$GG)
+    Wm = W(mod)
+    diag(Wm) = c(exp(p[1]), exp(p[2]), rep(0, k - 2))  # no noise in the seasonal states
+    W(mod) = Wm
+    V(mod) = exp(p[3])
+    return(mod)
+  }
+}
+fit_const = dlmMLE(co2, parm = c(0, 0, 0), build = build_trig_const(2))
+c(neg_loglik_constant = fit_const$value, neg_loglik_changing = fits_trig[[2]]$value)
+```
+
+If, in addition, the level and slope variances are zero, every state is deterministic and the model becomes a linear regression with a linear trend and harmonic terms:
+
+$$
+y_t = \beta_0 + \beta_1 t + \sum_{j=1}^{2}\left[a_j \cos(\omega_j t) + b_j \sin(\omega_j t)\right] + v_t.
+$$
+
+```{r}
+tt = 1:length(co2)
+
+# Harmonic regression:
+lm_harm = lm(co2 ~ tt + sin(2 * pi * tt / 12) + cos(2 * pi * tt / 12) +
+               sin(4 * pi * tt / 12) + cos(4 * pi * tt / 12))
+
+# Same model as a DLM with all state variances = 0:
+mod_det = dlmModPoly(order = 2, dV = 1, dW = c(0, 0)) + dlmModTrig(s = 12, q = 2, dV = 0, dW = 0)
+filt_det = dlmFilter(co2, mod_det)
+m_T = filt_det$m[length(co2) + 1, ]
+
+kable(data.frame(
+  Quantity = c("Slope", "Fitted value at the last month"),
+  lm = c(coef(lm_harm)["tt"], fitted(lm_harm)[length(co2)]),
+  dlm = c(m_T[2], sum(mod_det$FF * m_T)),
+  row.names = NULL
+), digits = 5, row.names = FALSE)
+```
+
+The Kalman filter with a vague prior and no state noise gives the same slope and the same fitted value as `lm()`: the filter is just computing least squares recursively. (The value of $V$ does not matter here, because it scales all the variances in the filter equally; see Question 4 of the tutorial below.)
+
+```{r}
+#| label: fig-harm-res
+#| fig-cap: "ACF of the residuals from the harmonic regression for CO2."
+#| fig-width: 7
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+acf(resid(lm_harm), main = "Harmonic regression residuals", lag.max = 48)
+```
+
+The residuals of the harmonic regression are strongly autocorrelated (@fig-harm-res): a straight line and a fixed seasonal pattern do not describe 39 years of CO$_2$ well. This is the main argument for the dynamic (state-space) version, where the level, slope and seasonal pattern can drift.
+
+**Reflection.** The `dlm` package makes it easy to build structural models by adding blocks (`dlmModPoly() + dlmModSeas()`), but it is important to check the defaults (for example `dlmModPoly()` sets the level variance to 0 and the slope variance to 1) and the parameterisation of $V$ and $W$ (variances, not standard deviations). The biggest thing I learned is the difference between filtered and smoothed estimates, and between intervals for the state and prediction intervals for new observations. My open question from the journal (which variances in $W$ should be non-zero) was answered in practice by estimating them: components whose variance is estimated as essentially zero (the CO$_2$ slope, the Nile slope) can be treated as fixed.
+
+# The Kalman Filter
+
+The Kalman filter is a recursive algorithm for the linear Gaussian state-space model. At each time point it *predicts* the state and the next observation, and then *updates* the state estimate with the new observation.
+
+### Derivation
+
+Suppose that after time $t-1$ we have $\theta_{t-1} \mid y_{1:t-1} \sim N(m_{t-1}, C_{t-1})$.
+
+**1. Predict the state (the prior for time** $t$). The state equation $\theta_t = G_t\theta_{t-1} + w_t$ is a linear function of independent normal variables, so
+
+$$
+\theta_t \mid y_{1:t-1} \sim N(a_t, R_t), \qquad a_t = G_t m_{t-1}, \qquad R_t = G_t C_{t-1} G_t' + W.
+$$
+
+**2. Predict the observation.** From $y_t = F_t\theta_t + v_t$,
+
+$$
+y_t \mid y_{1:t-1} \sim N(f_t, Q_t), \qquad f_t = F_t a_t, \qquad Q_t = F_t R_t F_t' + V,
+$$
+
+and $\text{Cov}(\theta_t, y_t \mid y_{1:t-1}) = R_t F_t'$.
+
+**3. Update (the posterior for time** $t$). So $(\theta_t, y_t)$ given $y_{1:t-1}$ is jointly normal:
+
+$$
+\begin{pmatrix} \theta_t \\ y_t \end{pmatrix} \Bigg| \, y_{1:t-1} \sim N\left(\begin{pmatrix} a_t \\ f_t \end{pmatrix}, \begin{pmatrix} R_t & R_tF_t' \\ F_tR_t & Q_t \end{pmatrix}\right).
+$$
+
+Using the conditional distribution of a multivariate normal ($\mu_1 + \Sigma_{12}\Sigma_{22}^{-1}(x_2 - \mu_2)$ and $\Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21}$):
+
+$$
+\theta_t \mid y_{1:t} \sim N(m_t, C_t), \qquad m_t = a_t + K_t e_t, \qquad C_t = R_t - K_t F_t R_t,
+$$
+
+where $e_t = y_t - f_t$ is the one-step-ahead prediction error and $K_t = R_t F_t' Q_t^{-1}$ is the **Kalman gain**. The posterior mean is the prior mean corrected by a fraction of the prediction error. The gain is large when the prior is uncertain ($R_t$ large) compared to the observation noise ($V$ small), so the observation gets more weight.
+
+**Likelihood.** By the prediction error decomposition, $p(y_{1:n}) = \prod_{t=1}^{n} p(y_t \mid y_{1:t-1})$, so
+
+$$
+\log L(V, W) = -\frac{1}{2}\sum_{t=1}^{n}\left[\log(2\pi Q_t) + \frac{e_t^2}{Q_t}\right],
+$$
+
+which can be maximised numerically over the unknown variances.
+
+**Missing observations and forecasts.** If $y_t$ is missing there is no update: $K_t = 0$, $m_t = a_t$ and $C_t = R_t$, and the term is left out of the likelihood. Forecasting is the same thing: appending `NA`s to the series makes the filter run the prediction steps only, and $f_t$, $Q_t$ are then the forecasts and their variances.
+
+**Smoothing.** The Kalman (Rauch-Tung-Striebel) smoother runs backwards from $s_n = m_n$, $S_n = C_n$:
+
+$$
+s_{t} = m_{t} + J_t(s_{t+1} - a_{t+1}), \qquad S_{t} = C_{t} + J_t(S_{t+1} - R_{t+1})J_t', \qquad J_t = C_t G_{t+1}' R_{t+1}^{-1}.
+$$
+
+## The Kalman filter from first principles
+
+The function below implements the three steps for a univariate observation and a state of any dimension. $F_t$ and $G_t$ can be given either as fixed matrices or as functions of $t$ (for time-varying models), and missing values (`NA`) are handled by skipping the update. The output is stored the same way as in `dlmFilter()`: row 1 of `m` (and element 1 of `C`) is the prior at time 0.
+
+```{r}
+kalman_filter = function(y, FF, GG, V, W, m0, C0) {
+  n = length(y)
+  p = length(m0)
+
+  # F_t and G_t can be fixed matrices or functions of t:
+  get_F = if (is.function(FF)) FF else function(t) FF
+  get_G = if (is.function(GG)) GG else function(t) GG
+
+  a = matrix(NA, n, p)        # prior means:      theta_t | y_{1:t-1} ~ N(a_t, R_t)
+  R = vector("list", n)
+  m = matrix(NA, n + 1, p)    # posterior means:  theta_t | y_{1:t}   ~ N(m_t, C_t)
+  C = vector("list", n + 1)
+  f = Q = e = rep(NA, n)      # forecasts:        y_t | y_{1:t-1}     ~ N(f_t, Q_t)
+
+  m[1, ] = m0                 # row 1 is time 0 (as in dlm)
+  C[[1]] = as.matrix(C0)
+  loglik = 0
+
+  for (t in 1:n) {
+    Ft = matrix(get_F(t), nrow = 1)
+    Gt = as.matrix(get_G(t))
+
+    # 1. Predict the state:
+    a[t, ] = Gt %*% m[t, ]
+    R[[t]] = Gt %*% C[[t]] %*% t(Gt) + W
+
+    # 2. Predict the observation:
+    f[t] = drop(Ft %*% a[t, ])
+    Q[t] = drop(Ft %*% R[[t]] %*% t(Ft)) + V
+
+    # 3. Update with y_t:
+    if (is.na(y[t])) {
+      # No observation: no update (the Kalman gain is zero)
+      m[t + 1, ] = a[t, ]
+      C[[t + 1]] = R[[t]]
+    } else {
+      e[t] = y[t] - f[t]                         # one-step-ahead prediction error
+      K = R[[t]] %*% t(Ft) / Q[t]                # Kalman gain (p x 1)
+      m[t + 1, ] = a[t, ] + drop(K) * e[t]
+      C[[t + 1]] = R[[t]] - K %*% Ft %*% R[[t]]
+      loglik = loglik + dnorm(y[t], f[t], sqrt(Q[t]), log = TRUE)
+    }
+  }
+
+  list(m = m, C = C, a = a, R = R, f = f, Q = Q, e = e, loglik = loglik)
+}
+```
+
+```{r}
+kalman_smoother = function(kf, GG) {
+  n = nrow(kf$a)
+  p = ncol(kf$a)
+  get_G = if (is.function(GG)) GG else function(t) GG
+
+  s = matrix(NA, n + 1, p)    # smoothed means:  theta_t | y_{1:n} ~ N(s_t, S_t)
+  S = vector("list", n + 1)
+
+  # At last time point smoothed = filtered distribution:
+  s[n + 1, ] = kf$m[n + 1, ]
+  S[[n + 1]] = kf$C[[n + 1]]
+
+  # Backwards recursion (row t of s, m, C = time t - 1; a, R at index t = time t):
+  for (t in n:1) {
+    Gt = as.matrix(get_G(t))
+    J = kf$C[[t]] %*% t(Gt) %*% solve(kf$R[[t]])   # smoother gain
+    s[t, ] = kf$m[t, ] + J %*% (s[t + 1, ] - kf$a[t, ])
+    S[[t]] = kf$C[[t]] + J %*% (S[[t + 1]] - kf$R[[t]]) %*% t(J)
+  }
+
+  list(s = s, S = S)
+}
+```
+
+::: callout-tip
+## Indexing
+
+$G_t$ is used in the *prediction* step for $\theta_t$ (moving from $t-1$ to $t$), and $F_t$ is used to predict $y_t$ from $\theta_t$. Using $G_{t-1}$ or $F_{t-1}$ by mistake is easy and gives wrong results that still look reasonable. The extra row for time 0 in `m` is another place where off-by-one errors happen.
+:::
+
+### Checking my filter against `dlm`: the Nile data
+
+**Maximum likelihood with my own filter.** I maximise my log-likelihood over $\log V$ and $\log W$ with `optim()`, using the same vague prior as `dlmModPoly()` ($m_0 = 0$, $C_0 = 10^7$).
+
+```{r}
+# Function to calculate negative log-likelihood of local level model:
+nile_nll = function(par) {
+  -kalman_filter(Nile, FF = 1, GG = 1, V = exp(par[1]), W = exp(par[2]),
+                 m0 = 0, C0 = 1e7)$loglik
+}
+
+fit_own_nile = optim(par = c(log(10000), log(1000)), fn = nile_nll,
+                     method = "BFGS", hessian = TRUE)
+
+V_own = exp(fit_own_nile$par[1])
+W_own = exp(fit_own_nile$par[2])
+
+# 95% CIs from Hessian (log scale, then back-transformed):
+se_own = sqrt(diag(solve(fit_own_nile$hessian)))
+
+kable(data.frame(
+  Parameter = c("V", "W"),
+  `My filter + optim()` = c(V_own, W_own),
+  Lower = exp(fit_own_nile$par - 1.96 * se_own),
+  Upper = exp(fit_own_nile$par + 1.96 * se_own),
+  `dlmMLE()` = var_nile,
+  check.names = FALSE
+), digits = 1, row.names = FALSE)
+```
+
+<!-- CHECK: both should give V close to 15099 and W close to 1469 (the values in Durbin and Koopman). -->
+
+My filter and `dlmMLE()` give the same estimates ($\hat{V} \approx$ `r round(V_own)`, $\hat{W} \approx$ `r round(W_own)`), which are also the values reported for the Nile local level model by Durbin and Koopman (2012).
+
+**Filtered and smoothed states, likelihood, forecasts and missing values.**
+
+```{r}
+# Own filter and smoother at own estimates:
+kf_nile = kalman_filter(Nile, FF = 1, GG = 1, V = V_own, W = W_own, m0 = 0, C0 = 1e7)
+ks_nile = kalman_smoother(kf_nile, GG = 1)
+
+# dlm with the same parameters:
+mod_check = dlmModPoly(order = 1, dV = V_own, dW = W_own)
+filt_check = dlmFilter(Nile, mod_check)
+smooth_check = dlmSmooth(filt_check)
+
+# Forecasts: append 10 NAs to series and run own filter again:
+kf_fc = kalman_filter(c(Nile, rep(NA, 10)), FF = 1, GG = 1, V = V_own, W = W_own,
+                      m0 = 0, C0 = 1e7)
+fc_check = dlmForecast(filt_check, nAhead = 10)
+
+# Missing values (1910-1915 removed, as above):
+kf_na = kalman_filter(nile_na, FF = 1, GG = 1, V = V_own, W = W_own, m0 = 0, C0 = 1e7)
+filt_na_check = dlmFilter(nile_na, mod_check)
+
+kable(data.frame(
+  Check = c("Filtered means m_t", "Filtered variances C_t",
+            "Smoothed means s_t", "Smoothed variances S_t",
+            "Forecasts f (h = 1, ..., 10)", "Forecast variances Q (h = 1, ..., 10)",
+            "Filtered means with missing values"),
+  `Largest absolute difference` = c(
+    max(abs(kf_nile$m[, 1] - as.numeric(filt_check$m))),
+    max(abs(unlist(kf_nile$C) - unlist(dlmSvd2var(filt_check$U.C, filt_check$D.C)))),
+    max(abs(ks_nile$s[, 1] - as.numeric(smooth_check$s))),
+    max(abs(unlist(ks_nile$S) - unlist(dlmSvd2var(smooth_check$U.S, smooth_check$D.S)))),
+    max(abs(kf_fc$f[101:110] - as.numeric(fc_check$f))),
+    max(abs(kf_fc$Q[101:110] - unlist(fc_check$Q))),
+    max(abs(kf_na$m[, 1] - as.numeric(filt_na_check$m)))),
+  check.names = FALSE
+), digits = 8, row.names = FALSE)
+
+# Log-likelihood (dlmLL() returns -logL without constant n/2 log(2 pi)):
+c(my_loglik = kf_nile$loglik,
+  dlm_loglik = -dlmLL(Nile, mod_check),
+  difference = kf_nile$loglik - (-dlmLL(Nile, mod_check)),
+  constant = -length(Nile) / 2 * log(2 * pi))
+```
+
+<!-- CHECK: all differences should be tiny (rounding error); the log-likelihood difference should equal the constant. If the difference is 0 instead, dlmLL() includes the constant and the comment above should be changed. -->
+
+All the differences are at the level of rounding error, so my filter and smoother reproduce `dlmFilter()`, `dlmSmooth()` and `dlmForecast()` exactly, including the missing values and the forecasts made by appending `NA`s. The log-likelihoods differ only by the constant $-\frac{n}{2}\log(2\pi)$, which does not depend on the parameters, so both are maximised at the same values.
+
+**A two-dimensional state: the local linear trend.** The same function works for a state vector, here $\theta_t = (\mu_t, \beta_t)'$ with the variances estimated earlier:
+
+```{r}
+G_llt = matrix(c(1, 0, 1, 1), 2, 2)   # [1 1; 0 1]
+
+kf_llt = kalman_filter(Nile, FF = c(1, 0), GG = G_llt,
+                       V = var_llt["V"], W = diag(var_llt[c("W_level", "W_slope")]),
+                       m0 = c(0, 0), C0 = diag(1e7, 2))
+filt_llt = dlmFilter(Nile, build_llt(fit_llt$par))
+
+max(abs(kf_llt$m - filt_llt$m))
+```
+
+## Topic exploration: exponential smoothing is a Kalman filter {#topic-exploration-exponential-smoothing-is-a-kalman-filter}
+
+**Question:** *how is simple exponential smoothing related to the Kalman filter for the local level model?*
+
+For the local level model ($F = G = 1$), the update step is
+
+$$
+m_t = m_{t-1} + K_t(y_t - m_{t-1}),
+$$
+
+which is exactly the error-correction form of SES, $\ell_t = \ell_{t-1} + \alpha(y_t - \ell_{t-1})$, with a *time-varying* $\alpha = K_t$. The variances do not depend on the data, so $K_t$ converges to a steady state. Setting $C_t = C_{t-1} = C$ in $R_t = C_{t-1} + W$, $K_t = R_t/(R_t + V)$ and $C_t = (1 - K_t)R_t$ and solving gives
+
+$$
+K_\infty = \frac{-q + \sqrt{q^2 + 4q}}{2}, \qquad q = \frac{W}{V} \ (\text{the signal-to-noise ratio}).
+$$
+
+So, after a few observations, the Kalman filter for the local level model *is* SES with $\alpha = K_\infty$. The local level model also implies an ARIMA(0,1,1) for $y_t$, and the ARIMA(0,1,1) forecast is SES with $\alpha = 1 + \theta$. I compared all four on the Nile data:
+
+```{r}
+q_nile = W_own / V_own
+K_inf = (-q_nile + sqrt(q_nile^2 + 4 * q_nile)) / 2
+
+# Kalman gain at each time point from own filter (F = 1, so K_t = R_t / Q_t):
+K_t = unlist(kf_nile$R) / kf_nile$Q
+
+# SES and ARIMA(0,1,1) fitted to the same data:
+ses_nile = ses(Nile)
+arima_nile = Arima(Nile, order = c(0, 1, 1))
+
+kable(data.frame(
+  Quantity = c("Steady-state Kalman gain K_inf (from V and W)",
+               "Kalman gain at t = 100",
+               "1 + theta from ARIMA(0,1,1)",
+               "alpha from ses()"),
+  Value = c(K_inf, K_t[100], 1 + coef(arima_nile)["ma1"], ses_nile$model$par["alpha"])
+), digits = 4, row.names = FALSE)
+```
+
+```{r}
+#| label: fig-kalman-gain
+#| fig-cap: "Kalman gain of the local level model for the Nile data (pink), converging to its steady state (purple dashed). The grey dotted line is the smoothing parameter estimated by ses()."
+#| fig-width: 7
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+ggplot(data = data.frame(t = 1:30, K = K_t[1:30]), mapping = aes(x = t, y = K)) +
+  geom_line(col = "deeppink") +
+  geom_point(col = "deeppink") +
+  geom_hline(yintercept = K_inf, linetype = 2, col = "purple") +
+  geom_hline(yintercept = ses_nile$model$par["alpha"], linetype = 3, col = "grey40") +
+  labs(title = "Kalman gain for the Nile local level model.", x = "Time", y = expression(K[t])) +
+  theme_minimal()
+```
+
+<!-- CHECK: expected K_inf about 0.267, 1 + theta about 0.267 and the ses() alpha about 0.246. -->
+
+The Kalman gain starts close to 1 (the vague prior means the first observation gets almost all the weight) and settles at $K_\infty \approx$ `r round(K_inf, 3)` within about ten years (@fig-kalman-gain). $1 + \hat{\theta}$ from the ARIMA(0,1,1) is almost identical, because the local level model and the ARIMA(0,1,1) are the same model. The SES estimate of $\alpha$ is close but not equal (`r round(ses_nile$model$par["alpha"], 3)`). The differences are in how the parameters are estimated: `ses()` uses a single source of error and estimates $\ell_0$ as a parameter, while the local level model has two independent errors and a vague prior on the initial level. In the steady state the three approaches give the same forecasts.
+
+This means that the smoothing parameter $\alpha$ has a clear meaning: it is determined by the signal-to-noise ratio. A noisy series with a slowly moving level (small $W/V$, like the Nile) gives a small $\alpha$, so the forecast averages over many years, while a series whose level moves a lot compared to the noise (like the oil data in Question 2) gives $\alpha$ close to 1.
+
+## Tutorial: State-space models and the Kalman filter
+
+### Question 1: Simulation and a Kalman filter from first principles
+
+$$
+\begin{aligned}
+y_t &= F_t\theta_t + v_t, \qquad v_t \sim N(0, V = 2) \\
+\theta_t &= G_t\theta_{t-1} + w_t, \qquad w_t \sim N(0, W = 1) \\
+\theta_0 &\sim N(0, 1)
+\end{aligned}
+$$
+
+with $G_t = \frac{1}{2}\sin\left(\frac{\pi}{2}[2t+1]\right) = \frac{(-1)^t}{2}$ (since $\sin(\pi t + \pi/2) = \cos(\pi t) = (-1)^t$), and $F_t \sim N(1, 0.2^2)$ rounded to one decimal, playing the role of an explanatory variable.
+
+Because $G_t$ alternates in sign, half of the previous state carries over with a flipped sign every step. This creates the cyclical (zig-zag) behaviour in $\theta_t$.
+
+```{r}
+set.seed(42)
+
+n_kf = 100
+h_kf = 5
+N_kf = n_kf + h_kf
+V_true = 2
+W_true = 1
+
+# Time-varying system matrices (F_t also needed for forecast period):
+FF_t = round(rnorm(N_kf, 1, 0.2), 1)
+GG_t = (-1)^(1:N_kf) / 2
+
+# Simulate the states and observations:
+theta_kf = numeric(N_kf)
+y_kf = numeric(N_kf)
+theta_prev = rnorm(1, 0, 1)                                     # theta_0
+for (t in 1:N_kf) {
+  theta_kf[t] = GG_t[t] * theta_prev + rnorm(1, 0, sqrt(W_true)) # state equation
+  y_kf[t] = FF_t[t] * theta_kf[t] + rnorm(1, 0, sqrt(V_true))    # observation equation
+  theta_prev = theta_kf[t]
+}
+
+# Observed series (last 5 values held out to check forecasts):
+y_obs = c(y_kf[1:n_kf], rep(NA, h_kf))
+```
+
+#### Parameter estimation
+
+I use my `kalman_filter()` from above, with $F_t$ and $G_t$ passed as functions of $t$. The likelihood is maximised over $\log V$ and $\log W$. The 5 `NA`s at the end do not contribute to the likelihood.
+
+```{r}
+# Function to calculate negative log-likelihood from log variances:
+negll = function(parm, y, FF, GG) {
+  -kalman_filter(y, FF = function(t) FF[t], GG = function(t) GG[t],
+                 V = exp(parm[1]), W = exp(parm[2]), m0 = 0, C0 = 1)$loglik
+}
+
+fit_kf = optim(par = c(0, 0), fn = negll, y = y_obs, FF = FF_t, GG = GG_t,
+               method = "BFGS", hessian = TRUE)
+
+se_kf = sqrt(diag(solve(fit_kf$hessian)))
+kable(data.frame(
+  Parameter = c("V", "W"),
+  True = c(V_true, W_true),
+  Estimate = exp(fit_kf$par),
+  Lower = exp(fit_kf$par - 1.96 * se_kf),
+  Upper = exp(fit_kf$par + 1.96 * se_kf)
+), digits = 3, row.names = FALSE)
+
+V_hat = exp(fit_kf$par[1])
+W_hat = exp(fit_kf$par[2])
+kf_out = kalman_filter(y_obs, FF = function(t) FF_t[t], GG = function(t) GG_t[t],
+                       V = V_hat, W = W_hat, m0 = 0, C0 = 1)
+
+# Filtered states and variances (without time-0 row):
+m_kf = kf_out$m[-1, 1]
+C_kf = unlist(kf_out$C[-1])
+```
+
+<!-- CHECK: whether V and W are recovered, and how wide the intervals are. -->
+
+The two variances are not easy to separate. Since $|G_t| = 1/2$, the state forgets its past quickly, so $\theta_t$ is close to white noise and $y_t$ looks like noise with variance $F_t^2\,\text{Var}(\theta_t) + V$. The changing $F_t$ helps a little, because it scales the state part but not the observation noise, but the confidence intervals are still wide.
+
+**Check against `dlm`.** `dlm` allows time-varying matrices through `JFF`, `JGG` and `X`: the entries of `JFF`/`JGG` say which column of `X` holds the value at each time.
+
+```{r}
+mod_tv = dlm(FF = matrix(1), V = matrix(V_hat), GG = matrix(1), W = matrix(W_hat),
+             m0 = 0, C0 = matrix(1),
+             JFF = matrix(1), JGG = matrix(2), X = cbind(FF_t, GG_t))
+filt_tv = dlmFilter(y_obs, mod_tv)
+
+# Largest difference between own and dlm filtered states:
+max(abs(as.numeric(dropFirst(filt_tv$m)) - m_kf))
+```
+
+My Kalman filter gives the same filtered states as `dlmFilter()` (the difference is at the level of rounding error), including the 5 missing values at the end.
+
+#### Forecasts for $h = 1, \ldots, 5$
+
+Adding `NA`s to the end of $y$ makes the filter skip the update step, so $m_t = a_t$, $C_t = R_t$, and $f_t, Q_t$ are the forecasts and their variances.
+
+```{r}
+fc_idx = (n_kf + 1):N_kf
+kable(data.frame(
+  h = 1:h_kf,
+  Forecast = kf_out$f[fc_idx],
+  Lower = kf_out$f[fc_idx] - 1.96 * sqrt(kf_out$Q[fc_idx]),
+  Upper = kf_out$f[fc_idx] + 1.96 * sqrt(kf_out$Q[fc_idx]),
+  True_y = y_kf[fc_idx]
+), digits = 2)
+```
+
+The forecasts shrink towards zero almost immediately: after one step only half of the last state survives (with a sign flip), after two steps a quarter, and so on. The prediction intervals quickly reach their long-run width, $\pm 1.96\sqrt{F_t^2 \text{Var}(\theta) + V}$ with $\text{Var}(\theta) = W/(1 - 1/4)$.
+
+```{r}
+#| label: fig-kf-fit
+#| fig-cap: "Kalman filter results for the simulated model in Question 1."
+#| fig-subcap:
+#|   - "Observations (grey), one-step-ahead fitted values (pink) and filtered signal F_t m_t (blue), with forecasts and 95% prediction intervals for t = 101–105."
+#|   - "True state (black) and filtered state with 95% interval (pink)."
+#| layout-nrow: 2
+#| fig-width: 8
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+kf_df = data.frame(
+  t = 1:N_kf,
+  y = y_kf,
+  observed = c(rep(TRUE, n_kf), rep(FALSE, h_kf)),
+  f = kf_out$f,
+  f_lo = kf_out$f - 1.96 * sqrt(kf_out$Q),
+  f_hi = kf_out$f + 1.96 * sqrt(kf_out$Q),
+  signal = FF_t * m_kf,
+  theta = theta_kf,
+  m = m_kf,
+  m_lo = m_kf - 1.96 * sqrt(C_kf),
+  m_hi = m_kf + 1.96 * sqrt(C_kf)
+)
+
+p_top = ggplot(data = kf_df, mapping = aes(x = t)) +
+  geom_ribbon(data = kf_df[!kf_df$observed, ], aes(ymin = f_lo, ymax = f_hi),
+              fill = "lightpink", alpha = 0.7) +
+  geom_point(aes(y = y, shape = observed), col = "grey50") +
+  geom_line(aes(y = f), col = "deeppink") +
+  geom_line(data = kf_df[kf_df$observed, ], aes(y = signal), col = "steelblue") +
+  scale_shape_manual(values = c("TRUE" = 16, "FALSE" = 4),
+                     labels = c("TRUE" = "Used for fitting", "FALSE" = "Held out")) +
+  labs(title = "Observations, fitted values and forecasts.", x = "Time", y = "y", shape = "") +
+  theme_minimal()
+
+p_bottom = ggplot(data = kf_df, mapping = aes(x = t)) +
+  geom_ribbon(aes(ymin = m_lo, ymax = m_hi), fill = "lightpink", alpha = 0.7) +
+  geom_line(aes(y = theta), col = "black") +
+  geom_line(aes(y = m), col = "deeppink") +
+  labs(title = "True and filtered state.", x = "Time", y = expression(theta[t])) +
+  theme_minimal()
+
+print(p_top)
+print(p_bottom)
+```
+
+#### Residuals
+
+```{r}
+#| label: fig-kf-res
+#| fig-cap: "Standardised one-step-ahead prediction errors from my Kalman filter and their ACF."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+std_res = kf_out$e[1:n_kf] / sqrt(kf_out$Q[1:n_kf])
+
+par(mfrow = c(1, 2))
+plot(std_res, type = "h", col = "deeppink", xlab = "Time", ylab = "Standardised residual",
+     main = "Standardised residuals")
+abline(h = 0)
+acf(std_res, main = "ACF")
+```
+
+```{r}
+Box.test(kf_out$e[1:n_kf] / sqrt(kf_out$Q[1:n_kf]), lag = 10, type = "Ljung-Box", fitdf = 2)
+```
+
+The standardised prediction errors $e_t/\sqrt{Q_t}$ should be independent $N(0,1)$ if the model is correct, which it is here (we simulated from it). The ACF (@fig-kf-res) and the Ljung-Box test are consistent with this.
+
+**Discussion.** The filtered state follows the zig-zag pattern of the true state, but with wide intervals: with $V = 2$ and a state variance of only about $1.33$, a single observation carries limited information about $\theta_t$ (@fig-kf-fit). The filter gives the most weight to the observation when $F_t$ is large, because then the state part of $y_t$ is larger relative to the noise.
+
+### Question 2: A noisy AR(2) process
+
+$$
+x_t = -0.9x_{t-2} + w_t, \qquad y_t = x_t + v_t.
+$$
+
+#### a) State-space form
+
+Let $\theta_t = (x_t, x_{t-1})'$. Then
+
+$$
+\theta_t = \begin{pmatrix} x_t \\ x_{t-1} \end{pmatrix}
+= \underbrace{\begin{pmatrix} 0 & -0.9 \\ 1 & 0 \end{pmatrix}}_{G}
+\begin{pmatrix} x_{t-1} \\ x_{t-2} \end{pmatrix} +
+\begin{pmatrix} w_t \\ 0 \end{pmatrix}, \qquad
+W = \begin{pmatrix} \sigma^2_w & 0 \\ 0 & 0 \end{pmatrix},
+$$
+
+$$
+y_t = \underbrace{\begin{pmatrix} 1 & 0 \end{pmatrix}}_{F}\theta_t + v_t, \qquad V = \sigma^2_v,
+\qquad \theta_0 = (x_0, x_{-1})'.
+$$
+
+#### b) Initial variances for stationarity
+
+$x_t$ only depends on $x_{t-2}$, so the even and odd time points form two independent AR(1) processes (in steps of two) with coefficient $-0.9$. For $x_t$ (and hence $y_t$) to be stationary from the start, $x_0$ and $x_{-1}$ must come from the stationary distribution:
+
+$$
+\sigma^2_0 = \sigma^2_1 = \frac{\sigma^2_w}{1 - 0.9^2} = \frac{\sigma^2_w}{0.19},
+$$
+
+and $x_0$ and $x_{-1}$ are uncorrelated, since $\text{Cov}(x_t, x_{t-1}) = 0$ for this process. With $\sigma_w = 1$ this gives $\sigma^2_0 = \sigma^2_1 =$ `r round(1 / 0.19, 3)`. Then $\text{Var}(y_t) = \sigma^2_w/0.19 + \sigma^2_v$ for every $t$.
+
+#### c) and d) Simulation with $\sigma_v = 1$ and $\sigma_v = 10$
+
+```{r}
+# Simulate x and y:
+sim_q2 = function(n, sigma_w, sigma_v) {
+  s2_0 = sigma_w^2 / (1 - 0.9^2)              # stationary variance
+  x_all = numeric(n + 2)
+  x_all[1:2] = rnorm(2, 0, sqrt(s2_0))        # x_{-1}, x_0
+  for (t in 3:(n + 2)) {
+    x_all[t] = -0.9 * x_all[t - 2] + rnorm(1, 0, sigma_w)
+  }
+  x = x_all[-(1:2)]
+  y = x + rnorm(n, 0, sigma_v)                # observation noise
+  return(list(x = ts(x), y = ts(y)))
+}
+
+# Same seed so both cases share the same x:
+set.seed(8)
+q2_v1 = sim_q2(100, sigma_w = 1, sigma_v = 1)
+set.seed(8)
+q2_v10 = sim_q2(100, sigma_w = 1, sigma_v = 10)
+```
+
+```{r}
+#| label: fig-q2-time
+#| fig-cap: "The AR(2) state process x (pink) and the noisy observations y (grey) for sigma_v = 1 (left) and sigma_v = 10 (right)."
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfrow = c(1, 2))
+plot(q2_v1$y, col = "grey50", ylab = "", main = expression(sigma[v] == 1))
+lines(q2_v1$x, col = "deeppink", lwd = 2)
+plot(q2_v10$y, col = "grey50", ylab = "", main = expression(sigma[v] == 10))
+lines(q2_v10$x, col = "deeppink", lwd = 2)
+```
+
+```{r}
+#| label: fig-q2-acf
+#| fig-cap: "Sample ACF and PACF of x and y. Rows: x, y with sigma_v = 1, y with sigma_v = 10."
+#| fig-width: 10
+#| fig-height: 9
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfrow = c(3, 2))
+acf(q2_v1$x, main = "ACF of x", lag.max = 20)
+pacf(q2_v1$x, main = "PACF of x", lag.max = 20)
+acf(q2_v1$y, main = "ACF of y (sigma_v = 1)", lag.max = 20)
+pacf(q2_v1$y, main = "PACF of y (sigma_v = 1)", lag.max = 20)
+acf(q2_v10$y, main = "ACF of y (sigma_v = 10)", lag.max = 20)
+pacf(q2_v10$y, main = "PACF of y (sigma_v = 10)", lag.max = 20)
+```
+
+```{r}
+# Theoretical ACF of x:
+round(ARMAacf(ar = c(0, -0.9), lag.max = 8), 3)
+
+# Factor by which observation noise shrinks autocorrelations of y:
+var_x = 1 / 0.19
+c(sigma_v_1 = var_x / (var_x + 1), sigma_v_10 = var_x / (var_x + 100))
+```
+
+-   $x_t$: the theoretical ACF is zero at odd lags and $(-0.9)^{k}$ at lag $2k$, so it alternates in sign at even lags and decays slowly. The PACF has a single large spike of about $-0.9$ at lag 2, as expected for an AR(2) with $\phi_1 = 0$. The time plot (@fig-q2-time) shows a regular cycle with a period of about 4 time steps.
+-   $y_t$ with $\sigma_v = 1$: the autocorrelations of $y$ are those of $x$ multiplied by $\text{Var}(x)/(\text{Var}(x) + \sigma^2_v) =$ `r round(var_x / (var_x + 1), 2)`, so the pattern is still clearly visible. The PACF no longer cuts off exactly after lag 2: adding white noise to an AR(2) gives an ARMA(2, 2), so smaller partial autocorrelations appear at later lags.
+-   $y_t$ with $\sigma_v = 10$: the shrinkage factor is only `r round(var_x / (var_x + 100), 2)`. The signal is buried in the noise: the ACF and PACF of $y$ look like white noise even though $x$ is strongly autocorrelated (@fig-q2-acf).
+
+This is exactly the situation where a state-space model helps: we model $x$ directly and treat $v$ as measurement error. As an extra check I ran my Kalman filter and smoother with the true parameters to recover $x$ from $y$:
+
+```{r}
+G_q2 = matrix(c(0, 1, -0.9, 0), 2, 2)   # [0 -0.9; 1 0]
+
+# Function to compute smoothed estimate of x_t (first state) with own filter and smoother:
+smooth_x = function(y, sigma_v) {
+  kf = kalman_filter(as.numeric(y), FF = c(1, 0), GG = G_q2, V = sigma_v^2,
+                     W = diag(c(1, 0)), m0 = c(0, 0), C0 = diag(1 / 0.19, 2))
+  kalman_smoother(kf, GG = G_q2)$s[-1, 1]
+}
+x_hat_v1 = smooth_x(q2_v1$y, sigma_v = 1)
+x_hat_v10 = smooth_x(q2_v10$y, sigma_v = 10)
+
+# Correlation between true x and its smoothed estimate:
+c(sigma_v_1 = cor(q2_v1$x, x_hat_v1), sigma_v_10 = cor(q2_v10$x, x_hat_v10))
+```
+
+<!-- CHECK: the two correlations (expect high for sigma_v = 1, low for sigma_v = 10). -->
+
+With $\sigma_v = 1$ the smoothed estimate of $x$ is very close to the truth, while with $\sigma_v = 10$ even the best possible estimate recovers only part of the signal.
+
+### Question 3: Second differences of the linear growth model
+
+The linear growth model is
+
+$$
+Y_t = \mu_t + v_t, \qquad \mu_t = \mu_{t-1} + \beta_{t-1} + w_t, \qquad \beta_t = \beta_{t-1} + \gamma_t,
+$$
+
+with $v_t$, $w_t$, $\gamma_t$ independent white noise with variances $\sigma^2_v, \sigma^2_w, \sigma^2_\gamma$.
+
+**First difference of the level:** $\Delta\mu_t = \mu_t - \mu_{t-1} = \beta_{t-1} + w_t$.
+
+**Second difference of the level:** $\Delta^2\mu_t = (\beta_{t-1} - \beta_{t-2}) + (w_t - w_{t-1}) = \gamma_{t-1} + w_t - w_{t-1}$.
+
+**Second difference of the noise:** $\Delta^2 v_t = v_t - 2v_{t-1} + v_{t-2}$.
+
+So
+
+$$
+Z_t = \Delta^2 Y_t = \gamma_{t-1} + w_t - w_{t-1} + v_t - 2v_{t-1} + v_{t-2}.
+$$
+
+$Z_t$ is a finite linear combination of white noise terms at lags 0, 1 and 2, so its mean (0) and autocovariances do not depend on $t$: it is stationary. Using the independence of all the noise terms:
+
+$$
+\begin{aligned}
+\gamma(0) &= \sigma^2_\gamma + 2\sigma^2_w + (1 + 4 + 1)\sigma^2_v = \sigma^2_\gamma + 2\sigma^2_w + 6\sigma^2_v \\
+\gamma(1) &= \text{Cov}(Z_t, Z_{t-1}) = -\sigma^2_w + (-2)(1)\sigma^2_v + (1)(-2)\sigma^2_v = -\sigma^2_w - 4\sigma^2_v \\
+\gamma(2) &= \text{Cov}(Z_t, Z_{t-2}) = (1)(1)\sigma^2_v = \sigma^2_v \\
+\gamma(k) &= 0, \quad k \geq 3
+\end{aligned}
+$$
+
+An autocovariance function that is non-zero up to lag 2 and zero afterwards is exactly the ACF of an MA(2) process. (Any stationary process whose autocovariances cut off after lag $q$ can be written as an MA($q$).) So the linear growth model is an ARIMA(0,2,2) model.
+
+**Simulation check:**
+
+```{r}
+set.seed(9)
+n_lg = 10000
+sig_v = 1
+sig_w = 0.5
+sig_g = 0.2
+
+# Simulate the linear growth model:
+beta_lg = cumsum(rnorm(n_lg, 0, sig_g))
+mu_lg = numeric(n_lg)
+for (t in 2:n_lg) mu_lg[t] = mu_lg[t - 1] + beta_lg[t - 1] + rnorm(1, 0, sig_w)
+y_lg = mu_lg + rnorm(n_lg, 0, sig_v)
+
+# Second differences:
+z_lg = diff(y_lg, differences = 2)
+
+# Theoretical ACF:
+g0 = sig_g^2 + 2 * sig_w^2 + 6 * sig_v^2
+rho_theory = c(1, (-sig_w^2 - 4 * sig_v^2) / g0, sig_v^2 / g0, 0, 0)
+
+# Sample ACF and ACF of fitted MA(2):
+ma2 = arima(z_lg, order = c(0, 0, 2), include.mean = FALSE)
+kable(data.frame(
+  Lag = 0:4,
+  Theory = rho_theory,
+  Sample = as.numeric(acf(z_lg, lag.max = 4, plot = FALSE)$acf),
+  Fitted_MA2 = as.numeric(ARMAacf(ma = coef(ma2), lag.max = 4))
+), digits = 3)
+```
+
+The sample ACF of the second differences matches the theoretical values, and is zero (apart from sampling error) beyond lag 2. A fitted MA(2) reproduces the same ACF.
+
+### Question 4: Regression coefficients with a Kalman filter
+
+The tutorial uses `usconsumption` from the (older) `fpp` package. The same quarterly growth rates for US personal consumption and disposable income are in `uschange` in `fpp2` (with more recent data, 1970--2016), so I used those.
+
+```{r}
+# Read in data:
+data(uschange)
+# View(uschange)
+
+y_us = uschange[, "Consumption"]
+z_us = uschange[, "Income"]
+```
+
+```{r}
+#| label: fig-us-data
+#| fig-cap: "Quarterly percentage changes in US consumption and income (left) and consumption against income with the least squares line (right)."
+#| fig-subcap:
+#|   - "Time plot"
+#|   - "Scatter plot"
+#| layout-ncol: 2
+#| fig-width: 5
+#| fig-height: 4
+#| echo: false
+#| message: false
+#| warning: false
+
+us_df = data.frame(
+  quarter = rep(as.numeric(time(y_us)), 2),
+  change = c(as.numeric(y_us), as.numeric(z_us)),
+  series = rep(c("Consumption", "Income"), each = length(y_us))
+)
+
+ggplot(data = us_df, mapping = aes(x = quarter, y = change, colour = series)) +
+  geom_line() +
+  scale_colour_manual(values = c("Consumption" = "deeppink", "Income" = "grey50")) +
+  labs(title = "US quarterly growth rates.", x = "Quarter", y = "% change", colour = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+ggplot(data = data.frame(income = as.numeric(z_us), consumption = as.numeric(y_us)),
+       mapping = aes(x = income, y = consumption)) +
+  geom_point(col = "deeppink") +
+  geom_smooth(method = "lm", se = FALSE, col = "black") +
+  labs(title = "Consumption vs income.", x = "Income (% change)", y = "Consumption (% change)") +
+  theme_minimal()
+```
+
+@fig-us-data shows that consumption and income growth move together, but income growth is much more volatile, and the scatter plot shows a positive but noisy relationship.
+
+```{r}
+# Ordinary least squares:
+lm_us = lm(y_us ~ z_us)
+summary(lm_us)$coefficients
+```
+
+#### The Kalman filter for regression
+
+As a state-space model, $\theta_t = (a_t, b_t)'$, $G = I$, $W = 0$ (the coefficients do not change), $F_t = (1, z_t)$ and $V = \sigma^2$. This is my `kalman_filter()` with $F_t$ given as a function of $t$:
+
+```{r}
+n_us = length(y_us)
+z_vec = as.numeric(z_us)
+
+kf_reg = function(sigma2) {
+  kalman_filter(as.numeric(y_us), FF = function(t) c(1, z_vec[t]), GG = diag(2),
+                V = sigma2, W = matrix(0, 2, 2), m0 = c(0, 0), C0 = diag(1e7, 2))
+}
+
+kf_us_1 = kf_reg(sigma2 = 1)
+kf_us_100 = kf_reg(sigma2 = 100)
+
+# Filtered coefficients and diagonal of C_t (without time-0 row):
+coef_path = kf_us_1$m[-1, ]
+C_diag = t(sapply(kf_us_1$C[-1], diag))
+
+kable(data.frame(
+  Coefficient = c("a (intercept)", "b (slope)"),
+  OLS = coef(lm_us),
+  KF_sigma2_1 = kf_us_1$m[n_us + 1, ],
+  KF_sigma2_100 = kf_us_100$m[n_us + 1, ]
+), digits = 5, row.names = FALSE)
+```
+
+The final filtered estimates $\hat{x}_{T \mid T}$ are identical to the OLS estimates (up to the effect of the very vague prior), whatever value of $\sigma^2$ is used.
+
+::: callout-note
+## Why $\sigma^2$ does not matter
+
+With $W = 0$ and a vague prior, every variance in the filter ($R_t$, $C_t$ and $Q_t$) is proportional to $\sigma^2$. The Kalman gain $K_t = R_tF_t'/Q_t$ is a ratio of these, so $\sigma^2$ cancels and the filtered means $m_t$ do not depend on it. Only the variances $C_t$ do.
+:::
+
+#### Estimating $\sigma^2$
+
+Run the filter with $\sigma^2 = 1$. The standardised prediction errors $e_t/\sqrt{Q_t}$ then have variance $\sigma^2$. The first two have (almost) zero weight because the prior is vague and two coefficients have to be learned first, so
+
+$$
+\hat{\sigma}^2 = \frac{1}{T-2}\sum_{t=3}^{T} \frac{e_t^2}{Q_t}.
+$$
+
+```{r}
+sigma2_kf = sum(kf_us_1$e[-(1:2)]^2 / kf_us_1$Q[-(1:2)]) / (n_us - 2)
+c(kalman_filter = sigma2_kf, lm = summary(lm_us)$sigma^2)
+```
+
+These are the same: the sum of squared standardised one-step-ahead errors (the *recursive residuals*) equals the OLS residual sum of squares.
+
+#### Recursive coefficient estimates
+
+```{r}
+#| label: fig-us-recursive
+#| fig-cap: "Recursive (filtered) estimates of the intercept and slope, with approximate 95% intervals, from quarter 10 onwards. Dashed lines: full-sample OLS estimates."
+#| fig-width: 8
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+rec_df = data.frame(
+  quarter = rep(as.numeric(time(y_us)), 2),
+  coef = rep(c("Intercept (a)", "Slope (b)"), each = n_us),
+  est = c(coef_path[, 1], coef_path[, 2]),
+  se = sqrt(c(C_diag[, 1], C_diag[, 2]) * sigma2_kf),
+  ols = rep(coef(lm_us), each = n_us)
+)
+rec_df = rec_df[rep(1:n_us, 2) >= 10, ]
+
+ggplot(data = rec_df, mapping = aes(x = quarter, y = est)) +
+  geom_ribbon(aes(ymin = est - 1.96 * se, ymax = est + 1.96 * se), fill = "lightpink", alpha = 0.7) +
+  geom_line(col = "deeppink") +
+  geom_line(aes(y = ols), linetype = 2) +
+  facet_wrap(~coef, ncol = 1, scales = "free_y") +
+  labs(
+    title = "Recursive regression estimates.",
+    x = "Quarter",
+    y = "Estimate"
+  ) +
+  theme_minimal()
+```
+
+$\hat{x}_{t \mid t}$ is the OLS estimate using only the data up to quarter $t$ (@fig-us-recursive). If the relationship were constant, these estimates should settle down and then only fluctuate within their intervals. Systematic drift (for example a slope that keeps decreasing) suggests that the coefficients change over time.
+
+<!-- CHECK: describe what the recursive paths in the figure actually do. -->
+
+Recursive estimates are a weak test, though, because every new estimate still uses all the earlier data. A more direct approach is to let the coefficients follow random walks ($W > 0$) and compare the likelihoods.
+
+```{r}
+#| warning: false
+
+# Static (W = 0) vs time-varying (W estimated) coefficients:
+build_static = function(p) dlmModReg(z_us, dV = exp(p[1]), dW = c(0, 0))
+build_tvp = function(p) dlmModReg(z_us, dV = exp(p[1]), dW = exp(p[2:3]))
+
+fit_static = dlmMLE(y_us, parm = log(var(y_us)), build = build_static, method = "BFGS")
+fit_tvp = dlmMLE(y_us, parm = c(log(var(y_us)), -5, -5), build = build_tvp)
+
+kable(data.frame(
+  Model = c("Static coefficients", "Time-varying coefficients"),
+  Parameters = c(1, 3),
+  neg_loglik = c(fit_static$value, fit_tvp$value),
+  AIC = c(2 * fit_static$value + 2 * 1, 2 * fit_tvp$value + 2 * 3)
+), digits = 2, row.names = FALSE)
+
+signif(exp(fit_tvp$par), 3)  # V, W_a, W_b
+```
+
+<!-- CHECK: which model has the lower AIC, and whether the W's are effectively zero. -->
+
+If the estimated coefficient variances are essentially zero, the data give no evidence that the relationship between income and consumption growth changed. If they are clearly positive and the AIC is lower, a time-varying coefficient model is preferred, and its smoothed coefficients (@fig-us-tvp) show how the relationship evolved:
+
+```{r}
+#| label: fig-us-tvp
+#| fig-cap: "Smoothed coefficients from the time-varying coefficient model."
+#| fig-width: 8
+#| fig-height: 5
+#| echo: false
+#| message: false
+#| warning: false
+
+smooth_tvp = dlmSmooth(y_us, build_tvp(fit_tvp$par))
+tvp_df = data.frame(
+  quarter = rep(as.numeric(time(y_us)), 2),
+  coef = rep(c("Intercept (a)", "Slope (b)"), each = n_us),
+  est = c(dropFirst(smooth_tvp$s)[, 1], dropFirst(smooth_tvp$s)[, 2])
+)
+
+ggplot(data = tvp_df, mapping = aes(x = quarter, y = est)) +
+  geom_line(col = "deeppink") +
+  facet_wrap(~coef, ncol = 1, scales = "free_y") +
+  labs(title = "Time-varying regression coefficients.", x = "Quarter", y = "Estimate") +
+  theme_minimal()
+```
+
+#### The same filter with `dlm`
+
+```{r}
+mod_us = dlmModReg(z_us, dV = 1, dW = c(0, 0))  # default prior: m0 = 0, C0 = 1e7 I
+filt_us = dlmFilter(y_us, mod_us)
+
+# Largest difference between own and dlm filtered coefficients:
+max(abs(filt_us$m[-1, ] - coef_path))
+```
+
+`dlmModReg()` uses the same vague prior, so `dlmFilter()` gives the same sequence of coefficient estimates as my own filter.
+
+### Reflection on state-space models and the Kalman filter
+
+Writing the Kalman filter myself made the predict and update steps much clearer than using `dlm`. Deriving it from the conditional distribution of a multivariate normal showed me why it only works for linear Gaussian models: the prior, likelihood and posterior all stay normal, so only a mean and a variance need to be carried forward. A missing observation (or a forecast) is just a step without an update, and the likelihood comes for free from the prediction errors. Writing one general function and then using it for a local level, a local linear trend, a model with time-varying $F_t$ and $G_t$, an AR(2) and a regression was the most convincing check that I understood it, especially once all of them matched `dlm` to rounding error. The off-by-one indexing (time 0 in the first row, $G_t$ vs $G_{t-1}$) was the hardest part to get right.
+
+The regression example showed that OLS is a special case of the Kalman filter (no state noise, vague prior), and the exploration showed that SES is the steady-state Kalman filter for the local level model, so three topics from this section (exponential smoothing, regression and ARIMA) are all special cases of the state-space framework. This is the idea I want to build on: in [Project 4](../projects/project-04.qmd) the same forward recursion (predict, then update) appears again for hidden Markov models, where the state is discrete instead of normal.
+
+# Hidden Markov Models {#hidden-markov-models}
+
+<!-- Add your own overview and reflection here: the key concepts of HMMs, what you found most difficult in this topic, and what you learned from the tutorial. -->
+
+This section works through Questions 1 to 7 of the HMM tutorial. It uses the HMM toolkit (scaled forward and backward algorithms, local decoding, the Viterbi algorithm and the stationary distribution) that I wrote from first principles for [Project 4](../projects/project-04-analysis.qmd), where the toolkit is explained in detail. Question 8, Poisson HMMs for the earthquake counts, is in Project 4, because it is where I checked the toolkit against `depmixS4` before applying it to JSE returns.
+
+```{r}
+#| label: hmm-setup
+#| message: false
+#| warning: false
+
+library(tidyverse)
+
+# Same seed and colours as in Project 4:
+set.seed(2026)
+col_main   = "purple"
+col_accent = "deeppink"
+state_cols = c("1" = "steelblue", "2" = "purple", "3" = "deeppink", "4" = "black")
+```
+
+```{r}
+#| label: hmm-toolkit
+#| file: ../scripts/hmm-toolkit.R
+#| code-fold: true
+#| code-summary: "HMM toolkit (scripts/hmm-toolkit.R)"
+```
+
+## Question 1: Simulating a three-state bivariate Gaussian HMM
+
+```{r}
+#| label: q1-sim
+
+# State-dependent means and covariance matrices (sigma must be created first):
+mu_q1 = 10 * matrix(c(-1, 0, 1, 0, 0, 1), ncol = 2, byrow = TRUE)
+sf = 10    # scaling factor
+sigma_q1 = array(NA, dim = c(2, 2, 3))
+sigma_q1[, , 1] = sf * matrix(c(1, 1/2, 1/2, 1), nrow = 2)
+sigma_q1[, , 2] = sf * matrix(c(1, -1/2, -1/2, 1), nrow = 2)
+sigma_q1[, , 3] = sf * matrix(c(3, 0, 0, 1/2), nrow = 2)
+
+Gamma_q1 = matrix(c(0.8, 0.1, 0.1,
+                    0.1, 0.8, 0.1,
+                    0.1, 0.1, 0.8), nrow = 3, byrow = TRUE)
+
+# Simulate 20 observations (Gamma symmetric, so stationary dist is uniform):
+n_q1 = 20
+z_q1 = numeric(n_q1)
+x_q1 = matrix(NA, n_q1, 2)
+for (t in 1:n_q1) {
+  z_q1[t] = if (t == 1) sample(1:3, 1) else sample(1:3, 1, prob = Gamma_q1[z_q1[t - 1], ])
+  x_q1[t, ] = MASS::mvrnorm(1, mu = mu_q1[z_q1[t], ], Sigma = sigma_q1[, , z_q1[t]])
+}
+
+q1_df = tibble(t = 1:n_q1, x1 = x_q1[, 1], x2 = x_q1[, 2], state = factor(z_q1))
+```
+
+```{r}
+#| label: fig-q1
+#| fig-cap: "Twenty observations simulated from the three-state bivariate Gaussian HMM, coloured by the true state. The grey arrows show the time path and the crosses mark the state means."
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(data = q1_df, mapping = aes(x = x1, y = x2)) +
+  geom_path(col = "grey70", arrow = arrow(length = unit(0.15, "cm"))) +
+  geom_point(aes(colour = state), size = 3) +
+  geom_text(aes(label = t), nudge_y = 0.9, size = 3) +
+  geom_point(data = tibble(x1 = mu_q1[, 1], x2 = mu_q1[, 2]), shape = 4, size = 4, stroke = 1.5) +
+  scale_colour_manual(values = state_cols) +
+  labs(title = "Simulated three-state Gaussian HMM.", x = expression(x[1]), y = expression(x[2]),
+       colour = "State")
+```
+
+@fig-q1 shows the three state distributions: state 1 is centred at $(-10, 0)$ with positive correlation, state 2 at $(0, 0)$ with negative correlation and state 3 at $(10, 10)$ with a much larger variance in $x_1$ than in $x_2$. Because the diagonal of $\Gamma$ is 0.8, the process stays in a state for five steps on average ($1/(1-0.8)$), so consecutive points tend to come from the same cluster, and the path jumps between clusters only occasionally.
+
+**How many parameters would have to be estimated?** Given only the observations, we would need:
+
+-   the transition probabilities: each row of $\Gamma$ has 3 elements that sum to 1, so $3 \times 2 = 6$,
+-   the state means: $3 \times 2 = 6$,
+-   the covariance matrices: each $2 \times 2$ symmetric matrix has 3 free elements, so $3 \times 3 = 9$,
+-   the initial distribution $\boldsymbol{\delta}$: 2 more, unless we assume the chain starts in its stationary distribution.
+
+That is 21 parameters (23 with $\boldsymbol{\delta}$), estimated from 20 bivariate observations (40 numbers). With so few observations the estimates would be very unreliable, and some states might not be visited often enough to estimate their covariance matrices at all.
+
+## Question 2: The Viterbi algorithm by hand
+
+```{r}
+#| label: q2
+
+obs_q2  = c("x", "x", "x", "x", "x", "x", "x", "z", "z", "y")
+true_q2 = c("A", "C", "A", "A", "A", "A", "A", "B", "B", "B")
+
+init = c(0.4, 0.3, 0.3)
+tpm = matrix(c(0.5, 0.3, 0.2, 0.1, 0.6, 0.3, 0.2, 0.2, 0.6), byrow = TRUE, ncol = 3)
+emmprob = matrix(c(0.6, 0.2, 0.2, 0.1, 0.5, 0.4, 0.3, 0.3, 0.4), byrow = TRUE, ncol = 3)
+colnames(emmprob) = c("x", "y", "z")   # observations along columns
+state_names = c("A", "B", "C")
+
+# Emission probabilities for observed words (dens[t, i] = P(x_t | C_t = i)):
+dens_q2 = t(emmprob[, obs_q2])
+
+vit_q2 = hmm_viterbi(dens_q2, init, tpm)
+local_q2 = hmm_local(dens_q2, init, tpm)
+
+q2_tbl = tibble(t = 1:10,
+                Observation = obs_q2,
+                `xi(A)` = vit_q2$xi[, 1], `xi(B)` = vit_q2$xi[, 2], `xi(C)` = vit_q2$xi[, 3],
+                Viterbi = state_names[vit_q2$states],
+                `P(A | x)` = local_q2[, 1], `P(B | x)` = local_q2[, 2], `P(C | x)` = local_q2[, 3],
+                `True state` = true_q2)
+
+kable(q2_tbl, digits = 3)
+```
+
+The Viterbi algorithm fills in $\xi_{ti}$, the log-probability of the most likely path that ends in state $i$ at time $t$ (together with the observations up to $t$):
+
+$$
+\xi_{1i} = \log\delta_i + \log p_i(x_1), \qquad \xi_{tj} = \max_i\left(\xi_{t-1,i} + \log\gamma_{ij}\right) + \log p_j(x_t).
+$$
+
+The most likely final state is the one with the largest $\xi_{Ti}$, and the path is traced back with $S_t = \text{argmax}_i(\xi_{ti} + \log\gamma_{i,S_{t+1}})$. Working on the log scale turns the products into sums and avoids underflow.
+
+The most likely state sequence is **`r paste(state_names[vit_q2$states], collapse = "")`**, which agrees with the true sequence at `r sum(state_names[vit_q2$states] == true_q2)` of the 10 time points. The first seven observations are all "x", which state A emits with probability 0.6 (compared with 0.1 and 0.3 for B and C), and A is persistent, so the algorithm stays in A. The switch to B at time 8 happens because "z" and "y" are much more likely in B (0.4 and 0.5), and B is the most persistent state ($\gamma_{BB} = 0.6$).
+
+The only mistake is at time 2, where the true state is C. A single "x" from C between "x"s from A is impossible to detect: it would need two unlikely transitions (A to C and C to A), and "x" is more likely in A anyway. This illustrates the main limitation of decoding: when the state distributions overlap, short visits to a state cannot be recovered. The local decoding probabilities in the table give the same sequence here, but they also show the uncertainty: $P(A \mid \mathbf{x})$ is only about 0.75 for the first observations, and at time 8 the probabilities for B and C are close.
+
+## Question 3: Probability of three observations from a Poisson HMM
+
+The two-state Poisson HMM has $\Gamma = \begin{pmatrix} 0.1 & 0.9 \\ 0.4 & 0.6 \end{pmatrix}$ and $\boldsymbol{\lambda} = (1, 3)$. Since the HMM is stationary, $\boldsymbol{\delta}$ is the stationary distribution, which solves $\boldsymbol{\delta}\Gamma = \boldsymbol{\delta}$: $\boldsymbol{\delta} = (4/13, 9/13)$.
+
+**a) Summing over all** $2^3 = 8$ state sequences:
+
+$$
+P(X_1 = 0, X_2 = 2, X_3 = 1) = \sum_{c_1, c_2, c_3} \delta_{c_1}\gamma_{c_1c_2}\gamma_{c_2c_3} \, p_{c_1}(0)\,p_{c_2}(2)\,p_{c_3}(1).
+$$
+
+```{r}
+#| label: tbl-q3
+#| tbl-cap: "All eight state sequences for the observations (0, 2, 1): the probability of the state sequence, the probability of the observations given the sequence, and their product."
+
+Gamma_q3 = matrix(c(0.1, 0.9, 0.4, 0.6), nrow = 2, byrow = TRUE)
+lambda_q3 = c(1, 3)
+delta_q3 = stat_dist(Gamma_q3)
+x_q3 = c(0, 2, 1)
+
+paths = expand.grid(C1 = 1:2, C2 = 1:2, C3 = 1:2) |>
+  as_tibble() |>
+  mutate(`P(states)` = delta_q3[C1] * Gamma_q3[cbind(C1, C2)] * Gamma_q3[cbind(C2, C3)],
+         `P(x | states)` = dpois(x_q3[1], lambda_q3[C1]) * dpois(x_q3[2], lambda_q3[C2]) *
+                           dpois(x_q3[3], lambda_q3[C3]),
+         Product = `P(states)` * `P(x | states)`) |>
+  arrange(C1, C2, C3)
+
+kable(paths, digits = 6)
+```
+
+**b) The matrix formula:**
+
+```{r}
+P_q3 = function(x) diag(dpois(x, lambda_q3))
+
+c(delta = delta_q3,
+  sum_over_paths = sum(paths$Product),
+  matrix_formula = as.numeric(delta_q3 %*% P_q3(0) %*% Gamma_q3 %*% P_q3(2) %*%
+                                Gamma_q3 %*% P_q3(1) %*% rep(1, 2)))
+```
+
+Both methods give $P(X_1 = 0, X_2 = 2, X_3 = 1) =$ `r round(sum(paths$Product), 6)`. The matrix formula does the same sum, but by summing over the state at each time point as it goes, instead of listing every sequence. With $m$ states and $T$ observations, listing the sequences takes $m^T$ terms, while the matrix product (the forward algorithm) takes about $Tm^2$ operations. @tbl-q3 also shows that the sequence (1, 2, 2) contributes most: a 0 is most likely from state 1 ($\lambda = 1$), and a 2 and a 1 are reasonably likely from state 2, which the chain also prefers to stay in.
+
+## Question 4: The independent mixture as a special case
+
+If the Markov chain degenerates to a sequence of independent random variables, then $P(C_t = j \mid C_{t-1} = i) = P(C_t = j) = \delta_j$ for every $i$. So every row of $\Gamma$ equals $\boldsymbol{\delta}$, i.e. $\Gamma = \mathbf{1}'\boldsymbol{\delta}$, and $\boldsymbol{\delta}$ is also the initial distribution. Then for any $x$,
+
+$$
+\mathbf{P}(x_{t-1})\Gamma = \mathbf{P}(x_{t-1})\mathbf{1}'\boldsymbol{\delta},
+$$
+
+and therefore every factor can be split off:
+
+$$
+\begin{aligned}
+L_T &= \boldsymbol{\delta}\mathbf{P}(x_1)\Gamma\mathbf{P}(x_2)\Gamma\cdots\Gamma\mathbf{P}(x_T)\mathbf{1}' \\
+&= \boldsymbol{\delta}\mathbf{P}(x_1)\mathbf{1}'\,\boldsymbol{\delta}\mathbf{P}(x_2)\mathbf{1}'\,\boldsymbol{\delta}\cdots\mathbf{1}'\,\boldsymbol{\delta}\mathbf{P}(x_T)\mathbf{1}' \\
+&= \prod_{t=1}^{T}\boldsymbol{\delta}\mathbf{P}(x_t)\mathbf{1}' = \prod_{t=1}^{T}\sum_{i=1}^{m}\delta_i\,p_i(x_t;\theta_i),
+\end{aligned}
+$$
+
+because each $\boldsymbol{\delta}\mathbf{P}(x_t)\mathbf{1}' = \sum_i \delta_i p_i(x_t)$ is a scalar. This is the likelihood of an independent mixture model with mixing weights $\delta_1, \dots, \delta_m$, as required.
+
+```{r}
+# Numerical check with Poisson example from Question 3 (Gamma with identical rows):
+Gamma_ind = rbind(delta_q3, delta_q3)
+c(hmm = hmm_loglik(sapply(lambda_q3, function(l) dpois(x_q3, l)), delta_q3, Gamma_ind),
+  mixture = sum(log(sapply(x_q3, function(x) sum(delta_q3 * dpois(x, lambda_q3))))))
+```
+
+My forward algorithm gives exactly the mixture log-likelihood when the rows of $\Gamma$ are identical.
+
+## Question 5: Building an HMM by inspection
+
+### The first string
+
+```{r}
+#| label: q5-string1
+
+string1 = paste0("AABBBACABBBACAAAAAAAAABBBACAAAAABACAAAAAABBBBAC",
+                 "AAAAAAAAAAAABACABACAABBACAAABBBBACAAABACAAAABAC",
+                 "AABACAAABBACAAAABBBBACABBACAAAAAABACABACAAABACA",
+                 "ABBBACAAAABACABBACA")
+symbols1 = strsplit(string1, "")[[1]]
+table(symbols1)
+
+# Split string at every C and describe each segment:
+segments = strsplit(string1, "C")[[1]]
+head(segments)
+
+# Check every complete segment has form A...A B...B A:
+complete = segments[-length(segments)]
+all(grepl("^A*B+A$", complete))
+
+run_A = nchar(sub("B+A$", "", complete))     # length of run of A's
+run_B = nchar(gsub("[^B]", "", complete))    # length of run of B's
+
+kable(tibble(Run = c("A (before the B's)", "B"),
+             Segments = length(complete),
+             `Total symbols` = c(sum(run_A), sum(run_B)),
+             `Mean run length` = c(mean(run_A), mean(run_B)),
+             `Estimated stay probability` = c((sum(run_A) - length(run_A)) / sum(run_A),
+                                              (sum(run_B) - length(run_B)) / sum(run_B))),
+      digits = 3)
+```
+
+The string has a very regular structure. It always cycles through
+
+$$
+\underbrace{A\cdots A}_{\text{run of A's}}\ \underbrace{B\cdots B}_{\text{run of B's}}\ A\ C,
+$$
+
+followed by the next run of A's (the last segment, a single "A", is the start of a new cycle). C is always preceded and followed by an A, and a run of B's is always followed by exactly one A and then a C. So an "A" behaves differently depending on where it is: after a C, an A can be followed by more A's or by a B, but after a B, an A is always followed by a C. One state for A is therefore not enough, and I propose a **four-state HMM** (@tbl-string1):
+
+| State         | Emits             | Transitions                                              |
+|-------------------|-------------------|----------------------------------|
+| 1: "A-run"    | A (probability 1) | stay in 1 with probability $p_A$, move to 2 with $1-p_A$ |
+| 2: "B-run"    | B (probability 1) | stay in 2 with probability $p_B$, move to 3 with $1-p_B$ |
+| 3: "single A" | A (probability 1) | move to 4 with probability 1                             |
+| 4: "C"        | C (probability 1) | move to 1 with probability 1                             |
+
+: Proposed HMM for the first string. {#tbl-string1}
+
+$$
+\Gamma = \begin{pmatrix} p_A & 1-p_A & 0 & 0 \\ 0 & p_B & 1-p_B & 0 \\ 0 & 0 & 0 & 1 \\ 1 & 0 & 0 & 0 \end{pmatrix}, \qquad
+B = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix} \ \ (\text{columns: A, B, C}), \qquad
+\boldsymbol{\delta} = (1, 0, 0, 0).
+$$
+
+The string starts with a run of A's, so the initial state is 1. The time spent in a state with stay probability $p$ is geometric with mean $1/(1-p)$, so $p$ can be estimated from the run lengths: $\hat{p} = (\text{total symbols} - \text{number of runs})/\text{total symbols}$. This gives $\hat{p}_A =$ `r round((sum(run_A) - length(run_A)) / sum(run_A), 2)` and $\hat{p}_B =$ `r round((sum(run_B) - length(run_B)) / sum(run_B), 2)` (mean runs of `r round(mean(run_A), 1)` A's and `r round(mean(run_B), 1)` B's). In this model the emissions are deterministic, so the "hidden" part is only that two states emit A. It is still an HMM, because A from state 1 and A from state 3 cannot be told apart without the context.
+
+```{r}
+# Simulate string from proposed model to check it looks like the data:
+p_A = (sum(run_A) - length(run_A)) / sum(run_A)
+p_B = (sum(run_B) - length(run_B)) / sum(run_B)
+Gamma_s1 = matrix(c(p_A, 1 - p_A, 0, 0,
+                    0,   p_B, 1 - p_B, 0,
+                    0,   0,   0,   1,
+                    1,   0,   0,   0), nrow = 4, byrow = TRUE)
+emit_s1 = c("A", "B", "A", "C")
+
+state = 1
+sim_string = character(160)
+for (t in 1:160) {
+  sim_string[t] = emit_s1[state]
+  state = sample(1:4, 1, prob = Gamma_s1[state, ])
+}
+paste(sim_string, collapse = "")
+```
+
+The simulated string has the same structure as the observed one.
+
+### The second string
+
+```{r}
+#| label: q5-string2
+
+string2 = "CEFBAFCEFBAFBAFCEFCADCAFBEFCEFBEFBEFCAFCEDCAFBEDCADBAFCAFCEF"
+triplets = substring(string2, seq(1, 58, by = 3), seq(3, 60, by = 3))
+triplets
+
+pos = tibble(first = substr(triplets, 1, 1),
+             second = substr(triplets, 2, 2),
+             third = substr(triplets, 3, 3))
+
+table(pos$first)
+table(pos$second)
+table(pos$third)
+
+# Check if second symbol is related to first:
+table(pos$first, pos$second)
+```
+
+The 60 symbols split into 20 triplets, and each position of a triplet uses its own pair of symbols: the first symbol is always B or C, the second always A or E, and the third always D or F. This is a **three-state HMM with a deterministic cycle**:
+
+$$
+\Gamma = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{pmatrix}, \qquad \boldsymbol{\delta} = (1, 0, 0),
+$$
+
+with emission probabilities estimated from the counts (@tbl-string2):
+
+| State | A                                     | B                                    | C                                    | D                                    | E                                     | F                                    |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| 1     | 0                                     | `r round(mean(pos$first == "B"), 2)` | `r round(mean(pos$first == "C"), 2)` | 0                                    | 0                                     | 0                                    |
+| 2     | `r round(mean(pos$second == "A"), 2)` | 0                                    | 0                                    | 0                                    | `r round(mean(pos$second == "E"), 2)` | 0                                    |
+| 3     | 0                                     | 0                                    | 0                                    | `r round(mean(pos$third == "D"), 2)` | 0                                     | `r round(mean(pos$third == "F"), 2)` |
+
+: Emission probabilities for the second string. {#tbl-string2}
+
+The string starts with C, which only state 1 emits, so $\boldsymbol{\delta} = (1, 0, 0)$. The cross-table of the first and second symbols shows that B and C are each followed by A and E about equally often, so it is reasonable to treat the emissions as independent given the state, which is what an HMM assumes. With only 20 triplets the emission probabilities are rough estimates.
+
+## Question 6: The occasionally dishonest casino
+
+This is the classic example from Durbin et al. (1998). A fair die (state 1) and a loaded die that rolls a six half of the time (state 2) are switched according to $\Gamma = \begin{pmatrix} 0.95 & 0.05 \\ 0.10 & 0.90 \end{pmatrix}$.
+
+```{r}
+#| label: q6
+
+Gamma_cas = matrix(c(0.95, 0.05, 0.10, 0.90), nrow = 2, byrow = TRUE)
+emit_cas = rbind(fair   = rep(1/6, 6),
+                 loaded = c(rep(1/10, 5), 5/10))
+delta_cas = stat_dist(Gamma_cas)
+
+# Simulate 300 rolls:
+n_cas = 300
+die = numeric(n_cas)
+roll = numeric(n_cas)
+for (t in 1:n_cas) {
+  die[t] = if (t == 1) sample(1:2, 1, prob = delta_cas) else sample(1:2, 1, prob = Gamma_cas[die[t - 1], ])
+  roll[t] = sample(1:6, 1, prob = emit_cas[die[t], ])
+}
+
+# Decode with the true parameters:
+dens_cas = t(emit_cas[, roll])
+vit_cas = hmm_viterbi(dens_cas, delta_cas, Gamma_cas)$states
+local_cas = hmm_local(dens_cas, delta_cas, Gamma_cas)
+
+c(stationary_P_loaded = delta_cas[2],
+  share_loaded = mean(die == 2),
+  six_rate_fair = mean(roll[die == 1] == 6),
+  six_rate_loaded = mean(roll[die == 2] == 6),
+  viterbi_accuracy = mean(vit_cas == die),
+  local_accuracy = mean(apply(local_cas, 1, which.max) == die))
+```
+
+```{r}
+#| label: fig-casino
+#| fig-cap: "Three hundred simulated rolls from the occasionally dishonest casino. Top: the rolls, with the periods when the loaded die was used shaded. Bottom: the posterior probability that the loaded die is used (local decoding), with the Viterbi path in pink."
+#| fig-width: 10
+#| fig-height: 6
+
+cas_df = tibble(t = 1:n_cas, roll = roll, loaded = die == 2,
+                p_loaded = local_cas[, 2], viterbi = vit_cas - 1)
+
+shade = cas_df |>
+  filter(loaded) |>
+  transmute(xmin = t - 0.5, xmax = t + 0.5)
+
+p_rolls = ggplot(data = cas_df, mapping = aes(x = t, y = roll)) +
+  geom_rect(data = shade, aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf),
+            inherit.aes = FALSE, fill = "grey85") +
+  geom_point(col = col_main, size = 1) +
+  scale_y_continuous(breaks = 1:6) +
+  labs(title = "Rolls (grey = loaded die).", x = NULL, y = "Roll")
+
+p_decode = ggplot(data = cas_df, mapping = aes(x = t)) +
+  geom_rect(data = shade, aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf),
+            inherit.aes = FALSE, fill = "grey85") +
+  geom_line(aes(y = p_loaded), col = col_main) +
+  geom_step(aes(y = viterbi), col = col_accent) +
+  labs(title = "Decoded state.", x = "Roll", y = "P(loaded | rolls)")
+
+p_rolls / p_decode
+```
+
+The chain spends about a third of the time with the loaded die ($\delta_2 = 1/3$), and in the simulation sixes are much more frequent when the loaded die is used. The Viterbi path recovers the die correctly for `r round(100 * mean(vit_cas == die))`% of the rolls (@fig-casino). Decoding works because the loaded die is used for runs of about 10 rolls ($1/(1-0.9)$), so a cluster of sixes is good evidence of a switch. Short visits to the loaded die are usually missed, and the switches are detected a few rolls late, because a single six is also quite likely from the fair die.
+
+## Question 7: A two-state Bernoulli HMM
+
+With $P(X_t = x \mid C_t = 1) = 0.5$ for $x = 0, 1$ and $P(X_t = 1 \mid C_t = 2) = 1$,
+
+$$
+\mathbf{P}(0) = \begin{pmatrix} 0.5 & 0 \\ 0 & 0 \end{pmatrix}, \qquad \mathbf{P}(1) = \begin{pmatrix} 0.5 & 0 \\ 0 & 1 \end{pmatrix}.
+$$
+
+```{r}
+#| label: q7
+
+Gamma_q7 = matrix(c(0.5, 0.5, 0.25, 0.75), nrow = 2, byrow = TRUE)
+delta_q7 = c(1, 2) / 3
+p1_q7 = c(0.5, 1)                         # P(X = 1 | C = i)
+
+P_q7 = function(x) diag(if (x == 1) p1_q7 else 1 - p1_q7)
+
+# Likelihood with the matrix product:
+bern_hmm_lik = function(x, delta, Gamma) {
+  L = delta %*% P_q7(x[1])
+  for (t in seq_along(x)[-1]) L = L %*% Gamma %*% P_q7(x[t])
+  as.numeric(L %*% rep(1, length(delta)))
+}
+
+c(check_stationary = stat_dist(Gamma_q7),
+  P_X_equals_0 = as.numeric(delta_q7 %*% P_q7(0) %*% rep(1, 2)),
+  P_X_equals_1 = as.numeric(delta_q7 %*% P_q7(1) %*% rep(1, 2)),
+  L_111 = bern_hmm_lik(c(1, 1, 1), delta_q7, Gamma_q7),
+  `29/48` = 29 / 48,
+  L_111_forward = exp(hmm_loglik(t(sapply(c(1, 1, 1), function(x) diag(P_q7(x)))), delta_q7, Gamma_q7)))
+```
+
+The stationary distribution is $\boldsymbol{\delta} = \frac{1}{3}(1, 2)$, so marginally $P(X_t = 0) = \frac{1}{3}(0.5) = 1/6$ and $P(X_t = 1) = 5/6$. The likelihood of three 1's is $\boldsymbol{\delta}\mathbf{P}(1)\Gamma\mathbf{P}(1)\Gamma\mathbf{P}(1)\mathbf{1}' = 29/48 \approx 0.604$, which both my matrix-product function and my forward algorithm reproduce. This is larger than $(5/6)^3 \approx 0.579$, the value if the observations were independent, because a 1 makes state 2 more likely, and state 2 is persistent and always emits 1.
+
+## References
+
+-   Durbin, R., Eddy, S. R., Krogh, A., & Mitchison, G. (1998). *Biological sequence analysis: Probabilistic models of proteins and nucleic acids*. Cambridge University Press.
+-   Zucchini, W., MacDonald, I. L., & Langrock, R. (2016). *Hidden Markov models for time series: An introduction using R* (2nd ed.). CRC Press.

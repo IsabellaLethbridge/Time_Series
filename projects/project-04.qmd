@@ -3,22 +3,39 @@ format: html
 editor: visual
 ---
 
--   **Section & Topic:**\[cite: 1\]
--   **Project Type:** (Implementation / Shiny App / Exploration / Simulation)\[cite: 1\]
--   **Question / Aim:**\[cite: 1\]
--   **Data Used:** (Include source details if real-world data)\[cite: 1\]
--   **Methods Used:**\[cite: 1\]
+# Hidden Markov models: from first principles to market regimes on the JSE
 
-## Key Findings
+**Section and topic:** Section 2 - Hidden Markov models (likelihood, forward and backward probabilities, local and global decoding, forecasting).
 
-<!-- Summary of findings -->
+**Type of project:** Implementation (all core HMM algorithms coded from first principles and checked against `depmixS4`), extended to model comparison on real-world data, with an interactive Shiny app.
 
-\[cite: 1\]
+**Aim:** To implement the HMM algorithms from first principles, validate them on the tutorial's earthquake data. Use the HMM algorithms to determine whether daily JSE All Share Index returns can be described by a small number of market regimes, when these regimes occurred, and whether a Gaussian HMM forecasts the distribution of returns as well as the GJR-GARCH model from Project 3.
 
-## Reflections
+**Data used:**
 
--   **What I would do differently next time:**\[cite: 1\]
+-   Annual counts of major earthquakes (magnitude 7 and above), 1900--2006. Source: Zucchini, MacDonald and Langrock (2016), as in the course notes and tutorial.
+-   Daily FTSE/JSE All Share total return index (J203), 30 June 1995 to 3 February 2017. Source: Gebbie, T. (2020), *Daily Sampled South African Market Index Data 1994--2017*, University of Cape Town, <https://doi.org/10.25375/uct.11302325.v1>.
 
-## Links
+Daily log returns (%) were modelled, with July 1995 to December 2012 as the training set and January 2013 to February 2017 as the test set (as in Project 3). Download instructions are in the detailed analysis and the [code and data appendix](../appendix/code-and-data.qmd).
 
--   [Detailed Analysis & Code Script](../appendix/code-and-data.qmd)\[cite: 1\]
+**Methods used:** I implemented the main HMM algorithms from first principles: the scaled forward and backward algorithms, local decoding, the Viterbi algorithm, the stationary distribution and forecast distributions. Parameters were estimated by numerically maximising the likelihood with `nlm()` and `optim()` on unconstrained working parameters. The implementation was validated against `depmixS4` using Poisson HMMs for the earthquake counts; the remaining tutorial questions are in the [Hidden Markov Models section of Section 2](../section-2/section-2.qmd#hidden-markov-models).
+
+For the JSE returns, Gaussian HMMs with one to four states were fitted from several sets of starting values and compared using AIC and BIC. The selected model was assessed with normal pseudo-residuals, decoded with the Viterbi algorithm and local decoding, and given approximate standard errors using the Hessian and the delta method. It was then compared with GJR-GARCH(1,1)-$t$ using filtered volatility and one-step-ahead log scores on the test set, with a Newey-West test of equal predictive ability. A Shiny app presents the fitted regimes interactively.
+
+**Key findings:**
+
+-   My likelihood code reproduced the `depmixS4` log-likelihoods for the earthquake data exactly (−341.88 and −328.53), but only once the initial distribution was estimated freely, as `depmixS4` does. A three-state Poisson HMM (about 13, 20 and 30 earthquakes per year) is selected by both AIC and BIC.
+-   For JSE returns, BIC selects four regimes, although three regimes already remove the heavy tails and the volatility clustering from the pseudo-residuals. The regimes range from a calm market (annualised volatility of about 8%) to a crisis regime (about 45%) with a negative mean return, which lasts about 20 trading days on average and is entered gradually through the intermediate regimes.
+-   The crisis regime picks out the 1998 emerging market crisis andmthe 2008--2009 global financial crisis. The HMM's real-time (filtered) volatility is strongly correlated with the GJR-GARCH volatility.
+-   With its default starting values, `depmixS4` stopped at a one-state solution for the JSE data, so I refitted it with starting values for a calm and a turbulent state. This showed how easily an optimiser can stop at the wrong point.
+-   Out of sample, GJR-GARCH-$t$ forecasts the next day's return distribution significantly better than every HMM (log score −1.317 compared with −1.326 for the best HMM). HMMs are useful for *describing* market regimes, while GARCH remains better for *forecasting* risk.
+
+**What I would do differently next time:**
+
+-   Use a parametric bootstrap instead of the delta method for confidence intervals, especially for the expected durations of the regimes.
+-   Use Student-$t$ state distributions with an AR(1) mean in each regime, or a Markov-switching GARCH model, to combine the interpretability of regimes with the responsiveness of GARCH.
+-   Apply the same regime-switching approach to El Niño, La Niña and neutral phases in the Project 2 sea surface temperature data.
+
+**Link to the detailed analysis:** [Detailed analysis and code](project-04-analysis.qmd)
+
+**Interactive app:** [JSE regime explorer](https://isabellalethbridge.shinyapps.io/shiny-app/) (opens on shinyapps.io; it can take a few seconds to wake up). Code: `scripts/shiny-app/` (see the [code and data appendix](../appendix/code-and-data.qmd)).
