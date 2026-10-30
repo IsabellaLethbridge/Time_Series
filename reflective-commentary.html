@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lagged &amp; Loaded – reflective-commentary</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Lagged &amp; Loaded</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./reflective-commentary.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Reflective Commentary</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ai-use-log.html" rel="" target="">
+ <span class="menu-text">AI Use Log</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sections" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Sections</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sections">    
+        <li>
+    <a class="dropdown-item" href="./section-1/section-1.html" rel="" target="">
+ <span class="dropdown-text">Section 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./section-2/section-2.html" rel="" target="">
+ <span class="dropdown-text">Section 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="./projects/index.html" rel="" target="">
+ <span class="dropdown-text">Projects Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-01.html" rel="" target="">
+ <span class="dropdown-text">Project 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-02.html" rel="" target="">
+ <span class="dropdown-text">Project 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-03.html" rel="" target="">
+ <span class="dropdown-text">Project 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./projects/project-04.html" rel="" target="">
+ <span class="dropdown-text">Project 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./journal/entries.html" rel="" target="">
+ <span class="menu-text">Journal</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-appendix" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Appendix</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-appendix">    
+        <li>
+    <a class="dropdown-item" href="./appendix/code-and-data.html" rel="" target="">
+ <span class="dropdown-text">Code &amp; Data</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/IsabellaLethbridge/Time_Series" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-achievements" id="toc-learning-achievements" class="nav-link active" data-scroll-target="#learning-achievements">Learning Achievements</a></li>
+  <li><a href="#methodological-challenges" id="toc-methodological-challenges" class="nav-link" data-scroll-target="#methodological-challenges">Methodological Challenges</a></li>
+  <li><a href="#ethical-and-reproducibility-considerations" id="toc-ethical-and-reproducibility-considerations" class="nav-link" data-scroll-target="#ethical-and-reproducibility-considerations">Ethical and Reproducibility Considerations</a></li>
+  <li><a href="#future-areas-for-development" id="toc-future-areas-for-development" class="nav-link" data-scroll-target="#future-areas-for-development">Future Areas for Development</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="learning-achievements" class="level2">
+<h2 class="anchored" data-anchor-id="learning-achievements">Learning Achievements</h2>
+<p>When I signed up for Time Series Analysis, I had never worked with time series data. I understood, conceptually, that today’s observation can depend on yesterday’s but I didn’t know how to model this. Sulaiman’s section answered my questions, one model at a time. The first clarifying moment was distinguishing between autoregressive (AR) and moving average (MA) terms. An AR process carries the influence of its own past forward, meaning that the effects of a shock can persist. Whereas, an MA process depends on a finite number of past shocks, that only influence observations for a fixed time period. Almost every series I worked with had some sort of seasonal pattern that became visually apparent when decomposing the series into it’s seasonality, trend and residuals, so naturally this lead us to SARIMA models.</p>
+<p>In Portfolio Theory, the assignments were based on Johannesburg Stock Exchange data, and many of the methods we implemented assumed that the variance was constant. This was not the case, and the conditional variance models section, in Time Series, offered an explanation as to why. Volatility clustering describes how periods of high volatility tend to follow periods of high volatility and periods of calm tend to follow periods of calm. ARCH and GARCH models were a new way to account for this in the data.</p>
+<p>I thought that I’d left trigonometry behind in high school, but sine and cosine terms made an unexpected return in spectral analysis. Representing a time series as a combination of waves provided me with a new perspective on patterns that I’d been viewing through the time domain only. A seasonal pattern could now be described by the sum of Fourier terms.</p>
+<p>With Section 1 done and dusted, Birgit’s section started connecting these different ideas. State-space models represent a time series through two equations: an observation equation which describes what is observed and a state equation which describes the evolution of an underlying, unobserved state. What initially appeared to be a completely different modelling framework started connecting methods I’d previously regarded as separate. Exponential smoothing had initially seemed like an intuitive way of calculating weighted averages but expressing it in state-space form cemented the statistical formulation, which allowed me to calculate prediction intervals.</p>
+<p>The Kalman filter tied my whole semester together. I’m taking Portfolio Theory, Time Series Analysis and Bayesian Computational Methods. I had expected the concepts covered in these respective courses to remain fairly distinguishable but the Kalman filter changed that. Its recursive updating procedure was familiar from Bayesian statistics. The prediction step provides the prior distribution, the new observation contributes to the likelihood and the resulting posterior becomes the prior at the next iteration. In Bayes, we’d constructed MCMC algorithms and now these were applicable in Time Series. Implementing this filter in Stan made this connection even more tangible and it was rewarding to see concepts, from courses I thought were unrelated, come together in a single modelling framework.</p>
+<p>I revisited the Portfolio Theory data in the Hidden Markov Models (HMM) section, but with a different perspective on market behaviour. GARCH models provided a framework for describing how conditional volatility evolves, but they do not explicitly identify distinct market regimes or describe how long the market might remain in a particular state. HMMs approach this differently by treating the market as switching between unobserved regimes representing different levels of market volatility. In Project 4, the regime-switching model did not outperform GARCH in volatility forecasting, but it provided a different type of insight into the market. While GARCH produced stronger volatility forecasts, the HMM offered an interpretable account of when market conditions changed and how persistent the different regimes were.</p>
+<p>Not only did I learn a new way of modelling sequential data, I also learnt new ways in which to analyse the outcomes: the Diebold–Mariano test for assessing whether differences in predictive accuracy are statistically meaningful, and the QLIKE loss function for evaluating volatility forecasts. Finally, this course tied together concepts that initially seemed disconnected and provided me with a more rounded view on sequential data. At the start of the semester I knew that past observations may influence the future, but now not only do I know how to model, analyse and forecast that relationship, I also know that I will probably never escape sine and cosine functions.</p>
+</section>
+<section id="methodological-challenges" class="level2">
+<h2 class="anchored" data-anchor-id="methodological-challenges">Methodological Challenges</h2>
+<p>Real data, I discovered, has not read the textbook.</p>
+<p>In Project 2, sea surface temperature and Theewaterskloof Dam levels appeared strongly related. This looked promising until I realised that much of the apparent relationship was due to the two seasonal series being out of phase. Prewhitening before computing the cross-correlation substantially changed the interpretation and showed me how easily autocorrelation and shared seasonality can manufacture an apparently meaningful relationship. Including SST in a dynamic regression also did not improve forecasts over the univariate model. Another challenge arose because the TAO/TRITON buoys contained missing observations, meaning that the set of buoys contributing to the average SST changed over time. This had to be accounted for before interpreting the series, since changes in which buoys were reporting could otherwise create artificial changes in the calculated SST.</p>
+<p>Electricity demand provided a clear lesson in how inconvenient real-world time series can be. Demand fell drastically during the 2020 COVID-19 lockdown and recovered slowly afterwards. Fitting a model to the entire series would have treated fundamentally different periods as though they were generated by the same underlying process, potentially leading to inaccurate forecasts. A Bai–Perron structural break test helped identify the disruption, but there was uncertainty around the appropriate end date. I therefore started the modelling period in March 2021, tying the statistical evidence to South Africa’s move to alert level 1. I also attempted to include an annual adjustment, which improved performance on the test set but worsened it on the validation set. Keeping it would have meant allowing knowledge of the out-of-sample test data to influence model selection, so the adjustment was not retained.</p>
+<p>The JSE returns in Project 3 highlighted the limitations of standard modelling assumptions. The returns themselves were only weakly autocorrelated, but their squared residuals showed strong ARCH effects. The distributional assumption also mattered more than I had anticipated. Gaussian models performed worse in the presence of heavy tails, whereas Student-(t) innovations were better able to accommodate extreme returns. The asymmetry captured by GJR-GARCH further complicated the analysis, since negative shocks increased the following day’s variance substantially more than positive shocks of the same magnitude. This reinforced the lesson that, although modelling assumptions may be mathematically convenient, they still need to be defensible in real-world data.</p>
+<p>In the Hidden Markov Models project, <code>depmixS4</code>, using its default starting values, converged to what was effectively a one-state solution for the JSE data. After refitting the model using alternative starting values, I obtained substantially better solutions. This highlighted the importance of using multiple random starts in optimisation problems, particularly when the likelihood may contain several local optima. A model converging successfully does not necessarily mean that it has converged to the best available solution.</p>
+<p>Uncertainty created a different challenge across several projects. In Project 1, the model-based prediction intervals were wider than their nominal coverage required because a smoothing parameter close to one caused uncertainty to accumulate almost like a random walk. Unusually large holiday residuals also inflated the estimated variance. In Project 2, however, residual autocorrelation suggested that the dam model’s prediction intervals were too narrow, while its long-horizon forecasts eventually produced intervals extending beyond the physically possible bounds for dam capacity. In Project 4, standard errors obtained using the Hessian and delta method were only approximate. Together, these examples emphasised that uncertainty is not simply an extra quantity reported alongside a forecast. How uncertainty is estimated, and which sources of uncertainty are omitted, can materially change the conclusions drawn from a model.</p>
+</section>
+<section id="ethical-and-reproducibility-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="ethical-and-reproducibility-considerations">Ethical and Reproducibility Considerations</h2>
+<p>None of the datasets I used contained personal information. Eskom electricity demand, City of Cape Town dam levels, NOAA buoy temperatures, JSE index prices and earthquake counts are all aggregate or publicly available datasets, so issues such as consent, anonymisation and POPIA compliance were not central to the analysis. The more relevant ethical considerations concerned how the results were interpreted and communicated. Dam levels and electricity demand are linked to decisions around water restrictions and load shedding, both of which have real consequences. Presenting a point forecast without its uncertainty, or overstating a weak relationship between El Niño and dam levels, could therefore create a misleading impression of certainty. For this reason, I reported prediction intervals and coverage alongside point forecasts and was careful to distinguish association from causation. Similarly, a VaR model that performs well over one evaluation period should not automatically be treated as reliable under all market conditions, particularly during periods of financial stress. I also documented data-cleaning decisions, including duplicated dam observations and changing buoy coverage, so that the analysis remained transparent.</p>
+<p>The portfolio was developed as a Quarto project under version control with Git. Each analysis uses a fixed random seed where required, saves its results, and allows the summary pages to read numerical outputs directly from those saved objects using inline R. This became increasingly important as the projects evolved. In earlier drafts, I occasionally found that the written interpretation no longer matched the tables after changing a model or specification. Linking the reported values directly to the analysis reduced the risk of this happening. Shared code, such as the HMM functions, was also kept in a common script rather than duplicated across projects. The Shiny application was deployed through shinyapps.io, while the appendix records data sources, access dates and the required rendering order. Freezing computationally expensive analyses also made the project substantially easier to manage.</p>
+<p>I used Claude (Anthropic) to assist with selected aspects of the portfolio. It was mainly used to debug code, translate my pseudocode into R, explain statistical concepts I did not yet fully understand, clarify how particular functions or packages should be implemented, and verify my interpretation of model output. I also used it periodically to check my projects against the portfolio guidelines and ensure that I remained on track. In addition, it assisted with plotting, table formatting, LaTeX equations, Quarto presentation, development of the Shiny application and the creation of interactive HTML revision material.</p>
+<p>The most important distinction for me was between using AI to accelerate the work and using it to replace the statistical reasoning behind the work. AI allowed me to move more quickly through coding, formatting and debugging, but the resulting output still had to be checked carefully against the underlying theory and the behaviour of the data. In several cases, an answer that initially appeared convincing turned out to be incorrect once I examined the implementation or model output more closely. I therefore treated AI-generated code and explanations as suggestions rather than final answers, and I independently ran, checked and interpreted the model implementations and outputs.</p>
+<p>AI can make analysis faster, but it does not remove the responsibility to understand it. Used carefully, it was valuable for improving efficiency, clarifying concepts and reducing the time spent on technical formatting. It was a tool that supported the development of the portfolio rather than a substitute for doing the portfolio itself.</p>
+</section>
+<section id="future-areas-for-development" class="level2">
+<h2 class="anchored" data-anchor-id="future-areas-for-development">Future Areas for Development</h2>
+<p>Projects 3 and 4 analysed the same JSE returns from two different perspectives: GARCH treated volatility as continuously evolving, while the HMM represented market behaviour through discrete regimes. A natural extension would be a Markov-switching GARCH model that combines both ideas. Project 2 also left room for development. I would like to replace the incomplete buoy-based SST measure with a gap-free ENSO index and include more directly relevant predictors such as rainfall and water use. Since dam capacity is physically bounded between 0% and 100%, I would also explore models that respect these limits. Finally, I would like to improve how uncertainty is represented. Bootstrap or Bayesian intervals could incorporate parameter uncertainty rather than treating fitted parameters as fixed. I would also like to spend more time on spectral analysis, which I enjoyed but applied less extensively.</p>
+<p>In July, I was mainly learning how the methods worked. By October, I was questioning assumptions, comparing alternatives and asking whether the output actually made sense. That shift, from fitting models to critically evaluating them, is what I would most like to carry forward.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

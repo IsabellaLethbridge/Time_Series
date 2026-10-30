@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lagged &amp; Loaded – entries</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Lagged &amp; Loaded</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reflective-commentary.html" rel="" target="">
+ <span class="menu-text">Reflective Commentary</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../ai-use-log.html" rel="" target="">
+ <span class="menu-text">AI Use Log</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sections" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Sections</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sections">    
+        <li>
+    <a class="dropdown-item" href="../section-1/section-1.html" rel="" target="">
+ <span class="dropdown-text">Section 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../section-2/section-2.html" rel="" target="">
+ <span class="dropdown-text">Section 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="../projects/index.html" rel="" target="">
+ <span class="dropdown-text">Projects Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-01.html" rel="" target="">
+ <span class="dropdown-text">Project 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-02.html" rel="" target="">
+ <span class="dropdown-text">Project 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-03.html" rel="" target="">
+ <span class="dropdown-text">Project 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/project-04.html" rel="" target="">
+ <span class="dropdown-text">Project 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="../journal/entries.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Journal</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-appendix" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Appendix</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-appendix">    
+        <li>
+    <a class="dropdown-item" href="../appendix/code-and-data.html" rel="" target="">
+ <span class="dropdown-text">Code &amp; Data</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/IsabellaLethbridge/Time_Series" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="learning-journal" class="level1 unlisted">
+<h1 class="unlisted">Learning Journal</h1>
+<p>This journal documents my learning progress throughout the course, one entry per lecture: what I did, what I learned, and the questions I still had. My use of AI tools is recorded separately in the <a href="../ai-use-log.html">AI Use Log</a>.</p>
+<section id="lecture-1" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-1">Lecture 1</h2>
+<p><strong>Date:</strong> 27 July 2026</p>
+<p><strong>Topic covered:</strong> Foundations</p>
+<p><strong>What I Did:</strong></p>
+<p>Plotted time series plots for discrete and continuous time series data: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>A time series is an ordered sequence of observations collected over time. The ordering matters since observations are often dependent on previous observations (sequential correlation).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Equally spaced measurements.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Autocorrelation across time.</p>
+</div>
+</div>
+<p>A time series is a <em>single</em> measurement taken at multiple points through time to give a series of measurements through time.</p>
+<p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: How does noise introduce different realisations?</p>
+<p>A: In normal regression the pattern is fixed and the noise sits on top of it:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_i + e_i,
+\]</span> where each error term is independent.</p>
+<p>In an AR process the noise actually builds the pattern. This means that every apparent trend is made of past shocks that haven’t died away yet. A different set of shocks will give a different shape because the shape of the path comes from noise. It isn’t that time series errors are correlated but that each observation is a weighted sum of every past shock making observations correlated.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="fu">plot</span>(<span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.9</span>), <span class="at">n =</span> <span class="dv">100</span>), <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Realisation"</span>, i), <span class="at">ylab =</span> <span class="st">"y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="entries_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>What to Do Next:</strong></p>
+<p>The Forecasting Problem</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-2" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-2">Lecture 2</h2>
+<p><strong>Date:</strong> 3 August 2026</p>
+<p><strong>Topic covered:</strong> The Forecasting Problem</p>
+<p><strong>What I Did:</strong></p>
+<p>Looked at stationary AR processes: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>A forecast horizon is how far into the future you try to predict values. When looking at time series data we are looking for stable, informative patterns (not just a lot of data).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Forecasting vs Goal setting vs Planning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A forecast is a prediction about what will happen in the future based on evidence that we have (with some uncertainty). Goal setting is what we want to happen in the future and planning is how we reach our goal.</p>
+</div>
+</div>
+<p>The uncertainty associated with forecasting gives rise to forecast intervals (not just point estimates).</p>
+<p>A random walk is a process where memory is permanent. Every future shock accumulates endlessly resulting in forecast variance growing linearly. A stationary AR is a process where memory decays geometrically. Shocks die out, forcing the forecast back to the process mean.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: If a process changes over time, at what point can we discard previous observations when forecasting?</p>
+<p>A: This is decided by the model and is called the model’s memory. A mean benchmark will use every observation and just forecast the mean, the naive benchmark will use the most recent observation, exponential smoothing uses all observations but weights them differently (older observations are given less weight). You would also discard observations if a structural break occurs.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When determining the number of observations to estimate the model (training set) more is usually better, unless the process has changed.</p>
+</div>
+</div>
+<p><strong>What to Do Next:</strong></p>
+<p>Exploring a Series</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-3" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-3">Lecture 3</h2>
+<p><strong>Date:</strong> 17 August 2026</p>
+<p><strong>Topics covered:</strong> Exploring a Series, Benchmarks and Forecast Accuracy</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Time domain looks at previous observations whereas the frequency domain looks at cycles at different frequencies. Often you will need to look at both of these domains.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Trend vs Seasonality vs Cycles
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A trend is the long-run direction of movement in a time series. Seasonality models a pattern that repeats itself at a fixed AND known interval. A cycle is a long oscillation where the length is NOT fixed.</p>
+</div>
+</div>
+<p>When dealing with time series data you may encounter changing variability. Here you need to transform the data to stabilise variance and difference to remove trend and seasonality. When structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.</p>
+<p>There are 4 benchmark forecasting models: Mean, Naive, Seasonal naive and Drift.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Residuals are not forecast errors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Residuals are for diagnostics; forecast errors are for evaluation!</p>
+</div>
+</div>
+<p>You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: How do you identify a significant structural break?</p>
+<p>A: This can be done using formal tests, dependent on whether the date of the break is known prior to looking at the data. If the date is known in advance (e.g.&nbsp;a policy change), you can use Chow’s test. Chow’s test fits the model before and after the date of the break and uses an F-test to check if there is a statistically significant difference in model parameters. If the date is unknown you can run a Chow test at every possible date and take the largest F, compared against adjusted critical values. This is a sup-F test and accounts for having searched over every date, making it harder to declare a break.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Operators, Stationarity and White Noise</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-4" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-4">Lecture 4</h2>
+<p><strong>Date:</strong> 19 August 2026</p>
+<p><strong>Topic covered:</strong> Three Validation Strategies, Linear Models for the Conditional Mean</p>
+<p><strong>What I Did:</strong></p>
+<p>Continued working through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Since you can’t perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observation while moving the forecast origin forward. Sliding window validation keeps the training window length fixed while moving the forecast origin forward.</p>
+<p>Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.</p>
+<p>We want our data to be stationary and for the residuals to be white noise. To restore stationarity you can transform the data to stabilise the variance and take linear/seasonal differences to remove trend and seasonality. Log-transformations reduce a multiplicative model to an additive model.</p>
+<p>Weak white noise requires uncorrelated observations with zero mean and constant variance but strict white noise requires <em>iid</em> observations.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: What is the difference between walk-forward and expanding window?</p>
+<p>A: In the notes they are the same procedure: the training set always starts at <span class="math inline">\(y_1\)</span> and grows by one observation each time the forecast origin moves forward. “Walk-forward” describes how the origin moves and “expanding window” describes what is kept. The slides list them as separate strategies, but note that they use the same growth rule. The difference is that walk-forward re-estimates the model at every step, so it has a higher computational cost. The real contrast is with the sliding window, which drops the oldest observation at each step.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Conditional Variance Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-5" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-5">Lecture 5</h2>
+<p><strong>Date:</strong> 24 August 2026</p>
+<p><strong>Topic covered:</strong> Linear Models for the Conditional Mean</p>
+<p><strong>What I Did:</strong></p>
+<p>Fit both ARIMA and SARIMA to the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>The moving average, MA(<span class="math inline">\(q\)</span>), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. An MA(<span class="math inline">\(q\)</span>) is always stationary and is restricted to be invertible.</p>
+<p>The autoregressive, AR(<span class="math inline">\(p\)</span>), model regresses a series on its own path.</p>
+<p>ARMA combines both MA and AR models and is fitted by maximum likelihood, not OLS, since the past shocks are never observed.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ACF and PACF graphs are used to determine which ARMA model to fit. An AR(<span class="math inline">\(p\)</span>) has a PACF that cuts off after lag <span class="math inline">\(p\)</span>. An MA(<span class="math inline">\(q\)</span>) has an ACF that cuts off after lag <span class="math inline">\(q\)</span>.</p>
+</div>
+</div>
+<p>The ARIMA(<span class="math inline">\(p,d,q\)</span>) model allows for differencing and the SARIMA model includes seasonality.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: How can you determine if there is additional seasonality in a dataset after differencing or if it is just noise? For example in <a href="../section-1/section-1.html">Section 1</a>, there were still spikes at some lags in the PACF after log-transforming and differencing the <code>AirPassengers</code> dataset.</p>
+<p>A: You can check if the residuals look like white noise by using a Ljung-Box test. A non-significant test means that there is no evidence of remaining autocorrelation (even if there are still a few lags that spike in the ACF/PACF). At the 5% level about 1 in 20 lags will spike by chance.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Conditional Variance Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-6" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-6">Lecture 6</h2>
+<p><strong>Date:</strong> 31 August 2026</p>
+<p><strong>Topic covered:</strong> Time Series Analysis Revision</p>
+<p><strong>What I Did:</strong></p>
+<p>Finished working through <em>Time Series Analysis in R</em>: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a <code>tsibble()</code>, time series plots, seasonal and subseries plots, lag plots, autocorrelation functions, time series models, stationarity, differencing and unit root tests.</p>
+<p><strong>Questions:</strong></p>
+<p>No new questions :)</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Conditional Variance Models, Spectral Analysis</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="additional-lecture-with-sulaiman" class="level2">
+<h2 class="anchored" data-anchor-id="additional-lecture-with-sulaiman">Additional Lecture with Sulaiman</h2>
+<p><strong>Date:</strong> 16 September 2026</p>
+<p><strong>Topic covered:</strong> Conditional Variance Models (ARCH and GARCH)</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through the provided Lab: <a href="../section-1/section-1.html">Section 1</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>All previous models have simply modelled the conditional mean and assumed constant variance. This fails for financial return data as it understates risk during periods where risk is highest and overstates risk when it is lowest. We now have both a mean (predictable component of the series) and a variance (conditional variance) equation.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A series can be uncorrelated and still highly predictable in magnitude.</p>
+</div>
+</div>
+<p>The ARCH model specifies conditional variance as a function of past squared innovations. The simplest case being <span class="math inline">\(\sigma^2_t = \alpha_0 + \alpha_1 \varepsilon_{t-1}^2\)</span>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Volatility clustering
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Large changes tend to follow large changes and small changes tend to follow small changes. Returns are often uncorrelated, hence why the ACF of returns indicates very little, however squared returns can be strongly autocorrelated.</p>
+</div>
+</div>
+<p>The GARCH model adds the previous conditional variance to the ARCH equation. This makes it equivalent to an ARCH model with infinite memory. A GARCH(1,1) model is usually sufficient in practice.</p>
+<p><span class="math display">\[
+\sigma_t^2 = \alpha_0 + \alpha_1 \varepsilon_{t-1}^2 + \beta_1 \sigma_{t-1}^2,
+\]</span> where <span class="math inline">\(\alpha_1\)</span> measures how strongly volatility reacts to a new shock, <span class="math inline">\(\beta_1\)</span> measures how long that reaction lasts, <span class="math inline">\(\alpha_1 + \beta_1\)</span> is the persistence.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: Why must <span class="math inline">\(\alpha_1 + \beta_1 &lt; 1\)</span>?</p>
+<p>A: When <span class="math inline">\(\alpha_1 + \beta_1 &lt; 1\)</span> this ensures that the long-run variance is <span class="math inline">\(\bar{\sigma}^2 = \frac{\alpha_0}{1- \alpha_1 - \beta_1}\)</span> and that the process has a benchmark variance for the volatility to return to. When <span class="math inline">\(\alpha_1 + \beta_1 = 1\)</span> (IGARCH) the shocks to volatility are permanent. This means that all the weight is on the past and none is on the long-run level. This is the variance equivalent of a random walk.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Spectral Analysis</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-7" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-7">Lecture 7</h2>
+<p><strong>Date:</strong> 14 September 2026</p>
+<p><strong>Topic covered:</strong> Exponential Smoothing</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through <em>Exponential Smoothing Exercises</em>: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Exponential smoothing forecasts are weighted averages of past observations. Weights decrease exponentially the further back in time you go. The smoothing parameter <span class="math inline">\(\alpha\)</span> adjusts the weight put on past observations. A large <span class="math inline">\(\alpha\)</span> puts a lot of weight on the most recent observation, similar to the Naive forecast. A small <span class="math inline">\(\alpha\)</span> averages over a long history, similar to the Mean forecast. This is similar to GARCH but applied to observations instead of squared shocks.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+SES vs Holt vs Holt-Winters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Simple exponential smoothing (SES) only updates a level resulting in flat forecasts. Holt’s method adds a trend equation, that describes the slope, so forecasts follow a straight line. Holt-Winters adds a seasonal equation. Each component gets its own smoothing parameter (<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>).</p>
+</div>
+</div>
+<p>The smoothing parameters and initial states (<span class="math inline">\(\ell_0\)</span>, <span class="math inline">\(b_0\)</span>) are estimated by minimising the sum of squared one-step-ahead errors. Fitted values are one-step-ahead forecasts, so residuals are always one-step-ahead errors.</p>
+<p>To turn the exponential smoothing algorithm into a state-space model we can write it in error-correction form: <span class="math inline">\(y_t = \ell_{t-1} + e_t\)</span>, <span class="math inline">\(\ell_t = \ell_{t-1} + \alpha e_t\)</span>. This allows us to estimate <span class="math inline">\(\sigma\)</span> and build prediction intervals.</p>
+<p>This is what <code>ets()</code> does.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prediction intervals are usually too narrow
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Standard prediction intervals only capture the random error and ignore the uncertainty in parameter estimates and choice of model.</p>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: How do we get variances of SES forecasts (<span class="math inline">\(\sigma^2[1+\alpha^2(h-1)]\)</span>) if the point forecasts are flat?</p>
+<p>A: The point forecast stays at <span class="math inline">\(\ell_T\)</span>, but every future error also moves the level by <span class="math inline">\(\alpha e_t\)</span>. These shifts add up, so uncertainty grows linearly with <span class="math inline">\(h\)</span> even though the mean does not change.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Time Series Regression Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-8" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-8">Lecture 8</h2>
+<p><strong>Date:</strong> 21 September 2026</p>
+<p><strong>Topic covered:</strong> Time Series Regression Models</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through <em>Chapter 2: Time Series Regression Models</em> and the provided slides, rerunning the R code that had been included. Used a Kalman filter to estimate regression coefficients in the US consumption example: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Time Series Regression includes explanatory variables in time series models. This allows one to include trend and seasonality covariates in the model instead of just differencing the series to make it stationary.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+ARMAX vs regression with ARMA errors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ARMAX includes lagged values of the response as predictors, <span class="math inline">\(y_t = \beta x_t + \phi y_{t-1} + \dots\)</span>. This means that <span class="math inline">\(\beta\)</span> can no longer be interpreted as the effect of <span class="math inline">\(x\)</span> on the mean of <span class="math inline">\(y\)</span>. Regression with ARMA errors keeps the normal regression equation and lets the errors follow an ARMA process, <span class="math inline">\(y_t = \beta_0 + \beta_1 x_t + \eta_t\)</span>, where <span class="math inline">\(\eta_t\)</span> follows an ARMA process. This means that <span class="math inline">\(\beta_1\)</span> can still be interpreted in the usual way.</p>
+</div>
+</div>
+<p>Harmonic regression assumes that the seasonal pattern stays the same over time.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Autocorrelated errors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When errors are autocorrelated, OLS still gives unbiased estimates but they are no longer efficient. The usual standard errors are also wrong, so tests and intervals are too optimistic.</p>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: When should I add a lagged response instead of modelling the errors as ARMA?</p>
+<p>A: It depends on whether the dependence is part of the process or a nuisance. If <span class="math inline">\(y\)</span> depends on its own past (e.g.&nbsp;a stock that accumulates), a lagged response makes sense, but then <span class="math inline">\(\beta_1\)</span> is only the immediate effect of <span class="math inline">\(x\)</span> and the long-run effect is <span class="math inline">\(\beta_1/(1-\phi)\)</span>. If the goal is the effect of <span class="math inline">\(x\)</span> on the mean of <span class="math inline">\(y\)</span>, the errors should be modelled as ARMA. In Example 4.1 in <a href="../section-2/section-2.html">Section 2</a>, the data were generated with AR(1) errors, so the model with a lagged response was misspecified unless <span class="math inline">\(x_{t-1}\)</span> was also included. Regression with AR(1) errors is the same as this model with the coefficient of <span class="math inline">\(x_{t-1}\)</span> restricted to <span class="math inline">\(-\phi\beta_1\)</span>.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>State-Space Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-9" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-9">Lecture 9</h2>
+<p><strong>Date:</strong> 28 September 2026</p>
+<p><strong>Topic covered:</strong> State-Space Models</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through the <code>dlm</code> practical and the <code>State Space and Kalman Filter</code> tutorial: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>A state-space model has both an observation equation and a state equation.</p>
+<p>The observation equation <span class="math inline">\(y_t = F\theta_t + v_t\)</span> links what we observe to an unobserved state whereas the state equation <span class="math inline">\(\theta_t = G\theta_{t-1} + w_t\)</span> describes how the state changes over time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Regression, ARIMA and exponential smoothing models can all be written in state-space form. State-space models don’t need stationarity since trend and seasonality are modelled directly and allowed to change over time.</p>
+</div>
+</div>
+<p>The Kalman filter is a recursive algorithm that first predicts and then updates. First the state, <span class="math inline">\(a_t, R_t\)</span>, and the next observation, <span class="math inline">\(f_t, Q_t\)</span>, are predicted. Then the state estimate, <span class="math inline">\(m_t, C_t\)</span>, is updated. The updated estimate is a weighted average of the prediction and the new observation where the Kalman gain decides how much weight is assigned to the observation.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Bayesian Framework
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Kalman filter works in a Bayesian way where, <span class="math inline">\(\text{posterior} \propto \text{prior} \times \text{likelihood}\)</span>. The posterior becomes the prior of the next step.</p>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: How do I decide which variances in <span class="math inline">\(W\)</span> should be allowed to be non-zero?</p>
+<p>A: A non-zero variance lets that state change over time and a zero variance keeps it fixed. The structure of the model decides which states can have noise. In the CO<span class="math inline">\(_2\)</span> model in <a href="../section-2/section-2.html">Section 2</a> only the level, slope and current seasonal effect get noise, because the other seasonal states are just the previous effects shifted along. The size of the variances can then be estimated by maximum likelihood. If an estimated variance is essentially zero, that state can be fixed, and models can be compared with the likelihood or AIC, e.g.&nbsp;static (<span class="math inline">\(W = 0\)</span>) vs time-varying coefficients in the US consumption example.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Kalman Filter</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-10" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-10">Lecture 10</h2>
+<p><strong>Date:</strong> 5 October 2026</p>
+<p><strong>Topic covered:</strong> Kalman Filter</p>
+<p><strong>What I Did:</strong></p>
+<p>Continued working through the <code>dlm</code> practical and the <code>State Space and Kalman Filter</code> tutorial: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>The Kalman filter is used to filter and forecast in dynamic linear Gaussian systems. This filter is recursive so we can process new observations as they arrive. The Kalman smoother starts at the end of a series and works backwards. This is better for looking backwards (not prediction).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Filtering vs Smoothing vs Forecasting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If we estimate the state at time <span class="math inline">\(t\)</span> using data up to time <span class="math inline">\(s\)</span>:</p>
+<ul>
+<li><span class="math inline">\(s &lt; t\)</span> = forecasting</li>
+<li><span class="math inline">\(s = t\)</span> = filtering</li>
+<li><span class="math inline">\(s &gt; t\)</span> = smoothing</li>
+</ul>
+</div>
+</div>
+<p>Forecasting and filtering are done using the Kalman filter. Smoothing is done using the Kalman smoother.</p>
+<p>The likelihood is the product of one-step-ahead predictive densities, <span class="math inline">\(y_t \mid y_{1:t-1} \sim N(f_t, Q_t)\)</span>. The unknown variances, <span class="math inline">\(V\)</span> and <span class="math inline">\(W\)</span>, can be estimated by maximum likelihood.</p>
+<p>Prediction intervals use <span class="math inline">\(Q_t = FR_tF' + V\)</span>. They are prediction intervals (not confidence intervals) because they are for a future observation and include the observation noise, <span class="math inline">\(V\)</span>, as well as the uncertainty about the state.</p>
+<p>If there are missing observations present in the data, there is nothing to update with and the Kalman gain will be zero. Consecutive missing observations increase uncertainty.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Method
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The prior predicts the next state from the previous estimate of the state, with some uncertainty (state equation).</li>
+<li>The likelihood asks how likely the new observation is given all possible states (observation equation).</li>
+<li>The new posterior, for the current state, is given by combining the likelihood and the prior.</li>
+</ol>
+</div>
+</div>
+<p><strong>Questions:</strong></p>
+<p>Q: Why does the Kalman filter only work for linear Gaussian state-space models?</p>
+<p>A: The Kalman filter does a linear transformation of a Gaussian which gives another Gaussian.</p>
+<p><span class="math display">\[
+\text{Gaussian prior} \times \text{Gaussian likelihood} \propto \text{Gaussian posterior}
+\]</span> The Kalman filter only keeps track of the mean and variance. When we have a non-linear or non-Gaussian distribution we either end up with a skewed distribution or a posterior with no closed form.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Hidden Markov Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-11" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-11">Lecture 11</h2>
+<p><strong>Date:</strong> 12 October 2026</p>
+<p><strong>Topic covered:</strong> Hidden Markov Models 1</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through Questions 1, 3, 4 and 7 of the HMM tutorial and wrote the forward algorithm from first principles: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>A hidden Markov model (HMM) has an unobserved state process, <span class="math inline">\(C_t\)</span>, that follows a Markov chain and an observed process, <span class="math inline">\(X_t\)</span>, whose distribution depends only on the current state. Each state has its own state-dependent distribution (e.g.&nbsp;Poisson or Gaussian).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The next state only depends on the current state (Markov property).</p>
+</div>
+</div>
+<p>The Markov chain is described by the transition probability matrix <span class="math inline">\(\Gamma\)</span>, where <span class="math inline">\(\gamma_{ij} = P(C_{t+1} = j \mid C_t = i)\)</span>, and the initial distribution <span class="math inline">\(\boldsymbol{\delta}\)</span>. A large diagonal in <span class="math inline">\(\Gamma\)</span> means that the states are persistent.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Independent mixture vs HMM
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An independent mixture draws a new state at every time point, independently of the last one. An HMM lets the state depend on the previous state, which creates autocorrelation in the observations.</p>
+</div>
+</div>
+<p>The likelihood, <span class="math inline">\(L_T = \boldsymbol{\delta}\mathbf{P}(x_1)\Gamma\mathbf{P}(x_2)\cdots\Gamma\mathbf{P}(x_T)\mathbf{1}'\)</span>, is calculated with the forward algorithm and maximised numerically. The forward probabilities are scaled at every step to avoid underflow.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: Why does an HMM produce autocorrelated observations if the observations are conditionally independent given the states?</p>
+<p>A: The observations are only independent once we know the states. A large observation makes a high-mean state more likely and, since the states are persistent, the next observation is likely to come from that same state.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Hidden Markov Models 2</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-12" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-12">Lecture 12</h2>
+<p><strong>Date:</strong> 19 October 2026</p>
+<p><strong>Topic covered:</strong> Hidden Markov Models 2</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through Questions 2, 5 and 6 of the HMM tutorial, wrote the backward algorithm, local decoding and the Viterbi algorithm from first principles, and fitted Poisson HMMs to the earthquake counts: <a href="../section-2/section-2.html">Section 2</a>, <a href="../projects/project-04-analysis.html">Project 4</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Once an HMM has been fitted we usually want to know which state the process was in. This is called decoding.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Local vs global decoding
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Local decoding finds the most likely state at each time point separately, using the forward and backward probabilities. Global decoding finds the most likely sequence of states using the Viterbi algorithm. The two can disagree.</p>
+</div>
+</div>
+<p>The number of states is chosen with AIC or BIC. The likelihood of an HMM often has several local maxima, so the model should be fitted from several different starting values.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: Why can’t short visits to a state be recovered by decoding?</p>
+<p>A: A single visit to a state needs two unlikely transitions, there and back, and if the state-dependent distributions overlap, the observation is often also likely under the surrounding state. In the Viterbi exercise in <a href="../section-2/section-2.html">Section 2</a>, the single visit to state C at time 2 was decoded as A.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Project 4</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
