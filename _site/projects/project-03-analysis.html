@@ -912,7 +912,7 @@ r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \ov
 <div class="cell">
 <details>
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient table of best model:</span></span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient table of best model (estimate, SE, t value, p-value):</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> best_fit<span class="sc">@</span>fit<span class="sc">$</span>robust.matcoef</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>param_table <span class="ot">=</span> <span class="fu">tibble</span>(</span>
@@ -1454,46 +1454,32 @@ r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \ov
 <div class="cell">
 <details>
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Patton's (2011) normalised QLIKE is non-negative </span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>qlike_wide <span class="ot">=</span> oos <span class="sc">|&gt;</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">L =</span> proxy <span class="sc">/</span> h <span class="sc">-</span> <span class="fu">log</span>(proxy <span class="sc">/</span> h) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, Model, L) <span class="sc">|&gt;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Model, <span class="at">values_from =</span> L)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>rivals <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(model_cols), <span class="st">"GJR-GARCH-t"</span>)</span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Patton's (2011) normalised QLIKE is non-negative (needed for dm.test with power = 1)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and differs from loss table QLIKE by a constant, so loss differentials are unchanged</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># QLIKE loss = proxy/h - log(proxy/h) - 1:</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>qlike_wide <span class="ot">=</span> oos <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">L =</span> proxy <span class="sc">/</span> h <span class="sc">-</span> <span class="fu">log</span>(proxy <span class="sc">/</span> h) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, Model, L) <span class="sc">|&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Model, <span class="at">values_from =</span> L)</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="ot">=</span> <span class="fu">map</span>(rivals, <span class="cf">function</span>(m) {</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  dm <span class="ot">=</span> <span class="fu">dm.test</span>(<span class="at">e1          =</span> qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]],</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">e2          =</span> qlike_wide[[m]],</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">alternative =</span> <span class="st">"two.sided"</span>,</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">h           =</span> <span class="dv">1</span>,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">power       =</span> <span class="dv">1</span>)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Comparison             =</span> <span class="fu">paste</span>(<span class="st">"GJR-GARCH-t vs"</span>, m),</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Mean loss difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]] <span class="sc">-</span> qlike_wide[[m]]),</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">DM statistic</span><span class="st">`</span>         <span class="ot">=</span> <span class="fu">unname</span>(dm<span class="sc">$</span>statistic),</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">p-value</span><span class="st">`</span>              <span class="ot">=</span> dm<span class="sc">$</span>p.value)</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Sentence for text and summary page:</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>fmt_models <span class="ot">=</span> <span class="cf">function</span>(x) knitr<span class="sc">::</span><span class="fu">combine_words</span>(x)</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>dm_sig     <span class="ot">=</span> rivals[dm_tbl<span class="sc">$</span><span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="sc">&lt;</span>  <span class="fl">0.05</span>]</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>dm_nonsig  <span class="ot">=</span> rivals[dm_tbl<span class="sc">$</span><span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="sc">&gt;=</span> <span class="fl">0.05</span>]</span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>dm_text    <span class="ot">=</span> <span class="fu">paste0</span>(</span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(dm_sig) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"at the 5% level, GJR-GARCH-$t$ has a significantly lower QLIKE loss than "</span>, <span class="fu">fmt_models</span>(dm_sig), <span class="st">". "</span>)</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"at the 5% level, GJR-GARCH-$t$ does not have a significantly lower QLIKE loss than any other model. "</span></span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>  },</span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(dm_nonsig) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Its advantage over "</span>, <span class="fu">fmt_models</span>(dm_nonsig), <span class="st">" is not statistically significant."</span>)</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">""</span></span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="sc">|&gt;</span></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">format.pval</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">eps =</span> <span class="fl">0.001</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>rivals <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(model_cols), <span class="st">"GJR-GARCH-t"</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="ot">=</span> <span class="fu">map</span>(rivals, <span class="cf">function</span>(m) {</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  dm <span class="ot">=</span> <span class="fu">dm.test</span>(<span class="at">e1          =</span> qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]],</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">e2          =</span> qlike_wide[[m]],</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">alternative =</span> <span class="st">"two.sided"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">h           =</span> <span class="dv">1</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">power       =</span> <span class="dv">1</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Comparison             =</span> <span class="fu">paste</span>(<span class="st">"GJR-GARCH-t vs"</span>, m),</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Mean loss difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]] <span class="sc">-</span> qlike_wide[[m]]),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">DM statistic</span><span class="st">`</span>         <span class="ot">=</span> <span class="fu">unname</span>(dm<span class="sc">$</span>statistic),</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">p-value</span><span class="st">`</span>              <span class="ot">=</span> dm<span class="sc">$</span>p.value)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="sc">|&gt;</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">format.pval</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">eps =</span> <span class="fl">0.001</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="tbl-dm" class="anchored">
@@ -1543,7 +1529,7 @@ r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \ov
 </div>
 </div>
 </div>
-<p><a href="#tbl-dm">Table&nbsp;10</a> shows that at the 5% level, GJR-GARCH-<span class="math inline">\(t\)</span> has a significantly lower QLIKE loss than Constant, EWMA, ARCH, GARCH-N, and GARCH-t. Since the squared return is a very noisy proxy for the true variance, small differences in average loss are difficult to detect over a test set of 1023 days.</p>
+<p><a href="#tbl-dm">Table&nbsp;10</a> shows that at the 5% level, GJR-GARCH-<span class="math inline">\(t\)</span> has a significantly lower QLIKE loss than Constant, EWMA, ARCH, GARCH-N and GARCH-<span class="math inline">\(t\)</span>. Since the squared return is a very noisy proxy for the true variance, small differences in average loss are difficult to detect over a test set of 1023 days.</p>
 </section>
 <section id="value-at-risk-backtests" class="level3">
 <h3 class="anchored" data-anchor-id="value-at-risk-backtests">Value-at-Risk backtests</h3>
@@ -1591,26 +1577,7 @@ r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \ov
 <span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(alpha, Model) <span class="sc">|&gt;</span></span>
 <span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Level, Model, Expected, Violations, <span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span>, <span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span>)</span>
 <span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Models passing both tests at 1% level:</span></span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>var_1    <span class="ot">=</span> var_tbl <span class="sc">|&gt;</span> <span class="fu">filter</span>(Level <span class="sc">==</span> <span class="st">"1%"</span>)</span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>var_pass <span class="ot">=</span> <span class="fu">as.character</span>(var_1<span class="sc">$</span>Model[var_1<span class="sc">$</span><span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span> <span class="sc">&gt;=</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> var_1<span class="sc">$</span><span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span> <span class="sc">&gt;=</span> <span class="fl">0.05</span>])</span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>var_fail <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="fu">as.character</span>(var_1<span class="sc">$</span>Model), var_pass)</span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>var_text <span class="ot">=</span> <span class="fu">paste0</span>(</span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(var_pass) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"at the 1% level, "</span>, <span class="fu">fmt_models</span>(var_pass), <span class="st">" pass both tests"</span>)</span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"at the 1% level, none of the models pass both tests"</span></span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a>  },</span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(var_fail) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">", while "</span>, <span class="fu">fmt_models</span>(var_fail), <span class="st">" are rejected by at least one test."</span>)</span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>    <span class="st">"."</span></span>
-<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results for summary page:</span></span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">list</span>(<span class="at">dm_text =</span> dm_text, <span class="at">var_text =</span> var_text), <span class="st">"_data/project03_results.rds"</span>)</span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(var_tbl, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(var_tbl, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="tbl-var" class="anchored">
@@ -1728,7 +1695,7 @@ r_t = \mu_t + \varepsilon_t, \qquad \varepsilon_t = \sigma_t z_t, \qquad z_t \ov
 </div>
 </div>
 </div>
-<p><a href="#tbl-var">Table&nbsp;11</a> shows that at the 1% level, Constant, GARCH-t, and GJR-GARCH-t pass both tests, while EWMA, ARCH, and GARCH-N are rejected by at least one test. At the 1% level, 1023 test days give approximately 10 expected violations. Models with normal innovations (EWMA, ARCH and GARCH-N) understate the probability of extreme losses, which shows as more violations than expected, whereas the Student-<span class="math inline">\(t\)</span> models allow for heavier tails. At the 5% level, the choice of distribution matters less, since the 5% quantiles of the normal and Student-<span class="math inline">\(t\)</span> distributions are similar. However, the test set contains few extreme days, so these tests have limited power.</p>
+<p><a href="#tbl-var">Table&nbsp;11</a> shows that at the 1% level, Constant, GARCH-<span class="math inline">\(t\)</span> and GJR-GARCH-<span class="math inline">\(t\)</span> pass both tests, while EWMA, ARCH and GARCH-N are rejected by at least one test. At the 1% level, 1023 test days give approximately 10 expected violations. Models with normal innovations (EWMA, ARCH and GARCH-N) understate the probability of extreme losses, which shows as more violations than expected, whereas the Student-<span class="math inline">\(t\)</span> models allow for heavier tails. At the 5% level, the choice of distribution matters less, since the 5% quantiles of the normal and Student-<span class="math inline">\(t\)</span> distributions are similar. However, the test set contains few extreme days, so these tests have limited power.</p>
 </section>
 </section>
 <section id="forecasting" class="level2">
@@ -2573,7 +2540,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb31-244"><a href="#cb31-244" aria-hidden="true" tabindex="-1"></a>In the ARCH model, the conditional variance depends on past squared shocks. The GARCH model lets the conditional variance depend on its own past as well as on past squared shocks. The GJR-GARCH model is a threshold model that captures the leverage effect, where negative shocks increase volatility more than positive shocks of the same magnitude.</span>
 <span id="cb31-245"><a href="#cb31-245" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-246"><a href="#cb31-246" aria-hidden="true" tabindex="-1"></a>| Model            | Conditional variance $\sigma_t^2$                                                                              |</span>
-<span id="cb31-247"><a href="#cb31-247" aria-hidden="true" tabindex="-1"></a>|---------------|---------------------------------------------------------|</span>
+<span id="cb31-247"><a href="#cb31-247" aria-hidden="true" tabindex="-1"></a>|------------------|----------------------------------------------------------------------------------------------------------------|</span>
 <span id="cb31-248"><a href="#cb31-248" aria-hidden="true" tabindex="-1"></a>| ARCH($q$)        | $\alpha_0 + \sum_{i=1}^{q}\alpha_i\varepsilon_{t-i}^2$                                                         |</span>
 <span id="cb31-249"><a href="#cb31-249" aria-hidden="true" tabindex="-1"></a>| GARCH($p,q$)     | $\alpha_0 + \sum^q_{i=1} \alpha_i \varepsilon_{t-i}^2 + \sum^p_{j=1} \beta_j \sigma_{t-j}^2$                   |</span>
 <span id="cb31-250"><a href="#cb31-250" aria-hidden="true" tabindex="-1"></a>| GJR-GARCH($p,q$) | $\alpha_0 + \sum^q_{i=1} (\alpha_i + \gamma_iI_{t-i})\varepsilon^2_{t-i} + \sum^p_{j=1}\beta_j \sigma_{t-j}^2$ |</span>
@@ -2754,7 +2721,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb31-439"><a href="#cb31-439" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-params</span></span>
 <span id="cb31-440"><a href="#cb31-440" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Parameter estimates of the selected GJR-GARCH(1,1) model with Student-t innovations."</span></span>
 <span id="cb31-441"><a href="#cb31-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-442"><a href="#cb31-442" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient table of best model:</span></span>
+<span id="cb31-442"><a href="#cb31-442" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient table of best model (estimate, SE, t value, p-value):</span></span>
 <span id="cb31-443"><a href="#cb31-443" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">=</span> best_fit<span class="sc">@</span>fit<span class="sc">$</span>robust.matcoef</span>
 <span id="cb31-444"><a href="#cb31-444" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-445"><a href="#cb31-445" aria-hidden="true" tabindex="-1"></a>param_table <span class="ot">=</span> <span class="fu">tibble</span>(</span>
@@ -3066,288 +3033,255 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb31-767"><a href="#cb31-767" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-dm</span></span>
 <span id="cb31-768"><a href="#cb31-768" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Diebold–Mariano tests of equal QLIKE loss between GJR-GARCH-t and each other model (one-day-ahead forecasts, two-sided). A negative statistic means that GJR-GARCH-t has the lower average loss."</span></span>
 <span id="cb31-769"><a href="#cb31-769" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-770"><a href="#cb31-770" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Patton's (2011) normalised QLIKE is non-negative </span></span>
-<span id="cb31-771"><a href="#cb31-771" aria-hidden="true" tabindex="-1"></a>qlike_wide <span class="ot">=</span> oos <span class="sc">|&gt;</span></span>
-<span id="cb31-772"><a href="#cb31-772" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">L =</span> proxy <span class="sc">/</span> h <span class="sc">-</span> <span class="fu">log</span>(proxy <span class="sc">/</span> h) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-773"><a href="#cb31-773" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, Model, L) <span class="sc">|&gt;</span></span>
-<span id="cb31-774"><a href="#cb31-774" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Model, <span class="at">values_from =</span> L)</span>
-<span id="cb31-775"><a href="#cb31-775" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-776"><a href="#cb31-776" aria-hidden="true" tabindex="-1"></a>rivals <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(model_cols), <span class="st">"GJR-GARCH-t"</span>)</span>
+<span id="cb31-770"><a href="#cb31-770" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Patton's (2011) normalised QLIKE is non-negative (needed for dm.test with power = 1)</span></span>
+<span id="cb31-771"><a href="#cb31-771" aria-hidden="true" tabindex="-1"></a><span class="co"># and differs from loss table QLIKE by a constant, so loss differentials are unchanged</span></span>
+<span id="cb31-772"><a href="#cb31-772" aria-hidden="true" tabindex="-1"></a><span class="co"># QLIKE loss = proxy/h - log(proxy/h) - 1:</span></span>
+<span id="cb31-773"><a href="#cb31-773" aria-hidden="true" tabindex="-1"></a>qlike_wide <span class="ot">=</span> oos <span class="sc">|&gt;</span></span>
+<span id="cb31-774"><a href="#cb31-774" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">L =</span> proxy <span class="sc">/</span> h <span class="sc">-</span> <span class="fu">log</span>(proxy <span class="sc">/</span> h) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-775"><a href="#cb31-775" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, Model, L) <span class="sc">|&gt;</span></span>
+<span id="cb31-776"><a href="#cb31-776" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Model, <span class="at">values_from =</span> L)</span>
 <span id="cb31-777"><a href="#cb31-777" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-778"><a href="#cb31-778" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="ot">=</span> <span class="fu">map</span>(rivals, <span class="cf">function</span>(m) {</span>
-<span id="cb31-779"><a href="#cb31-779" aria-hidden="true" tabindex="-1"></a>  dm <span class="ot">=</span> <span class="fu">dm.test</span>(<span class="at">e1          =</span> qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]],</span>
-<span id="cb31-780"><a href="#cb31-780" aria-hidden="true" tabindex="-1"></a>               <span class="at">e2          =</span> qlike_wide[[m]],</span>
-<span id="cb31-781"><a href="#cb31-781" aria-hidden="true" tabindex="-1"></a>               <span class="at">alternative =</span> <span class="st">"two.sided"</span>,</span>
-<span id="cb31-782"><a href="#cb31-782" aria-hidden="true" tabindex="-1"></a>               <span class="at">h           =</span> <span class="dv">1</span>,</span>
-<span id="cb31-783"><a href="#cb31-783" aria-hidden="true" tabindex="-1"></a>               <span class="at">power       =</span> <span class="dv">1</span>)</span>
-<span id="cb31-784"><a href="#cb31-784" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Comparison             =</span> <span class="fu">paste</span>(<span class="st">"GJR-GARCH-t vs"</span>, m),</span>
-<span id="cb31-785"><a href="#cb31-785" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Mean loss difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]] <span class="sc">-</span> qlike_wide[[m]]),</span>
-<span id="cb31-786"><a href="#cb31-786" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">DM statistic</span><span class="st">`</span>         <span class="ot">=</span> <span class="fu">unname</span>(dm<span class="sc">$</span>statistic),</span>
-<span id="cb31-787"><a href="#cb31-787" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">p-value</span><span class="st">`</span>              <span class="ot">=</span> dm<span class="sc">$</span>p.value)</span>
-<span id="cb31-788"><a href="#cb31-788" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
-<span id="cb31-789"><a href="#cb31-789" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span>
-<span id="cb31-790"><a href="#cb31-790" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-791"><a href="#cb31-791" aria-hidden="true" tabindex="-1"></a><span class="co"># Sentence for text and summary page:</span></span>
-<span id="cb31-792"><a href="#cb31-792" aria-hidden="true" tabindex="-1"></a>fmt_models <span class="ot">=</span> <span class="cf">function</span>(x) knitr<span class="sc">::</span><span class="fu">combine_words</span>(x)</span>
-<span id="cb31-793"><a href="#cb31-793" aria-hidden="true" tabindex="-1"></a>dm_sig     <span class="ot">=</span> rivals[dm_tbl<span class="sc">$</span><span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="sc">&lt;</span>  <span class="fl">0.05</span>]</span>
-<span id="cb31-794"><a href="#cb31-794" aria-hidden="true" tabindex="-1"></a>dm_nonsig  <span class="ot">=</span> rivals[dm_tbl<span class="sc">$</span><span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="sc">&gt;=</span> <span class="fl">0.05</span>]</span>
-<span id="cb31-795"><a href="#cb31-795" aria-hidden="true" tabindex="-1"></a>dm_text    <span class="ot">=</span> <span class="fu">paste0</span>(</span>
-<span id="cb31-796"><a href="#cb31-796" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(dm_sig) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb31-797"><a href="#cb31-797" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"at the 5% level, GJR-GARCH-$t$ has a significantly lower QLIKE loss than "</span>, <span class="fu">fmt_models</span>(dm_sig), <span class="st">". "</span>)</span>
-<span id="cb31-798"><a href="#cb31-798" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb31-799"><a href="#cb31-799" aria-hidden="true" tabindex="-1"></a>    <span class="st">"at the 5% level, GJR-GARCH-$t$ does not have a significantly lower QLIKE loss than any other model. "</span></span>
-<span id="cb31-800"><a href="#cb31-800" aria-hidden="true" tabindex="-1"></a>  },</span>
-<span id="cb31-801"><a href="#cb31-801" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(dm_nonsig) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb31-802"><a href="#cb31-802" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Its advantage over "</span>, <span class="fu">fmt_models</span>(dm_nonsig), <span class="st">" is not statistically significant."</span>)</span>
-<span id="cb31-803"><a href="#cb31-803" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb31-804"><a href="#cb31-804" aria-hidden="true" tabindex="-1"></a>    <span class="st">""</span></span>
-<span id="cb31-805"><a href="#cb31-805" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb31-806"><a href="#cb31-806" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-807"><a href="#cb31-807" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="sc">|&gt;</span></span>
-<span id="cb31-808"><a href="#cb31-808" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">format.pval</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">eps =</span> <span class="fl">0.001</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb31-809"><a href="#cb31-809" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span>
-<span id="cb31-810"><a href="#cb31-810" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-778"><a href="#cb31-778" aria-hidden="true" tabindex="-1"></a>rivals <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(model_cols), <span class="st">"GJR-GARCH-t"</span>)</span>
+<span id="cb31-779"><a href="#cb31-779" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-780"><a href="#cb31-780" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="ot">=</span> <span class="fu">map</span>(rivals, <span class="cf">function</span>(m) {</span>
+<span id="cb31-781"><a href="#cb31-781" aria-hidden="true" tabindex="-1"></a>  dm <span class="ot">=</span> <span class="fu">dm.test</span>(<span class="at">e1          =</span> qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]],</span>
+<span id="cb31-782"><a href="#cb31-782" aria-hidden="true" tabindex="-1"></a>               <span class="at">e2          =</span> qlike_wide[[m]],</span>
+<span id="cb31-783"><a href="#cb31-783" aria-hidden="true" tabindex="-1"></a>               <span class="at">alternative =</span> <span class="st">"two.sided"</span>,</span>
+<span id="cb31-784"><a href="#cb31-784" aria-hidden="true" tabindex="-1"></a>               <span class="at">h           =</span> <span class="dv">1</span>,</span>
+<span id="cb31-785"><a href="#cb31-785" aria-hidden="true" tabindex="-1"></a>               <span class="at">power       =</span> <span class="dv">1</span>)</span>
+<span id="cb31-786"><a href="#cb31-786" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">Comparison             =</span> <span class="fu">paste</span>(<span class="st">"GJR-GARCH-t vs"</span>, m),</span>
+<span id="cb31-787"><a href="#cb31-787" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Mean loss difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(qlike_wide[[<span class="st">"GJR-GARCH-t"</span>]] <span class="sc">-</span> qlike_wide[[m]]),</span>
+<span id="cb31-788"><a href="#cb31-788" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">DM statistic</span><span class="st">`</span>         <span class="ot">=</span> <span class="fu">unname</span>(dm<span class="sc">$</span>statistic),</span>
+<span id="cb31-789"><a href="#cb31-789" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">p-value</span><span class="st">`</span>              <span class="ot">=</span> dm<span class="sc">$</span>p.value)</span>
+<span id="cb31-790"><a href="#cb31-790" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
+<span id="cb31-791"><a href="#cb31-791" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span>
+<span id="cb31-792"><a href="#cb31-792" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-793"><a href="#cb31-793" aria-hidden="true" tabindex="-1"></a>dm_tbl <span class="sc">|&gt;</span></span>
+<span id="cb31-794"><a href="#cb31-794" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">format.pval</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">eps =</span> <span class="fl">0.001</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-795"><a href="#cb31-795" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb31-796"><a href="#cb31-796" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-797"><a href="#cb31-797" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-798"><a href="#cb31-798" aria-hidden="true" tabindex="-1"></a>@tbl-dm shows that at the 5% level, GJR-GARCH-$t$ has a significantly lower QLIKE loss than Constant, EWMA, ARCH, GARCH-N and GARCH-$t$. Since the squared return is a very noisy proxy for the true variance, small differences in average loss are difficult to detect over a test set of <span class="in">`r n_test`</span> days.</span>
+<span id="cb31-799"><a href="#cb31-799" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-800"><a href="#cb31-800" aria-hidden="true" tabindex="-1"></a><span class="fu">### Value-at-Risk backtests</span></span>
+<span id="cb31-801"><a href="#cb31-801" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-802"><a href="#cb31-802" aria-hidden="true" tabindex="-1"></a>The QLIKE loss evaluates the forecast variance, but not the shape of the forecast distribution. The choice between normal and Student-$t$ innovations matters most in the tails, so the forecasts are also evaluated using the one-day-ahead Value-at-Risk (VaR). The $100\alpha\%$ VaR is the $\alpha$ quantile of the forecast return distribution, so it is the lower limit of a $100(1 - 2\alpha)\%$ prediction interval for the next day's return. A violation occurs when the realised return falls below the VaR. If the forecasts are correct, violations should occur on a proportion $\alpha$ of days (tested with Kupiec's (1995) unconditional coverage test) and should not cluster together (tested with Christoffersen's (1998) conditional coverage test). These tests are not covered in the course notes, so the <span class="in">`VaRTest()`</span> function from <span class="in">`rugarch`</span> is used. The VaR of the GARCH-family models comes from the rolling forecasts, and the VaR of the constant-variance and EWMA benchmarks uses normal quantiles.</span>
+<span id="cb31-803"><a href="#cb31-803" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-806"><a href="#cb31-806" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-807"><a href="#cb31-807" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-var</span></span>
+<span id="cb31-808"><a href="#cb31-808" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Value-at-Risk backtests of the one-day-ahead forecasts over the test set at the 1% and 5% levels. Small p-values reject correct coverage (Kupiec) or correct coverage with independent violations (Christoffersen)."</span></span>
+<span id="cb31-809"><a href="#cb31-809" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-810"><a href="#cb31-810" aria-hidden="true" tabindex="-1"></a>var_levels <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>)</span>
 <span id="cb31-811"><a href="#cb31-811" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-812"><a href="#cb31-812" aria-hidden="true" tabindex="-1"></a>@tbl-dm shows that <span class="in">`r dm_text`</span> Since the squared return is a very noisy proxy for the true variance, small differences in average loss are difficult to detect over a test set of <span class="in">`r n_test`</span> days.</span>
-<span id="cb31-813"><a href="#cb31-813" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-814"><a href="#cb31-814" aria-hidden="true" tabindex="-1"></a><span class="fu">### Value-at-Risk backtests</span></span>
-<span id="cb31-815"><a href="#cb31-815" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-816"><a href="#cb31-816" aria-hidden="true" tabindex="-1"></a>The QLIKE loss evaluates the forecast variance, but not the shape of the forecast distribution. The choice between normal and Student-$t$ innovations matters most in the tails, so the forecasts are also evaluated using the one-day-ahead Value-at-Risk (VaR). The $100\alpha\%$ VaR is the $\alpha$ quantile of the forecast return distribution, so it is the lower limit of a $100(1 - 2\alpha)\%$ prediction interval for the next day's return. A violation occurs when the realised return falls below the VaR. If the forecasts are correct, violations should occur on a proportion $\alpha$ of days (tested with Kupiec's (1995) unconditional coverage test) and should not cluster together (tested with Christoffersen's (1998) conditional coverage test). These tests are not covered in the course notes, so the <span class="in">`VaRTest()`</span> function from <span class="in">`rugarch`</span> is used. The VaR of the GARCH-family models comes from the rolling forecasts, and the VaR of the constant-variance and EWMA benchmarks uses normal quantiles.</span>
-<span id="cb31-817"><a href="#cb31-817" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-820"><a href="#cb31-820" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-821"><a href="#cb31-821" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-var</span></span>
-<span id="cb31-822"><a href="#cb31-822" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Value-at-Risk backtests of the one-day-ahead forecasts over the test set at the 1% and 5% levels. Small p-values reject correct coverage (Kupiec) or correct coverage with independent violations (Christoffersen)."</span></span>
-<span id="cb31-823"><a href="#cb31-823" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-824"><a href="#cb31-824" aria-hidden="true" tabindex="-1"></a>var_levels <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>)</span>
-<span id="cb31-825"><a href="#cb31-825" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-826"><a href="#cb31-826" aria-hidden="true" tabindex="-1"></a><span class="co"># GARCH-family VaR from the rolling forecasts:</span></span>
-<span id="cb31-827"><a href="#cb31-827" aria-hidden="true" tabindex="-1"></a>var_garch <span class="ot">=</span> <span class="fu">imap</span>(roll_list, <span class="cf">function</span>(roll, model) {</span>
-<span id="cb31-828"><a href="#cb31-828" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">=</span> <span class="fu">as.data.frame</span>(roll, <span class="at">which =</span> <span class="st">"VaR"</span>)</span>
-<span id="cb31-829"><a href="#cb31-829" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(var_levels, <span class="cf">function</span>(a) {</span>
-<span id="cb31-830"><a href="#cb31-830" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">Model  =</span> model,</span>
-<span id="cb31-831"><a href="#cb31-831" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha  =</span> a,</span>
-<span id="cb31-832"><a href="#cb31-832" aria-hidden="true" tabindex="-1"></a>           <span class="at">actual =</span> v<span class="sc">$</span>realized,</span>
-<span id="cb31-833"><a href="#cb31-833" aria-hidden="true" tabindex="-1"></a>           <span class="at">VaR    =</span> v[[<span class="fu">grep</span>(<span class="fu">paste0</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">("</span>, a <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"%</span><span class="sc">\\</span><span class="st">)"</span>), <span class="fu">names</span>(v))]])</span>
-<span id="cb31-834"><a href="#cb31-834" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span></span>
-<span id="cb31-835"><a href="#cb31-835" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list_rbind</span>()</span>
-<span id="cb31-836"><a href="#cb31-836" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
-<span id="cb31-837"><a href="#cb31-837" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span>
-<span id="cb31-838"><a href="#cb31-838" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-839"><a href="#cb31-839" aria-hidden="true" tabindex="-1"></a><span class="co"># Benchmark VaR using normal quantiles:</span></span>
-<span id="cb31-840"><a href="#cb31-840" aria-hidden="true" tabindex="-1"></a>var_bench <span class="ot">=</span> oos <span class="sc">|&gt;</span></span>
-<span id="cb31-841"><a href="#cb31-841" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Model <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Constant"</span>, <span class="st">"EWMA"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb31-842"><a href="#cb31-842" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cross_join</span>(<span class="fu">tibble</span>(<span class="at">alpha =</span> var_levels)) <span class="sc">|&gt;</span></span>
-<span id="cb31-843"><a href="#cb31-843" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">Model  =</span> <span class="fu">as.character</span>(Model),</span>
-<span id="cb31-844"><a href="#cb31-844" aria-hidden="true" tabindex="-1"></a>            alpha,</span>
-<span id="cb31-845"><a href="#cb31-845" aria-hidden="true" tabindex="-1"></a>            <span class="at">actual =</span> r,</span>
-<span id="cb31-846"><a href="#cb31-846" aria-hidden="true" tabindex="-1"></a>            <span class="at">VaR    =</span> mu_tr <span class="sc">+</span> <span class="fu">qnorm</span>(alpha) <span class="sc">*</span> sigma)</span>
-<span id="cb31-847"><a href="#cb31-847" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-848"><a href="#cb31-848" aria-hidden="true" tabindex="-1"></a><span class="co"># Kupiec and Christoffersen tests:</span></span>
-<span id="cb31-849"><a href="#cb31-849" aria-hidden="true" tabindex="-1"></a>var_tbl <span class="ot">=</span> <span class="fu">bind_rows</span>(var_bench, var_garch) <span class="sc">|&gt;</span></span>
-<span id="cb31-850"><a href="#cb31-850" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Model, alpha) <span class="sc">|&gt;</span></span>
-<span id="cb31-851"><a href="#cb31-851" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_modify</span>(<span class="cf">function</span>(d, key) {</span>
-<span id="cb31-852"><a href="#cb31-852" aria-hidden="true" tabindex="-1"></a>    vt <span class="ot">=</span> <span class="fu">VaRTest</span>(<span class="at">alpha =</span> key<span class="sc">$</span>alpha, <span class="at">actual =</span> d<span class="sc">$</span>actual, <span class="at">VaR =</span> d<span class="sc">$</span>VaR)</span>
-<span id="cb31-853"><a href="#cb31-853" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">Expected           =</span> vt<span class="sc">$</span>expected.exceed,</span>
-<span id="cb31-854"><a href="#cb31-854" aria-hidden="true" tabindex="-1"></a>           <span class="at">Violations         =</span> vt<span class="sc">$</span>actual.exceed,</span>
-<span id="cb31-855"><a href="#cb31-855" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span>         <span class="ot">=</span> vt<span class="sc">$</span>uc.LRp,</span>
-<span id="cb31-856"><a href="#cb31-856" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span> <span class="ot">=</span> vt<span class="sc">$</span>cc.LRp)</span>
-<span id="cb31-857"><a href="#cb31-857" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span></span>
-<span id="cb31-858"><a href="#cb31-858" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb31-859"><a href="#cb31-859" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Model =</span> <span class="fu">factor</span>(Model, <span class="at">levels =</span> <span class="fu">names</span>(model_cols)),</span>
-<span id="cb31-860"><a href="#cb31-860" aria-hidden="true" tabindex="-1"></a>         <span class="at">Level =</span> <span class="fu">paste0</span>(alpha <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"%"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb31-861"><a href="#cb31-861" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(alpha, Model) <span class="sc">|&gt;</span></span>
-<span id="cb31-862"><a href="#cb31-862" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Level, Model, Expected, Violations, <span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span>, <span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span>)</span>
+<span id="cb31-812"><a href="#cb31-812" aria-hidden="true" tabindex="-1"></a><span class="co"># GARCH-family VaR from the rolling forecasts:</span></span>
+<span id="cb31-813"><a href="#cb31-813" aria-hidden="true" tabindex="-1"></a>var_garch <span class="ot">=</span> <span class="fu">imap</span>(roll_list, <span class="cf">function</span>(roll, model) {</span>
+<span id="cb31-814"><a href="#cb31-814" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">=</span> <span class="fu">as.data.frame</span>(roll, <span class="at">which =</span> <span class="st">"VaR"</span>)</span>
+<span id="cb31-815"><a href="#cb31-815" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(var_levels, <span class="cf">function</span>(a) {</span>
+<span id="cb31-816"><a href="#cb31-816" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">Model  =</span> model,</span>
+<span id="cb31-817"><a href="#cb31-817" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha  =</span> a,</span>
+<span id="cb31-818"><a href="#cb31-818" aria-hidden="true" tabindex="-1"></a>           <span class="at">actual =</span> v<span class="sc">$</span>realized,</span>
+<span id="cb31-819"><a href="#cb31-819" aria-hidden="true" tabindex="-1"></a>           <span class="at">VaR    =</span> v[[<span class="fu">grep</span>(<span class="fu">paste0</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">("</span>, a <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"%</span><span class="sc">\\</span><span class="st">)"</span>), <span class="fu">names</span>(v))]])</span>
+<span id="cb31-820"><a href="#cb31-820" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span></span>
+<span id="cb31-821"><a href="#cb31-821" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list_rbind</span>()</span>
+<span id="cb31-822"><a href="#cb31-822" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
+<span id="cb31-823"><a href="#cb31-823" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span>
+<span id="cb31-824"><a href="#cb31-824" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-825"><a href="#cb31-825" aria-hidden="true" tabindex="-1"></a><span class="co"># Benchmark VaR using normal quantiles:</span></span>
+<span id="cb31-826"><a href="#cb31-826" aria-hidden="true" tabindex="-1"></a>var_bench <span class="ot">=</span> oos <span class="sc">|&gt;</span></span>
+<span id="cb31-827"><a href="#cb31-827" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Model <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Constant"</span>, <span class="st">"EWMA"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-828"><a href="#cb31-828" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cross_join</span>(<span class="fu">tibble</span>(<span class="at">alpha =</span> var_levels)) <span class="sc">|&gt;</span></span>
+<span id="cb31-829"><a href="#cb31-829" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">Model  =</span> <span class="fu">as.character</span>(Model),</span>
+<span id="cb31-830"><a href="#cb31-830" aria-hidden="true" tabindex="-1"></a>            alpha,</span>
+<span id="cb31-831"><a href="#cb31-831" aria-hidden="true" tabindex="-1"></a>            <span class="at">actual =</span> r,</span>
+<span id="cb31-832"><a href="#cb31-832" aria-hidden="true" tabindex="-1"></a>            <span class="at">VaR    =</span> mu_tr <span class="sc">+</span> <span class="fu">qnorm</span>(alpha) <span class="sc">*</span> sigma)</span>
+<span id="cb31-833"><a href="#cb31-833" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-834"><a href="#cb31-834" aria-hidden="true" tabindex="-1"></a><span class="co"># Kupiec and Christoffersen tests:</span></span>
+<span id="cb31-835"><a href="#cb31-835" aria-hidden="true" tabindex="-1"></a>var_tbl <span class="ot">=</span> <span class="fu">bind_rows</span>(var_bench, var_garch) <span class="sc">|&gt;</span></span>
+<span id="cb31-836"><a href="#cb31-836" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Model, alpha) <span class="sc">|&gt;</span></span>
+<span id="cb31-837"><a href="#cb31-837" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_modify</span>(<span class="cf">function</span>(d, key) {</span>
+<span id="cb31-838"><a href="#cb31-838" aria-hidden="true" tabindex="-1"></a>    vt <span class="ot">=</span> <span class="fu">VaRTest</span>(<span class="at">alpha =</span> key<span class="sc">$</span>alpha, <span class="at">actual =</span> d<span class="sc">$</span>actual, <span class="at">VaR =</span> d<span class="sc">$</span>VaR)</span>
+<span id="cb31-839"><a href="#cb31-839" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">Expected           =</span> vt<span class="sc">$</span>expected.exceed,</span>
+<span id="cb31-840"><a href="#cb31-840" aria-hidden="true" tabindex="-1"></a>           <span class="at">Violations         =</span> vt<span class="sc">$</span>actual.exceed,</span>
+<span id="cb31-841"><a href="#cb31-841" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span>         <span class="ot">=</span> vt<span class="sc">$</span>uc.LRp,</span>
+<span id="cb31-842"><a href="#cb31-842" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span> <span class="ot">=</span> vt<span class="sc">$</span>cc.LRp)</span>
+<span id="cb31-843"><a href="#cb31-843" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span></span>
+<span id="cb31-844"><a href="#cb31-844" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb31-845"><a href="#cb31-845" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Model =</span> <span class="fu">factor</span>(Model, <span class="at">levels =</span> <span class="fu">names</span>(model_cols)),</span>
+<span id="cb31-846"><a href="#cb31-846" aria-hidden="true" tabindex="-1"></a>         <span class="at">Level =</span> <span class="fu">paste0</span>(alpha <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"%"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-847"><a href="#cb31-847" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(alpha, Model) <span class="sc">|&gt;</span></span>
+<span id="cb31-848"><a href="#cb31-848" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Level, Model, Expected, Violations, <span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span>, <span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span>)</span>
+<span id="cb31-849"><a href="#cb31-849" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-850"><a href="#cb31-850" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(var_tbl, <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb31-851"><a href="#cb31-851" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-852"><a href="#cb31-852" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-853"><a href="#cb31-853" aria-hidden="true" tabindex="-1"></a>@tbl-var shows that at the 1% level, Constant, GARCH-$t$ and GJR-GARCH-$t$ pass both tests, while EWMA, ARCH and GARCH-N are rejected by at least one test. At the 1% level, <span class="in">`r n_test`</span> test days give approximately <span class="in">`r round(0.01 * n_test)`</span> expected violations. Models with normal innovations (EWMA, ARCH and GARCH-N) understate the probability of extreme losses, which shows as more violations than expected, whereas the Student-$t$ models allow for heavier tails. At the 5% level, the choice of distribution matters less, since the 5% quantiles of the normal and Student-$t$ distributions are similar. However, the test set contains few extreme days, so these tests have limited power.</span>
+<span id="cb31-854"><a href="#cb31-854" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-855"><a href="#cb31-855" aria-hidden="true" tabindex="-1"></a><span class="fu">## Forecasting</span></span>
+<span id="cb31-856"><a href="#cb31-856" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-857"><a href="#cb31-857" aria-hidden="true" tabindex="-1"></a>The preferred model, GJR-GARCH(1,1)-$t$, is re-estimated on the full sample (1995--2017) and used to forecast volatility over the next 63 trading days.</span>
+<span id="cb31-858"><a href="#cb31-858" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-861"><a href="#cb31-861" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-862"><a href="#cb31-862" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: final-fit</span></span>
 <span id="cb31-863"><a href="#cb31-863" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-864"><a href="#cb31-864" aria-hidden="true" tabindex="-1"></a><span class="co"># Models passing both tests at 1% level:</span></span>
-<span id="cb31-865"><a href="#cb31-865" aria-hidden="true" tabindex="-1"></a>var_1    <span class="ot">=</span> var_tbl <span class="sc">|&gt;</span> <span class="fu">filter</span>(Level <span class="sc">==</span> <span class="st">"1%"</span>)</span>
-<span id="cb31-866"><a href="#cb31-866" aria-hidden="true" tabindex="-1"></a>var_pass <span class="ot">=</span> <span class="fu">as.character</span>(var_1<span class="sc">$</span>Model[var_1<span class="sc">$</span><span class="st">`</span><span class="at">Kupiec p</span><span class="st">`</span> <span class="sc">&gt;=</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> var_1<span class="sc">$</span><span class="st">`</span><span class="at">Christoffersen p</span><span class="st">`</span> <span class="sc">&gt;=</span> <span class="fl">0.05</span>])</span>
-<span id="cb31-867"><a href="#cb31-867" aria-hidden="true" tabindex="-1"></a>var_fail <span class="ot">=</span> <span class="fu">setdiff</span>(<span class="fu">as.character</span>(var_1<span class="sc">$</span>Model), var_pass)</span>
-<span id="cb31-868"><a href="#cb31-868" aria-hidden="true" tabindex="-1"></a>var_text <span class="ot">=</span> <span class="fu">paste0</span>(</span>
-<span id="cb31-869"><a href="#cb31-869" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(var_pass) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb31-870"><a href="#cb31-870" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"at the 1% level, "</span>, <span class="fu">fmt_models</span>(var_pass), <span class="st">" pass both tests"</span>)</span>
-<span id="cb31-871"><a href="#cb31-871" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb31-872"><a href="#cb31-872" aria-hidden="true" tabindex="-1"></a>    <span class="st">"at the 1% level, none of the models pass both tests"</span></span>
-<span id="cb31-873"><a href="#cb31-873" aria-hidden="true" tabindex="-1"></a>  },</span>
-<span id="cb31-874"><a href="#cb31-874" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(var_fail) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb31-875"><a href="#cb31-875" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">", while "</span>, <span class="fu">fmt_models</span>(var_fail), <span class="st">" are rejected by at least one test."</span>)</span>
-<span id="cb31-876"><a href="#cb31-876" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb31-877"><a href="#cb31-877" aria-hidden="true" tabindex="-1"></a>    <span class="st">"."</span></span>
-<span id="cb31-878"><a href="#cb31-878" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb31-864"><a href="#cb31-864" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit the best model on the full sample:</span></span>
+<span id="cb31-865"><a href="#cb31-865" aria-hidden="true" tabindex="-1"></a>final_fit <span class="ot">=</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> spec_list[[best_name]], <span class="at">data =</span> r_xts, <span class="at">solver =</span> <span class="st">"hybrid"</span>)</span>
+<span id="cb31-866"><a href="#cb31-866" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-867"><a href="#cb31-867" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast 63 trading days ahead:</span></span>
+<span id="cb31-868"><a href="#cb31-868" aria-hidden="true" tabindex="-1"></a>h_max <span class="ot">=</span> <span class="dv">63</span></span>
+<span id="cb31-869"><a href="#cb31-869" aria-hidden="true" tabindex="-1"></a>fc    <span class="ot">=</span> <span class="fu">ugarchforecast</span>(final_fit, <span class="at">n.ahead =</span> h_max)</span>
+<span id="cb31-870"><a href="#cb31-870" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-871"><a href="#cb31-871" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast dates (weekdays only, ignoring public holidays):</span></span>
+<span id="cb31-872"><a href="#cb31-872" aria-hidden="true" tabindex="-1"></a>all_days     <span class="ot">=</span> <span class="fu">seq</span>(<span class="fu">max</span>(alsi<span class="sc">$</span>date) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="st">"day"</span>, <span class="at">length.out =</span> <span class="dv">2</span> <span class="sc">*</span> h_max)</span>
+<span id="cb31-873"><a href="#cb31-873" aria-hidden="true" tabindex="-1"></a>future_dates <span class="ot">=</span> all_days[<span class="fu">wday</span>(all_days, <span class="at">week_start =</span> <span class="dv">1</span>) <span class="sc">&lt;=</span> <span class="dv">5</span>][<span class="dv">1</span><span class="sc">:</span>h_max]</span>
+<span id="cb31-874"><a href="#cb31-874" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-875"><a href="#cb31-875" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardised t quantiles for the 95% interval:</span></span>
+<span id="cb31-876"><a href="#cb31-876" aria-hidden="true" tabindex="-1"></a>nu_final <span class="ot">=</span> <span class="fu">coef</span>(final_fit)[<span class="st">"shape"</span>]</span>
+<span id="cb31-877"><a href="#cb31-877" aria-hidden="true" tabindex="-1"></a>q_lo     <span class="ot">=</span> <span class="fu">qdist</span>(<span class="st">"std"</span>, <span class="at">p =</span> <span class="fl">0.025</span>, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_final)</span>
+<span id="cb31-878"><a href="#cb31-878" aria-hidden="true" tabindex="-1"></a>q_hi     <span class="ot">=</span> <span class="fu">qdist</span>(<span class="st">"std"</span>, <span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_final)</span>
 <span id="cb31-879"><a href="#cb31-879" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-880"><a href="#cb31-880" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results for summary page:</span></span>
-<span id="cb31-881"><a href="#cb31-881" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">list</span>(<span class="at">dm_text =</span> dm_text, <span class="at">var_text =</span> var_text), <span class="st">"_data/project03_results.rds"</span>)</span>
-<span id="cb31-882"><a href="#cb31-882" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-883"><a href="#cb31-883" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(var_tbl, <span class="at">digits =</span> <span class="dv">3</span>)</span>
-<span id="cb31-884"><a href="#cb31-884" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-885"><a href="#cb31-885" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-886"><a href="#cb31-886" aria-hidden="true" tabindex="-1"></a>@tbl-var shows that <span class="in">`r var_text`</span> At the 1% level, <span class="in">`r n_test`</span> test days give approximately <span class="in">`r round(0.01 * n_test)`</span> expected violations. Models with normal innovations (EWMA, ARCH and GARCH-N) understate the probability of extreme losses, which shows as more violations than expected, whereas the Student-$t$ models allow for heavier tails. At the 5% level, the choice of distribution matters less, since the 5% quantiles of the normal and Student-$t$ distributions are similar. However, the test set contains few extreme days, so these tests have limited power.</span>
+<span id="cb31-880"><a href="#cb31-880" aria-hidden="true" tabindex="-1"></a>fc_df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">date  =</span> future_dates,</span>
+<span id="cb31-881"><a href="#cb31-881" aria-hidden="true" tabindex="-1"></a>               <span class="at">h     =</span> <span class="dv">1</span><span class="sc">:</span>h_max,</span>
+<span id="cb31-882"><a href="#cb31-882" aria-hidden="true" tabindex="-1"></a>               <span class="at">mu    =</span> <span class="fu">as.numeric</span>(<span class="fu">fitted</span>(fc)),</span>
+<span id="cb31-883"><a href="#cb31-883" aria-hidden="true" tabindex="-1"></a>               <span class="at">sigma =</span> <span class="fu">as.numeric</span>(<span class="fu">sigma</span>(fc))) <span class="sc">|&gt;</span></span>
+<span id="cb31-884"><a href="#cb31-884" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lo95 =</span> mu <span class="sc">+</span> q_lo <span class="sc">*</span> sigma,</span>
+<span id="cb31-885"><a href="#cb31-885" aria-hidden="true" tabindex="-1"></a>         <span class="at">hi95 =</span> mu <span class="sc">+</span> q_hi <span class="sc">*</span> sigma)</span>
+<span id="cb31-886"><a href="#cb31-886" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb31-887"><a href="#cb31-887" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-888"><a href="#cb31-888" aria-hidden="true" tabindex="-1"></a><span class="fu">## Forecasting</span></span>
-<span id="cb31-889"><a href="#cb31-889" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-890"><a href="#cb31-890" aria-hidden="true" tabindex="-1"></a>The preferred model, GJR-GARCH(1,1)-$t$, is re-estimated on the full sample (1995--2017) and used to forecast volatility over the next 63 trading days.</span>
-<span id="cb31-891"><a href="#cb31-891" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-894"><a href="#cb31-894" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-895"><a href="#cb31-895" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: final-fit</span></span>
-<span id="cb31-896"><a href="#cb31-896" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-897"><a href="#cb31-897" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit the best model on the full sample:</span></span>
-<span id="cb31-898"><a href="#cb31-898" aria-hidden="true" tabindex="-1"></a>final_fit <span class="ot">=</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> spec_list[[best_name]], <span class="at">data =</span> r_xts, <span class="at">solver =</span> <span class="st">"hybrid"</span>)</span>
-<span id="cb31-899"><a href="#cb31-899" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-900"><a href="#cb31-900" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast 63 trading days ahead:</span></span>
-<span id="cb31-901"><a href="#cb31-901" aria-hidden="true" tabindex="-1"></a>h_max <span class="ot">=</span> <span class="dv">63</span></span>
-<span id="cb31-902"><a href="#cb31-902" aria-hidden="true" tabindex="-1"></a>fc    <span class="ot">=</span> <span class="fu">ugarchforecast</span>(final_fit, <span class="at">n.ahead =</span> h_max)</span>
-<span id="cb31-903"><a href="#cb31-903" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-904"><a href="#cb31-904" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast dates (weekdays only, ignoring public holidays):</span></span>
-<span id="cb31-905"><a href="#cb31-905" aria-hidden="true" tabindex="-1"></a>all_days     <span class="ot">=</span> <span class="fu">seq</span>(<span class="fu">max</span>(alsi<span class="sc">$</span>date) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="st">"day"</span>, <span class="at">length.out =</span> <span class="dv">2</span> <span class="sc">*</span> h_max)</span>
-<span id="cb31-906"><a href="#cb31-906" aria-hidden="true" tabindex="-1"></a>future_dates <span class="ot">=</span> all_days[<span class="fu">wday</span>(all_days, <span class="at">week_start =</span> <span class="dv">1</span>) <span class="sc">&lt;=</span> <span class="dv">5</span>][<span class="dv">1</span><span class="sc">:</span>h_max]</span>
+<span id="cb31-890"><a href="#cb31-890" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-891"><a href="#cb31-891" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-final</span></span>
+<span id="cb31-892"><a href="#cb31-892" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "GJR-GARCH(1,1)-t estimated on the training sample and on the full sample."</span></span>
+<span id="cb31-893"><a href="#cb31-893" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-894"><a href="#cb31-894" aria-hidden="true" tabindex="-1"></a>fit_list <span class="ot">=</span> <span class="fu">list</span>(<span class="st">"Training sample"</span> <span class="ot">=</span> best_fit, <span class="st">"Full sample"</span> <span class="ot">=</span> final_fit)</span>
+<span id="cb31-895"><a href="#cb31-895" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-896"><a href="#cb31-896" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">Quantity =</span> <span class="fu">c</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">alpha_0$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">alpha$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">beta$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">gamma$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">nu$"</span>,</span>
+<span id="cb31-897"><a href="#cb31-897" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Persistence"</span>, <span class="st">"Half-life (days)"</span>, <span class="st">"Unconditional volatility (% p.a.)"</span>))</span>
+<span id="cb31-898"><a href="#cb31-898" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-899"><a href="#cb31-899" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop over the two fits:</span></span>
+<span id="cb31-900"><a href="#cb31-900" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> <span class="fu">names</span>(fit_list)) {</span>
+<span id="cb31-901"><a href="#cb31-901" aria-hidden="true" tabindex="-1"></a>  cf <span class="ot">=</span> <span class="fu">coef</span>(fit_list[[name]])</span>
+<span id="cb31-902"><a href="#cb31-902" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-903"><a href="#cb31-903" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Persistence, half-life and long-run volatility:</span></span>
+<span id="cb31-904"><a href="#cb31-904" aria-hidden="true" tabindex="-1"></a>  pers      <span class="ot">=</span> cf[<span class="st">"alpha1"</span>] <span class="sc">+</span> cf[<span class="st">"beta1"</span>] <span class="sc">+</span> cf[<span class="st">"gamma1"</span>] <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb31-905"><a href="#cb31-905" aria-hidden="true" tabindex="-1"></a>  half_life <span class="ot">=</span> <span class="fu">log</span>(<span class="fl">0.5</span>) <span class="sc">/</span> <span class="fu">log</span>(pers)</span>
+<span id="cb31-906"><a href="#cb31-906" aria-hidden="true" tabindex="-1"></a>  unc_vol   <span class="ot">=</span> <span class="fu">sqrt</span>(cf[<span class="st">"omega"</span>] <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pers) <span class="sc">*</span> ann_factor)</span>
 <span id="cb31-907"><a href="#cb31-907" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-908"><a href="#cb31-908" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardised t quantiles for the 95% interval:</span></span>
-<span id="cb31-909"><a href="#cb31-909" aria-hidden="true" tabindex="-1"></a>nu_final <span class="ot">=</span> <span class="fu">coef</span>(final_fit)[<span class="st">"shape"</span>]</span>
-<span id="cb31-910"><a href="#cb31-910" aria-hidden="true" tabindex="-1"></a>q_lo     <span class="ot">=</span> <span class="fu">qdist</span>(<span class="st">"std"</span>, <span class="at">p =</span> <span class="fl">0.025</span>, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_final)</span>
-<span id="cb31-911"><a href="#cb31-911" aria-hidden="true" tabindex="-1"></a>q_hi     <span class="ot">=</span> <span class="fu">qdist</span>(<span class="st">"std"</span>, <span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">shape =</span> nu_final)</span>
-<span id="cb31-912"><a href="#cb31-912" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-913"><a href="#cb31-913" aria-hidden="true" tabindex="-1"></a>fc_df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">date  =</span> future_dates,</span>
-<span id="cb31-914"><a href="#cb31-914" aria-hidden="true" tabindex="-1"></a>               <span class="at">h     =</span> <span class="dv">1</span><span class="sc">:</span>h_max,</span>
-<span id="cb31-915"><a href="#cb31-915" aria-hidden="true" tabindex="-1"></a>               <span class="at">mu    =</span> <span class="fu">as.numeric</span>(<span class="fu">fitted</span>(fc)),</span>
-<span id="cb31-916"><a href="#cb31-916" aria-hidden="true" tabindex="-1"></a>               <span class="at">sigma =</span> <span class="fu">as.numeric</span>(<span class="fu">sigma</span>(fc))) <span class="sc">|&gt;</span></span>
-<span id="cb31-917"><a href="#cb31-917" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lo95 =</span> mu <span class="sc">+</span> q_lo <span class="sc">*</span> sigma,</span>
-<span id="cb31-918"><a href="#cb31-918" aria-hidden="true" tabindex="-1"></a>         <span class="at">hi95 =</span> mu <span class="sc">+</span> q_hi <span class="sc">*</span> sigma)</span>
-<span id="cb31-919"><a href="#cb31-919" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-920"><a href="#cb31-920" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-923"><a href="#cb31-923" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-924"><a href="#cb31-924" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-final</span></span>
-<span id="cb31-925"><a href="#cb31-925" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "GJR-GARCH(1,1)-t estimated on the training sample and on the full sample."</span></span>
-<span id="cb31-926"><a href="#cb31-926" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-927"><a href="#cb31-927" aria-hidden="true" tabindex="-1"></a>fit_list <span class="ot">=</span> <span class="fu">list</span>(<span class="st">"Training sample"</span> <span class="ot">=</span> best_fit, <span class="st">"Full sample"</span> <span class="ot">=</span> final_fit)</span>
-<span id="cb31-928"><a href="#cb31-928" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-929"><a href="#cb31-929" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">Quantity =</span> <span class="fu">c</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">alpha_0$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">alpha$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">beta$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">gamma$"</span>, <span class="st">"$</span><span class="sc">\\</span><span class="st">nu$"</span>,</span>
-<span id="cb31-930"><a href="#cb31-930" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Persistence"</span>, <span class="st">"Half-life (days)"</span>, <span class="st">"Unconditional volatility (% p.a.)"</span>))</span>
-<span id="cb31-931"><a href="#cb31-931" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-932"><a href="#cb31-932" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop over the two fits:</span></span>
-<span id="cb31-933"><a href="#cb31-933" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> <span class="fu">names</span>(fit_list)) {</span>
-<span id="cb31-934"><a href="#cb31-934" aria-hidden="true" tabindex="-1"></a>  cf <span class="ot">=</span> <span class="fu">coef</span>(fit_list[[name]])</span>
-<span id="cb31-935"><a href="#cb31-935" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-936"><a href="#cb31-936" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Persistence, half-life and long-run volatility:</span></span>
-<span id="cb31-937"><a href="#cb31-937" aria-hidden="true" tabindex="-1"></a>  pers      <span class="ot">=</span> cf[<span class="st">"alpha1"</span>] <span class="sc">+</span> cf[<span class="st">"beta1"</span>] <span class="sc">+</span> cf[<span class="st">"gamma1"</span>] <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb31-938"><a href="#cb31-938" aria-hidden="true" tabindex="-1"></a>  half_life <span class="ot">=</span> <span class="fu">log</span>(<span class="fl">0.5</span>) <span class="sc">/</span> <span class="fu">log</span>(pers)</span>
-<span id="cb31-939"><a href="#cb31-939" aria-hidden="true" tabindex="-1"></a>  unc_vol   <span class="ot">=</span> <span class="fu">sqrt</span>(cf[<span class="st">"omega"</span>] <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pers) <span class="sc">*</span> ann_factor)</span>
-<span id="cb31-940"><a href="#cb31-940" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-941"><a href="#cb31-941" aria-hidden="true" tabindex="-1"></a>  final_table[[name]] <span class="ot">=</span> <span class="fu">unname</span>(<span class="fu">c</span>(cf[<span class="st">"omega"</span>], cf[<span class="st">"alpha1"</span>], cf[<span class="st">"beta1"</span>], cf[<span class="st">"gamma1"</span>], cf[<span class="st">"shape"</span>],</span>
-<span id="cb31-942"><a href="#cb31-942" aria-hidden="true" tabindex="-1"></a>                                 pers, half_life, unc_vol))</span>
-<span id="cb31-943"><a href="#cb31-943" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-908"><a href="#cb31-908" aria-hidden="true" tabindex="-1"></a>  final_table[[name]] <span class="ot">=</span> <span class="fu">unname</span>(<span class="fu">c</span>(cf[<span class="st">"omega"</span>], cf[<span class="st">"alpha1"</span>], cf[<span class="st">"beta1"</span>], cf[<span class="st">"gamma1"</span>], cf[<span class="st">"shape"</span>],</span>
+<span id="cb31-909"><a href="#cb31-909" aria-hidden="true" tabindex="-1"></a>                                 pers, half_life, unc_vol))</span>
+<span id="cb31-910"><a href="#cb31-910" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-911"><a href="#cb31-911" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-912"><a href="#cb31-912" aria-hidden="true" tabindex="-1"></a><span class="co"># Full-sample values for text and @fig-forecast:</span></span>
+<span id="cb31-913"><a href="#cb31-913" aria-hidden="true" tabindex="-1"></a>pers_final      <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">6</span>]</span>
+<span id="cb31-914"><a href="#cb31-914" aria-hidden="true" tabindex="-1"></a>half_life_final <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">7</span>]</span>
+<span id="cb31-915"><a href="#cb31-915" aria-hidden="true" tabindex="-1"></a>unc_vol_final   <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">8</span>]</span>
+<span id="cb31-916"><a href="#cb31-916" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-917"><a href="#cb31-917" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(final_table, <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb31-918"><a href="#cb31-918" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-919"><a href="#cb31-919" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-920"><a href="#cb31-920" aria-hidden="true" tabindex="-1"></a>@tbl-final shows that the parameter estimates from the full sample are very close to those from the training sample. This indicates that the model is stable over time. On the full sample, volatility is highly persistent (persistence = <span class="in">`r round(pers_final, 3)`</span>), with shocks taking a long time to die out (half-life = <span class="in">`r round(half_life_final)`</span> trading days). The long-run level that volatility reverts to is also similar to that of the training sample (unconditional volatility = <span class="in">`r round(unc_vol_final, 1)`</span>% p.a.).</span>
+<span id="cb31-921"><a href="#cb31-921" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-924"><a href="#cb31-924" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-925"><a href="#cb31-925" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-forecast</span></span>
+<span id="cb31-926"><a href="#cb31-926" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Left: Annualised conditional volatility over the last 250 trading days (purple) and the 63-day forecast (pink), the dashed line indicates the unconditional volatility. Right: The previous 250 returns with the forecast mean and 95% prediction interval."</span></span>
+<span id="cb31-927"><a href="#cb31-927" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 12</span></span>
+<span id="cb31-928"><a href="#cb31-928" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
+<span id="cb31-929"><a href="#cb31-929" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-930"><a href="#cb31-930" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted volatility over the last 250 days:</span></span>
+<span id="cb31-931"><a href="#cb31-931" aria-hidden="true" tabindex="-1"></a>hist_sigma <span class="ot">=</span> <span class="fu">tail</span>(<span class="fu">tibble</span>(<span class="at">date =</span> alsi<span class="sc">$</span>date, <span class="at">sigma =</span> <span class="fu">as.numeric</span>(<span class="fu">sigma</span>(final_fit))), <span class="dv">250</span>)</span>
+<span id="cb31-932"><a href="#cb31-932" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-933"><a href="#cb31-933" aria-hidden="true" tabindex="-1"></a>p_vol <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb31-934"><a href="#cb31-934" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> hist_sigma, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor)), <span class="at">colour =</span> col_main) <span class="sc">+</span></span>
+<span id="cb31-935"><a href="#cb31-935" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor)), <span class="at">colour =</span> col_accent, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb31-936"><a href="#cb31-936" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> unc_vol_final, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb31-937"><a href="#cb31-937" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Volatility forecast."</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Annualised volatility (%)"</span>)</span>
+<span id="cb31-938"><a href="#cb31-938" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-939"><a href="#cb31-939" aria-hidden="true" tabindex="-1"></a>p_int <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb31-940"><a href="#cb31-940" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">tail</span>(alsi, <span class="dv">250</span>), <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> r), <span class="at">colour =</span> col_main, <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb31-941"><a href="#cb31-941" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">ymin =</span> lo95, <span class="at">ymax =</span> hi95), <span class="at">fill =</span> col_accent, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb31-942"><a href="#cb31-942" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> mu), <span class="at">colour =</span> col_accent) <span class="sc">+</span></span>
+<span id="cb31-943"><a href="#cb31-943" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Return forecast with 95% interval."</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Return (%)"</span>)</span>
 <span id="cb31-944"><a href="#cb31-944" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-945"><a href="#cb31-945" aria-hidden="true" tabindex="-1"></a><span class="co"># Full-sample values for text and @fig-forecast:</span></span>
-<span id="cb31-946"><a href="#cb31-946" aria-hidden="true" tabindex="-1"></a>pers_final      <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">6</span>]</span>
-<span id="cb31-947"><a href="#cb31-947" aria-hidden="true" tabindex="-1"></a>half_life_final <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">7</span>]</span>
-<span id="cb31-948"><a href="#cb31-948" aria-hidden="true" tabindex="-1"></a>unc_vol_final   <span class="ot">=</span> final_table[[<span class="st">"Full sample"</span>]][<span class="dv">8</span>]</span>
+<span id="cb31-945"><a href="#cb31-945" aria-hidden="true" tabindex="-1"></a>p_vol <span class="sc">+</span> p_int</span>
+<span id="cb31-946"><a href="#cb31-946" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-947"><a href="#cb31-947" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-948"><a href="#cb31-948" aria-hidden="true" tabindex="-1"></a>@fig-forecast illustrates the 63-day volatility forecast from the model fitted to the full sample. During 2016, volatility peaked at the end of June (approximately 31% p.a.), which could be attributed to the Brexit vote. Volatility then decayed to below its long-run level and was low at the end of the sample (approximately 13% p.a.), below the unconditional volatility indicated by the dashed line. Thus, the forecast rises gradually towards the long-run level, reaching 16.8% p.a. after 63 trading days (@tbl-forecast). The forecast has not yet reached the long-run level by this point, which reflects the high persistence of the model.</span>
 <span id="cb31-949"><a href="#cb31-949" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-950"><a href="#cb31-950" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(final_table, <span class="at">digits =</span> <span class="dv">3</span>)</span>
-<span id="cb31-951"><a href="#cb31-951" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-952"><a href="#cb31-952" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-953"><a href="#cb31-953" aria-hidden="true" tabindex="-1"></a>@tbl-final shows that the parameter estimates from the full sample are very close to those from the training sample. This indicates that the model is stable over time. On the full sample, volatility is highly persistent (persistence = <span class="in">`r round(pers_final, 3)`</span>), with shocks taking a long time to die out (half-life = <span class="in">`r round(half_life_final)`</span> trading days). The long-run level that volatility reverts to is also similar to that of the training sample (unconditional volatility = <span class="in">`r round(unc_vol_final, 1)`</span>% p.a.).</span>
-<span id="cb31-954"><a href="#cb31-954" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-957"><a href="#cb31-957" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-958"><a href="#cb31-958" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-forecast</span></span>
-<span id="cb31-959"><a href="#cb31-959" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Left: Annualised conditional volatility over the last 250 trading days (purple) and the 63-day forecast (pink), the dashed line indicates the unconditional volatility. Right: The previous 250 returns with the forecast mean and 95% prediction interval."</span></span>
-<span id="cb31-960"><a href="#cb31-960" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 12</span></span>
-<span id="cb31-961"><a href="#cb31-961" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
-<span id="cb31-962"><a href="#cb31-962" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-963"><a href="#cb31-963" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted volatility over the last 250 days:</span></span>
-<span id="cb31-964"><a href="#cb31-964" aria-hidden="true" tabindex="-1"></a>hist_sigma <span class="ot">=</span> <span class="fu">tail</span>(<span class="fu">tibble</span>(<span class="at">date =</span> alsi<span class="sc">$</span>date, <span class="at">sigma =</span> <span class="fu">as.numeric</span>(<span class="fu">sigma</span>(final_fit))), <span class="dv">250</span>)</span>
+<span id="cb31-950"><a href="#cb31-950" aria-hidden="true" tabindex="-1"></a>The forecast mean return is just above zero, which highlights that the returns themselves cannot be predicted. The 95% prediction intervals widen over the forecast horizon since the forecast volatility increases towards its long-run level.</span>
+<span id="cb31-951"><a href="#cb31-951" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-954"><a href="#cb31-954" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-955"><a href="#cb31-955" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-forecast</span></span>
+<span id="cb31-956"><a href="#cb31-956" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Annualised volatility forecasts at selected horizons."</span></span>
+<span id="cb31-957"><a href="#cb31-957" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-958"><a href="#cb31-958" aria-hidden="true" tabindex="-1"></a>horizons <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">22</span>, <span class="dv">63</span>)</span>
+<span id="cb31-959"><a href="#cb31-959" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-960"><a href="#cb31-960" aria-hidden="true" tabindex="-1"></a>forecast_table <span class="ot">=</span> fc_df <span class="sc">|&gt;</span></span>
+<span id="cb31-961"><a href="#cb31-961" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(h <span class="sc">%in%</span> horizons) <span class="sc">|&gt;</span></span>
+<span id="cb31-962"><a href="#cb31-962" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(h,</span>
+<span id="cb31-963"><a href="#cb31-963" aria-hidden="true" tabindex="-1"></a>            <span class="at">Date           =</span> date,</span>
+<span id="cb31-964"><a href="#cb31-964" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Ann. vol (%)</span><span class="st">`</span> <span class="ot">=</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor))</span>
 <span id="cb31-965"><a href="#cb31-965" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-966"><a href="#cb31-966" aria-hidden="true" tabindex="-1"></a>p_vol <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb31-967"><a href="#cb31-967" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> hist_sigma, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor)), <span class="at">colour =</span> col_main) <span class="sc">+</span></span>
-<span id="cb31-968"><a href="#cb31-968" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor)), <span class="at">colour =</span> col_accent, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb31-969"><a href="#cb31-969" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> unc_vol_final, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb31-970"><a href="#cb31-970" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Volatility forecast."</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Annualised volatility (%)"</span>)</span>
-<span id="cb31-971"><a href="#cb31-971" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-972"><a href="#cb31-972" aria-hidden="true" tabindex="-1"></a>p_int <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb31-973"><a href="#cb31-973" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">tail</span>(alsi, <span class="dv">250</span>), <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> r), <span class="at">colour =</span> col_main, <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb31-974"><a href="#cb31-974" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">ymin =</span> lo95, <span class="at">ymax =</span> hi95), <span class="at">fill =</span> col_accent, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb31-975"><a href="#cb31-975" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> fc_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> mu), <span class="at">colour =</span> col_accent) <span class="sc">+</span></span>
-<span id="cb31-976"><a href="#cb31-976" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Return forecast with 95% interval."</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Return (%)"</span>)</span>
-<span id="cb31-977"><a href="#cb31-977" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-978"><a href="#cb31-978" aria-hidden="true" tabindex="-1"></a>p_vol <span class="sc">+</span> p_int</span>
-<span id="cb31-979"><a href="#cb31-979" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-966"><a href="#cb31-966" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(forecast_table, <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb31-967"><a href="#cb31-967" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-968"><a href="#cb31-968" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-969"><a href="#cb31-969" aria-hidden="true" tabindex="-1"></a>@tbl-forecast reports the annualised volatility forecasts at selected horizons. The forecast volatility increases steadily over the forecast period, from the first trading day (13.0% p.a.) to one month ahead (14.8% p.a. after 22 trading days) and three months ahead (16.8% p.a. after 63 trading days). However, even after three months the forecast remains below the long-run level of volatility (unconditional volatility = <span class="in">`r round(unc_vol_final, 1)`</span>% p.a.). This reflects the high persistence of the model, as volatility shocks take a long time to die out.</span>
+<span id="cb31-970"><a href="#cb31-970" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-971"><a href="#cb31-971" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion</span></span>
+<span id="cb31-972"><a href="#cb31-972" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-973"><a href="#cb31-973" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model recommendations</span></span>
+<span id="cb31-974"><a href="#cb31-974" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-975"><a href="#cb31-975" aria-hidden="true" tabindex="-1"></a>The optimal model for the volatility of daily ALSI returns is the GJR-GARCH(1,1) model with Student-$t$ innovations and an AR(1) mean equation. This model has the lowest BIC on the training set (BIC = 2.983) as well as the lowest loss on the test set (QLIKE = 0.805). Its parameter estimates are also stable between the training sample and the full sample (@tbl-final). The model captures the three main features of the data. Firstly, volatility is highly persistent. Secondly, negative shocks increase volatility more than positive shocks of the same size, which is known as the leverage effect. Lastly, the returns have heavy tails, even after volatility clustering has been accounted for. In comparison to EWMA, GJR-GARCH-$t$ reverts to a long-run level of volatility. Thus, it does not underestimate risk after long periods of low volatility.</span>
+<span id="cb31-976"><a href="#cb31-976" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-977"><a href="#cb31-977" aria-hidden="true" tabindex="-1"></a><span class="fu">### Limitations</span></span>
+<span id="cb31-978"><a href="#cb31-978" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-979"><a href="#cb31-979" aria-hidden="true" tabindex="-1"></a>There were several limitations to this analysis. Engle's ARCH LM test indicates that some dependence remains in the squared standardised residuals of all three GARCH models ($p$ = 0.010 to 0.043). This suggests that the GJR-GARCH-$t$ model does not capture all of the volatility dynamics in the returns, although part of this significance can be attributed to the large sample size.</span>
 <span id="cb31-980"><a href="#cb31-980" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-981"><a href="#cb31-981" aria-hidden="true" tabindex="-1"></a>@fig-forecast illustrates the 63-day volatility forecast from the model fitted to the full sample. During 2016, volatility peaked at the end of June (approximately 31% p.a.), which could be attributed to the Brexit vote. Volatility then decayed to below its long-run level and was low at the end of the sample (approximately 13% p.a.), below the unconditional volatility indicated by the dashed line. Thus, the forecast rises gradually towards the long-run level, reaching 16.8% p.a. after 63 trading days (@tbl-forecast). The forecast has not yet reached the long-run level by this point, which reflects the high persistence of the model.</span>
+<span id="cb31-981"><a href="#cb31-981" aria-hidden="true" tabindex="-1"></a>The squared return is a very noisy proxy for the true variance, so small differences in QLIKE are difficult to detect. The Diebold--Mariano tests (@tbl-dm) show which differences are statistically significant, and the ranking of the GARCH models is less certain than their improvement over the constant-variance model.</span>
 <span id="cb31-982"><a href="#cb31-982" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-983"><a href="#cb31-983" aria-hidden="true" tabindex="-1"></a>The forecast mean return is just above zero, which highlights that the returns themselves cannot be predicted. The 95% prediction intervals widen over the forecast horizon since the forecast volatility increases towards its long-run level.</span>
+<span id="cb31-983"><a href="#cb31-983" aria-hidden="true" tabindex="-1"></a>The test period (2013--2017) is calmer than the training period and contains no crisis comparable to 1997--1998 or 2008--2009. Thus, the forecasts, and especially the VaR backtests, have not been evaluated under extreme conditions. The constant-variance benchmark is also not re-estimated during the test period, unlike the GARCH models, which partly explains its large loss.</span>
 <span id="cb31-984"><a href="#cb31-984" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-987"><a href="#cb31-987" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-988"><a href="#cb31-988" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-forecast</span></span>
-<span id="cb31-989"><a href="#cb31-989" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Annualised volatility forecasts at selected horizons."</span></span>
+<span id="cb31-985"><a href="#cb31-985" aria-hidden="true" tabindex="-1"></a>The model assumes that the parameters remain constant from 1995 to 2017, a period that includes the 1997--1998 and 2008--2009 financial crises. The rolling models are also only re-estimated every 50 trading days. This means that the model may adapt slowly to structural changes in volatility. Lastly, the data end in February 2017, so the forecast is a historical exercise rather than a current prediction.</span>
+<span id="cb31-986"><a href="#cb31-986" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-987"><a href="#cb31-987" aria-hidden="true" tabindex="-1"></a><span class="fu">### Improvements</span></span>
+<span id="cb31-988"><a href="#cb31-988" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-989"><a href="#cb31-989" aria-hidden="true" tabindex="-1"></a>The returns are negatively skewed (skewness = -0.446), which a symmetric Student-$t$ distribution cannot capture. It may be useful to fit the models with a skewed Student-$t$ distribution instead.</span>
 <span id="cb31-990"><a href="#cb31-990" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-991"><a href="#cb31-991" aria-hidden="true" tabindex="-1"></a>horizons <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">22</span>, <span class="dv">63</span>)</span>
+<span id="cb31-991"><a href="#cb31-991" aria-hidden="true" tabindex="-1"></a>Realised volatility, calculated from intraday returns, would provide a less noisy proxy for the true variance than squared daily returns, and would allow the forecasts to be evaluated more reliably. Lastly, extending the data beyond February 2017 would allow the model to be used to forecast current volatility.</span>
 <span id="cb31-992"><a href="#cb31-992" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-993"><a href="#cb31-993" aria-hidden="true" tabindex="-1"></a>forecast_table <span class="ot">=</span> fc_df <span class="sc">|&gt;</span></span>
-<span id="cb31-994"><a href="#cb31-994" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(h <span class="sc">%in%</span> horizons) <span class="sc">|&gt;</span></span>
-<span id="cb31-995"><a href="#cb31-995" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(h,</span>
-<span id="cb31-996"><a href="#cb31-996" aria-hidden="true" tabindex="-1"></a>            <span class="at">Date           =</span> date,</span>
-<span id="cb31-997"><a href="#cb31-997" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Ann. vol (%)</span><span class="st">`</span> <span class="ot">=</span> sigma <span class="sc">*</span> <span class="fu">sqrt</span>(ann_factor))</span>
+<span id="cb31-993"><a href="#cb31-993" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb31-994"><a href="#cb31-994" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-995"><a href="#cb31-995" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. *Journal of Econometrics*, *31*(3), 307--327. <span class="ot">&lt;https://doi.org/10.1016/0304-4076(86)90063-1&gt;</span></span>
+<span id="cb31-996"><a href="#cb31-996" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-997"><a href="#cb31-997" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Christoffersen, P. F. (1998). Evaluating interval forecasts. *International Economic Review*, *39*(4), 841--862. <span class="ot">&lt;https://doi.org/10.2307/2527341&gt;</span></span>
 <span id="cb31-998"><a href="#cb31-998" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-999"><a href="#cb31-999" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(forecast_table, <span class="at">digits =</span> <span class="dv">3</span>)</span>
-<span id="cb31-1000"><a href="#cb31-1000" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-1001"><a href="#cb31-1001" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1002"><a href="#cb31-1002" aria-hidden="true" tabindex="-1"></a>@tbl-forecast reports the annualised volatility forecasts at selected horizons. The forecast volatility increases steadily over the forecast period, from the first trading day (13.0% p.a.) to one month ahead (14.8% p.a. after 22 trading days) and three months ahead (16.8% p.a. after 63 trading days). However, even after three months the forecast remains below the long-run level of volatility (unconditional volatility = <span class="in">`r round(unc_vol_final, 1)`</span>% p.a.). This reflects the high persistence of the model, as volatility shocks take a long time to die out.</span>
-<span id="cb31-1003"><a href="#cb31-1003" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1004"><a href="#cb31-1004" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion</span></span>
-<span id="cb31-1005"><a href="#cb31-1005" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1006"><a href="#cb31-1006" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model recommendations</span></span>
-<span id="cb31-1007"><a href="#cb31-1007" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1008"><a href="#cb31-1008" aria-hidden="true" tabindex="-1"></a>The optimal model for the volatility of daily ALSI returns is the GJR-GARCH(1,1) model with Student-$t$ innovations and an AR(1) mean equation. This model has the lowest BIC on the training set (BIC = 2.983) as well as the lowest loss on the test set (QLIKE = 0.805). Its parameter estimates are also stable between the training sample and the full sample (@tbl-final). The model captures the three main features of the data. Firstly, volatility is highly persistent. Secondly, negative shocks increase volatility more than positive shocks of the same size, which is known as the leverage effect. Lastly, the returns have heavy tails, even after volatility clustering has been accounted for. In comparison to EWMA, GJR-GARCH-$t$ reverts to a long-run level of volatility. Thus, it does not underestimate risk after long periods of low volatility.</span>
-<span id="cb31-1009"><a href="#cb31-1009" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1010"><a href="#cb31-1010" aria-hidden="true" tabindex="-1"></a><span class="fu">### Limitations</span></span>
-<span id="cb31-1011"><a href="#cb31-1011" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1012"><a href="#cb31-1012" aria-hidden="true" tabindex="-1"></a>There were several limitations to this analysis. Engle's ARCH LM test indicates that some dependence remains in the squared standardised residuals of all three GARCH models ($p$ = 0.010 to 0.043). This suggests that the GJR-GARCH-$t$ model does not capture all of the volatility dynamics in the returns, although part of this significance can be attributed to the large sample size.</span>
-<span id="cb31-1013"><a href="#cb31-1013" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1014"><a href="#cb31-1014" aria-hidden="true" tabindex="-1"></a>The squared return is a very noisy proxy for the true variance, so small differences in QLIKE are difficult to detect. The Diebold--Mariano tests (@tbl-dm) show which differences are statistically significant, and the ranking of the GARCH models is less certain than their improvement over the constant-variance model.</span>
-<span id="cb31-1015"><a href="#cb31-1015" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1016"><a href="#cb31-1016" aria-hidden="true" tabindex="-1"></a>The test period (2013--2017) is calmer than the training period and contains no crisis comparable to 1997--1998 or 2008--2009. Thus, the forecasts, and especially the VaR backtests, have not been evaluated under extreme conditions. The constant-variance benchmark is also not re-estimated during the test period, unlike the GARCH models, which partly explains its large loss.</span>
-<span id="cb31-1017"><a href="#cb31-1017" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1018"><a href="#cb31-1018" aria-hidden="true" tabindex="-1"></a>The model assumes that the parameters remain constant from 1995 to 2017, a period that includes the 1997--1998 and 2008--2009 financial crises. The rolling models are also only re-estimated every 50 trading days. This means that the model may adapt slowly to structural changes in volatility. Lastly, the data end in February 2017, so the forecast is a historical exercise rather than a current prediction.</span>
-<span id="cb31-1019"><a href="#cb31-1019" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1020"><a href="#cb31-1020" aria-hidden="true" tabindex="-1"></a><span class="fu">### Improvements</span></span>
+<span id="cb31-999"><a href="#cb31-999" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Department of Statistical Sciences. (2026). *Time series analysis: Part 1 notes* <span class="sc">\[</span>Course notes<span class="sc">\]</span>. University of Cape Town.</span>
+<span id="cb31-1000"><a href="#cb31-1000" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1001"><a href="#cb31-1001" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Diebold, F. X., &amp; Mariano, R. S. (1995). Comparing predictive accuracy. *Journal of Business &amp; Economic Statistics*, *13*(3), 253--263. <span class="ot">&lt;https://doi.org/10.1080/07350015.1995.10524599&gt;</span></span>
+<span id="cb31-1002"><a href="#cb31-1002" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1003"><a href="#cb31-1003" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. *Econometrica*, *50*(4), 987--1007. <span class="ot">&lt;https://doi.org/10.2307/1912773&gt;</span></span>
+<span id="cb31-1004"><a href="#cb31-1004" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1005"><a href="#cb31-1005" aria-hidden="true" tabindex="-1"></a><span class="ss">6.  </span>Gebbie, T. (2020). *Daily sampled South African market index data 1994--2017* <span class="sc">\[</span>Data set<span class="sc">\]</span>. University of Cape Town. <span class="ot">&lt;https://doi.org/10.25375/uct.11302325.v1&gt;</span></span>
+<span id="cb31-1006"><a href="#cb31-1006" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1007"><a href="#cb31-1007" aria-hidden="true" tabindex="-1"></a><span class="ss">7.  </span>Ghalanos, A. (2024). *rugarch: Univariate GARCH models* (R package version <span class="in">`r packageVersion("rugarch")`</span>) <span class="sc">\[</span>Computer software<span class="sc">\]</span>. <span class="ot">&lt;https://CRAN.R-project.org/package=rugarch&gt;</span></span>
+<span id="cb31-1008"><a href="#cb31-1008" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1009"><a href="#cb31-1009" aria-hidden="true" tabindex="-1"></a><span class="ss">8.  </span>Glosten, L. R., Jagannathan, R., &amp; Runkle, D. E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. *The Journal of Finance*, *48*(5), 1779--1801. <span class="ot">&lt;https://doi.org/10.1111/j.1540-6261.1993.tb05128.x&gt;</span></span>
+<span id="cb31-1010"><a href="#cb31-1010" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1011"><a href="#cb31-1011" aria-hidden="true" tabindex="-1"></a><span class="ss">9.  </span>Hyndman, R. J., &amp; Khandakar, Y. (2008). Automatic time series forecasting: The forecast package for R. *Journal of Statistical Software*, *27*(3), 1--22. <span class="ot">&lt;https://doi.org/10.18637/jss.v027.i03&gt;</span></span>
+<span id="cb31-1012"><a href="#cb31-1012" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1013"><a href="#cb31-1013" aria-hidden="true" tabindex="-1"></a><span class="ss">10. </span>J.P. Morgan/Reuters. (1996). *RiskMetrics: Technical document* (4th ed.). J.P. Morgan.</span>
+<span id="cb31-1014"><a href="#cb31-1014" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1015"><a href="#cb31-1015" aria-hidden="true" tabindex="-1"></a><span class="ss">11. </span>Kupiec, P. H. (1995). Techniques for verifying the accuracy of risk measurement models. *The Journal of Derivatives*, *3*(2), 73--84. <span class="ot">&lt;https://doi.org/10.3905/jod.1995.407942&gt;</span></span>
+<span id="cb31-1016"><a href="#cb31-1016" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1017"><a href="#cb31-1017" aria-hidden="true" tabindex="-1"></a><span class="ss">12. </span>Patton, A. J. (2011). Volatility forecast comparison using imperfect volatility proxies. *Journal of Econometrics*, *160*(1), 246--256. <span class="ot">&lt;https://doi.org/10.1016/j.jeconom.2010.03.034&gt;</span></span>
+<span id="cb31-1018"><a href="#cb31-1018" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-1019"><a href="#cb31-1019" aria-hidden="true" tabindex="-1"></a>::: {.callout-important collapse="true"}</span>
+<span id="cb31-1020"><a href="#cb31-1020" aria-hidden="true" tabindex="-1"></a><span class="fu">## R session information</span></span>
 <span id="cb31-1021"><a href="#cb31-1021" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1022"><a href="#cb31-1022" aria-hidden="true" tabindex="-1"></a>The returns are negatively skewed (skewness = -0.446), which a symmetric Student-$t$ distribution cannot capture. It may be useful to fit the models with a skewed Student-$t$ distribution instead.</span>
-<span id="cb31-1023"><a href="#cb31-1023" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1024"><a href="#cb31-1024" aria-hidden="true" tabindex="-1"></a>Realised volatility, calculated from intraday returns, would provide a less noisy proxy for the true variance than squared daily returns, and would allow the forecasts to be evaluated more reliably. Lastly, extending the data beyond February 2017 would allow the model to be used to forecast current volatility.</span>
-<span id="cb31-1025"><a href="#cb31-1025" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1026"><a href="#cb31-1026" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb31-1024"><a href="#cb31-1024" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-1025"><a href="#cb31-1025" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: session-info</span></span>
+<span id="cb31-1026"><a href="#cb31-1026" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: false</span></span>
 <span id="cb31-1027"><a href="#cb31-1027" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1028"><a href="#cb31-1028" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. *Journal of Econometrics*, *31*(3), 307--327. <span class="ot">&lt;https://doi.org/10.1016/0304-4076(86)90063-1&gt;</span></span>
-<span id="cb31-1029"><a href="#cb31-1029" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1030"><a href="#cb31-1030" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Christoffersen, P. F. (1998). Evaluating interval forecasts. *International Economic Review*, *39*(4), 841--862. <span class="ot">&lt;https://doi.org/10.2307/2527341&gt;</span></span>
-<span id="cb31-1031"><a href="#cb31-1031" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1032"><a href="#cb31-1032" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Department of Statistical Sciences. (2026). *Time series analysis: Part 1 notes* <span class="sc">\[</span>Course notes<span class="sc">\]</span>. University of Cape Town.</span>
-<span id="cb31-1033"><a href="#cb31-1033" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1034"><a href="#cb31-1034" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Diebold, F. X., &amp; Mariano, R. S. (1995). Comparing predictive accuracy. *Journal of Business &amp; Economic Statistics*, *13*(3), 253--263. <span class="ot">&lt;https://doi.org/10.1080/07350015.1995.10524599&gt;</span></span>
-<span id="cb31-1035"><a href="#cb31-1035" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1036"><a href="#cb31-1036" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. *Econometrica*, *50*(4), 987--1007. <span class="ot">&lt;https://doi.org/10.2307/1912773&gt;</span></span>
-<span id="cb31-1037"><a href="#cb31-1037" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1038"><a href="#cb31-1038" aria-hidden="true" tabindex="-1"></a><span class="ss">6.  </span>Gebbie, T. (2020). *Daily sampled South African market index data 1994--2017* <span class="sc">\[</span>Data set<span class="sc">\]</span>. University of Cape Town. <span class="ot">&lt;https://doi.org/10.25375/uct.11302325.v1&gt;</span></span>
-<span id="cb31-1039"><a href="#cb31-1039" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1040"><a href="#cb31-1040" aria-hidden="true" tabindex="-1"></a><span class="ss">7.  </span>Ghalanos, A. (2024). *rugarch: Univariate GARCH models* (R package version <span class="in">`r packageVersion("rugarch")`</span>) <span class="sc">\[</span>Computer software<span class="sc">\]</span>. <span class="ot">&lt;https://CRAN.R-project.org/package=rugarch&gt;</span></span>
-<span id="cb31-1041"><a href="#cb31-1041" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1042"><a href="#cb31-1042" aria-hidden="true" tabindex="-1"></a><span class="ss">8.  </span>Glosten, L. R., Jagannathan, R., &amp; Runkle, D. E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. *The Journal of Finance*, *48*(5), 1779--1801. <span class="ot">&lt;https://doi.org/10.1111/j.1540-6261.1993.tb05128.x&gt;</span></span>
-<span id="cb31-1043"><a href="#cb31-1043" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1044"><a href="#cb31-1044" aria-hidden="true" tabindex="-1"></a><span class="ss">9.  </span>Hyndman, R. J., &amp; Khandakar, Y. (2008). Automatic time series forecasting: The forecast package for R. *Journal of Statistical Software*, *27*(3), 1--22. <span class="ot">&lt;https://doi.org/10.18637/jss.v027.i03&gt;</span></span>
-<span id="cb31-1045"><a href="#cb31-1045" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1046"><a href="#cb31-1046" aria-hidden="true" tabindex="-1"></a><span class="ss">10. </span>J.P. Morgan/Reuters. (1996). *RiskMetrics: Technical document* (4th ed.). J.P. Morgan.</span>
-<span id="cb31-1047"><a href="#cb31-1047" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1048"><a href="#cb31-1048" aria-hidden="true" tabindex="-1"></a><span class="ss">11. </span>Kupiec, P. H. (1995). Techniques for verifying the accuracy of risk measurement models. *The Journal of Derivatives*, *3*(2), 73--84. <span class="ot">&lt;https://doi.org/10.3905/jod.1995.407942&gt;</span></span>
-<span id="cb31-1049"><a href="#cb31-1049" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1050"><a href="#cb31-1050" aria-hidden="true" tabindex="-1"></a><span class="ss">12. </span>Patton, A. J. (2011). Volatility forecast comparison using imperfect volatility proxies. *Journal of Econometrics*, *160*(1), 246--256. <span class="ot">&lt;https://doi.org/10.1016/j.jeconom.2010.03.034&gt;</span></span>
-<span id="cb31-1051"><a href="#cb31-1051" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1052"><a href="#cb31-1052" aria-hidden="true" tabindex="-1"></a>::: {.callout-important collapse="true"}</span>
-<span id="cb31-1053"><a href="#cb31-1053" aria-hidden="true" tabindex="-1"></a><span class="fu">## R session information</span></span>
-<span id="cb31-1054"><a href="#cb31-1054" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1057"><a href="#cb31-1057" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-1058"><a href="#cb31-1058" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: session-info</span></span>
-<span id="cb31-1059"><a href="#cb31-1059" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: false</span></span>
-<span id="cb31-1060"><a href="#cb31-1060" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-1061"><a href="#cb31-1061" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb31-1062"><a href="#cb31-1062" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-1063"><a href="#cb31-1063" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb31-1028"><a href="#cb31-1028" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb31-1029"><a href="#cb31-1029" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-1030"><a href="#cb31-1030" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

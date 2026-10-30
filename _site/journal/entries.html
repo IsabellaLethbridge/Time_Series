@@ -217,12 +217,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#lecture-4" id="toc-lecture-4" class="nav-link" data-scroll-target="#lecture-4">Lecture 4</a></li>
   <li><a href="#lecture-5" id="toc-lecture-5" class="nav-link" data-scroll-target="#lecture-5">Lecture 5</a></li>
   <li><a href="#lecture-6" id="toc-lecture-6" class="nav-link" data-scroll-target="#lecture-6">Lecture 6</a></li>
-  <li><a href="#additional-lecture-1-with-sulaiman" id="toc-additional-lecture-1-with-sulaiman" class="nav-link" data-scroll-target="#additional-lecture-1-with-sulaiman">Additional Lecture 1 with Sulaiman</a></li>
-  <li><a href="#additional-lecture-2-with-sulaiman" id="toc-additional-lecture-2-with-sulaiman" class="nav-link" data-scroll-target="#additional-lecture-2-with-sulaiman">Additional Lecture 2 with Sulaiman</a></li>
+  <li><a href="#additional-lecture-with-sulaiman" id="toc-additional-lecture-with-sulaiman" class="nav-link" data-scroll-target="#additional-lecture-with-sulaiman">Additional Lecture with Sulaiman</a></li>
   <li><a href="#lecture-7" id="toc-lecture-7" class="nav-link" data-scroll-target="#lecture-7">Lecture 7</a></li>
   <li><a href="#lecture-8" id="toc-lecture-8" class="nav-link" data-scroll-target="#lecture-8">Lecture 8</a></li>
   <li><a href="#lecture-9" id="toc-lecture-9" class="nav-link" data-scroll-target="#lecture-9">Lecture 9</a></li>
   <li><a href="#lecture-10" id="toc-lecture-10" class="nav-link" data-scroll-target="#lecture-10">Lecture 10</a></li>
+  <li><a href="#lecture-11" id="toc-lecture-11" class="nav-link" data-scroll-target="#lecture-11">Lecture 11</a></li>
+  <li><a href="#lecture-12" id="toc-lecture-12" class="nav-link" data-scroll-target="#lecture-12">Lecture 12</a></li>
   </ul>
 </nav>
     </div>
@@ -269,7 +270,7 @@ Assumption
 <p>Noise (stochastic) in data introduces different realisations. An observed time series is only one realisation of an underlying stochastic process. This is important as we are not just trying to model the observations but the process that generated them.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: How does noise introduce different realisations?</p>
-<p>A: In normal regression the pattern is fixed and the noise sits on top of it</p>
+<p>A: In normal regression the pattern is fixed and the noise sits on top of it:</p>
 <p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x_i + e_i,
 \]</span> where each error term is independent.</p>
@@ -339,7 +340,7 @@ Note
 <p><strong>What I Did:</strong></p>
 <p>Worked through <em>Time Series Analysis in R</em> using the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>Time domain looks at previous observations whereas the frequency domain looks at previous cycles. Often you will need to look at both of these domains.</p>
+<p>Time domain looks at previous observations whereas the frequency domain looks at cycles at different frequencies. Often you will need to look at both of these domains.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -353,7 +354,7 @@ Trend vs Seasonality vs Cycles
 <p>A trend is the long-run direction of movement in a time series. Seasonality models a pattern that repeats itself at a fixed AND known interval. A cycle is a long oscillation where the length is NOT fixed.</p>
 </div>
 </div>
-<p>When dealing with time series data you may encounter changing variability. Here you need to transform the data to stabilise variance and difference to remove trend anf seasonality. When structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.</p>
+<p>When dealing with time series data you may encounter changing variability. Here you need to transform the data to stabilise variance and difference to remove trend and seasonality. When structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.</p>
 <p>There are 4 benchmark forecasting models: Mean, Naive, Seasonal naive and Drift.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -371,7 +372,7 @@ Residuals are not forecast errors
 <p>You cannot run normal cross-validation on time series data since the ordering of observations matters. Future observations must never be used when estimating a forecasting model.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: How do you identify a significant structural break?</p>
-<p>A: This can be done using formal tests, dependent on whether the date of the break is known prior to looking at the data. If the date is known in advance, if there was a policy change, you can use Chow’s test. Chow’s test fits the model before and after the date of the break and uses an F-test to check if there is a statistically significant difference in model parameters. If the date is unknown you can run a Chow test at every possible date and take the largest F, compared against adjusted critical values. This is a sup-F test and accounts for having searched over every date, making it harder to declare a break.</p>
+<p>A: This can be done using formal tests, dependent on whether the date of the break is known prior to looking at the data. If the date is known in advance (e.g.&nbsp;a policy change), you can use Chow’s test. Chow’s test fits the model before and after the date of the break and uses an F-test to check if there is a statistically significant difference in model parameters. If the date is unknown you can run a Chow test at every possible date and take the largest F, compared against adjusted critical values. This is a sup-F test and accounts for having searched over every date, making it harder to declare a break.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Operators, Stationarity and White Noise</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -385,11 +386,11 @@ Residuals are not forecast errors
 <p><strong>What I Learned:</strong></p>
 <p>Since you can’t perform regular cross-validation on time series data you use a different approach. Walk-forward validation advances the forecast origin one step at a time and re-estimates the model at each step. Expanding window validation keeps every historical observation while moving the forecast origin forward. Sliding window validation keeps the training window length fixed while moving the forecast origin forward.</p>
 <p>Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.</p>
-<p>We want our data to be stationary and for the residuals to be white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model.</p>
-<p>Weak white noise requires uncorrelated observations but strict white noise requires <em>iid</em> observations.</p>
+<p>We want our data to be stationary and for the residuals to be white noise. To restore stationarity you can transform the data to stabilise the variance and take linear/seasonal differences to remove trend and seasonality. Log-transformations reduce a multiplicative model to an additive model.</p>
+<p>Weak white noise requires uncorrelated observations with zero mean and constant variance but strict white noise requires <em>iid</em> observations.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: What is the difference between walk-forward and expanding window?</p>
-<p>A:</p>
+<p>A: In the notes they are the same procedure: the training set always starts at <span class="math inline">\(y_1\)</span> and grows by one observation each time the forecast origin moves forward. “Walk-forward” describes how the origin moves and “expanding window” describes what is kept. The slides list them as separate strategies, but note that they use the same growth rule. The difference is that walk-forward re-estimates the model at every step, so it has a higher computational cost. The real contrast is with the sliding window, which drops the oldest observation at each step.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Conditional Variance Models</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -399,11 +400,11 @@ Residuals are not forecast errors
 <p><strong>Date:</strong> 24 August 2026</p>
 <p><strong>Topic covered:</strong> Linear Models for the Conditional Mean</p>
 <p><strong>What I Did:</strong></p>
-<p>Fit both ARIMA and SARIMA to the <code>AirPassengers</code> dataset:<a href="../section-1/section-1.html">Section 1</a></p>
+<p>Fit both ARIMA and SARIMA to the <code>AirPassengers</code> dataset: <a href="../section-1/section-1.html">Section 1</a></p>
 <p><strong>What I Learned:</strong></p>
-<p>The moving average, MA(<span class="math inline">\(q\)</span>), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. An MA(<span class="math inline">\(q\)</span>) is always stationary is restricted to be invertible.</p>
+<p>The moving average, MA(<span class="math inline">\(q\)</span>), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. An MA(<span class="math inline">\(q\)</span>) is always stationary and is restricted to be invertible.</p>
 <p>The autoregressive, AR(<span class="math inline">\(p\)</span>), model regresses a series on its own path.</p>
-<p>ARMA combines both MA and AR models and is fitted by maximum likelihood, not OLS, since the past chocks are never observed.</p>
+<p>ARMA combines both MA and AR models and is fitted by maximum likelihood, not OLS, since the past shocks are never observed.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -420,7 +421,7 @@ Note
 <p>The ARIMA(<span class="math inline">\(p,d,q\)</span>) model allows for differencing and the SARIMA model includes seasonality.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: How can you determine if there is additional seasonality in a dataset after differencing or if it is just noise? For example in <a href="../section-1/section-1.html">Section 1</a>, there were still spikes at some lags in the PACF after log-transforming and differencing the <code>AirPassengers</code> dataset.</p>
-<p>A: You can check if the residuals look like white noise by using a Ljung-Box test. A non-significant test means that there is no remaining proof of autocorrelation (even if there are will a few lags that spike in the ACF/PACF).</p>
+<p>A: You can check if the residuals look like white noise by using a Ljung-Box test. A non-significant test means that there is no evidence of remaining autocorrelation (even if there are still a few lags that spike in the ACF/PACF). At the 5% level about 1 in 20 lags will spike by chance.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Conditional Variance Models</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -431,7 +432,6 @@ Note
 <p><strong>Topic covered:</strong> Time Series Analysis Revision</p>
 <p><strong>What I Did:</strong></p>
 <p>Finished working through <em>Time Series Analysis in R</em>: <a href="../section-1/section-1.html">Section 1</a></p>
-<p><em>I still need to do this! Aim to have it done by Monday 7 September.</em></p>
 <p><strong>What I Learned:</strong></p>
 <p>Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a <code>tsibble()</code>, time series plots, seasonal and subseries plots, lag plots, autocorrelation functions, time series models, stationarity, differencing and unit root tests.</p>
 <p><strong>Questions:</strong></p>
@@ -440,8 +440,8 @@ Note
 <p>Conditional Variance Models, Spectral Analysis</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
-<section id="additional-lecture-1-with-sulaiman" class="level2">
-<h2 class="anchored" data-anchor-id="additional-lecture-1-with-sulaiman">Additional Lecture 1 with Sulaiman</h2>
+<section id="additional-lecture-with-sulaiman" class="level2">
+<h2 class="anchored" data-anchor-id="additional-lecture-with-sulaiman">Additional Lecture with Sulaiman</h2>
 <p><strong>Date:</strong> 16 September 2026</p>
 <p><strong>Topic covered:</strong> Conditional Variance Models (ARCH and GARCH)</p>
 <p><strong>What I Did:</strong></p>
@@ -475,26 +475,15 @@ Volatility clustering
 <p>Large changes tend to follow large changes and small changes tend to follow small changes. Returns are often uncorrelated, hence why the ACF of returns indicates very little, however squared returns can be strongly autocorrelated.</p>
 </div>
 </div>
-<p>The GARCH model includes the previous variance to the ARCH equation. This makes it equivalent to an ARCH model with infinite memory. a GARCH(1,1) model is usually sufficient in practice.</p>
+<p>The GARCH model adds the previous conditional variance to the ARCH equation. This makes it equivalent to an ARCH model with infinite memory. A GARCH(1,1) model is usually sufficient in practice.</p>
 <p><span class="math display">\[
 \sigma_t^2 = \alpha_0 + \alpha_1 \varepsilon_{t-1}^2 + \beta_1 \sigma_{t-1}^2,
 \]</span> where <span class="math inline">\(\alpha_1\)</span> measures how strongly volatility reacts to a new shock, <span class="math inline">\(\beta_1\)</span> measures how long that reaction lasts, <span class="math inline">\(\alpha_1 + \beta_1\)</span> is the persistence.</p>
 <p><strong>Questions:</strong></p>
 <p>Q: Why must <span class="math inline">\(\alpha_1 + \beta_1 &lt; 1\)</span>?</p>
 <p>A: When <span class="math inline">\(\alpha_1 + \beta_1 &lt; 1\)</span> this ensures that the long-run variance is <span class="math inline">\(\bar{\sigma}^2 = \frac{\alpha_0}{1- \alpha_1 - \beta_1}\)</span> and that the process has a benchmark variance for the volatility to return to. When <span class="math inline">\(\alpha_1 + \beta_1 = 1\)</span> (IGARCH) the shocks to volatility are permanent. This means that all the weight is on the past and none is on the long-run level. This is the variance equivalent of a random walk.</p>
-<p><strong>What to Do Next:</strong> Spectral Analysis</p>
-<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
-</section>
-<section id="additional-lecture-2-with-sulaiman" class="level2">
-<h2 class="anchored" data-anchor-id="additional-lecture-2-with-sulaiman">Additional Lecture 2 with Sulaiman</h2>
-<p><strong>Date:</strong></p>
-<p><strong>Topic covered:</strong></p>
-<p><strong>What I Did:</strong></p>
-<p><strong>What I Learned:</strong></p>
-<p><strong>Questions:</strong></p>
-<p>Q:</p>
-<p>A:</p>
 <p><strong>What to Do Next:</strong></p>
+<p>Spectral Analysis</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 </section>
 <section id="lecture-7" class="level2">
@@ -519,7 +508,7 @@ SES vs Holt vs Holt-Winters
 </div>
 </div>
 <p>The smoothing parameters and initial states (<span class="math inline">\(\ell_0\)</span>, <span class="math inline">\(b_0\)</span>) are estimated by minimising the sum of squared one-step-ahead errors. Fitted values are one-step-ahead forecasts, so residuals are always one-step-ahead errors.</p>
-<p>To turn the exponential smoothing algorithm into a state-space model we can write it in error-corrected form: <span class="math inline">\(y_t = \ell_{t-1} + e_t\)</span>, <span class="math inline">\(\ell_t = \ell_{t-1} + \alpha e_t\)</span>. This allows us to estimate <span class="math inline">\(\sigma\)</span> and build prediction intervals.</p>
+<p>To turn the exponential smoothing algorithm into a state-space model we can write it in error-correction form: <span class="math inline">\(y_t = \ell_{t-1} + e_t\)</span>, <span class="math inline">\(\ell_t = \ell_{t-1} + \alpha e_t\)</span>. This allows us to estimate <span class="math inline">\(\sigma\)</span> and build prediction intervals.</p>
 <p>This is what <code>ets()</code> does.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -559,7 +548,7 @@ ARMAX vs regression with ARMA errors
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>ARMAX includes lagged values of the response as predictors, <span class="math inline">\(y_t = \beta x_t + \phi y_{t-1} + \dots\)</span>. This means that <span class="math inline">\(\beta\)</span> can no longer be interpreted as the effect of <span class="math inline">\(x\)</span> on the mean of <span class="math inline">\(y\)</span>. Regression with ARMA errors keeps the normal regression equation and lets the errors follow an ARMA process, <span class="math inline">\(y_t = \beta_0 + \beta_1 x_t + \eta_t\)</span>. This means that <span class="math inline">\(\beta_1\)</span> can still be interpreted in the usual way.</p>
+<p>ARMAX includes lagged values of the response as predictors, <span class="math inline">\(y_t = \beta x_t + \phi y_{t-1} + \dots\)</span>. This means that <span class="math inline">\(\beta\)</span> can no longer be interpreted as the effect of <span class="math inline">\(x\)</span> on the mean of <span class="math inline">\(y\)</span>. Regression with ARMA errors keeps the normal regression equation and lets the errors follow an ARMA process, <span class="math inline">\(y_t = \beta_0 + \beta_1 x_t + \eta_t\)</span>, where <span class="math inline">\(\eta_t\)</span> follows an ARMA process. This means that <span class="math inline">\(\beta_1\)</span> can still be interpreted in the usual way.</p>
 </div>
 </div>
 <p>Harmonic regression assumes that the seasonal pattern stays the same over time.</p>
@@ -573,13 +562,12 @@ Autocorrelated errors
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>When errors are autocorrelated, OLS still gives unbiased estimates but they are no longer efficient. This means that the standard errors, tests and intervals are also wrong.</p>
-<p>This can be fixed with generalised least squares by using <code>gls()</code> with <code>corAR1()</code> or <code>corARMA()</code> or with <code>arima(..., xreg = )</code>.</p>
+<p>When errors are autocorrelated, OLS still gives unbiased estimates but they are no longer efficient. The usual standard errors are also wrong, so tests and intervals are too optimistic.</p>
 </div>
 </div>
 <p><strong>Questions:</strong></p>
 <p>Q: When should I add a lagged response instead of modelling the errors as ARMA?</p>
-<p>A:</p>
+<p>A: It depends on whether the dependence is part of the process or a nuisance. If <span class="math inline">\(y\)</span> depends on its own past (e.g.&nbsp;a stock that accumulates), a lagged response makes sense, but then <span class="math inline">\(\beta_1\)</span> is only the immediate effect of <span class="math inline">\(x\)</span> and the long-run effect is <span class="math inline">\(\beta_1/(1-\phi)\)</span>. If the goal is the effect of <span class="math inline">\(x\)</span> on the mean of <span class="math inline">\(y\)</span>, the errors should be modelled as ARMA. In Example 4.1 in <a href="../section-2/section-2.html">Section 2</a>, the data were generated with AR(1) errors, so the model with a lagged response was misspecified unless <span class="math inline">\(x_{t-1}\)</span> was also included. Regression with AR(1) errors is the same as this model with the coefficient of <span class="math inline">\(x_{t-1}\)</span> restricted to <span class="math inline">\(-\phi\beta_1\)</span>.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>State-Space Models</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -622,7 +610,7 @@ Bayesian Framework
 </div>
 <p><strong>Questions:</strong></p>
 <p>Q: How do I decide which variances in <span class="math inline">\(W\)</span> should be allowed to be non-zero?</p>
-<p>A:</p>
+<p>A: A non-zero variance lets that state change over time and a zero variance keeps it fixed. The structure of the model decides which states can have noise. In the CO<span class="math inline">\(_2\)</span> model in <a href="../section-2/section-2.html">Section 2</a> only the level, slope and current seasonal effect get noise, because the other seasonal states are just the previous effects shifted along. The size of the variances can then be estimated by maximum likelihood. If an estimated variance is essentially zero, that state can be fixed, and models can be compared with the likelihood or AIC, e.g.&nbsp;static (<span class="math inline">\(W = 0\)</span>) vs time-varying coefficients in the US consumption example.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Kalman Filter</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
@@ -663,14 +651,14 @@ Filtering vs Smoothing vs Forecasting
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Method (conceptual)
+Method
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
 <li>The prior predicts the next state from the previous estimate of the state, with some uncertainty (state equation).</li>
 <li>The likelihood asks how likely the new observation is given all possible states (observation equation).</li>
-<li>The new posterior, for the current state, is given by combining the likelihood and the prior</li>
+<li>The new posterior, for the current state, is given by combining the likelihood and the prior.</li>
 </ol>
 </div>
 </div>
@@ -682,6 +670,78 @@ Method (conceptual)
 \]</span> The Kalman filter only keeps track of the mean and variance. When we have a non-linear or non-Gaussian distribution we either end up with a skewed distribution or a posterior with no closed form.</p>
 <p><strong>What to Do Next:</strong></p>
 <p>Hidden Markov Models</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-11" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-11">Lecture 11</h2>
+<p><strong>Date:</strong> 12 October 2026</p>
+<p><strong>Topic covered:</strong> Hidden Markov Models 1</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through Questions 1, 3, 4 and 7 of the HMM tutorial and wrote the forward algorithm from first principles: <a href="../section-2/section-2.html">Section 2</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>A hidden Markov model (HMM) has an unobserved state process, <span class="math inline">\(C_t\)</span>, that follows a Markov chain and an observed process, <span class="math inline">\(X_t\)</span>, whose distribution depends only on the current state. Each state has its own state-dependent distribution (e.g.&nbsp;Poisson or Gaussian).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Assumption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The next state only depends on the current state (Markov property).</p>
+</div>
+</div>
+<p>The Markov chain is described by the transition probability matrix <span class="math inline">\(\Gamma\)</span>, where <span class="math inline">\(\gamma_{ij} = P(C_{t+1} = j \mid C_t = i)\)</span>, and the initial distribution <span class="math inline">\(\boldsymbol{\delta}\)</span>. A large diagonal in <span class="math inline">\(\Gamma\)</span> means that the states are persistent.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Independent mixture vs HMM
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An independent mixture draws a new state at every time point, independently of the last one. An HMM lets the state depend on the previous state, which creates autocorrelation in the observations.</p>
+</div>
+</div>
+<p>The likelihood, <span class="math inline">\(L_T = \boldsymbol{\delta}\mathbf{P}(x_1)\Gamma\mathbf{P}(x_2)\cdots\Gamma\mathbf{P}(x_T)\mathbf{1}'\)</span>, is calculated with the forward algorithm and maximised numerically. The forward probabilities are scaled at every step to avoid underflow.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: Why does an HMM produce autocorrelated observations if the observations are conditionally independent given the states?</p>
+<p>A: The observations are only independent once we know the states. A large observation makes a high-mean state more likely and, since the states are persistent, the next observation is likely to come from that same state.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Hidden Markov Models 2</p>
+<p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
+</section>
+<section id="lecture-12" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-12">Lecture 12</h2>
+<p><strong>Date:</strong> 19 October 2026</p>
+<p><strong>Topic covered:</strong> Hidden Markov Models 2</p>
+<p><strong>What I Did:</strong></p>
+<p>Worked through Questions 2, 5 and 6 of the HMM tutorial, wrote the backward algorithm, local decoding and the Viterbi algorithm from first principles, and fitted Poisson HMMs to the earthquake counts: <a href="../section-2/section-2.html">Section 2</a>, <a href="../projects/project-04-analysis.html">Project 4</a></p>
+<p><strong>What I Learned:</strong></p>
+<p>Once an HMM has been fitted we usually want to know which state the process was in. This is called decoding.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Local vs global decoding
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Local decoding finds the most likely state at each time point separately, using the forward and backward probabilities. Global decoding finds the most likely sequence of states using the Viterbi algorithm. The two can disagree.</p>
+</div>
+</div>
+<p>The number of states is chosen with AIC or BIC. The likelihood of an HMM often has several local maxima, so the model should be fitted from several different starting values.</p>
+<p><strong>Questions:</strong></p>
+<p>Q: Why can’t short visits to a state be recovered by decoding?</p>
+<p>A: A single visit to a state needs two unlikely transitions, there and back, and if the state-dependent distributions overlap, the observation is often also likely under the surrounding state. In the Viterbi exercise in <a href="../section-2/section-2.html">Section 2</a>, the single visit to state C at time 2 was decoded as A.</p>
+<p><strong>What to Do Next:</strong></p>
+<p>Project 4</p>
 <p><strong>Links:</strong> <a href="../ai-use-log.html">AI Log</a></p>
 
 

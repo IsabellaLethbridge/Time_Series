@@ -4,6 +4,14 @@ project:
   render:
     - "*.qmd"
     - "!rough.qmd" # Excludes draft files from rendering
+  resources: 
+    - "section-1/S1_Chapters_1-6.html"
+    - "section-1/S1_Conditional_Variance_Models.html"
+    - "section-1/S1_Spectral_Analysis.html"
+    - "section-2/S2_Exponential_Smoothing.html"
+    - "section-2/S2_Hidden_Markov_Models.html"
+    - "section-2/S2-Regression.html"
+    - "section-2/S2_State_Space_Models.html"
 
 website:
   title: "The Temporal Shift"

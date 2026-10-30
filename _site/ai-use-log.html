@@ -59,8 +59,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -179,8 +177,32 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#ai-use-log" id="toc-ai-use-log" class="nav-link active" data-scroll-target="#ai-use-log">AI Use Log</a>
   <ul class="collapse">
-  <li><a href="#project-2-predicting-drought-in-the-western-cape" id="toc-project-2-predicting-drought-in-the-western-cape" class="nav-link" data-scroll-target="#project-2-predicting-drought-in-the-western-cape">Project 2: Predicting drought in the Western Cape</a></li>
-  <li><a href="#project-3-predicting-the-volatility-of-jse-all-share-index-returns" id="toc-project-3-predicting-the-volatility-of-jse-all-share-index-returns" class="nav-link" data-scroll-target="#project-3-predicting-the-volatility-of-jse-all-share-index-returns">Project 3: Predicting the volatility of JSE All Share Index returns</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">Section 1</a>
+  <ul class="collapse">
+  <li><a href="#interactive-revision-material" id="toc-interactive-revision-material" class="nav-link" data-scroll-target="#interactive-revision-material">Interactive revision material</a></li>
+  </ul></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">Section 2</a>
+  <ul class="collapse">
+  <li><a href="#interactive-revision-material-1" id="toc-interactive-revision-material-1" class="nav-link" data-scroll-target="#interactive-revision-material-1">Interactive revision material</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#portfolio-projects" id="toc-portfolio-projects" class="nav-link" data-scroll-target="#portfolio-projects">Portfolio Projects</a>
+  <ul class="collapse">
+  <li><a href="#portfolio-wide-ai-assistance" id="toc-portfolio-wide-ai-assistance" class="nav-link" data-scroll-target="#portfolio-wide-ai-assistance">Portfolio-wide AI assistance</a></li>
+  <li><a href="#project-1" id="toc-project-1" class="nav-link" data-scroll-target="#project-1">Project 1</a>
+  <ul class="collapse">
+  <li><a href="#ai-errors-identified-and-corrected" id="toc-ai-errors-identified-and-corrected" class="nav-link" data-scroll-target="#ai-errors-identified-and-corrected">AI errors identified and corrected</a></li>
+  </ul></li>
+  <li><a href="#project-2" id="toc-project-2" class="nav-link" data-scroll-target="#project-2">Project 2</a>
+  <ul class="collapse">
+  <li><a href="#ai-errors-identified-and-corrected-1" id="toc-ai-errors-identified-and-corrected-1" class="nav-link" data-scroll-target="#ai-errors-identified-and-corrected-1">AI errors identified and corrected</a></li>
+  </ul></li>
+  <li><a href="#project-3" id="toc-project-3" class="nav-link" data-scroll-target="#project-3">Project 3</a></li>
+  <li><a href="#project-4" id="toc-project-4" class="nav-link" data-scroll-target="#project-4">Project 4</a>
+  <ul class="collapse">
+  <li><a href="#ai-errors-identified-and-corrected-2" id="toc-ai-errors-identified-and-corrected-2" class="nav-link" data-scroll-target="#ai-errors-identified-and-corrected-2">AI errors identified and corrected</a></li>
+  </ul></li>
+  <li><a href="#responsibility-for-ai-assisted-work" id="toc-responsibility-for-ai-assisted-work" class="nav-link" data-scroll-target="#responsibility-for-ai-assisted-work">Responsibility for AI-assisted work</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -190,110 +212,639 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
+<style>
+/* AI log tables: use the available screen width and keep prose readable */
+.ai-log-table {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.ai-log-table table {
+  width: 100%;
+  table-layout: auto;
+  font-size: 0.94rem;
+}
+
+.ai-log-table th,
+.ai-log-table td {
+  vertical-align: top;
+  padding: 0.65rem 0.8rem;
+}
+
+.ai-log-table th:nth-child(1),
+.ai-log-table td:nth-child(1) {
+  min-width: 12rem;
+  width: 18%;
+}
+
+.ai-log-table th:nth-child(2),
+.ai-log-table td:nth-child(2) {
+  min-width: 28rem;
+  width: 48%;
+}
+
+.ai-log-table th:nth-child(3),
+.ai-log-table td:nth-child(3) {
+  min-width: 22rem;
+  width: 34%;
+}
+
+.ai-overview table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.ai-overview th:nth-child(1),
+.ai-overview td:nth-child(1) {
+  min-width: 13rem;
+  width: 22%;
+}
+
+.ai-overview th:nth-child(2),
+.ai-overview td:nth-child(2) {
+  min-width: 34rem;
+  width: 78%;
+}
+
+/* Prevent code/function names from forcing very narrow columns */
+.ai-log-table code,
+.ai-overview code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+</style>
 <section id="ai-use-log" class="level1">
 <h1>AI Use Log</h1>
-<p>This log records substantive uses of AI that influenced my portfolio, as required by the portfolio guidelines. Minor interactions (for example, single syntax questions) are not logged. I remain responsible for checking and understanding all AI-assisted material, and all analysis results were produced by running the code myself in R.</p>
-<section id="project-2-predicting-drought-in-the-western-cape" class="level2">
-<h2 class="anchored" data-anchor-id="project-2-predicting-drought-in-the-western-cape">Project 2: Predicting drought in the Western Cape</h2>
+<p>This log records uses of AI that influenced my portfolio.</p>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">Section 1</h2>
+<p><strong>Tool used:</strong> Claude (Anthropic)</p>
+<p>Claude was used throughout Section 1 primarily as a learning and coding support tool. I used it to clarify concepts from the lecture notes, check my exercise answers, translate mathematical formulations into LaTeX, and help implement methods in R where I had first worked through the underlying formulas or pseudocode myself. It was also used to explain unfamiliar R functions and model output, and to assist with formatting my Section 1 workthrough.</p>
+<section id="interactive-revision-material" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-revision-material">Interactive revision material</h3>
+<p>I asked Claude to create interactive HTML revision files from the Section 1 notes. These summarised the key concepts and included questions that I could work through before revealing the answers.</p>
+<ul>
+<li><a href="section-1/S1_Chapters_1-6.html" target="_blank">Section 1A: Chapters 1–6</a></li>
+<li><a href="section-1/S1_Conditional_Variance_Models.html" target="_blank">Section 1B: Conditional Variance Models</a></li>
+<li><a href="section-1/S1_Spectral_Analysis.html" target="_blank">Section 1C: Spectral Analysis</a></li>
+<li><a href="./section-1/section-1.html" target="_blank">Section 1 workthrough</a></li>
+</ul>
+<div class="ai-log-table">
 <table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 58%">
+<col style="width: 31%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Date</th>
-<th>Tool used</th>
-<th>What I asked it to help with</th>
-<th>Link</th>
-<th>What I checked or changed myself</th>
+<th>AI-assisted area</th>
+<th>How Claude was used</th>
+<th>What I checked or did myself</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Reviewing Project 2 against the portfolio guidelines and rubric, using my rendered HTML output. It identified text that contradicted the tables, unfinished placeholder text, a model chosen using the test set, a cross-correlation driven by seasonality, a missing seasonal MA candidate for SST, and a bias from averaging whichever buoys reported each day.</td>
-<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
-<td>I checked each issue against my rendered tables and figures before accepting it.</td>
+<td><strong>Conceptual explanations</strong></td>
+<td>Claude was used to clarify concepts that I did not initially understand, including missing data in discrete and continuous time series, different realisations of a stochastic process, the frequency-domain view of a series, conditional variance models and spectral analysis.</td>
+<td>I checked explanations against the lecture notes and used follow-up questions where necessary until I could explain and apply the concepts myself.</td>
 </tr>
 <tr class="even">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Revising the analysis code: a justified set of seven candidate models, rolling-origin cross-validation for model selection, an ETS(A,N,A) comparison, a composition-adjusted daily SST mean, Ljung-Box tests, and saving key results so the summary page updates automatically.</td>
-<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
-<td>Claude could not run R, so I rendered the code myself, reported errors back (a YAML caption error) and checked every table and figure. I replaced Claude’s hand-coded prewhitening filter with <code>TSA::prewhiten()</code>, since prewhitening was not covered in lectures and a package function with an explanation was more appropriate.</td>
+<td><strong>Mathematical notation and model formulations</strong></td>
+<td>Claude helped format model definitions and derivations in LaTeX and made the notation in my workthrough more consistent.</td>
+<td>I checked the equations against the formulations in the notes before including them.</td>
 </tr>
 <tr class="odd">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Explaining concepts I had not used before: CRPS, the Ljung-Box <span class="math inline">\(Q\)</span> statistic, prewhitening, rolling-origin cross-validation and the buoy composition adjustment (including writing it as an equation).</td>
-<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
-<td>I checked the explanations against Hyndman &amp; Athanasopoulos (2021) and Cryer &amp; Chan (2008), and asked for simpler explanations until I could explain each one in my own words.</td>
+<td><strong>R implementation and exercises</strong></td>
+<td>Claude helped explain R functions and translate methods or pseudocode into R while I worked through the Section 1 exercises and tutorials.</td>
+<td>I ran all code myself and checked the results against the theory, lecture material and expected model behaviour.</td>
 </tr>
 <tr class="even">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Rewording draft paragraphs and replacing conditional inline R text with sentences based on my final rendered results.</td>
-<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
-<td>I edited the wording and corrected the interpretation where I disagreed. I pointed out that the SST trend was not more stable than the dam trend (it tracks El Niño and La Niña events), that the positive lag-6 correlation contradicts the hypothesised negative relationship, and that the unit root tests choose the differencing while the ACF and PACF choose the AR and MA orders.</td>
+<td><strong>Conditional variance models</strong></td>
+<td>Claude explained ADF and KPSS testing, how to use the relevant R functions, how to interpret GARCH output, and helped write code for extracting model-selection quantities such as AIC and BIC.</td>
+<td>I ran the tests and models myself and interpreted the results in the context of the exercises and lecture material.</td>
 </tr>
 <tr class="odd">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Suggesting references for the methods and software used (Hyndman &amp; Athanasopoulos; Cryer &amp; Chan; the <code>fable</code>, <code>feasts</code> and <code>TSA</code> packages).</td>
-<td><a href="https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk">Conversation</a></td>
-<td>Claude said that some reference details were from memory and that its first prewhitening citation was wrong. I checked the package references with <code>citation()</code> in R and the textbook chapter numbers against the books.</td>
+<td><strong>Spectral analysis</strong></td>
+<td>Claude walked through the provided Spectral Analysis R tutorial line by line and explained concepts such as the Nyquist frequency and how to interpret a periodogram.</td>
+<td>I checked that I could interpret the output myself and used the lecture notes or other course material where an AI explanation was insufficient.</td>
+</tr>
+<tr class="even">
+<td><strong>Interactive revision files</strong></td>
+<td>Claude converted the lecture material into the three interactive HTML revision resources linked above, including summaries and self-test questions.</td>
+<td>I checked the content against the notes and attempted the questions before viewing the answers.</td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="project-3-predicting-the-volatility-of-jse-all-share-index-returns" class="level2">
-<h2 class="anchored" data-anchor-id="project-3-predicting-the-volatility-of-jse-all-share-index-returns">Project 3: Predicting the volatility of JSE All Share Index returns</h2>
+</section>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">Section 2</h2>
+<p><strong>Tool used:</strong> Claude (Anthropic)</p>
+<p>Claude was used in Section 2 in a similar way to Section 1: primarily to help me understand new modelling frameworks, translate mathematical procedures or pseudocode into R, debug implementations and create interactive revision resources. Because Section 2 involved more algorithmic methods, particularly state-space models and Hidden Markov Models, I also used Claude to step through algorithms and explain how the mathematical formulation related to the code.</p>
+<section id="interactive-revision-material-1" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-revision-material-1">Interactive revision material</h3>
+<p>I asked Claude to create interactive HTML revision files from the Section 2 material, using the same approach as for Section 1. These were used as supplementary revision resources rather than replacements for the lecture notes.</p>
+<ul>
+<li><a href="section-2/S2_Exponential_Smoothing.html" target="_blank">Section 2: Exponential Smoothing</a></li>
+<li><a href="section-2/S2_State_Space_Models.html" target="_blank">Section 2: State-Space Models</a></li>
+<li><a href="section-2/S2-Regression.html" target="_blank">Section 2: Regression</a></li>
+<li><a href="section-2/S2_Hidden_Markov_Models.html" target="_blank">Section 2: Hidden Markov Models</a></li>
+</ul>
+<div class="ai-log-table">
 <table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 53%">
+<col style="width: 38%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Date</th>
-<th>Tool used</th>
-<th>What I asked it to help with</th>
-<th>Link</th>
-<th>What I checked or changed myself</th>
+<th>AI-assisted area</th>
+<th>How Claude was used</th>
+<th>What I checked or did myself</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2026-10-08</td>
-<td>Claude (Cowork)</td>
-<td>Reviewing my first version of Project 3 against the course ARCH and GARCH guide. It found that the sector extension had failed fits (degrees of freedom at the lower bound and identical half-lives for every sector), that EGARCH was difficult to interpret, and that some template text contradicted my diagnostic results. It suggested a simplified structure following the guide’s ten-step workflow.</td>
-<td><a href="ADD LINK">Conversation</a></td>
-<td>[Add what you checked or changed yourself.]</td>
+<td><strong>Conceptual explanations</strong></td>
+<td>Claude was used to clarify the relationship between exponential smoothing and state-space models, the role of observed and latent states, and how the different Section 2 modelling frameworks were connected.</td>
+<td>I checked the explanations against the lecture material and made sure I could interpret the models independently before applying them.</td>
 </tr>
 <tr class="even">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Reviewing Project 3 against the portfolio guidelines and rubric, using my rendered HTML output. It identified broken inline R code, typos, a broken table reference, an incorrect long-run volatility in the summary, a methods paragraph that did not match the analysis, and that the test period was much calmer than the training period.</td>
-<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
-<td>I checked each issue against my rendered tables and figures before accepting it.</td>
+<td><strong>Exponential smoothing</strong></td>
+<td>Claude helped connect the exponential-smoothing recursions to their state-space representation and assisted with coding implementations based on pseudocode.</td>
+<td>I checked the recursions against the model formulation, ran the implementations and compared their behaviour with package-based results where appropriate.</td>
 </tr>
 <tr class="odd">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Checking whether the Diebold–Mariano test was covered in the course notes, and adding Diebold–Mariano tests and Value-at-Risk backtests (Kupiec and Christoffersen) to the analysis.</td>
-<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
-<td>Claude confirmed that these tests are not in the course notes, slides or ARCH and GARCH guide. I asked for them to be implemented with <code>forecast::dm.test()</code> and <code>rugarch::VaRTest()</code> instead of from first principles, and asked for the code to be simplified so that it did not generate the interpretation text. Claude could not run R, so I rendered the code myself and wrote the interpretations from my rendered tables.</td>
+<td><strong>State-space models and filtering</strong></td>
+<td>Claude was used to step through state-space notation and filtering procedures and to explain how sequential updating works computationally.</td>
+<td>I worked through the calculations and checked that I understood the interpretation of the latent state, prediction and updating steps rather than relying only on generated code.</td>
 </tr>
 <tr class="even">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Rewording and condensing draft paragraphs (mean model selection, diagnostics, Diebold–Mariano and VaR results), and explaining why the models are evaluated on a test set.</td>
-<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
-<td>I edited the wording and wrote the results into the interpretations myself. Claude then checked the summary page against my results and corrected contradictions, for example the limitations paragraph that said the GARCH ranking was uncertain after the Diebold–Mariano tests showed significant differences.</td>
+<td><strong>Regression and time-series errors</strong></td>
+<td>Claude assisted with explanations and implementation details where regression was combined with time-series structure, including how predictors and serial dependence should be handled.</td>
+<td>I checked model specifications and output against the lecture material and interpreted the fitted relationships myself.</td>
 </tr>
 <tr class="odd">
-<td>2026-10-29</td>
-<td>Claude (Cowork)</td>
-<td>Suggesting references for the methods and software used (Patton, 2011; Diebold &amp; Mariano, 1995; Kupiec, 1995; Christoffersen, 1998; Hyndman &amp; Khandakar, 2008).</td>
-<td><a href="https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk">Conversation</a></td>
-<td>[Add how you checked the references, e.g.&nbsp;against the DOIs and <code>citation()</code> in R.]</td>
+<td><strong>Hidden Markov Models</strong></td>
+<td>Claude explained the main HMM components and algorithms, including the forward recursion and Viterbi algorithm, and helped translate pseudocode into reusable R functions. This later formed the basis of the first-principles toolkit used in Project 4.</td>
+<td>I checked the functions against the HMM equations and validated the implementation against package-based results where possible.</td>
+</tr>
+<tr class="even">
+<td><strong>HMM software and diagnostics</strong></td>
+<td>Claude helped explain how to use <code>depmixS4</code>, fit models with different numbers of regimes, work with multiple starting values, assess parameter precision and implement model diagnostics such as pseudo-residuals.</td>
+<td>I ran and compared the models myself, investigated poor solutions and used the statistical output and diagnostics to make the final modelling decisions.</td>
+</tr>
+<tr class="odd">
+<td><strong>Code debugging and streamlining</strong></td>
+<td>Claude assisted with debugging and reorganising repeated Section 2 code into clearer functions and workflows, particularly for algorithms that were later reused in Project 4.</td>
+<td>I checked that refactoring did not change the numerical results and retained responsibility for the final implementations.</td>
+</tr>
+<tr class="even">
+<td><strong>Interactive revision files</strong></td>
+<td>Claude generated the four Section 2 HTML revision resources linked above from the course material, including summaries and questions for self-testing.</td>
+<td>I checked the material against the notes and used the resources to test and clarify my understanding.</td>
 </tr>
 </tbody>
 </table>
+</div>
+</section>
+</section>
+</section>
+<section id="portfolio-projects" class="level1">
+<h1>Portfolio Projects</h1>
+<section id="portfolio-wide-ai-assistance" class="level2">
+<h2 class="anchored" data-anchor-id="portfolio-wide-ai-assistance">Portfolio-wide AI assistance</h2>
+<p>In addition to the project-specific uses documented below, Claude (Anthropic) was used throughout the portfolio for spell-checking, grammar and wording improvements, LaTeX and Quarto formatting, and periodic checks against the portfolio guidelines. Statistical interpretations and final modelling decisions remained my responsibility.</p>
+</section>
+<section id="project-1" class="level2">
+<h2 class="anchored" data-anchor-id="project-1">Project 1</h2>
+<p><strong>Tool used:</strong> Claude (Anthropic)</p>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 40%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>AI-assisted task</th>
+<th>How Claude was used</th>
+<th>What I checked or did myself</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data-access instructions</strong></td>
+<td>Claude helped me locate and understand how to access the electricity-demand data required for the project.</td>
+<td>I accessed the data myself, checked that the required period and variables were present and documented the data source used in the project.</td>
+</tr>
+<tr class="even">
+<td><strong>Reading the data into R</strong></td>
+<td>Claude assisted with the R code required to import the data, parse dates and place the series into a form suitable for time-series analysis.</td>
+<td>I ran the import code, checked the date range, observation frequency and resulting values against the source data.</td>
+</tr>
+<tr class="odd">
+<td><strong>Initial data-quality checks</strong></td>
+<td>Claude helped write code to check missing observations, duplicated dates/observations and other basic data-quality issues.</td>
+<td>I inspected the identified issues and decided how they should be handled before modelling.</td>
+</tr>
+<tr class="even">
+<td><strong>Plotting code</strong></td>
+<td>Claude assisted with all major plotting code, including time-series plots, decompositions, diagnostic plots and forecast/evaluation figures.</td>
+<td>I decided what needed to be visualised, checked the plotted values and edited labels, annotations and presentation where required.</td>
+</tr>
+<tr class="odd">
+<td><strong>Structural-break testing</strong></td>
+<td>I asked Claude to explain how a structural-break test could be implemented for the electricity-demand series.</td>
+<td>I used the test as supporting evidence rather than treating the estimated break dates as automatically correct, and interpreted the break in the context of the COVID-19 period and the modelling objective.</td>
+</tr>
+<tr class="even">
+<td><strong>Stepping through structural-break pseudocode</strong></td>
+<td>Claude helped me work through the structural-break procedure step by step and translate the required workflow into R code.</td>
+<td>I ran the procedure, inspected the candidate break dates and compared them with the observed series and relevant dates.</td>
+</tr>
+<tr class="odd">
+<td><strong>Strengthening the structural-break assessment</strong></td>
+<td>Claude suggested checking multiple values of the minimum segment length / trimming parameter rather than relying on one setting.</td>
+<td>I ran the alternative specifications and used the sensitivity of the estimated break dates as part of my decision about the training period.</td>
+</tr>
+<tr class="even">
+<td><strong>Holt–Winters from first principles</strong></td>
+<td>I supplied the Holt–Winters formulas/pseudocode and asked Claude to help translate the recursions into an R implementation from first principles.</td>
+<td>I checked each recursion against the model definition, compared the behaviour with package-based exponential-smoothing output and interpreted the fitted components myself.</td>
+</tr>
+<tr class="odd">
+<td><strong>Rolling-window evaluation</strong></td>
+<td>Claude helped write reusable model-fitting and forecasting functions so that several models could be evaluated consistently over rolling/expanding forecast origins.</td>
+<td>I determined the training, validation and test design, checked that each forecast used only information available at the forecast origin and interpreted the resulting errors.</td>
+</tr>
+<tr class="even">
+<td><strong><code>imap()</code> / <code>purrr</code> workflow</strong></td>
+<td>Claude explained how <code>imap()</code> could be used to streamline repeated fitting or forecasting across named model specifications and helped adapt my code to use it.</td>
+<td>I checked that each model name was correctly matched to its forecast output and that the streamlined workflow reproduced the original calculations.</td>
+</tr>
+<tr class="odd">
+<td><strong>Diebold–Mariano test</strong></td>
+<td>Claude explained the purpose of the Diebold–Mariano test and assisted with the R implementation for comparing forecast accuracy.</td>
+<td>I selected the forecasts/losses being compared and interpreted the test in conjunction with the observed forecast errors rather than using the p-value alone.</td>
+</tr>
+<tr class="even">
+<td><strong>Empirical prediction intervals</strong></td>
+<td>Claude helped me check the construction of empirical prediction intervals based on forecast/residual errors and identify issues with how the intervals were being calculated.</td>
+<td>I checked interval coverage and width against the observed holdout values and discussed the limitations of constructing intervals from the available residual information.</td>
+</tr>
+<tr class="odd">
+<td><strong>Annual-cycle adjustment</strong></td>
+<td>After comparing model behaviour, Claude suggested testing whether removing the additional annual-cycle adjustment simplified or improved the forecasting approach.</td>
+<td>I compared the competing specifications using the validation/test framework and made the final modelling decision based on the evaluation results.</td>
+</tr>
+<tr class="even">
+<td><strong>Fourier terms for the annual cycle</strong></td>
+<td>Claude helped write a function to generate the required sine and cosine Fourier terms for an annual cycle.</td>
+<td>I checked the frequencies/periods used, inspected the generated terms and assessed whether adding them improved forecast performance.</td>
+</tr>
+<tr class="odd">
+<td><strong>Inline values</strong></td>
+<td>Claude helped write inline R expressions so numerical results in the text were populated directly from fitted objects and evaluation results.</td>
+<td>I checked the rendered values against the underlying R objects.</td>
+</tr>
+<tr class="even">
+<td><strong>Table formatting</strong></td>
+<td>Claude assisted with formatting all result and diagnostic tables for the rendered portfolio.</td>
+<td>I checked that the values, labels, units and captions agreed with the analysis output.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="ai-errors-identified-and-corrected" class="level3">
+<h3 class="anchored" data-anchor-id="ai-errors-identified-and-corrected">AI errors identified and corrected</h3>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 37%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue identified</th>
+<th>What was wrong</th>
+<th>How it was corrected</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>First-principles Holt–Winters smoothing parameter</strong></td>
+<td>In the first-principles Holt–Winters implementation, the estimated smoothing parameter () reached the boundary at 1, while <code>ets()</code> estimated approximately 0.915.</td>
+<td>I checked the first-principles estimate against the <code>ets()</code> fit and revised the discussion so that () is explicitly described as a boundary estimate rather than being treated as directly equivalent to the package estimate.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="project-2" class="level2">
+<h2 class="anchored" data-anchor-id="project-2">Project 2</h2>
+<p><strong>Tool used:</strong> Claude (Anthropic)</p>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 56%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>AI-assisted task</th>
+<th>How Claude was used</th>
+<th>What I checked or did myself</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data-access instructions</strong></td>
+<td>Claude assisted with locating/accessing the City of Cape Town dam-level data and the NOAA/TAO sea-surface-temperature data used in the project.</td>
+<td>I accessed the sources myself, checked the periods and variables available and documented the final sources used.</td>
+</tr>
+<tr class="even">
+<td><strong>Reading the datasets into R</strong></td>
+<td>Claude helped with code to import the dam-level and SST datasets, parse dates and place the series on compatible time scales.</td>
+<td>I ran the import code and checked the resulting dates and values against the source files.</td>
+</tr>
+<tr class="odd">
+<td><strong>Cleaning the data</strong></td>
+<td>Claude assisted with cleaning code for inconsistent dates, duplicated observations, missing values and reshaping the data for analysis.</td>
+<td>I inspected the identified problems and made the final decisions about exclusions, transformations and aggregation.</td>
+</tr>
+<tr class="even">
+<td><strong>Missing SST observations / filling gaps</strong></td>
+<td>Claude helped identify and implement ways of handling gaps in the buoy series so that aggregation and subsequent analysis did not silently fail.</td>
+<td>I inspected the missingness pattern and considered the implications of filling/interpolating values before using the resulting series.</td>
+</tr>
+<tr class="odd">
+<td><strong>SST aggregation across buoys</strong></td>
+<td>I raised the concern that the TAO/TRITON buoys came from different locations/latitudes and that the set of reporting buoys changed over time. Claude suggested an aggregation/adjustment strategy to reduce artificial variation caused by changing buoy composition.</td>
+<td>I checked the buoy coverage over time, assessed the resulting aggregate series and explicitly discussed changing buoy availability as a limitation.</td>
+</tr>
+<tr class="even">
+<td><strong>Seasonal and ordinary differencing</strong></td>
+<td>Claude refined my code for determining and applying the required seasonal and first differences to the series.</td>
+<td>I used the observed series, ACF/diagnostics and stationarity considerations to decide whether the resulting transformation was reasonable.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prewhitening</strong></td>
+<td>Claude explained the purpose of prewhitening and assisted with code to prewhiten the series before calculating the cross-correlation function.</td>
+<td>I checked the filtered series and interpreted how prewhitening changed the apparent lead–lag relationship between SST and dam levels.</td>
+</tr>
+<tr class="even">
+<td><strong>Dynamic-regression workflow</strong></td>
+<td>Claude assisted with implementation details for including SST information in the dam-level forecasting model and aligning lagged predictors with the response.</td>
+<td>I selected the candidate relationship, fitted and evaluated the models and concluded that inclusion of SST did not improve forecasts over the univariate model.</td>
+</tr>
+<tr class="odd">
+<td><strong>CRPS extraction for inline reporting</strong></td>
+<td>Claude helped extract CRPS values from the relevant evaluation objects and format them for inline R references in the text.</td>
+<td>I checked the extracted values against the evaluation output and used them in the final model comparison.</td>
+</tr>
+<tr class="even">
+<td><strong>Plotting code</strong></td>
+<td>Claude assisted with all plotting code, including dam/SST time-series figures, decomposition/diagnostic plots, cross-correlation displays and forecast plots.</td>
+<td>I specified the comparisons I wanted to show, checked the plotted values and edited presentation and annotations where needed.</td>
+</tr>
+<tr class="odd">
+<td><strong>Table formatting</strong></td>
+<td>Claude assisted with formatting the project tables in Quarto/HTML.</td>
+<td>I checked all reported estimates, errors and captions against the analysis objects.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="ai-errors-identified-and-corrected-1" class="level3">
+<h3 class="anchored" data-anchor-id="ai-errors-identified-and-corrected-1">AI errors identified and corrected</h3>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 57%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue identified</th>
+<th>What was wrong</th>
+<th>How it was corrected</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Cross-correlation analysis</strong></td>
+<td>The original cross-correlation analysis used the raw seasonal series. The apparent relationship was largely driven by the shared seasonal structure rather than a reliable lead–lag relationship.</td>
+<td>I replaced the raw CCF with a prewhitened cross-correlation analysis based on seasonally differenced series.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="project-3" class="level2">
+<h2 class="anchored" data-anchor-id="project-3">Project 3</h2>
+<p><strong>Tool used:</strong> Claude (Anthropic)</p>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 48%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>AI-assisted task</th>
+<th>How Claude was used</th>
+<th>What I checked or did myself</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data-access instructions</strong></td>
+<td>Claude helped with instructions for obtaining the JSE index-price data required for the project.</td>
+<td>I accessed the data, checked the time period and constructed/verified the return series used in the analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>Reading and preparing the data</strong></td>
+<td>Claude assisted with import code, date handling and preparation of the price/return series.</td>
+<td>I checked the resulting returns, missing observations and summary statistics before modelling.</td>
+</tr>
+<tr class="odd">
+<td><strong>Streamlining repeated code</strong></td>
+<td>Claude helped refactor repeated GARCH fitting, forecasting and evaluation code into more concise functions/workflows.</td>
+<td>I checked that the streamlined code reproduced the original fitted values, forecasts and evaluation metrics.</td>
+</tr>
+<tr class="even">
+<td><strong>GARCH(1,1) from first principles</strong></td>
+<td>I supplied the GARCH(1,1) model equations/pseudocode and asked Claude to help translate the variance recursion and likelihood into R.</td>
+<td>I checked the recursion and constraints against the model definition and compared the resulting estimates/volatility with package-based fits.</td>
+</tr>
+<tr class="odd">
+<td><strong>GJR-GARCH with Student-(t) innovations</strong></td>
+<td>Claude suggested including a GJR-GARCH-(t) specification so that the model could accommodate both asymmetric responses to shocks and heavy-tailed returns.</td>
+<td>I fitted and diagnosed the model, compared it with the other candidate specifications and retained it based on the empirical results rather than the suggestion alone.</td>
+</tr>
+<tr class="even">
+<td><strong>QLIKE loss</strong></td>
+<td>Claude explained QLIKE and assisted with implementing it as a loss function for volatility-forecast evaluation.</td>
+<td>I checked the calculation and used it alongside the other forecast measures when comparing models.</td>
+</tr>
+<tr class="odd">
+<td><strong>Value-at-Risk backtests</strong></td>
+<td>Drawing on the connection with my Portfolio Theory course, I asked Claude to help implement VaR forecasts and the associated backtests for the fitted volatility models.</td>
+<td>I selected the VaR levels, checked the violation counts and test output and interpreted the results in relation to the assumed innovation distributions and market risk.</td>
+</tr>
+<tr class="even">
+<td><strong>Forecast-evaluation workflow</strong></td>
+<td>Claude helped streamline the repeated out-of-sample forecasts and evaluation of competing conditional-variance models.</td>
+<td>I determined the evaluation sample and model comparisons and checked that forecasts were genuinely out of sample.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plotting and tables</strong></td>
+<td>As part of the portfolio-wide assistance described above, Claude generated/assisted with the plotting and table-formatting code used for the volatility, diagnostic and forecast-comparison results.</td>
+<td>I checked all plotted and tabulated quantities against the fitted objects and wrote the substantive interpretation myself.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="project-4" class="level2">
+<h2 class="anchored" data-anchor-id="project-4">Project 4</h2>
+<p><strong>Tool used:</strong> Claude (Anthropic)</p>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 48%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>AI-assisted task</th>
+<th>How Claude was used</th>
+<th>What I checked or did myself</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data-access instructions</strong></td>
+<td>Claude assisted with instructions for accessing the earthquake data used for validating the HMM implementation and the JSE data used for the substantive analysis.</td>
+<td>I accessed the datasets and checked that the variables, dates and sample periods matched the intended analyses.</td>
+</tr>
+<tr class="even">
+<td><strong>Reading and preparing the data</strong></td>
+<td>Claude helped write the import and preparation code required to create the series used by the HMM functions.</td>
+<td>I ran the code, checked the resulting observations and verified the training/test splits and return calculations.</td>
+</tr>
+<tr class="odd">
+<td><strong>First-principles HMM toolkit from pseudocode</strong></td>
+<td>I supplied the model formulation and pseudocode/required steps for the HMM algorithms. Claude helped translate these into R functions for the likelihood/forward algorithm, decoding and related calculations.</td>
+<td>I worked through the functions, checked them against the HMM equations and validated the implementation using known/package-based results where possible.</td>
+</tr>
+<tr class="even">
+<td><strong>Streamlining the functions into a toolkit</strong></td>
+<td>Once the individual HMM functions were working, Claude helped reorganise them into a reusable toolkit so that the same code could be applied to the earthquake example and JSE models with different numbers of states.</td>
+<td>I checked that the refactoring did not change the numerical results and used the common toolkit throughout the analysis.</td>
+</tr>
+<tr class="odd">
+<td><strong>Viterbi algorithm</strong></td>
+<td>Claude explained the Viterbi algorithm step by step and how it differs from local decoding/filtering, and assisted with implementation details.</td>
+<td>I checked the recursion against the model formulation and interpreted the resulting global state sequence myself.</td>
+</tr>
+<tr class="even">
+<td><strong>Using <code>depmixS4</code></strong></td>
+<td>Claude explained how to specify, fit and extract results from a Gaussian HMM using <code>depmixS4</code> so that I could compare the package result with my first-principles implementation.</td>
+<td>I ran the fits, compared the likelihood/parameters with my implementation and investigated why the default fit could converge to a poor solution.</td>
+</tr>
+<tr class="odd">
+<td><strong>Fitting multiple numbers of regimes</strong></td>
+<td>Claude helped streamline fitting one-, two-, three- and four-state models, including looping over model sizes and storing comparable fit objects.</td>
+<td>I compared BIC, diagnostics and interpretability across the fitted regime numbers and made the final model-selection decision.</td>
+</tr>
+<tr class="even">
+<td><strong>Multiple/random starting values</strong></td>
+<td>Claude assisted with code for refitting each HMM from several random starts after the sensitivity of the likelihood optimisation became apparent.</td>
+<td>I compared the attained log-likelihoods and retained the best solution, while noting that multiple starts reduce but do not eliminate the possibility of a local optimum.</td>
+</tr>
+<tr class="odd">
+<td><strong>Precision / standard errors of estimates</strong></td>
+<td>Claude explained how the Hessian could be used to approximate the covariance matrix of the estimated parameters and how the delta method could be used for derived quantities such as expected regime durations.</td>
+<td>I checked the resulting standard errors, reported their approximate nature and discussed the limitations of Hessian/delta-method uncertainty.</td>
+</tr>
+<tr class="even">
+<td><strong>Pseudo-residuals</strong></td>
+<td>Claude helped implement normal pseudo-residuals for model checking and the associated Ljung–Box diagnostics for the residuals and their squares.</td>
+<td>I checked the formula against the one-step-ahead predictive distribution and interpreted the diagnostics across the candidate HMMs.</td>
+</tr>
+<tr class="odd">
+<td><strong>Newey–West SE of a mean</strong></td>
+<td>Claude helped write a function for a Newey–West standard error of the mean difference in log scores so that predictive performance could be compared while allowing for serial dependence.</td>
+<td>I checked the lag rule and calculation, applied it to the out-of-sample log-score differences and interpreted the resulting comparison with GJR-GARCH.</td>
+</tr>
+<tr class="even">
+<td><strong>Shiny application</strong></td>
+<td>I specified what I wanted the JSE regime explorer to do, including the required controls, regime displays, crisis-period exploration and comparison with GJR-GARCH. Claude wrote the majority of the Shiny implementation code.</td>
+<td>I ran and tested the application, checked that its plots and reported quantities agreed with the Project 4 analysis, identified problems and requested/reviewed revisions before deployment.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plotting and tables</strong></td>
+<td>Claude assisted with plotting and table-formatting code for state probabilities, decoded regimes, diagnostics, forecast densities and model comparisons.</td>
+<td>I checked that all visualised/tabulated results agreed with the fitted models and analysis objects and wrote the final interpretation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="ai-errors-identified-and-corrected-2" class="level3">
+<h3 class="anchored" data-anchor-id="ai-errors-identified-and-corrected-2">AI errors identified and corrected</h3>
+<div class="ai-log-table">
+<table class="table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 49%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue identified</th>
+<th>What was wrong</th>
+<th>How it was corrected</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Comparison with <code>depmixS4</code></strong></td>
+<td>The original text stated that <code>depmixS4</code> “agreed closely” with my first-principles toolkit. On closer inspection, the default <code>depmixS4</code> fit had effectively collapsed to a one-state solution, so this comparison was misleading.</td>
+<td>I refitted <code>depmixS4</code> using both its default starting values and selected starting values, compared the resulting likelihoods and state parameters, and revised the discussion to explain the collapsed default solution explicitly.</td>
+</tr>
+<tr class="even">
+<td><strong>HMM versus GARCH volatility comparison</strong></td>
+<td>I initially compared HMM volatility constructed from <strong>smoothed</strong> state probabilities with GARCH volatility. Smoothed probabilities use observations from the future, whereas the GARCH volatility forecast at time (t) only uses information available up to that point, making the comparison unfair.</td>
+<td>I replaced the primary comparison with HMM volatility based on <strong>filtered</strong> probabilities so that both methods use only information available at the time. The smoothed-probability result is still reported separately as a retrospective description of the regimes.</td>
+</tr>
+<tr class="odd">
+<td><strong>Single set of HMM starting values</strong></td>
+<td>The HMMs were initially fitted from only one set of starting values. Because the HMM likelihood can contain local optima, convergence from one start did not provide enough evidence that the fitted solution was the best available one.</td>
+<td>I added five random initialisations for each model specification and retained the fit with the highest attained log-likelihood. The final discussion now acknowledges the sensitivity of HMM optimisation to starting values.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="responsibility-for-ai-assisted-work" class="level2">
+<h2 class="anchored" data-anchor-id="responsibility-for-ai-assisted-work">Responsibility for AI-assisted work</h2>
+<p>All AI-assisted code and output were run and checked by me. Where appropriate, I compared implementations with lecture material, model definitions, diagnostics or package-based results. Claude was used to accelerate coding, debugging, formatting and understanding, but I remained responsible for the final modelling decisions, statistical interpretations and material included in the portfolio.</p>
 
 
 </section>

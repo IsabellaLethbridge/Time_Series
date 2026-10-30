@@ -264,11 +264,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#linear-models-for-the-conditional-mean" id="toc-linear-models-for-the-conditional-mean" class="nav-link" data-scroll-target="#linear-models-for-the-conditional-mean">Linear Models for the Conditional Mean</a>
   <ul class="collapse">
-  <li><a href="#the-maq-model" id="toc-the-maq-model" class="nav-link" data-scroll-target="#the-maq-model">The MA(<span class="math inline">\(q\)</span>) model</a></li>
-  <li><a href="#the-arp-model" id="toc-the-arp-model" class="nav-link" data-scroll-target="#the-arp-model">The AR(<span class="math inline">\(p\)</span>) model</a></li>
-  <li><a href="#the-armapq-model" id="toc-the-armapq-model" class="nav-link" data-scroll-target="#the-armapq-model">The ARMA(<span class="math inline">\(p,q\)</span>) model</a></li>
-  <li><a href="#the-arimapdq-model" id="toc-the-arimapdq-model" class="nav-link" data-scroll-target="#the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span>) model</a></li>
-  <li><a href="#the-sarimapdqpdqtext_m-model" id="toc-the-sarimapdqpdqtext_m-model" class="nav-link" data-scroll-target="#the-sarimapdqpdqtext_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span>)(<span class="math inline">\(P,D,Q\text{)}_m\)</span> model</a></li>
+  <li><a href="#the-maq-model" id="toc-the-maq-model" class="nav-link" data-scroll-target="#the-maq-model">The MA(<span class="math inline">\(q\)</span> ) model</a></li>
+  <li><a href="#the-arp-model" id="toc-the-arp-model" class="nav-link" data-scroll-target="#the-arp-model">The AR(<span class="math inline">\(p\)</span> ) model</a></li>
+  <li><a href="#the-armapq-model" id="toc-the-armapq-model" class="nav-link" data-scroll-target="#the-armapq-model">The ARMA(<span class="math inline">\(p,q\)</span> ) model</a></li>
+  <li><a href="#the-arimapdq-model" id="toc-the-arimapdq-model" class="nav-link" data-scroll-target="#the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span> ) model</a></li>
+  <li><a href="#the-sarimapdq-pdq-_m-model" id="toc-the-sarimapdq-pdq-_m-model" class="nav-link" data-scroll-target="#the-sarimapdq-pdq-_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span> )(<span class="math inline">\(P,D,Q\)</span> )<span class="math inline">\(_m\)</span> model</a></li>
   </ul></li>
   <li><a href="#time-series-analysis-exercises" id="toc-time-series-analysis-exercises" class="nav-link" data-scroll-target="#time-series-analysis-exercises">Time Series Analysis Exercises</a>
   <ul class="collapse">
@@ -362,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>Treat an observed series as one realisation of a stochastic process.</li>
 </ol>
-<p>An observed series is treated as one realisation of a stochastic process. Each <span class="math inline">\(y_t\)</span> is a random variable (before being observed), after being observed it becomes a realised value A stochastic process defines a series of these random variables. Thus, the observed data is one sample path out of all the possible paths the same mechanism could have produced. Although different realisations differ, they have the same statistical character. How far different realisations appear from each other is dependent on the underlying statistical process. In a white noise process, different realisations will lie around a fixed level. In a random walk, the different realisations will drift apart, since shocks accumulate.</p>
+<p>An observed series is treated as one realisation of a stochastic process. Each <span class="math inline">\(y_t\)</span> is a random variable (before being observed), after being observed it becomes a realised value. A stochastic process defines a series of these random variables. Thus, the observed data is one sample path out of all the possible paths the same mechanism could have produced. Although different realisations differ visually, they have the same statistical character. How far different realisations appear from each other is dependent on the underlying statistical process. In a white noise process, different realisations will lie around a fixed level. In a random walk, the different realisations will drift apart, since shocks accumulate.</p>
 <ol start="3" type="1">
 <li>Explain what forecasting is, judge when a process is predictable, and keep forecasts, goals and plans separate.</li>
 </ol>
@@ -391,10 +391,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Define white noise, MA, AR, ARMA, ARIMA and SARIMA processes, derive their basic properties, and identify them from an ACF and a PACF.</li>
 </ol>
 <p>White noise <span class="math inline">\(\varepsilon_t \sim WN(0,\sigma^2)\)</span> has <span class="math inline">\(E(\varepsilon_t)=0\)</span>, <span class="math inline">\(\text{Var}(\varepsilon_t)=\sigma^2\)</span> and <span class="math inline">\(\gamma(h)=0\)</span> for <span class="math inline">\(h\neq0\)</span>, so its ACF and PACF show no significant spikes.</p>
-<p>MA(<span class="math inline">\(q\)</span>), <span class="math inline">\(y_t=\mu+\sum_{j=0}^{q}\theta_j\varepsilon_{t-j}\)</span> with <span class="math inline">\(\theta_0=1\)</span> is always stationary and <span class="math inline">\(E(y_t)=\mu\)</span>. The <span class="math inline">\(\varepsilon\)</span> terms are uncorrelated, thus <span class="math inline">\(\gamma(0)=\sigma^2\sum_{j=0}^{q}\theta_j^2\)</span>. When the lag is <span class="math inline">\(h \le q\)</span>, <span class="math inline">\(y_t\)</span> and <span class="math inline">\(y_{t-h}\)</span> have some common shocks (<span class="math inline">\(\varepsilon_{t-h},\dots,\varepsilon_{t-q}\)</span>). Only the shared shocks contribute to the covariance, so <span class="math inline">\(\gamma(h)=\sigma^2\sum_{j=0}^{q-h}\theta_j\theta_{j+h}\)</span> and <span class="math inline">\(\rho(h)=\gamma(h)/\gamma(0)\)</span>. When the lag is <span class="math inline">\(h&gt;q\)</span>, there are no shocks in common, so <span class="math inline">\(\gamma(h)=0\)</span>. Thus, the ACF of an MA(<span class="math inline">\(q\)</span>) cuts off after lag <span class="math inline">\(q\)</span>.</p>
-<p>AR(1), <span class="math inline">\(y_t=c+\phi y_{t-1}+\varepsilon_t\)</span> is stationary when <span class="math inline">\(|\phi|&lt;1\)</span>. Since the mean is constant, <span class="math inline">\(\mu=c+\phi\mu\)</span>, thus <span class="math inline">\(E(y_t)=c/(1-\phi)\)</span>. <span class="math inline">\(\varepsilon_t\)</span> is uncorrelated with <span class="math inline">\(y_{t-1}\)</span>, thus <span class="math inline">\(\gamma(0)=\phi^2\gamma(0)+\sigma^2\)</span>, so <span class="math inline">\(\gamma(0)=\sigma^2/(1-\phi^2)\)</span>, which is only finite when <span class="math inline">\(|\phi|&lt;1\)</span>. Multiplying the mean-adjusted equation by <span class="math inline">\(y_{t-h}-\mu\)</span> and taking expectations gives <span class="math inline">\(\gamma(h)=\phi\gamma(h-1)\)</span>, so <span class="math inline">\(\rho(h)=\phi^h\)</span>. Thus, the ACF of an AR(<span class="math inline">\(p\)</span>) tails off. Once <span class="math inline">\(y_{t-1},\dots,y_{t-p}\)</span> are included, further lags add no new information, so the PACF cuts off after lag <span class="math inline">\(p\)</span>.</p>
+<p>MA(<span class="math inline">\(q\)</span>), <span class="math inline">\(y_t=\mu+\sum_{j=0}^{q}\theta_j\varepsilon_{t-j}\)</span> with <span class="math inline">\(\theta_0=1\)</span> is always stationary and <span class="math inline">\(E(y_t)=\mu\)</span>. The <span class="math inline">\(\varepsilon\)</span> terms are uncorrelated, so <span class="math inline">\(\gamma(0)=\sigma^2\sum_{j=0}^{q}\theta_j^2\)</span>. When the lag is <span class="math inline">\(h \le q\)</span>, <span class="math inline">\(y_t\)</span> and <span class="math inline">\(y_{t-h}\)</span> have some common shocks (<span class="math inline">\(\varepsilon_{t-h},\dots,\varepsilon_{t-q}\)</span>). Only the shared shocks contribute to the covariance, so <span class="math inline">\(\gamma(h)=\sigma^2\sum_{j=0}^{q-h}\theta_j\theta_{j+h}\)</span> and <span class="math inline">\(\rho(h)=\gamma(h)/\gamma(0)\)</span>. When the lag is <span class="math inline">\(h&gt;q\)</span>, there are no shocks in common, so <span class="math inline">\(\gamma(h)=0\)</span>. Thus, the ACF of an MA(<span class="math inline">\(q\)</span>) cuts off after lag <span class="math inline">\(q\)</span>.</p>
+<p>AR(1), <span class="math inline">\(y_t=c+\phi y_{t-1}+\varepsilon_t\)</span> is stationary when <span class="math inline">\(|\phi|&lt;1\)</span>. Since the mean is constant, <span class="math inline">\(\mu=c+\phi\mu\)</span>, so <span class="math inline">\(E(y_t)=c/(1-\phi)\)</span>. <span class="math inline">\(\varepsilon_t\)</span> is uncorrelated with <span class="math inline">\(y_{t-1}\)</span>, so <span class="math inline">\(\gamma(0)=\phi^2\gamma(0)+\sigma^2=\sigma^2(1-\phi^2)\)</span>, which is only finite when <span class="math inline">\(|\phi|&lt;1\)</span>. Multiplying the mean-adjusted equation by <span class="math inline">\(y_{t-h}-\mu\)</span> and taking expectations gives <span class="math inline">\(\gamma(h)=\phi\gamma(h-1)\)</span>, so <span class="math inline">\(\rho(h)=\phi^h\)</span>. Thus, the ACF of an AR(<span class="math inline">\(p\)</span>) tails off. Once <span class="math inline">\(y_{t-1},\dots,y_{t-p}\)</span> are included, further lags add no new information, so the PACF cuts off after lag <span class="math inline">\(p\)</span>.</p>
 <p>ARMA(1,1), <span class="math inline">\(y_t=c+\phi y_{t-1}+\varepsilon_t+\theta\varepsilon_{t-1}\)</span> is stationary when <span class="math inline">\(|\phi|&lt;1\)</span> and <span class="math inline">\(E(y_t)=c/(1-\phi)\)</span>. The MA term only affects the covariance at lag 1. When the lag is <span class="math inline">\(h\ge2\)</span>, <span class="math inline">\(\gamma(h)=\phi\gamma(h-1)\)</span>, thus the ACF decays like an AR(1) after lag 1. The process can be written as both an MA(<span class="math inline">\(\infty\)</span>) and an AR(<span class="math inline">\(\infty\)</span>) (when <span class="math inline">\(|\theta|&lt;1\)</span>), so neither the ACF nor the PACF cuts off. Thus, both the ACF and PACF of an ARMA(<span class="math inline">\(p,q\)</span>) tail off.</p>
-<p>ARIMA(0,1,0), <span class="math inline">\(y_t=y_{t-1}+\varepsilon_t\)</span> is the simplest ARIMA (a random walk). Substituting back gives <span class="math inline">\(y_t=y_0+\sum_{i=1}^t\varepsilon_i\)</span>. The <span class="math inline">\(\varepsilon\)</span> terms are uncorrelated, thus <span class="math inline">\(\text{Var}(y_t)=t\sigma^2\)</span>, which grows with <span class="math inline">\(t\)</span>, so the process is non-stationary. <span class="math inline">\(\text{Corr}(y_t,y_{t-h})=\sqrt{(t-h)/t}\approx1\)</span>, thus the ACF decays very slowly. Differencing gives <span class="math inline">\((1-L)y_t=\varepsilon_t\)</span>, which is white noise. Thus, an ARIMA(<span class="math inline">\(p,d,q\)</span>) is differenced <span class="math inline">\(d\)</span> times and the ARMA(<span class="math inline">\(p,q\)</span>) is then identified from the differenced series.</p>
+<p>ARIMA(0,1,0), <span class="math inline">\(y_t=y_{t-1}+\varepsilon_t\)</span> is the simplest ARIMA (a random walk). Substituting back gives <span class="math inline">\(y_t=y_0+\sum_{i=1}^t\varepsilon_i\)</span>. The <span class="math inline">\(\varepsilon\)</span> terms are uncorrelated, thus <span class="math inline">\(\text{Var}(y_t)=t\sigma^2\)</span>, which grows with <span class="math inline">\(t\)</span>, so the process is non-stationary. <span class="math inline">\(\text{Cor}(y_t,y_{t-h})=\sqrt{(t-h)/t}\approx1\)</span>, thus the ACF decays very slowly. Differencing gives <span class="math inline">\((1-L)y_t=\varepsilon_t\)</span>, which is white noise. Thus, an ARIMA(<span class="math inline">\(p,d,q\)</span>) is differenced <span class="math inline">\(d\)</span> times and the ARMA(<span class="math inline">\(p,q\)</span>) is then identified from the differenced series.</p>
 <p>SARIMA<span class="math inline">\((p,d,q)(P,D,Q)_s\)</span> applies the same results at the seasonal lags <span class="math inline">\(s, 2s, \dots\)</span>. For example, the seasonal MA(1), <span class="math inline">\(y_t=\varepsilon_t+\Theta\varepsilon_{t-12}\)</span>, only shares a shock with <span class="math inline">\(y_{t-12}\)</span>, thus <span class="math inline">\(\gamma(12)=\Theta\sigma^2\)</span> and <span class="math inline">\(\gamma(h)=0\)</span> at every other lag <span class="math inline">\(h\neq0\)</span>. Thus, the ACF of a seasonal MA has spikes at multiples of <span class="math inline">\(s\)</span> that cut off after lag <span class="math inline">\(Qs\)</span>, and the PACF of a seasonal AR has spikes at multiples of <span class="math inline">\(s\)</span> that cut off after lag <span class="math inline">\(Ps\)</span>. A slow decay at lags <span class="math inline">\(s, 2s, \dots\)</span> means a seasonal difference is needed.</p>
 <ol start="10" type="1">
 <li>Fit, diagnose and forecast these models in R, following the workflow of Box and Jenkins, and test residuals against the white noise standard.</li>
@@ -588,7 +588,7 @@ Note
 </section>
 <section id="the-components-of-a-series" class="level3">
 <h3 class="anchored" data-anchor-id="the-components-of-a-series">The components of a series</h3>
-<p>Trend is the long run direction of movement. Seasonality is th pattern that repeats at a fixed and known interval. Cycles are long oscillations with no fixed length. Irregular variation (noise) is random variation unexplained by the trend, seasonality and cycles.</p>
+<p>Trend is the long run direction of movement. Seasonality is the pattern that repeats at a fixed and known interval. Cycles are long oscillations with no fixed length. Irregular variation (noise) is random variation unexplained by the trend, seasonality and cycles.</p>
 </section>
 </section>
 <section id="time-series-analysis-in-r" class="level1">
@@ -1077,7 +1077,7 @@ Sliding   102.08 41.53          40.61 41.98</code></pre>
 </ol>
 <p>Future observations enter model estimation. Reported accuracy looks excellent but is unattainable in practice - the future is unknown when real forecasts are made.</p>
 <ol start="3" type="1">
-<li>Contrast Walk_Forward, Expanding Window and Sliding Window validation.</li>
+<li>Contrast Walk Forward, Expanding Window and Sliding Window validation.</li>
 </ol>
 <p>In expanding window validation every historical observation is kept. The training set grows with all past data. In sliding window validation the training window has a fixed length. The number of training observations stays the same but the forecast origin is moved forward through time. Walk-forward validation is when the forecast origin advances one step at a time.</p>
 <ol start="4" type="1">
@@ -1261,7 +1261,7 @@ Assumption
 </div>
 </div>
 </div>
-<p>After the log transformation, one seasonal difference and one first difference, the series in <a href="#fig-stationary">Figure&nbsp;6</a> fluctuates around zero with a roughly constant variance.</p>
+<p>After the log transformation, one seasonal difference and one first difference, the series in <a href="#fig-stationary">Figure&nbsp;6</a> fluctuates around zero with a roughly constant variance (it isn’t really but we want it to be).</p>
 </section>
 <section id="white-noise" class="level3">
 <h3 class="anchored" data-anchor-id="white-noise">White noise</h3>
@@ -1287,14 +1287,14 @@ Note
 <p>Although white noise is uncorrelated, a weighted combination of neighbouring white noise is not.</p>
 <p>Filtering is the process of building a new series as a weighted combination of the terms of another.</p>
 <section id="the-maq-model" class="level3">
-<h3 class="anchored" data-anchor-id="the-maq-model">The MA(<span class="math inline">\(q\)</span>) model</h3>
+<h3 class="anchored" data-anchor-id="the-maq-model">The MA(<span class="math inline">\(q\)</span> ) model</h3>
 <p><span class="math display">\[
 y_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}, \quad \varepsilon_t \sim WN(0,\sigma^2).
 \]</span></p>
 <p>The moving average model is driven by lagged shocks not lagged observations. A MA(<span class="math inline">\(q\)</span>) process is stationary for any values of the coefficients, since it is a finite weighted sum of white noise terms with fixed weights. The coefficients must satisfy invertibility.</p>
 </section>
 <section id="the-arp-model" class="level3">
-<h3 class="anchored" data-anchor-id="the-arp-model">The AR(<span class="math inline">\(p\)</span>) model</h3>
+<h3 class="anchored" data-anchor-id="the-arp-model">The AR(<span class="math inline">\(p\)</span> ) model</h3>
 <p><span class="math display">\[
 y_t = c + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + \varepsilon_t, \quad \varepsilon_t \sim WN(0,\sigma^2).
 \]</span></p>
@@ -1323,7 +1323,7 @@ y_t = c + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + \varepsilon_t, \quad \varep
 <p>If you are observing spikes outside of the first few this indicates seasonality in the series. <a href="#fig-ap_process">Figure&nbsp;8</a> suggests that there is still seasonality present in the transformed and differenced <code>AirPassengers</code> dataset, however this could also just be because differencing reduced the number of observations resulting in a more noisy dataset.</p>
 </section>
 <section id="the-armapq-model" class="level3">
-<h3 class="anchored" data-anchor-id="the-armapq-model">The ARMA(<span class="math inline">\(p,q\)</span>) model</h3>
+<h3 class="anchored" data-anchor-id="the-armapq-model">The ARMA(<span class="math inline">\(p,q\)</span> ) model</h3>
 <p>The ARMA model allows for process that show persistence and short lived shocks simultaneously. The series must be stationary.</p>
 <p><span class="math display">\[
 y_t = c + \sum^p_{i=1} \phi_i y_{t-i} + \varepsilon_t + \sum^q_{j=1} \theta_j \varepsilon_{t-j}, \quad \varepsilon_t \sim WN(0,\sigma^2).
@@ -1344,7 +1344,7 @@ Note
 </div>
 </section>
 <section id="the-arimapdq-model" class="level3">
-<h3 class="anchored" data-anchor-id="the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span>) model</h3>
+<h3 class="anchored" data-anchor-id="the-arimapdq-model">The ARIMA(<span class="math inline">\(p,d,q\)</span> ) model</h3>
 <p>The ARIMA model applies <span class="math inline">\(d\)</span> differences to <span class="math inline">\(y_t\)</span> and then fits an ARMA(<span class="math inline">\(p,q\)</span>) to the result.</p>
 <p><span class="math display">\[
 \phi(L)(1-L)^dy_t = c+ \theta(L)\varepsilon_t
@@ -1425,8 +1425,8 @@ Model df: 2.   Total lags used: 24</code></pre>
 </div>
 <p>The forecasts in <a href="#fig-ap_arima">Figure&nbsp;9</a> do not repeat the seasonal pattern. After a few months they flatten out and the intervals become very wide. In <a href="#fig-ap_res">Figure&nbsp;10</a> we can see that the residuals do not look like white noise. This is due to the ARIMA(1,1,1) model not accounting for the seasonality present in the data.</p>
 </section>
-<section id="the-sarimapdqpdqtext_m-model" class="level3">
-<h3 class="anchored" data-anchor-id="the-sarimapdqpdqtext_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span>)(<span class="math inline">\(P,D,Q\text{)}_m\)</span> model</h3>
+<section id="the-sarimapdq-pdq-_m-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-sarimapdq-pdq-_m-model">The SARIMA(<span class="math inline">\(p,d,q\)</span> )(<span class="math inline">\(P,D,Q\)</span> )<span class="math inline">\(_m\)</span> model</h3>
 <p><span class="math display">\[
 \Phi(L^m)\phi(L)(1-L^m)^D(1-L)^dy_t = \Theta(L^m)\theta(L)\varepsilon_t.
 \]</span></p>
@@ -2141,7 +2141,7 @@ Call:
 
 Mean and Variance Equation:
  data ~ arma(1, 0) + garch(1, 0)
-&lt;environment: 0x00000158cab3a468&gt;
+&lt;environment: 0x000001ac12aa2d98&gt;
  [data = Del.Tbill]
 
 Conditional Distribution:
@@ -2167,7 +2167,7 @@ Log Likelihood:
  -223.7818    normalized:  -1.196694 
 
 Description:
- Fri Oct 30 04:03:35 2026 by user: isabe 
+ Fri Oct 30 09:57:15 2026 by user: isabe 
 
 
 
@@ -2265,7 +2265,7 @@ y_t = \mu + \text{ar1}\,y_{t-1} + a_t, \qquad a_t = \sigma_t\varepsilon_t, \qqua
 <p><span class="math display">\[
 y_t = 0.0835 + 0.2416\,y_{t-1} + a_t, \qquad \sigma_t^2 = 0.3382 + 0.8348\,a_{t-1}^2.
 \]</span></p>
-<p>The intercept <span class="math inline">\(\mu\)</span> is not significant (<span class="math inline">\(p = 0.121\)</span>), so the average change in the T-bill rate is approximately zero. The AR(1) coefficient is significant (<span class="math inline">\(p &lt; 0.001\)</span>), so there is some positive dependence between consecutive quarterly changes. <span class="math inline">\(\omega\)</span> and <span class="math inline">\(\alpha_1\)</span> are both significant (<span class="math inline">\(p &lt; 0.001\)</span>). <span class="math inline">\(\alpha_1 = 0.835\)</span> is large, so a large shock in one quarter strongly increases the variance in the next quarter. This confirms the volatility clustering seen in <a href="#fig-tbill">Figure&nbsp;18</a>.</p>
+<p>The intercept <span class="math inline">\(\mu\)</span> is not significant (<span class="math inline">\(p = 0.121\)</span>), so we fail to reject the hypothesis that the average change in the T-bell rate is zero. Since the mean equation includes an AR term, <span class="math inline">\(\mu\)</span> is the intercept not the mean. The implied unconditional mean is <span class="math inline">\(0.0835/(1-0.2416) \approx 11\)</span> percentage points per quarter. This is a slight upward drift, small relative to the series’ volatility. The AR(1) coefficient in significant (<span class="math inline">\(p &lt; 0.001\)</span>), so consecutive quarterly changes have some positive dependence. <span class="math inline">\(\omega\)</span> and <span class="math inline">\(\alpha_1\)</span> are both significant (<span class="math inline">\(p &lt; 0.001\)</span>). <span class="math inline">\(\alpha_1 = 0.835\)</span> is large, so a large shock in one quarter strongly increases the variance in the next quarter. This confirms the volatility clustering seen in <a href="#fig-tbill">Figure&nbsp;18</a>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-tbill_res" class="quarto-figure quarto-figure-center anchored">
@@ -2458,7 +2458,7 @@ y_t = 0.0835 + 0.2416\,y_{t-1} + a_t, \qquad \sigma_t^2 = 0.3382 + 0.8348\,a_{t-
 </section>
 <section id="spectral-analysis" class="level1">
 <h1>Spectral Analysis</h1>
-<p>This is my work-through of <em>Spectral Analysis in R</em>. The tutorial’s helper functions are used throughout. The questions are answered in my own words, and I added the code for the figures that were not shown in the tutorial.</p>
+<p>This is my work-through of <em>Spectral Analysis in R</em>. The tutorial’s helper functions are used throughout. The questions are answered in my own words, and I used Claude (Anthropic) to add the code for the figures that were not shown in the tutorial.</p>
 <section id="setup-and-toolkit" class="level2">
 <h2 class="anchored" data-anchor-id="setup-and-toolkit">Setup and toolkit</h2>
 <div class="cell">
@@ -2658,7 +2658,7 @@ A\cos(2\pi f t + \varphi) = a\cos(2\pi f t) + b\sin(2\pi f t), \qquad A = \sqrt{
 <section id="the-periodogram" class="level2">
 <h2 class="anchored" data-anchor-id="the-periodogram">The periodogram</h2>
 <p>The periodogram <span class="math inline">\(I(f)\)</span> measures how much of the variation in a series comes from an oscillation at frequency <span class="math inline">\(f\)</span>. Its population version is the spectral density <span class="math inline">\(S(f)\)</span>, which spreads the variance of a stationary process over the frequencies. For example, a tall ordinate at <span class="math inline">\(f = \frac{1}{12}\)</span> in monthly data means that a 12-month cycle explains a large share of the variance.</p>
-<p>In R, spec.pgram() is used to estimate the periodogram. By default it removes a linear trend, tapers the ends of the series, pads the series and rescales by frequency(x). Thus, its values only match pgram() when these options are switched off.</p>
+<p>In R, <code>spec.pgram()</code> is used to estimate the periodogram. By default it removes a linear trend, tapers the ends of the series, pads the series and rescales by frequency(x). Thus, its values only match <code>pgram()</code> when these options are switched off.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2808,7 +2808,7 @@ Q: What is the dominant frequency and period, and does it match the construction
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Q: A monthly series has large peaks at 1/12, 2/12 and 3/12. Are these three cycles of 12, 6 and 4 months?the dominant frequency and period, and does it match the construction?
+Q: A monthly series has large peaks at 1/12, 2/12 and 3/12. Are these three cycles of 12, 6 and 4 months?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -3035,54 +3035,63 @@ Q: Why is unnecessary differencing harmful rather than merely unhelpful?
 <div class="cell-output-display">
 <div id="tbl-domains" class="anchored">
 <table class="table table-sm table-striped small">
-<caption>Table&nbsp;10: When to use the time domain and when to use the frequency domain.</caption>
+<caption>Table&nbsp;10: How each domain handles common tasks, and which is better suited.</caption>
 <colgroup>
-<col style="width: 29%">
-<col style="width: 34%">
+<col style="width: 17%">
 <col style="width: 35%">
+<col style="width: 39%">
+<col style="width: 8%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Question</th>
+<th style="text-align: left;">Task</th>
 <th style="text-align: left;">Time domain</th>
 <th style="text-align: left;">Frequency domain</th>
+<th style="text-align: left;">Better suited</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Is there dependence?</td>
-<td style="text-align: left;">ACF and PACF</td>
+<td style="text-align: left;">Detect dependence</td>
+<td style="text-align: left;">Significant spikes in the ACF/PACF</td>
 <td style="text-align: left;">The spectrum is not flat</td>
+<td style="text-align: left;">Either</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">How long is the cycle?</td>
-<td style="text-align: left;">Awkward, from ACF peaks</td>
-<td style="text-align: left;">Directly, from a spectral peak</td>
+<td style="text-align: left;">Find the length of a cycle</td>
+<td style="text-align: left;">Read the lag of repeating ACF peaks (imprecise)</td>
+<td style="text-align: left;">Period = 1 / frequency of the spectral peak</td>
+<td style="text-align: left;">Frequency</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Is the cycle regular?</td>
-<td style="text-align: left;">Hard to judge</td>
-<td style="text-align: left;">The width of the peak</td>
+<td style="text-align: left;">Judge how regular a cycle is</td>
+<td style="text-align: left;">Difficult: look at how slowly the ACF oscillation dies out</td>
+<td style="text-align: left;">Narrow peak = regular cycle; broad peak = irregular cycle</td>
+<td style="text-align: left;">Frequency</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Several cycles at once?</td>
-<td style="text-align: left;">Very hard</td>
-<td style="text-align: left;">Immediate</td>
+<td style="text-align: left;">Separate several cycles</td>
+<td style="text-align: left;">Very difficult: the cycles overlap in the ACF</td>
+<td style="text-align: left;">Each cycle appears as its own peak</td>
+<td style="text-align: left;">Frequency</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Which model should I fit?</td>
-<td style="text-align: left;">ACF/PACF identification</td>
-<td style="text-align: left;">Not directly</td>
+<td style="text-align: left;">Choose a model</td>
+<td style="text-align: left;">Match ACF/PACF patterns to AR, MA or ARMA</td>
+<td style="text-align: left;">Indirectly: the shape of the spectrum hints at AR or MA behaviour</td>
+<td style="text-align: left;">Time</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Forecast the next value</td>
-<td style="text-align: left;">Directly, via a model</td>
-<td style="text-align: left;">Not directly</td>
+<td style="text-align: left;">Forecast future values</td>
+<td style="text-align: left;">Directly, from the fitted model</td>
+<td style="text-align: left;">Not directly: found cycles can feed into a harmonic regression</td>
+<td style="text-align: left;">Time</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Non-stationary series</td>
-<td style="text-align: left;">Differencing, transformations</td>
-<td style="text-align: left;">Requires stationarity</td>
+<td style="text-align: left;">Handle non-stationarity</td>
+<td style="text-align: left;">Difference or transform first, then model</td>
+<td style="text-align: left;">Must be made stationary first, or the spectrum is misleading</td>
+<td style="text-align: left;">Time</td>
 </tr>
 </tbody>
 </table>

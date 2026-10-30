@@ -3,26 +3,245 @@ format: html
 editor: visual
 ---
 
+```{=html}
+<style>
+/* AI log tables: use the available screen width and keep prose readable */
+.ai-log-table {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.ai-log-table table {
+  width: 100%;
+  table-layout: auto;
+  font-size: 0.94rem;
+}
+
+.ai-log-table th,
+.ai-log-table td {
+  vertical-align: top;
+  padding: 0.65rem 0.8rem;
+}
+
+.ai-log-table th:nth-child(1),
+.ai-log-table td:nth-child(1) {
+  min-width: 12rem;
+  width: 18%;
+}
+
+.ai-log-table th:nth-child(2),
+.ai-log-table td:nth-child(2) {
+  min-width: 28rem;
+  width: 48%;
+}
+
+.ai-log-table th:nth-child(3),
+.ai-log-table td:nth-child(3) {
+  min-width: 22rem;
+  width: 34%;
+}
+
+.ai-overview table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.ai-overview th:nth-child(1),
+.ai-overview td:nth-child(1) {
+  min-width: 13rem;
+  width: 22%;
+}
+
+.ai-overview th:nth-child(2),
+.ai-overview td:nth-child(2) {
+  min-width: 34rem;
+  width: 78%;
+}
+
+/* Prevent code/function names from forcing very narrow columns */
+.ai-log-table code,
+.ai-overview code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+</style>
+```
 # AI Use Log
 
-This log records substantive uses of AI that influenced my portfolio, as required by the portfolio guidelines. Minor interactions (for example, single syntax questions) are not logged. I remain responsible for checking and understanding all AI-assisted material, and all analysis results were produced by running the code myself in R.
+This log records uses of AI that influenced my portfolio.
 
-## Project 2: Predicting drought in the Western Cape
+## Section 1
 
-| Date       | Tool used         | What I asked it to help with | Link | What I checked or changed myself |
-|------------|-------------------|------------------------------|------|----------------------------------|
-| 2026-10-29 | Claude (Cowork)   | Reviewing Project 2 against the portfolio guidelines and rubric, using my rendered HTML output. It identified text that contradicted the tables, unfinished placeholder text, a model chosen using the test set, a cross-correlation driven by seasonality, a missing seasonal MA candidate for SST, and a bias from averaging whichever buoys reported each day. | [Conversation](https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk) | I checked each issue against my rendered tables and figures before accepting it. |
-| 2026-10-29 | Claude (Cowork)   | Revising the analysis code: a justified set of seven candidate models, rolling-origin cross-validation for model selection, an ETS(A,N,A) comparison, a composition-adjusted daily SST mean, Ljung-Box tests, and saving key results so the summary page updates automatically. | [Conversation](https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk) | Claude could not run R, so I rendered the code myself, reported errors back (a YAML caption error) and checked every table and figure. I replaced Claude's hand-coded prewhitening filter with `TSA::prewhiten()`, since prewhitening was not covered in lectures and a package function with an explanation was more appropriate. |
-| 2026-10-29 | Claude (Cowork)   | Explaining concepts I had not used before: CRPS, the Ljung-Box $Q$ statistic, prewhitening, rolling-origin cross-validation and the buoy composition adjustment (including writing it as an equation). | [Conversation](https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk) | I checked the explanations against Hyndman & Athanasopoulos (2021) and Cryer & Chan (2008), and asked for simpler explanations until I could explain each one in my own words. |
-| 2026-10-29 | Claude (Cowork)   | Rewording draft paragraphs and replacing conditional inline R text with sentences based on my final rendered results. | [Conversation](https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk) | I edited the wording and corrected the interpretation where I disagreed. I pointed out that the SST trend was not more stable than the dam trend (it tracks El Niño and La Niña events), that the positive lag-6 correlation contradicts the hypothesised negative relationship, and that the unit root tests choose the differencing while the ACF and PACF choose the AR and MA orders. |
-| 2026-10-29 | Claude (Cowork)   | Suggesting references for the methods and software used (Hyndman & Athanasopoulos; Cryer & Chan; the `fable`, `feasts` and `TSA` packages). | [Conversation](https://claude.ai/code/session_01ASHC3xy81tNSXBNR1DQedk) | Claude said that some reference details were from memory and that its first prewhitening citation was wrong. I checked the package references with `citation()` in R and the textbook chapter numbers against the books. |
+**Tool used:** Claude (Anthropic)
 
-## Project 3: Predicting the volatility of JSE All Share Index returns
+Claude was used throughout Section 1 primarily as a learning and coding support tool. I used it to clarify concepts from the lecture notes, check my exercise answers, translate mathematical formulations into LaTeX, and help implement methods in R where I had first worked through the underlying formulas or pseudocode myself. It was also used to explain unfamiliar R functions and model output, and to assist with formatting my Section 1 workthrough.
 
-| Date       | Tool used         | What I asked it to help with | Link | What I checked or changed myself |
-|------------|-------------------|------------------------------|------|----------------------------------|
-| 2026-10-08 | Claude (Cowork)   | Reviewing my first version of Project 3 against the course ARCH and GARCH guide. It found that the sector extension had failed fits (degrees of freedom at the lower bound and identical half-lives for every sector), that EGARCH was difficult to interpret, and that some template text contradicted my diagnostic results. It suggested a simplified structure following the guide's ten-step workflow. | [Conversation](ADD LINK) | [Add what you checked or changed yourself.] |
-| 2026-10-29 | Claude (Cowork)   | Reviewing Project 3 against the portfolio guidelines and rubric, using my rendered HTML output. It identified broken inline R code, typos, a broken table reference, an incorrect long-run volatility in the summary, a methods paragraph that did not match the analysis, and that the test period was much calmer than the training period. | [Conversation](https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk) | I checked each issue against my rendered tables and figures before accepting it. |
-| 2026-10-29 | Claude (Cowork)   | Checking whether the Diebold–Mariano test was covered in the course notes, and adding Diebold–Mariano tests and Value-at-Risk backtests (Kupiec and Christoffersen) to the analysis. | [Conversation](https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk) | Claude confirmed that these tests are not in the course notes, slides or ARCH and GARCH guide. I asked for them to be implemented with `forecast::dm.test()` and `rugarch::VaRTest()` instead of from first principles, and asked for the code to be simplified so that it did not generate the interpretation text. Claude could not run R, so I rendered the code myself and wrote the interpretations from my rendered tables. |
-| 2026-10-29 | Claude (Cowork)   | Rewording and condensing draft paragraphs (mean model selection, diagnostics, Diebold–Mariano and VaR results), and explaining why the models are evaluated on a test set. | [Conversation](https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk) | I edited the wording and wrote the results into the interpretations myself. Claude then checked the summary page against my results and corrected contradictions, for example the limitations paragraph that said the GARCH ranking was uncertain after the Diebold–Mariano tests showed significant differences. |
-| 2026-10-29 | Claude (Cowork)   | Suggesting references for the methods and software used (Patton, 2011; Diebold & Mariano, 1995; Kupiec, 1995; Christoffersen, 1998; Hyndman & Khandakar, 2008). | [Conversation](https://claude.ai/code/session_01ASHC42xvTd3yug5azKivYk) | [Add how you checked the references, e.g. against the DOIs and `citation()` in R.] |
+### Interactive revision material
+
+I asked Claude to create interactive HTML revision files from the Section 1 notes. These summarised the key concepts and included questions that I could work through before revealing the answers.
+
+-   [Section 1A: Chapters 1--6](section-1/S1_Chapters_1-6.html){target="_blank"}
+-   [Section 1B: Conditional Variance Models](section-1/S1_Conditional_Variance_Models.html){target="_blank"}
+-   [Section 1C: Spectral Analysis](section-1/S1_Spectral_Analysis.html){target="_blank"}
+-   [Section 1 workthrough](section-1/section-1.qmd){target="_blank"}
+
+::: ai-log-table
+| AI-assisted area                                 | How Claude was used                                                                                                                                                                                                                                                               | What I checked or did myself                                                                                                                       |
+|--------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Conceptual explanations**                      | Claude was used to clarify concepts that I did not initially understand, including missing data in discrete and continuous time series, different realisations of a stochastic process, the frequency-domain view of a series, conditional variance models and spectral analysis. | I checked explanations against the lecture notes and used follow-up questions where necessary until I could explain and apply the concepts myself. |
+| **Mathematical notation and model formulations** | Claude helped format model definitions and derivations in LaTeX and made the notation in my workthrough more consistent.                                                                                                                                                          | I checked the equations against the formulations in the notes before including them.                                                               |
+| **R implementation and exercises**               | Claude helped explain R functions and translate methods or pseudocode into R while I worked through the Section 1 exercises and tutorials.                                                                                                                                        | I ran all code myself and checked the results against the theory, lecture material and expected model behaviour.                                   |
+| **Conditional variance models**                  | Claude explained ADF and KPSS testing, how to use the relevant R functions, how to interpret GARCH output, and helped write code for extracting model-selection quantities such as AIC and BIC.                                                                                   | I ran the tests and models myself and interpreted the results in the context of the exercises and lecture material.                                |
+| **Spectral analysis**                            | Claude walked through the provided Spectral Analysis R tutorial line by line and explained concepts such as the Nyquist frequency and how to interpret a periodogram.                                                                                                             | I checked that I could interpret the output myself and used the lecture notes or other course material where an AI explanation was insufficient.   |
+| **Interactive revision files**                   | Claude converted the lecture material into the three interactive HTML revision resources linked above, including summaries and self-test questions.                                                                                                                               | I checked the content against the notes and attempted the questions before viewing the answers.                                                    |
+:::
+
+## Section 2
+
+**Tool used:** Claude (Anthropic)
+
+Claude was used in Section 2 in a similar way to Section 1: primarily to help me understand new modelling frameworks, translate mathematical procedures or pseudocode into R, debug implementations and create interactive revision resources. Because Section 2 involved more algorithmic methods, particularly state-space models and Hidden Markov Models, I also used Claude to step through algorithms and explain how the mathematical formulation related to the code.
+
+### Interactive revision material
+
+I asked Claude to create interactive HTML revision files from the Section 2 material, using the same approach as for Section 1. These were used as supplementary revision resources rather than replacements for the lecture notes.
+
+-   [Section 2: Exponential Smoothing](section-2/S2_Exponential_Smoothing.html){target="_blank"}
+-   [Section 2: State-Space Models](section-2/S2_State_Space_Models.html){target="_blank"}
+-   [Section 2: Regression](section-2/S2-Regression.html){target="_blank"}
+-   [Section 2: Hidden Markov Models](section-2/S2_Hidden_Markov_Models.html){target="_blank"}
+
+::: ai-log-table
+| AI-assisted area                      | How Claude was used                                                                                                                                                                                                                                       | What I checked or did myself                                                                                                                                                      |
+|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Conceptual explanations**           | Claude was used to clarify the relationship between exponential smoothing and state-space models, the role of observed and latent states, and how the different Section 2 modelling frameworks were connected.                                            | I checked the explanations against the lecture material and made sure I could interpret the models independently before applying them.                                            |
+| **Exponential smoothing**             | Claude helped connect the exponential-smoothing recursions to their state-space representation and assisted with coding implementations based on pseudocode.                                                                                              | I checked the recursions against the model formulation, ran the implementations and compared their behaviour with package-based results where appropriate.                        |
+| **State-space models and filtering**  | Claude was used to step through state-space notation and filtering procedures and to explain how sequential updating works computationally.                                                                                                               | I worked through the calculations and checked that I understood the interpretation of the latent state, prediction and updating steps rather than relying only on generated code. |
+| **Regression and time-series errors** | Claude assisted with explanations and implementation details where regression was combined with time-series structure, including how predictors and serial dependence should be handled.                                                                  | I checked model specifications and output against the lecture material and interpreted the fitted relationships myself.                                                           |
+| **Hidden Markov Models**              | Claude explained the main HMM components and algorithms, including the forward recursion and Viterbi algorithm, and helped translate pseudocode into reusable R functions. This later formed the basis of the first-principles toolkit used in Project 4. | I checked the functions against the HMM equations and validated the implementation against package-based results where possible.                                                  |
+| **HMM software and diagnostics**      | Claude helped explain how to use `depmixS4`, fit models with different numbers of regimes, work with multiple starting values, assess parameter precision and implement model diagnostics such as pseudo-residuals.                                       | I ran and compared the models myself, investigated poor solutions and used the statistical output and diagnostics to make the final modelling decisions.                          |
+| **Code debugging and streamlining**   | Claude assisted with debugging and reorganising repeated Section 2 code into clearer functions and workflows, particularly for algorithms that were later reused in Project 4.                                                                            | I checked that refactoring did not change the numerical results and retained responsibility for the final implementations.                                                        |
+| **Interactive revision files**        | Claude generated the four Section 2 HTML revision resources linked above from the course material, including summaries and questions for self-testing.                                                                                                    | I checked the material against the notes and used the resources to test and clarify my understanding.                                                                             |
+:::
+
+# Portfolio Projects
+
+## Portfolio-wide AI assistance
+
+In addition to the project-specific uses documented below, Claude (Anthropic) was used throughout the portfolio for spell-checking, grammar and wording improvements, LaTeX and Quarto formatting, and periodic checks against the portfolio guidelines. Statistical interpretations and final modelling decisions remained my responsibility.
+
+## Project 1
+
+**Tool used:** Claude (Anthropic)
+
+::: ai-log-table
+| AI-assisted task                                  | How Claude was used                                                                                                                                                           | What I checked or did myself                                                                                                                                                                                 |
+|---------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Data-access instructions**                      | Claude helped me locate and understand how to access the electricity-demand data required for the project.                                                                    | I accessed the data myself, checked that the required period and variables were present and documented the data source used in the project.                                                                  |
+| **Reading the data into R**                       | Claude assisted with the R code required to import the data, parse dates and place the series into a form suitable for time-series analysis.                                  | I ran the import code, checked the date range, observation frequency and resulting values against the source data.                                                                                           |
+| **Initial data-quality checks**                   | Claude helped write code to check missing observations, duplicated dates/observations and other basic data-quality issues.                                                    | I inspected the identified issues and decided how they should be handled before modelling.                                                                                                                   |
+| **Plotting code**                                 | Claude assisted with all major plotting code, including time-series plots, decompositions, diagnostic plots and forecast/evaluation figures.                                  | I decided what needed to be visualised, checked the plotted values and edited labels, annotations and presentation where required.                                                                           |
+| **Structural-break testing**                      | I asked Claude to explain how a structural-break test could be implemented for the electricity-demand series.                                                                 | I used the test as supporting evidence rather than treating the estimated break dates as automatically correct, and interpreted the break in the context of the COVID-19 period and the modelling objective. |
+| **Stepping through structural-break pseudocode**  | Claude helped me work through the structural-break procedure step by step and translate the required workflow into R code.                                                    | I ran the procedure, inspected the candidate break dates and compared them with the observed series and relevant dates.                                                                                      |
+| **Strengthening the structural-break assessment** | Claude suggested checking multiple values of the minimum segment length / trimming parameter rather than relying on one setting.                                              | I ran the alternative specifications and used the sensitivity of the estimated break dates as part of my decision about the training period.                                                                 |
+| **Holt--Winters from first principles**           | I supplied the Holt--Winters formulas/pseudocode and asked Claude to help translate the recursions into an R implementation from first principles.                            | I checked each recursion against the model definition, compared the behaviour with package-based exponential-smoothing output and interpreted the fitted components myself.                                  |
+| **Rolling-window evaluation**                     | Claude helped write reusable model-fitting and forecasting functions so that several models could be evaluated consistently over rolling/expanding forecast origins.          | I determined the training, validation and test design, checked that each forecast used only information available at the forecast origin and interpreted the resulting errors.                               |
+| **`imap()` / `purrr` workflow**                   | Claude explained how `imap()` could be used to streamline repeated fitting or forecasting across named model specifications and helped adapt my code to use it.               | I checked that each model name was correctly matched to its forecast output and that the streamlined workflow reproduced the original calculations.                                                          |
+| **Diebold--Mariano test**                         | Claude explained the purpose of the Diebold--Mariano test and assisted with the R implementation for comparing forecast accuracy.                                             | I selected the forecasts/losses being compared and interpreted the test in conjunction with the observed forecast errors rather than using the p-value alone.                                                |
+| **Empirical prediction intervals**                | Claude helped me check the construction of empirical prediction intervals based on forecast/residual errors and identify issues with how the intervals were being calculated. | I checked interval coverage and width against the observed holdout values and discussed the limitations of constructing intervals from the available residual information.                                   |
+| **Annual-cycle adjustment**                       | After comparing model behaviour, Claude suggested testing whether removing the additional annual-cycle adjustment simplified or improved the forecasting approach.            | I compared the competing specifications using the validation/test framework and made the final modelling decision based on the evaluation results.                                                           |
+| **Fourier terms for the annual cycle**            | Claude helped write a function to generate the required sine and cosine Fourier terms for an annual cycle.                                                                    | I checked the frequencies/periods used, inspected the generated terms and assessed whether adding them improved forecast performance.                                                                        |
+| **Inline values**                                 | Claude helped write inline R expressions so numerical results in the text were populated directly from fitted objects and evaluation results.                                 | I checked the rendered values against the underlying R objects.                                                                                                                                              |
+| **Table formatting**                              | Claude assisted with formatting all result and diagnostic tables for the rendered portfolio.                                                                                  | I checked that the values, labels, units and captions agreed with the analysis output.                                                                                                                       |
+:::
+
+### AI errors identified and corrected
+
+::: ai-log-table
+| Issue identified                                       | What was wrong                                                                                                                                                           | How it was corrected                                                                                                                                                                                                                   |
+|--------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **First-principles Holt--Winters smoothing parameter** | In the first-principles Holt--Winters implementation, the estimated smoothing parameter (\alpha) reached the boundary at 1, while `ets()` estimated approximately 0.915. | I checked the first-principles estimate against the `ets()` fit and revised the discussion so that (\alpha=1) is explicitly described as a boundary estimate rather than being treated as directly equivalent to the package estimate. |
+:::
+
+## Project 2
+
+**Tool used:** Claude (Anthropic)
+
+::: ai-log-table
+| AI-assisted task                            | How Claude was used                                                                                                                                                                                                                                                   | What I checked or did myself                                                                                                                                    |
+|---------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Data-access instructions**                | Claude assisted with locating/accessing the City of Cape Town dam-level data and the NOAA/TAO sea-surface-temperature data used in the project.                                                                                                                       | I accessed the sources myself, checked the periods and variables available and documented the final sources used.                                               |
+| **Reading the datasets into R**             | Claude helped with code to import the dam-level and SST datasets, parse dates and place the series on compatible time scales.                                                                                                                                         | I ran the import code and checked the resulting dates and values against the source files.                                                                      |
+| **Cleaning the data**                       | Claude assisted with cleaning code for inconsistent dates, duplicated observations, missing values and reshaping the data for analysis.                                                                                                                               | I inspected the identified problems and made the final decisions about exclusions, transformations and aggregation.                                             |
+| **Missing SST observations / filling gaps** | Claude helped identify and implement ways of handling gaps in the buoy series so that aggregation and subsequent analysis did not silently fail.                                                                                                                      | I inspected the missingness pattern and considered the implications of filling/interpolating values before using the resulting series.                          |
+| **SST aggregation across buoys**            | I raised the concern that the TAO/TRITON buoys came from different locations/latitudes and that the set of reporting buoys changed over time. Claude suggested an aggregation/adjustment strategy to reduce artificial variation caused by changing buoy composition. | I checked the buoy coverage over time, assessed the resulting aggregate series and explicitly discussed changing buoy availability as a limitation.             |
+| **Seasonal and ordinary differencing**      | Claude refined my code for determining and applying the required seasonal and first differences to the series.                                                                                                                                                        | I used the observed series, ACF/diagnostics and stationarity considerations to decide whether the resulting transformation was reasonable.                      |
+| **Prewhitening**                            | Claude explained the purpose of prewhitening and assisted with code to prewhiten the series before calculating the cross-correlation function.                                                                                                                        | I checked the filtered series and interpreted how prewhitening changed the apparent lead--lag relationship between SST and dam levels.                          |
+| **Dynamic-regression workflow**             | Claude assisted with implementation details for including SST information in the dam-level forecasting model and aligning lagged predictors with the response.                                                                                                        | I selected the candidate relationship, fitted and evaluated the models and concluded that inclusion of SST did not improve forecasts over the univariate model. |
+| **CRPS extraction for inline reporting**    | Claude helped extract CRPS values from the relevant evaluation objects and format them for inline R references in the text.                                                                                                                                           | I checked the extracted values against the evaluation output and used them in the final model comparison.                                                       |
+| **Plotting code**                           | Claude assisted with all plotting code, including dam/SST time-series figures, decomposition/diagnostic plots, cross-correlation displays and forecast plots.                                                                                                         | I specified the comparisons I wanted to show, checked the plotted values and edited presentation and annotations where needed.                                  |
+| **Table formatting**                        | Claude assisted with formatting the project tables in Quarto/HTML.                                                                                                                                                                                                    | I checked all reported estimates, errors and captions against the analysis objects.                                                                             |
+:::
+
+### AI errors identified and corrected
+
+::: ai-log-table
+| Issue identified               | What was wrong                                                                                                                                                                                     | How it was corrected                                                                                         |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **Cross-correlation analysis** | The original cross-correlation analysis used the raw seasonal series. The apparent relationship was largely driven by the shared seasonal structure rather than a reliable lead--lag relationship. | I replaced the raw CCF with a prewhitened cross-correlation analysis based on seasonally differenced series. |
+:::
+
+## Project 3
+
+**Tool used:** Claude (Anthropic)
+
+::: ai-log-table
+| AI-assisted task                           | How Claude was used                                                                                                                                                                                  | What I checked or did myself                                                                                                                                             |
+|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Data-access instructions**               | Claude helped with instructions for obtaining the JSE index-price data required for the project.                                                                                                     | I accessed the data, checked the time period and constructed/verified the return series used in the analysis.                                                            |
+| **Reading and preparing the data**         | Claude assisted with import code, date handling and preparation of the price/return series.                                                                                                          | I checked the resulting returns, missing observations and summary statistics before modelling.                                                                           |
+| **Streamlining repeated code**             | Claude helped refactor repeated GARCH fitting, forecasting and evaluation code into more concise functions/workflows.                                                                                | I checked that the streamlined code reproduced the original fitted values, forecasts and evaluation metrics.                                                             |
+| **GARCH(1,1) from first principles**       | I supplied the GARCH(1,1) model equations/pseudocode and asked Claude to help translate the variance recursion and likelihood into R.                                                                | I checked the recursion and constraints against the model definition and compared the resulting estimates/volatility with package-based fits.                            |
+| **GJR-GARCH with Student-(t) innovations** | Claude suggested including a GJR-GARCH-(t) specification so that the model could accommodate both asymmetric responses to shocks and heavy-tailed returns.                                           | I fitted and diagnosed the model, compared it with the other candidate specifications and retained it based on the empirical results rather than the suggestion alone.   |
+| **QLIKE loss**                             | Claude explained QLIKE and assisted with implementing it as a loss function for volatility-forecast evaluation.                                                                                      | I checked the calculation and used it alongside the other forecast measures when comparing models.                                                                       |
+| **Value-at-Risk backtests**                | Drawing on the connection with my Portfolio Theory course, I asked Claude to help implement VaR forecasts and the associated backtests for the fitted volatility models.                             | I selected the VaR levels, checked the violation counts and test output and interpreted the results in relation to the assumed innovation distributions and market risk. |
+| **Forecast-evaluation workflow**           | Claude helped streamline the repeated out-of-sample forecasts and evaluation of competing conditional-variance models.                                                                               | I determined the evaluation sample and model comparisons and checked that forecasts were genuinely out of sample.                                                        |
+| **Plotting and tables**                    | As part of the portfolio-wide assistance described above, Claude generated/assisted with the plotting and table-formatting code used for the volatility, diagnostic and forecast-comparison results. | I checked all plotted and tabulated quantities against the fitted objects and wrote the substantive interpretation myself.                                               |
+:::
+
+## Project 4
+
+**Tool used:** Claude (Anthropic)
+
+::: ai-log-table
+| AI-assisted task                                 | How Claude was used                                                                                                                                                                                                             | What I checked or did myself                                                                                                                                                                 |
+|--------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Data-access instructions**                     | Claude assisted with instructions for accessing the earthquake data used for validating the HMM implementation and the JSE data used for the substantive analysis.                                                              | I accessed the datasets and checked that the variables, dates and sample periods matched the intended analyses.                                                                              |
+| **Reading and preparing the data**               | Claude helped write the import and preparation code required to create the series used by the HMM functions.                                                                                                                    | I ran the code, checked the resulting observations and verified the training/test splits and return calculations.                                                                            |
+| **First-principles HMM toolkit from pseudocode** | I supplied the model formulation and pseudocode/required steps for the HMM algorithms. Claude helped translate these into R functions for the likelihood/forward algorithm, decoding and related calculations.                  | I worked through the functions, checked them against the HMM equations and validated the implementation using known/package-based results where possible.                                    |
+| **Streamlining the functions into a toolkit**    | Once the individual HMM functions were working, Claude helped reorganise them into a reusable toolkit so that the same code could be applied to the earthquake example and JSE models with different numbers of states.         | I checked that the refactoring did not change the numerical results and used the common toolkit throughout the analysis.                                                                     |
+| **Viterbi algorithm**                            | Claude explained the Viterbi algorithm step by step and how it differs from local decoding/filtering, and assisted with implementation details.                                                                                 | I checked the recursion against the model formulation and interpreted the resulting global state sequence myself.                                                                            |
+| **Using `depmixS4`**                             | Claude explained how to specify, fit and extract results from a Gaussian HMM using `depmixS4` so that I could compare the package result with my first-principles implementation.                                               | I ran the fits, compared the likelihood/parameters with my implementation and investigated why the default fit could converge to a poor solution.                                            |
+| **Fitting multiple numbers of regimes**          | Claude helped streamline fitting one-, two-, three- and four-state models, including looping over model sizes and storing comparable fit objects.                                                                               | I compared BIC, diagnostics and interpretability across the fitted regime numbers and made the final model-selection decision.                                                               |
+| **Multiple/random starting values**              | Claude assisted with code for refitting each HMM from several random starts after the sensitivity of the likelihood optimisation became apparent.                                                                               | I compared the attained log-likelihoods and retained the best solution, while noting that multiple starts reduce but do not eliminate the possibility of a local optimum.                    |
+| **Precision / standard errors of estimates**     | Claude explained how the Hessian could be used to approximate the covariance matrix of the estimated parameters and how the delta method could be used for derived quantities such as expected regime durations.                | I checked the resulting standard errors, reported their approximate nature and discussed the limitations of Hessian/delta-method uncertainty.                                                |
+| **Pseudo-residuals**                             | Claude helped implement normal pseudo-residuals for model checking and the associated Ljung--Box diagnostics for the residuals and their squares.                                                                               | I checked the formula against the one-step-ahead predictive distribution and interpreted the diagnostics across the candidate HMMs.                                                          |
+| **Newey--West SE of a mean**                     | Claude helped write a function for a Newey--West standard error of the mean difference in log scores so that predictive performance could be compared while allowing for serial dependence.                                     | I checked the lag rule and calculation, applied it to the out-of-sample log-score differences and interpreted the resulting comparison with GJR-GARCH.                                       |
+| **Shiny application**                            | I specified what I wanted the JSE regime explorer to do, including the required controls, regime displays, crisis-period exploration and comparison with GJR-GARCH. Claude wrote the majority of the Shiny implementation code. | I ran and tested the application, checked that its plots and reported quantities agreed with the Project 4 analysis, identified problems and requested/reviewed revisions before deployment. |
+| **Plotting and tables**                          | Claude assisted with plotting and table-formatting code for state probabilities, decoded regimes, diagnostics, forecast densities and model comparisons.                                                                        | I checked that all visualised/tabulated results agreed with the fitted models and analysis objects and wrote the final interpretation.                                                       |
+:::
+
+### AI errors identified and corrected
+
+::: ai-log-table
+| Issue identified                           | What was wrong                                                                                                                                                                                                                                                                                          | How it was corrected                                                                                                                                                                                                                                                   |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Comparison with `depmixS4`**             | The original text stated that `depmixS4` "agreed closely" with my first-principles toolkit. On closer inspection, the default `depmixS4` fit had effectively collapsed to a one-state solution, so this comparison was misleading.                                                                      | I refitted `depmixS4` using both its default starting values and selected starting values, compared the resulting likelihoods and state parameters, and revised the discussion to explain the collapsed default solution explicitly.                                   |
+| **HMM versus GARCH volatility comparison** | I initially compared HMM volatility constructed from **smoothed** state probabilities with GARCH volatility. Smoothed probabilities use observations from the future, whereas the GARCH volatility forecast at time (t) only uses information available up to that point, making the comparison unfair. | I replaced the primary comparison with HMM volatility based on **filtered** probabilities so that both methods use only information available at the time. The smoothed-probability result is still reported separately as a retrospective description of the regimes. |
+| **Single set of HMM starting values**      | The HMMs were initially fitted from only one set of starting values. Because the HMM likelihood can contain local optima, convergence from one start did not provide enough evidence that the fitted solution was the best available one.                                                               | I added five random initialisations for each model specification and retained the fit with the highest attained log-likelihood. The final discussion now acknowledges the sensitivity of HMM optimisation to starting values.                                          |
+:::
+
+## Responsibility for AI-assisted work
+
+All AI-assisted code and output were run and checked by me. Where appropriate, I compared implementations with lecture material, model definitions, diagnostics or package-based results. Claude was used to accelerate coding, debugging, formatting and understanding, but I remained responsible for the final modelling decisions, statistical interpretations and material included in the portfolio.

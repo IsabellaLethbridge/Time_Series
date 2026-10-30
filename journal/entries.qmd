@@ -37,7 +37,7 @@ Noise (stochastic) in data introduces different realisations. An observed time s
 
 Q: How does noise introduce different realisations?
 
-A: In normal regression the pattern is fixed and the noise sits on top of it
+A: In normal regression the pattern is fixed and the noise sits on top of it:
 
 $$
 y_i = \beta_0 + \beta_1 x_i + e_i,
@@ -111,7 +111,7 @@ Worked through *Time Series Analysis in R* using the `AirPassengers` dataset: [S
 
 **What I Learned:**
 
-Time domain looks at previous observations whereas the frequency domain looks at previous cycles. Often you will need to look at both of these domains.
+Time domain looks at previous observations whereas the frequency domain looks at cycles at different frequencies. Often you will need to look at both of these domains.
 
 ::: callout-tip
 ## Trend vs Seasonality vs Cycles
@@ -119,7 +119,7 @@ Time domain looks at previous observations whereas the frequency domain looks at
 A trend is the long-run direction of movement in a time series. Seasonality models a pattern that repeats itself at a fixed AND known interval. A cycle is a long oscillation where the length is NOT fixed.
 :::
 
-When dealing with time series data you may encounter changing variability. Here you need to transform the data to stabilise variance and difference to remove trend anf seasonality. When structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.
+When dealing with time series data you may encounter changing variability. Here you need to transform the data to stabilise variance and difference to remove trend and seasonality. When structural breaks are present in the data you can either use an indicator variable at the break or you can fit separate models on either side of the break.
 
 There are 4 benchmark forecasting models: Mean, Naive, Seasonal naive and Drift.
 
@@ -135,7 +135,7 @@ You cannot run normal cross-validation on time series data since the ordering of
 
 Q: How do you identify a significant structural break?
 
-A: This can be done using formal tests, dependent on whether the date of the break is known prior to looking at the data. If the date is known in advance, if there was a policy change, you can use Chow's test. Chow's test fits the model before and after the date of the break and uses an F-test to check if there is a statistically significant difference in model parameters. If the date is unknown you can run a Chow test at every possible date and take the largest F, compared against adjusted critical values. This is a sup-F test and accounts for having searched over every date, making it harder to declare a break.
+A: This can be done using formal tests, dependent on whether the date of the break is known prior to looking at the data. If the date is known in advance (e.g. a policy change), you can use Chow's test. Chow's test fits the model before and after the date of the break and uses an F-test to check if there is a statistically significant difference in model parameters. If the date is unknown you can run a Chow test at every possible date and take the largest F, compared against adjusted critical values. This is a sup-F test and accounts for having searched over every date, making it harder to declare a break.
 
 **What to Do Next:**
 
@@ -159,15 +159,15 @@ Since you can't perform regular cross-validation on time series data you use a d
 
 Expanding window is good for stable processes whereas sliding window is good for rapidly changing processes.
 
-We want our data to be stationary and for the residuals to be white noise. To restore stationarity you can transform the data to remove the variance of seasonality. You can take the linear/seasonal differences. Log-transformations reduce a multiplicative model to an additive model.
+We want our data to be stationary and for the residuals to be white noise. To restore stationarity you can transform the data to stabilise the variance and take linear/seasonal differences to remove trend and seasonality. Log-transformations reduce a multiplicative model to an additive model.
 
-Weak white noise requires uncorrelated observations but strict white noise requires *iid* observations.
+Weak white noise requires uncorrelated observations with zero mean and constant variance but strict white noise requires *iid* observations.
 
 **Questions:**
 
 Q: What is the difference between walk-forward and expanding window?
 
-A:
+A: In the notes they are the same procedure: the training set always starts at $y_1$ and grows by one observation each time the forecast origin moves forward. "Walk-forward" describes how the origin moves and "expanding window" describes what is kept. The slides list them as separate strategies, but note that they use the same growth rule. The difference is that walk-forward re-estimates the model at every step, so it has a higher computational cost. The real contrast is with the sliding window, which drops the oldest observation at each step.
 
 **What to Do Next:**
 
@@ -183,15 +183,15 @@ Conditional Variance Models
 
 **What I Did:**
 
-Fit both ARIMA and SARIMA to the `AirPassengers` dataset:[Section 1](../section-1/section-1.qmd)
+Fit both ARIMA and SARIMA to the `AirPassengers` dataset: [Section 1](../section-1/section-1.qmd)
 
 **What I Learned:**
 
-The moving average, MA($q$), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. An MA($q$) is always stationary is restricted to be invertible.
+The moving average, MA($q$), model is driven by lagged shocks. The dependence is based on errors not actual observations. The model has short memory. An MA($q$) is always stationary and is restricted to be invertible.
 
 The autoregressive, AR($p$), model regresses a series on its own path.
 
-ARMA combines both MA and AR models and is fitted by maximum likelihood, not OLS, since the past chocks are never observed.
+ARMA combines both MA and AR models and is fitted by maximum likelihood, not OLS, since the past shocks are never observed.
 
 ::: callout-note
 ## Note
@@ -205,7 +205,7 @@ The ARIMA($p,d,q$) model allows for differencing and the SARIMA model includes s
 
 Q: How can you determine if there is additional seasonality in a dataset after differencing or if it is just noise? For example in [Section 1](../section-1/section-1.qmd), there were still spikes at some lags in the PACF after log-transforming and differencing the `AirPassengers` dataset.
 
-A: You can check if the residuals look like white noise by using a Ljung-Box test. A non-significant test means that there is no remaining proof of autocorrelation (even if there are will a few lags that spike in the ACF/PACF).
+A: You can check if the residuals look like white noise by using a Ljung-Box test. A non-significant test means that there is no evidence of remaining autocorrelation (even if there are still a few lags that spike in the ACF/PACF). At the 5% level about 1 in 20 lags will spike by chance.
 
 **What to Do Next:**
 
@@ -223,8 +223,6 @@ Conditional Variance Models
 
 Finished working through *Time Series Analysis in R*: [Section 1](../section-1/section-1.qmd)
 
-*I still need to do this! Aim to have it done by Monday 7 September.*
-
 **What I Learned:**
 
 Sulaiman revised Time Series Analysis in R. We covered reading in a .csv file and converting it to a `tsibble()`, time series plots, seasonal and subseries plots, lag plots, autocorrelation functions, time series models, stationarity, differencing and unit root tests.
@@ -239,7 +237,7 @@ Conditional Variance Models, Spectral Analysis
 
 **Links:** [AI Log](../ai-use-log.qmd)
 
-## Additional Lecture 1 with Sulaiman
+## Additional Lecture with Sulaiman
 
 **Date:** 16 September 2026
 
@@ -267,7 +265,7 @@ The ARCH model specifies conditional variance as a function of past squared inno
 Large changes tend to follow large changes and small changes tend to follow small changes. Returns are often uncorrelated, hence why the ACF of returns indicates very little, however squared returns can be strongly autocorrelated.
 :::
 
-The GARCH model includes the previous variance to the ARCH equation. This makes it equivalent to an ARCH model with infinite memory. a GARCH(1,1) model is usually sufficient in practice.
+The GARCH model adds the previous conditional variance to the ARCH equation. This makes it equivalent to an ARCH model with infinite memory. A GARCH(1,1) model is usually sufficient in practice.
 
 $$
 \sigma_t^2 = \alpha_0 + \alpha_1 \varepsilon_{t-1}^2 + \beta_1 \sigma_{t-1}^2,
@@ -279,27 +277,9 @@ Q: Why must $\alpha_1 + \beta_1 < 1$?
 
 A: When $\alpha_1 + \beta_1 < 1$ this ensures that the long-run variance is $\bar{\sigma}^2 = \frac{\alpha_0}{1- \alpha_1 - \beta_1}$ and that the process has a benchmark variance for the volatility to return to. When $\alpha_1 + \beta_1 = 1$ (IGARCH) the shocks to volatility are permanent. This means that all the weight is on the past and none is on the long-run level. This is the variance equivalent of a random walk.
 
-**What to Do Next:** Spectral Analysis
-
-**Links:** [AI Log](../ai-use-log.qmd)
-
-## Additional Lecture 2 with Sulaiman
-
-**Date:**
-
-**Topic covered:**
-
-**What I Did:**
-
-**What I Learned:**
-
-**Questions:**
-
-Q:
-
-A:
-
 **What to Do Next:**
+
+Spectral Analysis
 
 **Links:** [AI Log](../ai-use-log.qmd)
 
@@ -325,7 +305,7 @@ Simple exponential smoothing (SES) only updates a level resulting in flat foreca
 
 The smoothing parameters and initial states ($\ell_0$, $b_0$) are estimated by minimising the sum of squared one-step-ahead errors. Fitted values are one-step-ahead forecasts, so residuals are always one-step-ahead errors.
 
-To turn the exponential smoothing algorithm into a state-space model we can write it in error-corrected form: $y_t = \ell_{t-1} + e_t$, $\ell_t = \ell_{t-1} + \alpha e_t$. This allows us to estimate $\sigma$ and build prediction intervals.
+To turn the exponential smoothing algorithm into a state-space model we can write it in error-correction form: $y_t = \ell_{t-1} + e_t$, $\ell_t = \ell_{t-1} + \alpha e_t$. This allows us to estimate $\sigma$ and build prediction intervals.
 
 This is what `ets()` does.
 
@@ -364,7 +344,7 @@ Time Series Regression includes explanatory variables in time series models. Thi
 ::: callout-tip
 ## ARMAX vs regression with ARMA errors
 
-ARMAX includes lagged values of the response as predictors, $y_t = \beta x_t + \phi y_{t-1} + \dots$. This means that $\beta$ can no longer be interpreted as the effect of $x$ on the mean of $y$. Regression with ARMA errors keeps the normal regression equation and lets the errors follow an ARMA process, $y_t = \beta_0 + \beta_1 x_t + \eta_t$. This means that $\beta_1$ can still be interpreted in the usual way.
+ARMAX includes lagged values of the response as predictors, $y_t = \beta x_t + \phi y_{t-1} + \dots$. This means that $\beta$ can no longer be interpreted as the effect of $x$ on the mean of $y$. Regression with ARMA errors keeps the normal regression equation and lets the errors follow an ARMA process, $y_t = \beta_0 + \beta_1 x_t + \eta_t$, where $\eta_t$ follows an ARMA process. This means that $\beta_1$ can still be interpreted in the usual way.
 :::
 
 Harmonic regression assumes that the seasonal pattern stays the same over time.
@@ -372,16 +352,14 @@ Harmonic regression assumes that the seasonal pattern stays the same over time.
 ::: callout-warning
 ## Autocorrelated errors
 
-When errors are autocorrelated, OLS still gives unbiased estimates but they are no longer efficient. This means that the standard errors, tests and intervals are also wrong.
-
-This can be fixed with generalised least squares by using `gls()` with `corAR1()` or `corARMA()` or with `arima(..., xreg = )`.
+When errors are autocorrelated, OLS still gives unbiased estimates but they are no longer efficient. The usual standard errors are also wrong, so tests and intervals are too optimistic.
 :::
 
 **Questions:**
 
 Q: When should I add a lagged response instead of modelling the errors as ARMA?
 
-A:
+A: It depends on whether the dependence is part of the process or a nuisance. If $y$ depends on its own past (e.g. a stock that accumulates), a lagged response makes sense, but then $\beta_1$ is only the immediate effect of $x$ and the long-run effect is $\beta_1/(1-\phi)$. If the goal is the effect of $x$ on the mean of $y$, the errors should be modelled as ARMA. In Example 4.1 in [Section 2](../section-2/section-2.qmd), the data were generated with AR(1) errors, so the model with a lagged response was misspecified unless $x_{t-1}$ was also included. Regression with AR(1) errors is the same as this model with the coefficient of $x_{t-1}$ restricted to $-\phi\beta_1$.
 
 **What to Do Next:**
 
@@ -423,7 +401,7 @@ The Kalman filter works in a Bayesian way where, $\text{posterior} \propto \text
 
 Q: How do I decide which variances in $W$ should be allowed to be non-zero?
 
-A:
+A: A non-zero variance lets that state change over time and a zero variance keeps it fixed. The structure of the model decides which states can have noise. In the CO$_2$ model in [Section 2](../section-2/section-2.qmd) only the level, slope and current seasonal effect get noise, because the other seasonal states are just the previous effects shifted along. The size of the variances can then be estimated by maximum likelihood. If an estimated variance is essentially zero, that state can be fixed, and models can be compared with the likelihood or AIC, e.g. static ($W = 0$) vs time-varying coefficients in the US consumption example.
 
 **What to Do Next:**
 
@@ -464,11 +442,11 @@ Prediction intervals use $Q_t = FR_tF' + V$. They are prediction intervals (not 
 If there are missing observations present in the data, there is nothing to update with and the Kalman gain will be zero. Consecutive missing observations increase uncertainty.
 
 ::: callout-tip
-## Method (conceptual)
+## Method
 
 1.  The prior predicts the next state from the previous estimate of the state, with some uncertainty (state equation).
 2.  The likelihood asks how likely the new observation is given all possible states (observation equation).
-3.  The new posterior, for the current state, is given by combining the likelihood and the prior
+3.  The new posterior, for the current state, is given by combining the likelihood and the prior.
 :::
 
 **Questions:**
@@ -499,47 +477,29 @@ Worked through Questions 1, 3, 4 and 7 of the HMM tutorial and wrote the forward
 
 **What I Learned:**
 
-A hidden Markov model (HMM) has two parts: an unobserved state process, $C_t$, that follows a Markov chain and an observed process, $X_t$, whose distribution depends only on the current state. Each state has its own state-dependent distribution, $p_i(x) = P(X_t = x \mid C_t = i)$, which can be Poisson, Gaussian, categorical, etc.
+A hidden Markov model (HMM) has an unobserved state process, $C_t$, that follows a Markov chain and an observed process, $X_t$, whose distribution depends only on the current state. Each state has its own state-dependent distribution (e.g. Poisson or Gaussian).
 
 ::: callout-important
 ## Assumption
 
-Markov property: the next state only depends on the current state, $P(C_{t+1} \mid C_t, \dots, C_1) = P(C_{t+1} \mid C_t)$.
+The next state only depends on the current state (Markov property).
 :::
 
-::: callout-important
-## Assumption
-
-Conditional independence: given the current state, $X_t$ is independent of all other observations and states.
-:::
-
-The Markov chain is described by the transition probability matrix $\Gamma$, where $\gamma_{ij} = P(C_{t+1} = j \mid C_t = i)$ and each row sums to 1, and the initial distribution $\boldsymbol{\delta}$. If the chain starts in its stationary distribution, $\boldsymbol{\delta}\Gamma = \boldsymbol{\delta}$, the HMM is stationary. The time spent in state $i$ is geometric with mean $1/(1-\gamma_{ii})$, so a large diagonal means persistent states.
+The Markov chain is described by the transition probability matrix $\Gamma$, where $\gamma_{ij} = P(C_{t+1} = j \mid C_t = i)$, and the initial distribution $\boldsymbol{\delta}$. A large diagonal in $\Gamma$ means that the states are persistent.
 
 ::: callout-tip
 ## Independent mixture vs HMM
 
-An independent mixture model draws a new state at every time point, independently of the last one. An HMM lets the state depend on the previous state. The independent mixture is the special case of an HMM where every row of $\Gamma$ equals $\boldsymbol{\delta}$. This dependence between states is what creates serial correlation in the observations and makes an HMM useful for over-dispersed, autocorrelated data.
+An independent mixture draws a new state at every time point, independently of the last one. An HMM lets the state depend on the previous state, which creates autocorrelation in the observations.
 :::
 
-The likelihood can be written as a matrix product,
-
-$$
-L_T = \boldsymbol{\delta}\mathbf{P}(x_1)\Gamma\mathbf{P}(x_2)\Gamma\cdots\Gamma\mathbf{P}(x_T)\mathbf{1}',
-$$ where $\mathbf{P}(x) = \text{diag}(p_1(x), \dots, p_m(x))$. Summing over every state sequence directly would take $m^T$ terms, but the forward algorithm, $\boldsymbol{\alpha}_t = \boldsymbol{\alpha}_{t-1}\Gamma\mathbf{P}(x_t)$, evaluates the same sum in about $Tm^2$ operations. Here $\alpha_t(i) = P(X_{1:t} = x_{1:t}, C_t = i)$.
-
-::: callout-warning
-## Numerical underflow
-
-The forward probabilities get very small very quickly, so in practice they are scaled at every step and the log-likelihood is accumulated as a sum of logs.
-:::
-
-The parameters are estimated by numerically maximising the likelihood. Since `optim()` works on unconstrained parameters, the parameters have to be transformed to working parameters, e.g. $\log\lambda_i$ for Poisson means and a multinomial logit for the off-diagonal elements of $\Gamma$, and then transformed back.
+The likelihood, $L_T = \boldsymbol{\delta}\mathbf{P}(x_1)\Gamma\mathbf{P}(x_2)\cdots\Gamma\mathbf{P}(x_T)\mathbf{1}'$, is calculated with the forward algorithm and maximised numerically. The forward probabilities are scaled at every step to avoid underflow.
 
 **Questions:**
 
 Q: Why does an HMM produce autocorrelated observations if the observations are conditionally independent given the states?
 
-A: The observations are only independent once we know the states. Since we never observe the states, a large observation makes a high-mean state more likely, and because the states are persistent, the next observation is also likely to come from that state. The dependence between observations comes entirely from the dependence in the Markov chain. In [Section 2](../section-2/section-2.qmd) (Question 7), the likelihood of three 1's ($29/48 \approx 0.604$) was larger than if the observations were independent ($(5/6)^3 \approx 0.579$) for this reason.
+A: The observations are only independent once we know the states. A large observation makes a high-mean state more likely and, since the states are persistent, the next observation is likely to come from that same state.
 
 **What to Do Next:**
 
@@ -561,41 +521,19 @@ Worked through Questions 2, 5 and 6 of the HMM tutorial, wrote the backward algo
 
 Once an HMM has been fitted we usually want to know which state the process was in. This is called decoding.
 
-The backward probabilities, $\beta_t(i) = P(X_{t+1:T} = x_{t+1:T} \mid C_t = i)$, are computed recursively from the end of the series, $\boldsymbol{\beta}_t' = \Gamma\mathbf{P}(x_{t+1})\boldsymbol{\beta}_{t+1}'$ with $\boldsymbol{\beta}_T = \mathbf{1}$. Combining these with the forward probabilities gives the probability of each state given all the observations.
-
 ::: callout-tip
 ## Local vs global decoding
 
-Local decoding finds the most likely state at each time point separately, $P(C_t = i \mid \mathbf{x}) = \alpha_t(i)\beta_t(i)/L_T$. Global decoding finds the most likely sequence of states, $\text{argmax}_{\mathbf{c}} P(\mathbf{C} = \mathbf{c} \mid \mathbf{x})$, using the Viterbi algorithm. The two can disagree, since the sequence of individually most likely states is not necessarily the most likely sequence (it may even contain impossible transitions).
+Local decoding finds the most likely state at each time point separately, using the forward and backward probabilities. Global decoding finds the most likely sequence of states using the Viterbi algorithm. The two can disagree.
 :::
 
-The Viterbi algorithm is a dynamic programming algorithm that keeps track of the probability of the most likely path that ends in each state at time $t$,
-
-$$
-\xi_{1i} = \delta_i p_i(x_1), \qquad \xi_{tj} = \max_i\left(\xi_{t-1,i}\gamma_{ij}\right) p_j(x_t),
-$$ and then traces the path back from the most likely final state. Like the forward algorithm, it is run on the log scale to avoid underflow.
-
-The forward and backward probabilities can also be used for state prediction, $P(C_{T+h} = i \mid \mathbf{x}) = \boldsymbol{\alpha}_T\Gamma^h\mathbf{1}'/L_T$ (normalised), and for forecasting future observations, which are mixtures of the state-dependent distributions. As $h$ increases the state predictions converge to the stationary distribution.
-
-As an alternative to direct numerical maximisation, the parameters can be estimated with the EM (Baum-Welch) algorithm, which treats the states as missing data and uses the forward and backward probabilities in the E-step.
-
-::: callout-note
-## Note
-
-The number of states is chosen with AIC or BIC. BIC penalises the number of parameters more heavily, which matters since the number of parameters grows with $m^2$. Pseudo-residuals are used to check the fit of the model.
-:::
-
-::: callout-warning
-## Local maxima
-
-The likelihood of an HMM often has several local maxima, so the model should be fitted from several different starting values.
-:::
+The number of states is chosen with AIC or BIC. The likelihood of an HMM often has several local maxima, so the model should be fitted from several different starting values.
 
 **Questions:**
 
 Q: Why can't short visits to a state be recovered by decoding?
 
-A: Decoding depends on both the state-dependent distributions and the transition probabilities. If a state is only visited for one time point, the decoded path would need two unlikely transitions to get there and back, and if the state-dependent distributions overlap, the observation is often also likely under the surrounding state. In the Viterbi exercise in [Section 2](../section-2/section-2.qmd) (Question 2), the single visit to state C at time 2 was decoded as A, and in the dishonest casino (Question 6) short spells with the loaded die were missed and switches were detected a few rolls late.
+A: A single visit to a state needs two unlikely transitions, there and back, and if the state-dependent distributions overlap, the observation is often also likely under the surrounding state. In the Viterbi exercise in [Section 2](../section-2/section-2.qmd), the single visit to state C at time 2 was decoded as A.
 
 **What to Do Next:**
 
